@@ -60,13 +60,17 @@ async function prerender() {
     console.log(`Prerendering: ${url}`);
     
     try {
-      await page.goto(url, { waitUntil: 'networkidle', timeout: 15000 });
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
       
       // Wait for React to mount and render content inside #root
       await page.waitForFunction(() => {
         const root = document.getElementById('root');
-        return root && root.innerHTML.length > 200; // Ensure some content is rendered
-      }, { timeout: 10000 });
+        // Check if root exists and has child nodes (React has rendered)
+        return root && root.hasChildNodes();
+      }, { timeout: 15000 });
+
+      // Add a small artificial delay to let framer-motion or initial animations settle
+      await page.waitForTimeout(500);
 
       // Get the full HTML
       const html = await page.content();
