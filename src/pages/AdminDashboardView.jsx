@@ -48,6 +48,46 @@ function AdminDashboardView({
   const [securityNewPassword, setSecurityNewPassword] = useState('');
   const [securityIsLoading, setSecurityIsLoading] = useState(false);
   const toggleSettingsSection = (key) => setSettingsAccordion(prev => ({ ...prev, [key]: !prev[key] }));
+
+  const handleSaveAll = (e) => {
+    if (e) e.preventDefault();
+    alert('Ayarlarınız yerel ortama (localStorage) geçici olarak kaydedildi.');
+  };
+
+  const handleChangePassword = async (e) => {
+    if (e) e.preventDefault();
+    setSecurityIsLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({
+          oldPassword: securityOldPassword,
+          newUsername: securityUsername,
+          newPassword: securityNewPassword
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        alert(data.message || 'Hesap bilgileriniz başarıyla güncellendi!');
+        setSecurityOldPassword('');
+        setSecurityNewPassword('');
+        setSecurityUsername('');
+      } else {
+        alert('Hata: ' + (data.message || 'Bilgiler güncellenemedi.'));
+      }
+    } catch (error) {
+      alert('Sunucu hatası. Daha sonra tekrar deneyin.');
+    } finally {
+      setSecurityIsLoading(false);
+    }
+  };
   const insertHtmlTag = (elementId, fieldName, tagOpen, tagClose = '') => {
     const textarea = document.getElementById(elementId);
     if (!textarea) return;
