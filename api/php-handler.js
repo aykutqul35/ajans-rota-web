@@ -82,6 +82,42 @@ export default async function handler(req, res) {
     }
   }
   
+  else if (action === 'save') {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ success: false, message: 'Method Not Allowed' });
+    }
+    try {
+      const sql = neon(process.env.DATABASE_URL);
+      const dataPayload = req.body; // should be the full JSON DB
+      const id = 'main_db';
+      await sql`
+        INSERT INTO site_data (id, data, updated_at)
+        VALUES (${id}, ${JSON.stringify(dataPayload)}::jsonb, NOW())
+        ON CONFLICT (id) DO UPDATE 
+        SET data = EXCLUDED.data, updated_at = NOW()
+      `;
+      return res.status(200).json({ success: true, message: 'Database saved to Neon DB successfully' });
+    } catch (error) {
+      console.error('Error saving db:', error);
+      return res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+  }
+
+  else if (action === 'get' || action === 'get_db') {
+    try {
+      const sql = neon(process.env.DATABASE_URL);
+      const rows = await sql`SELECT data FROM site_data WHERE id = 'main_db' LIMIT 1`;
+      if (rows.length > 0) {
+        return res.status(200).json(rows[0].data); // return the JSON directly
+      } else {
+        return res.status(404).json({ success: false, message: 'No data found' });
+      }
+    } catch (error) {
+      console.error('Error fetching db:', error);
+      return res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+  }
+
   else if (action === 'delete_lead') {
      try {
         const sql = neon(process.env.DATABASE_URL);
