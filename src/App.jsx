@@ -5333,8 +5333,8 @@ function App() {
             {/* Homepage left: process timeline */}
             <div id="process" className="process-block">
               <span className="section-tag">Çalışma Disiplini</span>
-              <h2 className="section-title" style={{ textAlign: 'left' }}>Başarıya Giden 4 Adımlı Rota</h2>
-              <p className="section-desc" style={{ textAlign: 'left', margin: '0 0 2rem' }}>Kampanyalarimizi şansa bırakmıyoruz. Bilimsel test metotları ve veri analitiği ile hedefinize odaklanıyoruz.</p>
+              <h2 className="section-title">Başarıya Giden 4 Adımlı Rota</h2>
+              <p className="section-desc" style={{ margin: '0 0 2rem' }}>Kampanyalarimizi şansa bırakmıyoruz. Bilimsel test metotları ve veri analitiği ile hedefinize odaklanıyoruz.</p>
 
               <div className="process-timeline">
                 <div className="process-step">
