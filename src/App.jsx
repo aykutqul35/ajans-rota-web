@@ -5379,28 +5379,6 @@ function App() {
                 </div>
               </div>
             </div>
-
-            {/* Homepage right: form */}
-            <div className="glass-card contact-wrapper">
-              <div className="homepage-form-header">
-                <h3>Rotanızı Birlikte Çizelim</h3>
-                <p>Ücretsiz büyüme analizi ve teklif almak için formu doldurun, 24 saat içinde dönüş sağlayalım.</p>
-              </div>
-              <div className="homepage-form-trust">
-                <span className="homepage-form-trust-item">
-                  <i className="fa-solid fa-clock"></i> 24 Saat İçinde Dönüş
-                </span>
-                <span className="homepage-form-trust-divider"></span>
-                <span className="homepage-form-trust-item accent">
-                  <i className="fa-solid fa-shield-halved"></i> Güvenli &amp; Gizli
-                </span>
-                <span className="homepage-form-trust-divider"></span>
-                <span className="homepage-form-trust-item">
-                  <i className="fa-solid fa-gift"></i> Ücretsiz Analiz
-                </span>
-              </div>
-              {renderContactForm()}
-            </div>
           </div>
         </div>
       </section>
