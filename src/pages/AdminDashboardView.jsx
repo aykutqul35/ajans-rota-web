@@ -2970,23 +2970,38 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
       console.error("Leads auto-save failed, saved to localStorage:", err);
     }
   };
-  const handleViewLead = lead => {
-    const updated = leadsData.map(l => l.id === lead.id ? {
-      ...l,
-      status: 'read'
-    } : l);
+  const handleViewLead = async lead => {
+    const updated = leadsData.map(l => l.id === lead.id ? { ...l, status: 'read' } : l);
     setLeadsData(updated);
-    setSelectedLead({
-      ...lead,
-      status: 'read'
-    });
-    saveLeadsOnly(updated);
+    setSelectedLead({ ...lead, status: 'read' });
+    
+    // YENİ: Vercel veritabanına sadece bu lead'in okunma durumunu güncelle
+    try {
+      await fetch('/api/php-handler?action=save_lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        body: JSON.stringify({ ...lead, status: 'read' })
+      });
+    } catch (err) {
+      console.error("Lead status update failed:", err);
+    }
   };
-  const handleDeleteLead = leadId => {
+
+  const handleDeleteLead = async leadId => {
     if (window.confirm('Bu talebi silmek istediğinizden emin misiniz?')) {
       const updated = leadsData.filter(l => l.id !== leadId);
       setLeadsData(updated);
-      saveLeadsOnly(updated);
+      
+      // YENİ: Vercel veritabanından kalıcı olarak sil
+      try {
+        await fetch('/api/php-handler?action=delete_lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+          body: JSON.stringify({ id: leadId })
+        });
+      } catch (err) {
+        console.error("Lead deletion failed:", err);
+      }
     }
   };
   const openEditModal = (type, item) => {

@@ -1318,11 +1318,24 @@ function App() {
           if (data.teamMembers) setTeamMembersData(data.teamMembers);
           if (data.blogPosts) setBlogsData(data.blogPosts);
           if (data.testimonials) setTestimonialsData(data.testimonials);
-          if (data.leads) setLeadsData(data.leads);
           if (data.clientReports) setClientReports(data.clientReports);
         } else {
           loadFromLocalStorage();
         }
+
+        // --- NEW: Fetch leads exclusively from Neon DB ---
+        try {
+          const leadsRes = await fetch('/api/php-handler?action=get_leads', { headers });
+          if (leadsRes.ok) {
+            const leadsDataApi = await leadsRes.json();
+            if (leadsDataApi.success && leadsDataApi.leads) {
+              setLeadsData(leadsDataApi.leads);
+            }
+          }
+        } catch (dbErr) {
+          console.error("Failed to fetch leads from Neon DB:", dbErr);
+        }
+        // -------------------------------------------------
       } catch (error) {
         console.error("Failed to fetch dynamic data from API, using defaults:", error);
         loadFromLocalStorage();

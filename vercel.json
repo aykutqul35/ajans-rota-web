@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api.php",
+      "destination": "/api/php-handler"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
