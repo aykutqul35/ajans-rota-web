@@ -42,7 +42,11 @@ function AdminDashboardView({
   const [legalSettingsSubTab, setLegalSettingsSubTab] = useState('privacy');
   const [legalEditorPreview, setLegalEditorPreview] = useState(false);
   // Genel Ayarlar accordion state — hangi bölümler açık
-  const [settingsAccordion, setSettingsAccordion] = useState({ contact: true, visuals: false, whatsapp: false, social_pricing: false, about_content: false, contact_page: false, legal_content: false, menu: false, seo: false });
+  const [settingsAccordion, setSettingsAccordion] = useState({ contact: true, visuals: false, whatsapp: false, social_pricing: false, about_content: false, contact_page: false, legal_content: false, menu: false, seo: false, security: false });
+  const [securityUsername, setSecurityUsername] = useState('');
+  const [securityOldPassword, setSecurityOldPassword] = useState('');
+  const [securityNewPassword, setSecurityNewPassword] = useState('');
+  const [securityIsLoading, setSecurityIsLoading] = useState(false);
   const toggleSettingsSection = (key) => setSettingsAccordion(prev => ({ ...prev, [key]: !prev[key] }));
   const insertHtmlTag = (elementId, fieldName, tagOpen, tagClose = '') => {
     const textarea = document.getElementById(elementId);
@@ -678,6 +682,49 @@ function AdminDashboardView({
         count: referrerMap[name]
       };
     }).sort((a, b) => b.count - a.count);
+    const [securityUsername, setSecurityUsername] = useState('');
+    const [securityOldPassword, setSecurityOldPassword] = useState('');
+    const [securityNewPassword, setSecurityNewPassword] = useState('');
+    const [securityIsLoading, setSecurityIsLoading] = useState(false);
+    const handleSaveAll = (e) => {
+    if (e) e.preventDefault();
+    alert('Ayarlarınız yerel ortama (localStorage) geçici olarak kaydedildi.');
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setSecurityIsLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({
+          oldPassword: securityOldPassword,
+          newUsername: securityUsername,
+          newPassword: securityNewPassword
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        alert(data.message || 'Hesap bilgileriniz başarıyla güncellendi!');
+        setSecurityOldPassword('');
+        setSecurityNewPassword('');
+        setSecurityUsername('');
+      } else {
+        alert('Hata: ' + (data.message || 'Bilgiler güncellenemedi.'));
+      }
+    } catch (error) {
+      alert('Sunucu hatası. Daha sonra tekrar deneyin.');
+    } finally {
+      setSecurityIsLoading(false);
+    }
+  };
     const sortedActions = Object.keys(actionMap).map(name => {
       return {
         name,
@@ -5348,6 +5395,74 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
             }}>
                   Web sitenizin genel ayarlarını, görsel varlıklarını, SEO meta etiketlerini ve site haritasını buradan yapılandırabilirsiniz.
                 </p>
+
+                {/* ── ACCORDION: Güvenlik ve Hesap Bilgileri ── */}
+                <div style={{ marginBottom: '0.75rem', borderRadius: '14px', overflow: 'hidden', border: '1px solid rgba(239,68,68,0.2)', boxShadow: settingsAccordion.security ? '0 4px 16px rgba(239,68,68,0.08)' : 'none', transition: 'box-shadow 0.2s' }}>
+                  <button type="button" onClick={() => toggleSettingsSection('security')} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: settingsAccordion.security ? 'linear-gradient(135deg, rgba(239,68,68,0.10) 0%, rgba(220,38,38,0.06) 100%)' : 'rgba(255,255,255,0.7)', border: 'none', cursor: 'pointer', borderBottom: settingsAccordion.security ? '1px solid rgba(239,68,68,0.15)' : 'none', transition: 'background 0.2s' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1rem', color: '#dc2626' }}>
+                      <i className="fa-solid fa-shield-halved" style={{ color: '#ef4444', fontSize: '1.05rem' }}></i>
+                      Güvenlik ve Giriş Bilgileri (Şifre Değiştir)
+                    </span>
+                    <i className={`fa-solid ${settingsAccordion.security ? 'fa-chevron-up' : 'fa-chevron-down'}`} style={{ color: '#ef4444', fontSize: '0.85rem' }}></i>
+                  </button>
+                  {settingsAccordion.security && (
+                    <div style={{ padding: '1.5rem' }}>
+                      <div style={{ background: 'linear-gradient(135deg, rgba(239,68,68,0.06) 0%, rgba(220,38,38,0.04) 100%)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '16px', padding: '1.5rem' }}>
+                        <p style={{ fontSize: '0.85rem', color: '#7f1d1d', marginBottom: '1.25rem', lineHeight: '1.5', fontWeight: 500 }}>
+                          <i className="fa-solid fa-lock" style={{ marginRight: '0.5rem' }}></i>
+                          Buradan Neon PostgreSQL veritabanındaki yönetici bilgilerinizi güncelleyebilirsiniz.
+                        </p>
+                        
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                          <div className="admin-input-group">
+                            <label>Mevcut Şifreniz (Zorunlu)</label>
+                            <input 
+                              type="password" 
+                              value={securityOldPassword} 
+                              onChange={e => setSecurityOldPassword(e.target.value)} 
+                              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #d1d5db', background: '#fff' }} 
+                              placeholder="Kullandığınız şifre" 
+                            />
+                          </div>
+                          
+                          <div className="admin-input-group">
+                            <label>Yeni Kullanıcı Adı (Opsiyonel)</label>
+                            <input 
+                              type="text" 
+                              value={securityUsername} 
+                              onChange={e => setSecurityUsername(e.target.value)} 
+                              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #d1d5db', background: '#fff' }} 
+                              placeholder="Değiştirmeyecekseniz boş bırakın" 
+                            />
+                          </div>
+
+                          <div className="admin-input-group" style={{ gridColumn: '1 / -1' }}>
+                            <label>Yeni Şifreniz (Opsiyonel)</label>
+                            <input 
+                              type="password" 
+                              value={securityNewPassword} 
+                              onChange={e => setSecurityNewPassword(e.target.value)} 
+                              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #d1d5db', background: '#fff' }} 
+                              placeholder="Yeni şifrenizi girin (Değiştirmeyecekseniz boş bırakın)" 
+                            />
+                          </div>
+                        </div>
+
+                        <div className="admin-form-actions" style={{ marginTop: '1.5rem', justifyContent: 'flex-start' }}>
+                          <button 
+                            type="button" 
+                            onClick={handleChangePassword} 
+                            disabled={securityIsLoading} 
+                            style={{ padding: '0.75rem 2rem', borderRadius: '8px', background: '#ef4444', color: '#fff', border: 'none', cursor: securityIsLoading ? 'not-allowed' : 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                          >
+                            {securityIsLoading ? <i className="fa-solid fa-spinner fa-spin"></i> : <i className="fa-solid fa-save"></i>}
+                            Bilgilerimi Güncelle
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 {/* ── ACCORDION: Temel İletişim Bilgileri ── */}
                 <div style={{ marginBottom: '0.75rem', borderRadius: '14px', overflow: 'hidden', border: '1px solid rgba(2,132,199,0.2)', boxShadow: settingsAccordion.contact ? '0 4px 16px rgba(2,132,199,0.08)' : 'none', transition: 'box-shadow 0.2s' }}>

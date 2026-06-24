@@ -9,22 +9,36 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    setTimeout(() => {
-      if (username === 'admin' && password === 'admin123') {
-        const dummyToken = 'jwt-dummy-token-' + Date.now();
-        localStorage.setItem('admin_token', dummyToken);
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        localStorage.setItem('admin_token', data.token);
+        localStorage.setItem('admin_username', data.user.username);
         navigate('/admin');
         window.location.reload();
       } else {
-        setError('Geçersiz kullanıcı adı veya şifre.');
-        setIsLoading(false);
+        setError(data.message || 'Geçersiz kullanıcı adı veya şifre.');
       }
-    }, 1200);
+    } catch (err) {
+      setError('Sunucuya bağlanılamadı. Lütfen daha sonra tekrar deneyin.');
+      console.error('Login error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
