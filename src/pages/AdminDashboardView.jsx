@@ -682,49 +682,6 @@ function AdminDashboardView({
         count: referrerMap[name]
       };
     }).sort((a, b) => b.count - a.count);
-    const [securityUsername, setSecurityUsername] = useState('');
-    const [securityOldPassword, setSecurityOldPassword] = useState('');
-    const [securityNewPassword, setSecurityNewPassword] = useState('');
-    const [securityIsLoading, setSecurityIsLoading] = useState(false);
-    const handleSaveAll = (e) => {
-    if (e) e.preventDefault();
-    alert('Ayarlarınız yerel ortama (localStorage) geçici olarak kaydedildi.');
-  };
-
-  const handleChangePassword = async (e) => {
-    e.preventDefault();
-    setSecurityIsLoading(true);
-
-    try {
-      const response = await fetch('/api/auth/change-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`
-        },
-        body: JSON.stringify({
-          oldPassword: securityOldPassword,
-          newUsername: securityUsername,
-          newPassword: securityNewPassword
-        })
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        alert(data.message || 'Hesap bilgileriniz başarıyla güncellendi!');
-        setSecurityOldPassword('');
-        setSecurityNewPassword('');
-        setSecurityUsername('');
-      } else {
-        alert('Hata: ' + (data.message || 'Bilgiler güncellenemedi.'));
-      }
-    } catch (error) {
-      alert('Sunucu hatası. Daha sonra tekrar deneyin.');
-    } finally {
-      setSecurityIsLoading(false);
-    }
-  };
     const sortedActions = Object.keys(actionMap).map(name => {
       return {
         name,
