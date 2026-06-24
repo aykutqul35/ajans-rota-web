@@ -49,11 +49,6 @@ function AdminDashboardView({
   const [securityIsLoading, setSecurityIsLoading] = useState(false);
   const toggleSettingsSection = (key) => setSettingsAccordion(prev => ({ ...prev, [key]: !prev[key] }));
 
-  const handleSaveAll = (e) => {
-    if (e) e.preventDefault();
-    alert('Ayarlarınız yerel ortama (localStorage) geçici olarak kaydedildi.');
-  };
-
   const handleChangePassword = async (e) => {
     if (e) e.preventDefault();
     setSecurityIsLoading(true);
