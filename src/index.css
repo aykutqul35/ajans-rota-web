@@ -4239,21 +4239,26 @@ p {
 
   /* Başlık alanı */
   .contact-merged-grid .process-block .section-tag {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     letter-spacing: 0.12em;
+    display: block;
+    text-align: center !important;
+    margin: 0 auto 0.5rem;
   }
 
   .contact-merged-grid .process-block .section-title {
     font-size: 1.5rem !important;
     line-height: 1.25;
     margin-bottom: 0.5rem;
+    text-align: center !important;
   }
 
   .contact-merged-grid .process-block .section-desc {
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     line-height: 1.55;
-    margin-bottom: 1.75rem !important;
+    margin-bottom: 1.5rem !important;
     color: var(--text-muted);
+    text-align: center !important;
   }
 
   /* Timeline konteyner — Yatay kaydırmalı (Horizontal Snap) */
