@@ -1,0 +1,18 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # Redirect direct sitemap requests if sitemap is inside public/dist
+  RewriteRule ^sitemap\.xml$ sitemap.xml [L]
+  
+  # Standard SPA Rewrite
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+# Protect data.json from direct download (KVKK Security)
+<Files "data.json">
+    Order Allow,Deny
+    Deny from all
+</Files>
