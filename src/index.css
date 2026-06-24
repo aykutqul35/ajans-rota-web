@@ -1724,9 +1724,27 @@ p {
   .form-group-row {
     grid-template-columns: 1fr;
   }
+  .homepage-form-header {
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  .homepage-form-header::before {
+    display: none;
+  }
+  .homepage-form-header h3 {
+    font-size: 1.4rem;
+    margin: 0 0 0.5rem 0;
+    text-align: center;
+  }
+  .homepage-form-header p {
+    font-size: 0.85rem;
+    margin: 0;
+    text-align: center;
+  }
   .homepage-form-trust {
     gap: 0.6rem;
     padding: 0.6rem 0.75rem;
+    justify-content: center;
   }
   .homepage-form-trust-divider {
     display: none;
