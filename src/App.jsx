@@ -3166,93 +3166,6 @@ function App() {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="services">
-        <div className="container">
-          <FadeIn className="section-header">
-            <span className="section-tag">{settingsData.services_section_tag || "Uzmanlık Alanlarımız"}</span>
-            <h2 className="section-title">{settingsData.services_section_title || "Büyümenizi Hızlandıracak Çözümler"}</h2>
-            <p className="section-desc">{settingsData.services_section_desc || "E-ticaret ve dijital satış hunilerinde en yüksek verimi alabilmeniz için veriye dayalı stratejiler geliştiriyoruz."}</p>
-          </FadeIn>
-
-          <StaggerContainer className="services-grid">
-            {Object.keys(servicesData).map(key => {
-              const service = servicesData[key];
-              return <StaggerItem key={key} className="glass-card service-card" onClick={() => handleServiceClick(key)}>
-                  <div className="service-icon-box">
-                    <i className={service.iconName || "fa-solid fa-compass"}></i>
-                  </div>
-                  <h3>{service.title}</h3>
-                  <p>{service.description}</p>
-                  <ul className="service-features">
-                    {(service.features || []).slice(0, 3).map((f, idx) => <li key={idx}><i className="fa-solid fa-circle-check"></i> {f}</li>)}
-                  </ul>
-                  <div className="service-card-cta">
-                    <span>Detayları Gör &amp; Planla</span>
-                    <i className="fa-solid fa-arrow-right"></i>
-                  </div>
-                </StaggerItem>;
-            })}
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* Izmir Edge (Neden Ege Odaklı Dijital Ajans?) */}
-      <section id="izmir" className="izmir-edge">
-        <div className="container izmir-grid">
-          <FadeIn direction="right" className="izmir-content">
-            <span className="section-tag">{settingsData.izmir_edge_tag || "Bölgesel Güç"}</span>
-            <h2 className="section-title">{settingsData.izmir_edge_title || "Ege'nin Üretim Gücünü Dijitalle Katlıyoruz"}</h2>
-            <p className="section-desc">
-              {settingsData.izmir_edge_desc || "İzmir, Türkiye'nin e-ticaret, lojistik ve üretim üslerinden biri. Uzaktan çalışan ajansların aksine, yerel dinamikleri ve Ege üreticilerinin ihtiyaçlarını çok iyi biliyor, yüz yüze şeffaf iletişim kuruyoruz."}
-            </p>
-            
-            <ul className="izmir-list">
-              <li>
-                <div className="izmir-list-icon">
-                  <i className={settingsData.izmir_edge_item1_icon || "fa-solid fa-chart-pie"}></i>
-                </div>
-                <div className="izmir-list-text">
-                  <h4>{settingsData.izmir_edge_item1_title || "E-İhracat ve Küresel Hedefler"}</h4>
-                  <p>{settingsData.izmir_edge_item1_desc || "İzmir limanının sunduğu lojistik gücü, küresel Google ve Meta reklamları ile birleştirip markanızı Avrupa ve Amerika pazarlarına taşıyoruz."}</p>
-                </div>
-              </li>
-              <li>
-                <div className="izmir-list-icon">
-                  <i className={settingsData.izmir_edge_item2_icon || "fa-solid fa-users-viewfinder"}></i>
-                </div>
-                <div className="izmir-list-text">
-                  <h4>{settingsData.izmir_edge_item2_title || "Yüz Yüze İletişim ve Güven"}</h4>
-                  <p>{settingsData.izmir_edge_item2_desc || "Haftalık değerlendirme toplantıları, strateji sunumları ve raporlamaları doğrudan ofisinizde ya da İzmir'deki çalışma alanımızda birlikte yapıyoruz."}</p>
-                </div>
-              </li>
-              <li>
-                <div className="izmir-list-icon">
-                  <i className={settingsData.izmir_edge_item3_icon || "fa-solid fa-bezier-curve"}></i>
-                </div>
-                <div className="izmir-list-text">
-                  <h4>{settingsData.izmir_edge_item3_title || "Hızlı ve Çevik Entegrasyon"}</h4>
-                  <p>{settingsData.izmir_edge_item3_desc || "Ege bölgesindeki tekstil, gıda, tarım ve endüstriyel üreticilerin dijitalleşme ve e-ticaret altyapı süreçlerini sıfırdan kurup hızlandırıyoruz."}</p>
-                </div>
-              </li>
-            </ul>
-          </FadeIn>
-
-          <FadeIn direction="left" delay={0.2} className="izmir-visual-box">
-            <div className="izmir-visual-card">
-              <i className={`${settingsData.izmir_edge_box_icon || 'fa-solid fa-ship'} izmir-visual-icon`}></i>
-              <h3 className="izmir-visual-title">{settingsData.izmir_edge_box_title || "Ege Denizi'nden Dijital Dünyaya"}</h3>
-              <p className="izmir-visual-desc">{settingsData.izmir_edge_box_desc || "Körfezin esintisiyle veri odaklı stratejileri harmanlayan yeni nesil ajans deneyimi."}</p>
-              <div className="izmir-visual-badge">
-                <span className="izmir-badge-title">{settingsData.izmir_edge_box_badge_title || "İzmir"}</span>
-                <span className="izmir-badge-desc">{settingsData.izmir_edge_box_badge_desc || "Ege'nin Dijital Merkezi"}</span>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-
       {/* 4. Calculator Section */}
       <section id="calculator" className="calculator-section">
         <div className="calculator-glow"></div>
@@ -5326,6 +5239,93 @@ function App() {
       </section>
       
       {/* Footer Contact Section for Homepage */}
+      {/* Services Section */}
+      <section id="services" className="services">
+        <div className="container">
+          <FadeIn className="section-header">
+            <span className="section-tag">{settingsData.services_section_tag || "Uzmanlık Alanlarımız"}</span>
+            <h2 className="section-title">{settingsData.services_section_title || "Büyümenizi Hızlandıracak Çözümler"}</h2>
+            <p className="section-desc">{settingsData.services_section_desc || "E-ticaret ve dijital satış hunilerinde en yüksek verimi alabilmeniz için veriye dayalı stratejiler geliştiriyoruz."}</p>
+          </FadeIn>
+
+          <StaggerContainer className="services-grid">
+            {Object.keys(servicesData).map(key => {
+              const service = servicesData[key];
+              return <StaggerItem key={key} className="glass-card service-card" onClick={() => handleServiceClick(key)}>
+                  <div className="service-icon-box">
+                    <i className={service.iconName || "fa-solid fa-compass"}></i>
+                  </div>
+                  <h3>{service.title}</h3>
+                  <p>{service.description}</p>
+                  <ul className="service-features">
+                    {(service.features || []).slice(0, 3).map((f, idx) => <li key={idx}><i className="fa-solid fa-circle-check"></i> {f}</li>)}
+                  </ul>
+                  <div className="service-card-cta">
+                    <span>Detayları Gör &amp; Planla</span>
+                    <i className="fa-solid fa-arrow-right"></i>
+                  </div>
+                </StaggerItem>;
+            })}
+          </StaggerContainer>
+        </div>
+      </section>
+
+      {/* Izmir Edge (Neden Ege Odaklı Dijital Ajans?) */}
+      <section id="izmir" className="izmir-edge">
+        <div className="container izmir-grid">
+          <FadeIn direction="right" className="izmir-content">
+            <span className="section-tag">{settingsData.izmir_edge_tag || "Bölgesel Güç"}</span>
+            <h2 className="section-title">{settingsData.izmir_edge_title || "Ege'nin Üretim Gücünü Dijitalle Katlıyoruz"}</h2>
+            <p className="section-desc">
+              {settingsData.izmir_edge_desc || "İzmir, Türkiye'nin e-ticaret, lojistik ve üretim üslerinden biri. Uzaktan çalışan ajansların aksine, yerel dinamikleri ve Ege üreticilerinin ihtiyaçlarını çok iyi biliyor, yüz yüze şeffaf iletişim kuruyoruz."}
+            </p>
+            
+            <ul className="izmir-list">
+              <li>
+                <div className="izmir-list-icon">
+                  <i className={settingsData.izmir_edge_item1_icon || "fa-solid fa-chart-pie"}></i>
+                </div>
+                <div className="izmir-list-text">
+                  <h4>{settingsData.izmir_edge_item1_title || "E-İhracat ve Küresel Hedefler"}</h4>
+                  <p>{settingsData.izmir_edge_item1_desc || "İzmir limanının sunduğu lojistik gücü, küresel Google ve Meta reklamları ile birleştirip markanızı Avrupa ve Amerika pazarlarına taşıyoruz."}</p>
+                </div>
+              </li>
+              <li>
+                <div className="izmir-list-icon">
+                  <i className={settingsData.izmir_edge_item2_icon || "fa-solid fa-users-viewfinder"}></i>
+                </div>
+                <div className="izmir-list-text">
+                  <h4>{settingsData.izmir_edge_item2_title || "Yüz Yüze İletişim ve Güven"}</h4>
+                  <p>{settingsData.izmir_edge_item2_desc || "Haftalık değerlendirme toplantıları, strateji sunumları ve raporlamaları doğrudan ofisinizde ya da İzmir'deki çalışma alanımızda birlikte yapıyoruz."}</p>
+                </div>
+              </li>
+              <li>
+                <div className="izmir-list-icon">
+                  <i className={settingsData.izmir_edge_item3_icon || "fa-solid fa-bezier-curve"}></i>
+                </div>
+                <div className="izmir-list-text">
+                  <h4>{settingsData.izmir_edge_item3_title || "Hızlı ve Çevik Entegrasyon"}</h4>
+                  <p>{settingsData.izmir_edge_item3_desc || "Ege bölgesindeki tekstil, gıda, tarım ve endüstriyel üreticilerin dijitalleşme ve e-ticaret altyapı süreçlerini sıfırdan kurup hızlandırıyoruz."}</p>
+                </div>
+              </li>
+            </ul>
+          </FadeIn>
+
+          <FadeIn direction="left" delay={0.2} className="izmir-visual-box">
+            <div className="izmir-visual-card">
+              <i className={`${settingsData.izmir_edge_box_icon || 'fa-solid fa-ship'} izmir-visual-icon`}></i>
+              <h3 className="izmir-visual-title">{settingsData.izmir_edge_box_title || "Ege Denizi'nden Dijital Dünyaya"}</h3>
+              <p className="izmir-visual-desc">{settingsData.izmir_edge_box_desc || "Körfezin esintisiyle veri odaklı stratejileri harmanlayan yeni nesil ajans deneyimi."}</p>
+              <div className="izmir-visual-badge">
+                <span className="izmir-badge-title">{settingsData.izmir_edge_box_badge_title || "İzmir"}</span>
+                <span className="izmir-badge-desc">{settingsData.izmir_edge_box_badge_desc || "Ege'nin Dijital Merkezi"}</span>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+
       <section id="contact" className="contact-section">
         <div className="container">
           <div className="contact-merged-grid">
