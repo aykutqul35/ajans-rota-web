@@ -88,11 +88,11 @@ export default async function handler(req, res) {
     }
     try {
       const sql = neon(process.env.DATABASE_URL);
-      const dataPayload = req.body; // should be the full JSON DB
+      const dataPayload = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
       const id = 'main_db';
       await sql`
         INSERT INTO site_data (id, data, updated_at)
-        VALUES (${id}, ${JSON.stringify(dataPayload)}::jsonb, NOW())
+        VALUES (${id}, ${dataPayload}::jsonb, NOW())
         ON CONFLICT (id) DO UPDATE 
         SET data = EXCLUDED.data, updated_at = NOW()
       `;
