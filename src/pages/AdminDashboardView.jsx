@@ -11876,6 +11876,181 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                   </div>
                 </div>
               </div>
+              {/* Creatives & Files Upload Section */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '2rem',
+                marginBottom: '2rem'
+              }}>
+                {/* Creatives */}
+                <div style={{
+                  border: '1px solid var(--glass-border)',
+                  padding: '1.25rem',
+                  borderRadius: '10px',
+                  background: 'rgba(15, 23, 42, 0.01)'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '1rem'
+                  }}>
+                    <span style={{ fontWeight: '700', fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                      Müşteri Onayına Sunulacak Kreatifler
+                    </span>
+                    <label className="btn btn-primary" style={{
+                      padding: '0.25rem 0.6rem',
+                      fontSize: '0.75rem',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}>
+                      <i className="fa-solid fa-upload"></i> Dosya Yükle
+                      <input type="file" style={{ display: 'none' }} accept="image/*,application/pdf" onChange={async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        
+                        try {
+                          const { upload } = await import('@vercel/blob/client');
+                          const newBlob = await upload(file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
+                          
+                          const updated = { ...clientReports };
+                          if (!updated[editingReportBrand].creatives) updated[editingReportBrand].creatives = [];
+                          updated[editingReportBrand].creatives.push({
+                            id: Date.now(),
+                            title: file.name,
+                            type: file.type.includes('pdf') ? 'pdf' : 'image',
+                            url: newBlob.url,
+                            status: 'pending',
+                            date: new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }),
+                            feedback: ''
+                          });
+                          setClientReports(updated);
+                          alert('Dosya başarıyla Vercel Blob\'a yüklendi!');
+                        } catch (err) {
+                          console.error(err);
+                          alert('Dosya yüklenirken bir hata oluştu. Lütfen Vercel ayarlarınızı kontrol edin.');
+                        }
+                      }} />
+                    </label>
+                  </div>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    {(clientReports[editingReportBrand]?.creatives || []).map((creative, idx) => (
+                      <div key={idx} style={{
+                        padding: '0.75rem',
+                        background: '#fff',
+                        borderRadius: '6px',
+                        border: '1px solid var(--glass-border)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{creative.title}</span>
+                          <a href={creative.url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: 'var(--primary)', textDecoration: 'none' }}>Görüntüle</a>
+                        </div>
+                        <button type="button" onClick={() => {
+                          if (window.confirm('Bu kreatifi silmek istediğinize emin misiniz?')) {
+                            const updated = { ...clientReports };
+                            updated[editingReportBrand].creatives.splice(idx, 1);
+                            setClientReports(updated);
+                          }
+                        }} style={{
+                          border: 'none', background: 'rgba(239, 68, 68, 0.08)', borderRadius: '6px',
+                          width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          cursor: 'pointer', color: '#ef4444', fontSize: '0.75rem'
+                        }}>
+                          <i className="fa-solid fa-trash"></i>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Vault / Files */}
+                <div style={{
+                  border: '1px solid var(--glass-border)',
+                  padding: '1.25rem',
+                  borderRadius: '10px',
+                  background: 'rgba(15, 23, 42, 0.01)'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '1rem'
+                  }}>
+                    <span style={{ fontWeight: '700', fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                      Dosya Kasası (Faturalar & Raporlar)
+                    </span>
+                    <label className="btn btn-primary" style={{
+                      padding: '0.25rem 0.6rem',
+                      fontSize: '0.75rem',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}>
+                      <i className="fa-solid fa-upload"></i> Dosya Yükle
+                      <input type="file" style={{ display: 'none' }} accept="image/*,application/pdf" onChange={async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        
+                        try {
+                          const { upload } = await import('@vercel/blob/client');
+                          const newBlob = await upload(file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
+                          
+                          const updated = { ...clientReports };
+                          if (!updated[editingReportBrand].files) updated[editingReportBrand].files = [];
+                          updated[editingReportBrand].files.push({
+                            id: Date.now(),
+                            title: file.name,
+                            type: file.name.toLowerCase().includes('fatura') ? 'invoice' : 'pdf',
+                            url: newBlob.url,
+                            date: new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' })
+                          });
+                          setClientReports(updated);
+                          alert('Dosya başarıyla Vercel Blob\'a yüklendi!');
+                        } catch (err) {
+                          console.error(err);
+                          alert('Dosya yüklenirken bir hata oluştu. Lütfen Vercel ayarlarınızı kontrol edin.');
+                        }
+                      }} />
+                    </label>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    {(clientReports[editingReportBrand]?.files || []).map((f, idx) => (
+                      <div key={idx} style={{
+                        padding: '0.75rem',
+                        background: '#fff',
+                        borderRadius: '6px',
+                        border: '1px solid var(--glass-border)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{f.title}</span>
+                          <a href={f.url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: 'var(--primary)', textDecoration: 'none' }}>Görüntüle</a>
+                        </div>
+                        <button type="button" onClick={() => {
+                          if (window.confirm('Bu dosyayı silmek istediğinize emin misiniz?')) {
+                            const updated = { ...clientReports };
+                            updated[editingReportBrand].files.splice(idx, 1);
+                            setClientReports(updated);
+                          }
+                        }} style={{
+                          border: 'none', background: 'rgba(239, 68, 68, 0.08)', borderRadius: '6px',
+                          width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          cursor: 'pointer', color: '#ef4444', fontSize: '0.75rem'
+                        }}>
+                          <i className="fa-solid fa-trash"></i>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
               {/* Google & Meta Ads Campaigns Tables */}
               <div style={{
