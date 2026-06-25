@@ -11,7 +11,7 @@ export default async function handler(request, response) {
         // Authenticate the user here (e.g. check if Admin is logged in)
         // For simplicity in this implementation, we will allow it.
         return {
-          allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'video/mp4'],
+          allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'application/pdf', 'video/mp4'],
           tokenPayload: JSON.stringify({
             // Any custom metadata you want
           }),
