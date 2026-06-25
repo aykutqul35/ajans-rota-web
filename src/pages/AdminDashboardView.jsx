@@ -11420,7 +11420,6 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                       </div>
                     </div>
                   </div>
-                  </div>
 
                   {/* AI Summary Input */}
                   <div style={{
