@@ -55,7 +55,7 @@ Kurallar:
     
     const chatCompletion = await groq.chat.completions.create({
       messages: apiMessages,
-      model: "llama3-70b-8192", // Çok akıllı ve süper hızlı model
+      model: "llama-3.3-70b-versatile", // En yeni ve aktif model
       temperature: 0.7,
       max_tokens: 500,
     });
