@@ -20,8 +20,7 @@ export default async function handler(req, res) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    // Maksimum uyumluluk için standart gemini-pro modelini kullanıyoruz
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     // Türkiye saati (UTC+3)
     const currentHour = (new Date().getUTCHours() + 3) % 24;
