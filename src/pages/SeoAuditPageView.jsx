@@ -16,6 +16,7 @@ function SeoAuditPageView({
   const [progress, setProgress] = useState(0);
   const [progressText, setProgressText] = useState('');
   const [result, setResult] = useState(null);
+  const [isUnlocked, setIsUnlocked] = useState(false); // Gated Content State
 
   // Lead Form States
   const [fullName, setFullName] = useState('');
@@ -35,6 +36,7 @@ function SeoAuditPageView({
     setIsAnalyzing(true);
     setProgress(0);
     setResult(null);
+    setIsUnlocked(false);
     setReportDownloaded(false);
     const stages = [{
       p: 15,
@@ -200,6 +202,7 @@ function SeoAuditPageView({
       }
       setLeadLoading(false);
       setReportDownloaded(true);
+      setIsUnlocked(true); // Unlock the content!
     } catch (err) {
       console.error("Failed to save lead:", err);
       if (typeof onSaveLead === 'function') {
@@ -207,6 +210,7 @@ function SeoAuditPageView({
       }
       setLeadLoading(false);
       setReportDownloaded(true);
+      setIsUnlocked(true); // Unlock the content!
     }
   };
 
@@ -325,20 +329,28 @@ function SeoAuditPageView({
       </div>
 
       {/* Analysis Results Display */}
-      {result && <div className="seo-result-container" style={{
-      display: 'grid',
-      gridTemplateColumns: '1fr',
-      gap: '2rem',
-      maxWidth: '900px',
-      margin: '0 auto 4rem auto'
-    }}>
-          
-          {/* Flex columns for Gauge + Details */}
-          <div className="seo-result-grid" style={{
-        display: 'grid',
-        gridTemplateColumns: '1.1fr 0.9fr',
-        gap: '2rem'
-      }}>
+      {result && <div style={{ position: 'relative', marginTop: '2rem' }}>
+        
+        {/* Blur overlay container */}
+        <div className="seo-result-container" style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr',
+          gap: '2rem',
+          maxWidth: '900px',
+          margin: '0 auto 4rem auto',
+          filter: !isUnlocked ? 'blur(8px)' : 'none',
+          opacity: !isUnlocked ? 0.6 : 1,
+          pointerEvents: !isUnlocked ? 'none' : 'auto',
+          userSelect: !isUnlocked ? 'none' : 'auto',
+          transition: 'all 0.5s ease-out'
+        }}>
+            
+            {/* Flex columns for Gauge + Details */}
+            <div className="seo-result-grid" style={{
+          display: 'grid',
+          gridTemplateColumns: '1.1fr 0.9fr',
+          gap: '2rem'
+        }}>
             
             {/* Score Gauge & General Comment Widget Card */}
             <div className="glass-card" style={{
@@ -552,7 +564,8 @@ function SeoAuditPageView({
 
               {/* Lead Generation & Request Form */}
               <div className="glass-card" style={{
-            padding: '2rem'
+            padding: '2rem',
+            display: isUnlocked ? 'none' : 'block' // Hide if unlocked, as it was already filled
           }}>
                 <span className="story-tag" style={{
               marginBottom: '0.75rem',
@@ -795,7 +808,135 @@ function SeoAuditPageView({
 
           </div>
 
-        </div>}
+        </div>
+
+        {/* Absolute Centered Gated Content Form */}
+        {!isUnlocked && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '90%',
+            maxWidth: '500px',
+            background: 'rgba(15, 23, 42, 0.85)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '16px',
+            padding: '2.5rem',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+            zIndex: 10,
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem'
+          }}>
+            <div style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.8rem',
+              color: '#fff',
+              margin: '0 auto',
+              boxShadow: '0 8px 16px rgba(2, 132, 199, 0.3)'
+            }}>
+              <i className="fa-solid fa-lock"></i>
+            </div>
+            
+            <h3 style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '1.4rem',
+              color: '#fff',
+              margin: '0'
+            }}>
+              Raporunuz Hazır!
+            </h3>
+            
+            <p style={{
+              fontSize: '0.9rem',
+              color: 'var(--text-muted)',
+              lineHeight: '1.5',
+              margin: '0 0 1rem 0'
+            }}>
+              <strong style={{color: '#fff'}}>{websiteUrl}</strong> adresi için <strong>{result.errors.length} kritik hata</strong> tespit ettik. <br/>
+              Kilitli analiz detaylarını, skorlarınızı ve çözüm önerilerini görmek için bilgilerinizi girerek kilidi açın.
+            </p>
+
+            <form onSubmit={handleDownloadReport} style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.8rem'
+            }}>
+              <input type="text" required placeholder="Adınız Soyadınız *" value={fullName} onChange={e => setFullName(e.target.value)} style={{
+                width: '100%',
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                border: '1px solid rgba(255,255,255,0.2)',
+                background: 'rgba(255,255,255,0.05)',
+                color: '#fff',
+                fontSize: '0.9rem',
+                outline: 'none'
+              }} />
+              <input type="email" required placeholder="E-posta Adresiniz *" value={email} onChange={e => setEmail(e.target.value)} style={{
+                width: '100%',
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                border: '1px solid rgba(255,255,255,0.2)',
+                background: 'rgba(255,255,255,0.05)',
+                color: '#fff',
+                fontSize: '0.9rem',
+                outline: 'none'
+              }} />
+              <input type="tel" required placeholder="Telefon Numaranız *" value={phone} onChange={e => setPhone(e.target.value)} style={{
+                width: '100%',
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                border: '1px solid rgba(255,255,255,0.2)',
+                background: 'rgba(255,255,255,0.05)',
+                color: '#fff',
+                fontSize: '0.9rem',
+                outline: 'none'
+              }} />
+              
+              <button type="submit" disabled={leadLoading} style={{
+                width: '100%',
+                padding: '0.8rem',
+                borderRadius: '8px',
+                background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                border: 'none',
+                cursor: leadLoading ? 'default' : 'pointer',
+                marginTop: '0.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                transition: 'transform 0.2s',
+              }}
+              >
+                {leadLoading ? 'Kilidi Açılıyor...' : <><i className="fa-solid fa-unlock-keyhole"></i> Sonuçları Göster</>}
+              </button>
+              
+              {leadError && <div style={{ color: '#ef4444', fontSize: '0.85rem' }}>{leadError}</div>}
+              
+              <span style={{
+                fontSize: '0.7rem',
+                color: 'rgba(255,255,255,0.4)',
+                marginTop: '0.5rem'
+              }}>
+                <i className="fa-solid fa-shield-halved"></i> Bilgileriniz %100 güvendedir ve 3. şahıslarla paylaşılmaz.
+              </span>
+            </form>
+          </div>
+        )}
+      </div>}
 
     </div>;
 }

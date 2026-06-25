@@ -25,6 +25,7 @@ function KobiIndexPageView({
   const [leadLoading, setLeadLoading] = useState(false);
   const [leadSubmitted, setLeadSubmitted] = useState(false);
   const [leadError, setLeadError] = useState('');
+  const [isUnlocked, setIsUnlocked] = useState(false); // Gated Content
   const calculateScore = () => {
     let score = 10;
     if (q1 === 'yes') score += 25;
@@ -40,6 +41,7 @@ function KobiIndexPageView({
       return;
     }
     setShowScore(true);
+    setIsUnlocked(false); // Make sure it locks initially
     setLeadSubmitted(false);
   };
   const handleSubmitLead = async e => {
@@ -73,6 +75,7 @@ function KobiIndexPageView({
       }
       setLeadLoading(false);
       setLeadSubmitted(true);
+      setIsUnlocked(true); // Unlock!
     } catch (err) {
       console.error(err);
       if (typeof onSaveLead === 'function') {
@@ -80,6 +83,7 @@ function KobiIndexPageView({
       }
       setLeadLoading(false);
       setLeadSubmitted(true);
+      setIsUnlocked(true); // Unlock!
     }
   };
   const score = calculateScore();
@@ -351,13 +355,21 @@ function KobiIndexPageView({
               Endeksi Hesapla & Analiz Et
             </button>
           </form>
-        </div> : <div style={{
-      maxWidth: '850px',
-      margin: '0 auto',
-      display: 'grid',
-      gridTemplateColumns: '1.1fr 0.9fr',
-      gap: '2rem'
-    }} className="seo-result-grid">
+        </div> : <div style={{ position: 'relative', marginTop: '2rem' }}>
+          
+          {/* Blur Overlay Container */}
+          <div style={{
+            maxWidth: '850px',
+            margin: '0 auto',
+            display: 'grid',
+            gridTemplateColumns: '1.1fr 0.9fr',
+            gap: '2rem',
+            filter: !isUnlocked ? 'blur(8px)' : 'none',
+            opacity: !isUnlocked ? 0.6 : 1,
+            pointerEvents: !isUnlocked ? 'none' : 'auto',
+            userSelect: !isUnlocked ? 'none' : 'auto',
+            transition: 'all 0.5s ease-out'
+          }} className="seo-result-grid">
           {/* Score Card */}
           <div className="glass-card" style={{
         padding: '2.5rem',
@@ -442,8 +454,9 @@ function KobiIndexPageView({
 
           {/* Form */}
           <div className="glass-card" style={{
-        padding: '2.5rem'
-      }}>
+            padding: '2.5rem',
+            display: isUnlocked ? 'none' : 'block' // Hide default form since they fill the absolute one
+          }}>
             <span className="story-tag" style={{
           marginBottom: '0.75rem',
           color: 'var(--secondary)'
@@ -538,6 +551,133 @@ function KobiIndexPageView({
                 </p>
               </div>}
           </div>
+          </div>
+
+          {/* Absolute Centered Gated Content Form */}
+          {!isUnlocked && (
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '90%',
+              maxWidth: '500px',
+              background: 'rgba(15, 23, 42, 0.85)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '16px',
+              padding: '2.5rem',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+              zIndex: 10,
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem'
+            }}>
+              <div style={{
+                width: '60px',
+                height: '60px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.8rem',
+                color: '#fff',
+                margin: '0 auto',
+                boxShadow: '0 8px 16px rgba(2, 132, 199, 0.3)'
+              }}>
+                <i className="fa-solid fa-lock"></i>
+              </div>
+              
+              <h3 style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '1.4rem',
+                color: '#fff',
+                margin: '0'
+              }}>
+                KOBİ Endeksiniz Hazır!
+              </h3>
+              
+              <p style={{
+                fontSize: '0.9rem',
+                color: 'var(--text-muted)',
+                lineHeight: '1.5',
+                margin: '0 0 1rem 0'
+              }}>
+                <strong>{district}</strong> bölgesindeki diğer şirketlerle rekabet gücünüzü ve büyüme skorunuzu görmek için bilgilerinizi girerek rapor kilidini açın.
+              </p>
+
+              <form onSubmit={handleSubmitLead} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.8rem'
+              }}>
+                <input type="text" required placeholder="Adınız Soyadınız *" value={fullName} onChange={e => setFullName(e.target.value)} style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  background: 'rgba(255,255,255,0.05)',
+                  color: '#fff',
+                  fontSize: '0.9rem',
+                  outline: 'none'
+                }} />
+                <input type="email" required placeholder="E-posta Adresiniz *" value={email} onChange={e => setEmail(e.target.value)} style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  background: 'rgba(255,255,255,0.05)',
+                  color: '#fff',
+                  fontSize: '0.9rem',
+                  outline: 'none'
+                }} />
+                <input type="tel" required placeholder="Telefon Numaranız *" value={phone} onChange={e => setPhone(e.target.value)} style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  background: 'rgba(255,255,255,0.05)',
+                  color: '#fff',
+                  fontSize: '0.9rem',
+                  outline: 'none'
+                }} />
+                
+                <button type="submit" disabled={leadLoading} style={{
+                  width: '100%',
+                  padding: '0.8rem',
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                  border: 'none',
+                  cursor: leadLoading ? 'default' : 'pointer',
+                  marginTop: '0.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  transition: 'transform 0.2s',
+                }}
+                >
+                  {leadLoading ? 'Kilidi Açılıyor...' : <><i className="fa-solid fa-unlock-keyhole"></i> Skoru Göster</>}
+                </button>
+                
+                {leadError && <div style={{ color: '#ef4444', fontSize: '0.85rem' }}>{leadError}</div>}
+                
+                <span style={{
+                  fontSize: '0.7rem',
+                  color: 'rgba(255,255,255,0.4)',
+                  marginTop: '0.5rem'
+                }}>
+                  <i className="fa-solid fa-shield-halved"></i> Bilgileriniz %100 güvendedir ve 3. şahıslarla paylaşılmaz.
+                </span>
+              </form>
+            </div>
+          )}
         </div>}
     </div>;
 }
