@@ -11962,7 +11962,6 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                               })
                             }).catch(console.error);
                           }
-                          }
                           alert('Dosya başarıyla Vercel Blob\'a yüklendi!');
                         } catch (err) {
                           console.error(err);
@@ -12076,7 +12075,6 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                                 report_data: updated[editingReportBrand] 
                               })
                             }).catch(console.error);
-                          }
                           }
                           alert('Dosya başarıyla Vercel Blob\'a yüklendi!');
                         } catch (err) {
