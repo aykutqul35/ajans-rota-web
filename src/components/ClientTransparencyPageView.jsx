@@ -854,7 +854,7 @@ export default function ClientTransparencyPageView({
                       </div>
                     )}
                     <div style={{ marginTop: 'auto', display: 'flex', gap: '0.5rem' }}>
-                      <button className="btn btn-primary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', background: '#16a34a', borderColor: '#16a34a' }} onClick={() => {
+                      <button className="btn btn-primary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', background: '#16a34a', borderColor: '#16a34a' }} onClick={async () => {
                         if(setClientReports && clientReports && clientReports[activeBrand]) {
                            const updated = {...clientReports};
                            if(!updated[activeBrand].creatives) return;
@@ -862,6 +862,18 @@ export default function ClientTransparencyPageView({
                            if(idx > -1) {
                              updated[activeBrand].creatives[idx].status = 'approved';
                              setClientReports(updated);
+                             
+                             const clientId = updated[activeBrand].client_id;
+                             if (clientId) {
+                               try {
+                                 await fetch('/api/clients/update', {
+                                   method: 'PUT',
+                                   headers: { 'Content-Type': 'application/json' },
+                                   body: JSON.stringify({ client_id: clientId, report_data: updated[activeBrand] })
+                                 });
+                               } catch (err) { console.error(err); }
+                             }
+
                              const localDbStr = localStorage.getItem('ajans_rota_db');
                              if(localDbStr){ try{ const dbPayload=JSON.parse(localDbStr); dbPayload.clientReports=updated; localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload)); }catch(e){} }
                              alert('Tasarım onaylandı olarak işaretlendi ve ajansa bildirildi!');
@@ -870,7 +882,7 @@ export default function ClientTransparencyPageView({
                       }}>
                         <i className="fa-solid fa-check"></i> Onayla
                       </button>
-                      <button className="btn btn-secondary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', color: '#ef4444', borderColor: '#ef4444' }} onClick={() => {
+                      <button className="btn btn-secondary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', color: '#ef4444', borderColor: '#ef4444' }} onClick={async () => {
                         if(setClientReports && clientReports && clientReports[activeBrand]) {
                            const updated = {...clientReports};
                            if(!updated[activeBrand].creatives) return;
@@ -878,6 +890,18 @@ export default function ClientTransparencyPageView({
                            if(idx > -1) {
                              updated[activeBrand].creatives[idx].status = 'rejected';
                              setClientReports(updated);
+                             
+                             const clientId = updated[activeBrand].client_id;
+                             if (clientId) {
+                               try {
+                                 await fetch('/api/clients/update', {
+                                   method: 'PUT',
+                                   headers: { 'Content-Type': 'application/json' },
+                                   body: JSON.stringify({ client_id: clientId, report_data: updated[activeBrand] })
+                                 });
+                               } catch (err) { console.error(err); }
+                             }
+
                              const localDbStr = localStorage.getItem('ajans_rota_db');
                              if(localDbStr){ try{ const dbPayload=JSON.parse(localDbStr); dbPayload.clientReports=updated; localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload)); }catch(e){} }
                              alert('Tasarım reddedildi. Lütfen yöneticinizle revizyon için iletişime geçiniz.');

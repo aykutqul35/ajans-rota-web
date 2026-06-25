@@ -2909,6 +2909,23 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
       clientReports: clientReports
     };
     localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
+    
+    // Save current client report to Neon DB
+    if (clientReports[editingReportBrand] && clientReports[editingReportBrand].client_id) {
+      try {
+        await fetch('/api/clients/update', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            client_id: clientReports[editingReportBrand].client_id, 
+            report_data: clientReports[editingReportBrand] 
+          })
+        });
+      } catch (err) {
+        console.error('Neon DB Client Save Error:', err);
+      }
+    }
+
     try {
       const response = await fetch('/api.php?action=save', {
         method: 'POST',
@@ -11934,6 +11951,18 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                               localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
                             } catch(e) {}
                           }
+                          // Save to Neon
+                          if (updated[editingReportBrand].client_id) {
+                            fetch('/api/clients/update', {
+                              method: 'PUT',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ 
+                                client_id: updated[editingReportBrand].client_id, 
+                                report_data: updated[editingReportBrand] 
+                              })
+                            }).catch(console.error);
+                          }
+                          }
                           alert('Dosya başarıyla Vercel Blob\'a yüklendi!');
                         } catch (err) {
                           console.error(err);
@@ -12036,6 +12065,18 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                               dbPayload.clientReports = updated;
                               localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
                             } catch(e) {}
+                          }
+                          // Save to Neon
+                          if (updated[editingReportBrand].client_id) {
+                            fetch('/api/clients/update', {
+                              method: 'PUT',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ 
+                                client_id: updated[editingReportBrand].client_id, 
+                                report_data: updated[editingReportBrand] 
+                              })
+                            }).catch(console.error);
+                          }
                           }
                           alert('Dosya başarıyla Vercel Blob\'a yüklendi!');
                         } catch (err) {

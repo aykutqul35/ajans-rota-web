@@ -1363,13 +1363,42 @@ function App() {
           if (data.blogPosts) setBlogsData(data.blogPosts);
           if (data.testimonials) setTestimonialsData(data.testimonials);
           if (data.leads) setLeadsData(data.leads);
-          if (data.clientReports) setClientReports(data.clientReports);
+          if (data.clientReports) {
+            // we will overwrite this with DB data right after
+            setClientReports(data.clientReports);
+          }
         } catch (e) {
           console.error("Failed to parse localStorage db", e);
         }
       }
     };
-    fetchData();
+    
+    const loadClientsFromDB = async () => {
+      try {
+        const res = await fetch('/api/clients');
+        if (res.ok) {
+          const result = await res.json();
+          if (result.success && result.data) {
+            const dbReports = {};
+            result.data.forEach(client => {
+              const data = client.report_data || {};
+              const key = data._key || (client.brand_name.toLowerCase().includes('e-ticaret') ? 'ecommerce' : 'b2b');
+              dbReports[key] = {
+                ...data,
+                client_id: client.id, // Store DB ID for updates
+                username: client.username,
+                brandName: client.brand_name
+              };
+            });
+            setClientReports(prev => ({...prev, ...dbReports}));
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch clients from Neon DB:", err);
+      }
+    };
+
+    fetchData().then(() => loadClientsFromDB());
   }, [authToken]);
 
   // Dynamic Marketing and Analytics Code Injector
