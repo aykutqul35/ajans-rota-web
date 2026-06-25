@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-export default function ClientTransparencyPageView({ clientReports, onBack, onContactClick }) {
+export default function ClientTransparencyPageView({
+  clientReports,
+  setClientReports,
+  onBack,
+  onContactClick
+}) {
   const [activeBrand, setActiveBrand] = useState('ecommerce'); // ecommerce, b2b
   const [dateRange, setDateRange] = useState('30days'); // 7days, 30days, thismonth
   const [animTrigger, setAnimTrigger] = useState(false);
@@ -849,10 +854,36 @@ export default function ClientTransparencyPageView({ clientReports, onBack, onCo
                       </div>
                     )}
                     <div style={{ marginTop: 'auto', display: 'flex', gap: '0.5rem' }}>
-                      <button className="btn btn-primary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', background: '#16a34a', borderColor: '#16a34a' }} onClick={() => alert('Onaylandı olarak işaretlendi (Demo)')}>
+                      <button className="btn btn-primary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', background: '#16a34a', borderColor: '#16a34a' }} onClick={() => {
+                        if(setClientReports && clientReports && clientReports[activeBrand]) {
+                           const updated = {...clientReports};
+                           if(!updated[activeBrand].creatives) return;
+                           const idx = updated[activeBrand].creatives.findIndex(c => c.id === creative.id);
+                           if(idx > -1) {
+                             updated[activeBrand].creatives[idx].status = 'approved';
+                             setClientReports(updated);
+                             const localDbStr = localStorage.getItem('ajans_rota_db');
+                             if(localDbStr){ try{ const dbPayload=JSON.parse(localDbStr); dbPayload.clientReports=updated; localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload)); }catch(e){} }
+                             alert('Tasarım onaylandı olarak işaretlendi ve ajansa bildirildi!');
+                           }
+                        }
+                      }}>
                         <i className="fa-solid fa-check"></i> Onayla
                       </button>
-                      <button className="btn btn-secondary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', color: '#ef4444', borderColor: '#ef4444' }} onClick={() => alert('Reddedildi olarak işaretlendi (Demo)')}>
+                      <button className="btn btn-secondary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', color: '#ef4444', borderColor: '#ef4444' }} onClick={() => {
+                        if(setClientReports && clientReports && clientReports[activeBrand]) {
+                           const updated = {...clientReports};
+                           if(!updated[activeBrand].creatives) return;
+                           const idx = updated[activeBrand].creatives.findIndex(c => c.id === creative.id);
+                           if(idx > -1) {
+                             updated[activeBrand].creatives[idx].status = 'rejected';
+                             setClientReports(updated);
+                             const localDbStr = localStorage.getItem('ajans_rota_db');
+                             if(localDbStr){ try{ const dbPayload=JSON.parse(localDbStr); dbPayload.clientReports=updated; localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload)); }catch(e){} }
+                             alert('Tasarım reddedildi. Lütfen yöneticinizle revizyon için iletişime geçiniz.');
+                           }
+                        }
+                      }}>
                         <i className="fa-solid fa-xmark"></i> Reddet
                       </button>
                     </div>

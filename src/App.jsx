@@ -3123,7 +3123,7 @@ function App() {
         <Route path="/kreatif-vitrin" element={<CreativeShowcasePageView onBack={() => navigate('/')} />} />
         <Route path="/rakip-analizi" element={<CompetitorAnalysisPageView onBack={() => navigate('/')} onSaveLead={simulateLeadLocally} logHit={logHit} />} />
         <Route path="/akademi" element={<AkademiPageView onBack={() => navigate('/')} onSaveLead={simulateLeadLocally} logHit={logHit} />} />
-        <Route path="/seffaf-panel" element={<Suspense fallback={<SkeletonLoader />}><ClientTransparencyPageView clientReports={clientReports} onBack={() => navigate('/')} onContactClick={() => navigate('/iletisim')} /></Suspense>} />
+        <Route path="/seffaf-panel" element={<Suspense fallback={<SkeletonLoader />}><ClientTransparencyPageView clientReports={clientReports} setClientReports={setClientReports} onBack={() => navigate('/')} onContactClick={() => navigate('/iletisim')} /></Suspense>} />
         <Route path="/hakkimizda" element={<AboutPageView onBack={() => navigate('/')} onNavToContact={() => navigate('/iletisim')} settingsData={settingsData} />} />
         <Route path="/gizlilik-politikasi" element={<LegalPageView onBack={() => navigate('/')} currentPath={'/gizlilik-politikasi'} settingsData={settingsData} />} />
         <Route path="/kullanim-kosullari" element={<LegalPageView onBack={() => navigate('/')} currentPath={'/kullanim-kosullari'} settingsData={settingsData} />} />
