@@ -11964,8 +11964,8 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                           }
                           alert('Dosya başarıyla Vercel Blob\'a yüklendi!');
                         } catch (err) {
-                          console.error(err);
-                          alert('Dosya yüklenirken bir hata oluştu. Lütfen Vercel ayarlarınızı kontrol edin.');
+                          console.error('Vercel Blob Upload Error:', err);
+                          alert('Dosya yüklenirken Vercel kaynaklı bir hata oluştu:\n\n' + err.message + '\n\nLütfen Vercel ayarlarınızı kontrol edin.');
                         }
                       }} />
                     </label>
@@ -12078,8 +12078,8 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                           }
                           alert('Dosya başarıyla Vercel Blob\'a yüklendi!');
                         } catch (err) {
-                          console.error(err);
-                          alert('Dosya yüklenirken bir hata oluştu. Lütfen Vercel ayarlarınızı kontrol edin.');
+                          console.error('Vercel Blob Upload Error:', err);
+                          alert('Dosya yüklenirken Vercel kaynaklı bir hata oluştu:\n\n' + err.message + '\n\nLütfen Vercel ayarlarınızı kontrol edin.');
                         }
                       }} />
                     </label>
