@@ -1379,6 +1379,14 @@ function App() {
 
     const safeAppend = (parent, child) => {
       try {
+        if (child.tagName && child.tagName.toLowerCase() === 'script') {
+          let content = child.innerHTML.trim();
+          if (content.startsWith('<script') || content.startsWith('<!--')) {
+            console.warn('Admin panelinden gelen script hatalı formatlanmış (HTML etiketleri içeriyor). Otomatik temizleniyor...');
+            content = content.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '').replace(/<!--/g, '').replace(/-->/g, '');
+            child.innerHTML = content;
+          }
+        }
         parent.appendChild(child);
       } catch (e) {
         console.error('Dynamic tracker append error. Invalid tag in admin panel.', e);
