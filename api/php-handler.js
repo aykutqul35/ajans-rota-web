@@ -99,7 +99,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, message: 'Database saved to Neon DB successfully' });
     } catch (error) {
       console.error('Error saving db:', error);
-      return res.status(500).json({ success: false, message: 'Internal Server Error' });
+      return res.status(500).json({ success: false, error: error.message || 'Internal Server Error' });
     }
   }
 
@@ -114,7 +114,7 @@ export default async function handler(req, res) {
       }
     } catch (error) {
       console.error('Error fetching db:', error);
-      return res.status(500).json({ success: false, message: 'Internal Server Error' });
+      return res.status(500).json({ success: false, error: error.message || 'Internal Server Error' });
     }
   }
 
