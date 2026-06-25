@@ -92,10 +92,10 @@ export default function WhatsAppAssistantWidget({
       if (data.success) {
         setMessages([...newMessages, { role: 'assistant', content: data.reply }]);
       } else {
-        setMessages([...newMessages, { role: 'assistant', content: 'Üzgünüm, şu an bağlantımda bir sorun var. Bize direkt WhatsApp butonundan yazabilirsiniz.' }]);
+        setMessages([...newMessages, { role: 'assistant', content: 'Üzgünüm, şu an bağlantımda bir sorun var. Bize direkt WhatsApp butonundan yazabilirsiniz. Hata Detayı: ' + (data.error || data.message || 'Bilinmiyor') }]);
       }
     } catch (error) {
-      setMessages([...newMessages, { role: 'assistant', content: 'Sistem hatası oluştu, lütfen daha sonra tekrar deneyin.' }]);
+      setMessages([...newMessages, { role: 'assistant', content: 'Sistem hatası oluştu, lütfen daha sonra tekrar deneyin. CATCH: ' + error.message }]);
     }
     
     setIsLoading(false);
