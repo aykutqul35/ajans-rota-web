@@ -1027,6 +1027,14 @@ function App() {
       }
     };
 
+    const safeAppend = (parent, child) => {
+      try {
+        parent.appendChild(child);
+      } catch (e) {
+        console.error('Failed to append tracking script. Check your Admin Panel settings for invalid HTML tags.', e);
+      }
+    };
+
     // 2. Google Analytics 4 (GA4)
     const gaId = settingsData?.google_analytics_id;
     cleanupScriptsAndIframes('gtag-js', 'script[src*="googletagmanager.com/gtag/js"]');
@@ -1036,7 +1044,7 @@ function App() {
       gaScript.id = 'gtag-js';
       gaScript.async = true;
       gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
-      document.head.appendChild(gaScript);
+      safeAppend(document.head,gaScript);
       const gaInitScript = document.createElement('script');
       gaInitScript.id = 'gtag-init-js';
       gaInitScript.innerHTML = `
@@ -1045,7 +1053,7 @@ function App() {
         gtag('js', new Date());
         gtag('config', '${gaId}');
       `;
-      document.head.appendChild(gaInitScript);
+      safeAppend(document.head,gaInitScript);
     }
 
     // 3. Google Tag Manager (GTM)
@@ -1062,14 +1070,14 @@ function App() {
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','${gtmId}');
       `;
-      document.head.appendChild(gtmScript);
+      safeAppend(document.head,gtmScript);
       const gtmNoscript = document.createElement('noscript');
       gtmNoscript.id = 'gtm-noscript';
       gtmNoscript.innerHTML = `
         <iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}"
         height="0" width="0" style="display:none;visibility:hidden"></iframe>
       `;
-      document.body.appendChild(gtmNoscript);
+      safeAppend(document.body,gtmNoscript);
     }
 
     // 4. Facebook Pixel
@@ -1092,14 +1100,14 @@ function App() {
         fbq('track', 'PageView');
         ${settingsData?.fb_pixel_custom_script || ''}
       `;
-      document.head.appendChild(fbScript);
+      safeAppend(document.head,fbScript);
       const fbNoscript = document.createElement('noscript');
       fbNoscript.id = 'fb-pixel-noscript';
       fbNoscript.innerHTML = `
         <img height="1" width="1" style="display:none"
         src="https://www.facebook.com/tr?id=${fbPixelId}&ev=PageView&noscript=1" />
       `;
-      document.body.appendChild(fbNoscript);
+      safeAppend(document.body,fbNoscript);
     }
 
     // 5. Google Ads Conversion ID & Event Script
@@ -1111,7 +1119,7 @@ function App() {
       gAdsScript.id = 'google-ads-js';
       gAdsScript.async = true;
       gAdsScript.src = `https://www.googletagmanager.com/gtag/js?id=${gAdsId}`;
-      document.head.appendChild(gAdsScript);
+      safeAppend(document.head,gAdsScript);
       const gAdsInitScript = document.createElement('script');
       gAdsInitScript.id = 'google-ads-init-js';
       gAdsInitScript.innerHTML = `
@@ -1121,7 +1129,7 @@ function App() {
         gtag('config', '${gAdsId}');
         ${settingsData?.google_ads_event_script || ''}
       `;
-      document.head.appendChild(gAdsInitScript);
+      safeAppend(document.head,gAdsInitScript);
     }
   }, [settingsData?.google_site_verification, settingsData?.google_analytics_id, settingsData?.gtm_id, settingsData?.fb_pixel_id, settingsData?.fb_pixel_custom_script, settingsData?.google_ads_conversion_id, settingsData?.google_ads_event_script]);
 
@@ -1369,6 +1377,14 @@ function App() {
     if (!settingsData) return;
     const cleanupScripts = [];
 
+    const safeAppend = (parent, child) => {
+      try {
+        parent.appendChild(child);
+      } catch (e) {
+        console.error('Dynamic tracker append error. Invalid tag in admin panel.', e);
+      }
+    };
+
     // 1. Google Tag Manager (GTM)
     if (settingsData.gtm_id) {
       const gtmId = settingsData.gtm_id.trim();
@@ -1381,7 +1397,7 @@ function App() {
       j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','${gtmId}');`;
-      document.head.appendChild(gtmScript);
+      safeAppend(document.head,gtmScript);
       cleanupScripts.push(gtmScript);
 
       // GTM noscript injection
@@ -1389,7 +1405,7 @@ function App() {
       gtmNoScript.id = 'gtm-noscript-dynamic';
       gtmNoScript.innerHTML = `<iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}"
       height="0" width="0" style="display:none;visibility:hidden"></iframe>`;
-      document.body.appendChild(gtmNoScript);
+      safeAppend(document.body,gtmNoScript);
       cleanupScripts.push(gtmNoScript);
     }
 
@@ -1405,7 +1421,7 @@ function App() {
       gtagLib.id = 'gtag-lib-dynamic';
       gtagLib.async = true;
       gtagLib.src = `https://www.googletagmanager.com/gtag/js?id=${primaryTrackId}`;
-      document.head.appendChild(gtagLib);
+      safeAppend(document.head,gtagLib);
       cleanupScripts.push(gtagLib);
 
       // Initialization script
@@ -1424,7 +1440,7 @@ function App() {
         initCode += `\\n        gtag('config', '${adsId}');`;
       }
       gtagInit.innerHTML = initCode;
-      document.head.appendChild(gtagInit);
+      safeAppend(document.head,gtagInit);
       cleanupScripts.push(gtagInit);
 
       // Google Ads Conversion Event Custom Script if present
@@ -1432,7 +1448,7 @@ function App() {
         const adsEventScript = document.createElement('script');
         adsEventScript.id = 'google-ads-event-dynamic';
         adsEventScript.innerHTML = settingsData.google_ads_event_script;
-        document.head.appendChild(adsEventScript);
+        safeAppend(document.head,adsEventScript);
         cleanupScripts.push(adsEventScript);
       }
     }
@@ -1452,13 +1468,13 @@ function App() {
       'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', '${fbId}');
       fbq('track', 'PageView');`;
-      document.head.appendChild(fbScript);
+      safeAppend(document.head,fbScript);
       cleanupScripts.push(fbScript);
       const fbNoScript = document.createElement('noscript');
       fbNoScript.id = 'fb-pixel-noscript-dynamic';
       fbNoScript.innerHTML = `<img height="1" width="1" style="display:none"
       src="https://www.facebook.com/tr?id=${fbId}&ev=PageView&noscript=1" />`;
-      document.body.appendChild(fbNoScript);
+      safeAppend(document.body,fbNoScript);
       cleanupScripts.push(fbNoScript);
 
       // Facebook Custom Event Script
@@ -1466,7 +1482,7 @@ function App() {
         const fbCustomScript = document.createElement('script');
         fbCustomScript.id = 'fb-pixel-custom-dynamic';
         fbCustomScript.innerHTML = settingsData.fb_pixel_custom_script;
-        document.head.appendChild(fbCustomScript);
+        safeAppend(document.head,fbCustomScript);
         cleanupScripts.push(fbCustomScript);
       }
     }
@@ -1509,7 +1525,7 @@ function App() {
         ttq.load('${tiktokId}');
         ttq.page();
       }(window, document, 'ttq');`;
-      document.head.appendChild(ttScript);
+      safeAppend(document.head,ttScript);
       cleanupScripts.push(ttScript);
 
       // TikTok Custom Event Script
@@ -1517,7 +1533,7 @@ function App() {
         const ttCustomScript = document.createElement('script');
         ttCustomScript.id = 'tiktok-pixel-custom-dynamic';
         ttCustomScript.innerHTML = settingsData.tiktok_pixel_custom_script;
-        document.head.appendChild(ttCustomScript);
+        safeAppend(document.head,ttCustomScript);
         cleanupScripts.push(ttCustomScript);
       }
     }
