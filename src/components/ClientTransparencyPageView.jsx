@@ -270,10 +270,10 @@ export default function ClientTransparencyPageView({ clientReports, onBack, onCo
             </div>
 
             <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.5rem' }}>
-              Müşteri Panel Girişi
+              Rota Growth OS
             </h1>
             <p style={{ color: 'var(--text-light)', fontSize: '0.85rem', lineHeight: '1.5', marginBottom: '2rem' }}>
-              Reklam performansınızı ve şeffaf çalışma timeline'ını izlemek için firmanıza tanımlanan giriş bilgilerini kullanın.
+              Reklam performansınızı ve operasyon süreçlerini canlı izlemek için firmanıza tanımlanan giriş bilgilerini kullanın.
             </p>
 
             {loginError && (

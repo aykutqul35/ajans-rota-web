@@ -3089,10 +3089,18 @@ function App() {
           </ul>
 
           <div className="nav-actions">
+            <a href="#" className="btn btn-secondary" style={{ background: 'transparent', color: 'var(--text-dark)', border: '1px solid var(--glass-border)' }} onClick={e => {
+              e.preventDefault();
+              navigateTo('/seffaf-panel');
+              setIsMobileMenuOpen(false);
+            }}>
+              <i className="fa-solid fa-lock" style={{ marginRight: '6px' }}></i>
+              Müşteri Girişi
+            </a>
             <a href="#contact" className="btn btn-secondary" onClick={e => {
-            e.preventDefault();
-            handleNavClick('contact');
-          }}>Teklif Al</a>
+              e.preventDefault();
+              handleNavClick('contact');
+            }}>Teklif Al</a>
           </div>
 
           <button className="menu-toggle" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Menüyü Aç/Kapa">
