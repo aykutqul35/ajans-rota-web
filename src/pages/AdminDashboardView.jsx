@@ -11955,8 +11955,20 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                         alignItems: 'center'
                       }}>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                          <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{creative.title}</span>
-                          <a href={creative.url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: 'var(--primary)', textDecoration: 'none' }}>Görüntüle</a>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{creative.title}</span>
+                            <span style={{
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              fontSize: '0.65rem',
+                              fontWeight: 700,
+                              background: creative.status === 'approved' ? '#dcfce7' : creative.status === 'rejected' ? '#fee2e2' : '#fef3c7',
+                              color: creative.status === 'approved' ? '#16a34a' : creative.status === 'rejected' ? '#ef4444' : '#d97706'
+                            }}>
+                              {creative.status === 'approved' ? 'Onaylandı' : creative.status === 'rejected' ? 'Reddedildi' : 'Bekliyor'}
+                            </span>
+                          </div>
+                          <a href={creative.url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: 'var(--primary)', textDecoration: 'none', marginTop: '0.2rem' }}>Görüntüle</a>
                         </div>
                         <button type="button" onClick={() => {
                           if (window.confirm('Bu kreatifi silmek istediğinize emin misiniz?')) {
