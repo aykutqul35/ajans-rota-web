@@ -1733,6 +1733,34 @@ function App() {
     } else if (s.includes('teklif') || s.includes('growth') || s.includes('büyüme')) {
       logHit(currentPath || '/', 'submit_calc_report');
     }
+
+    // Fire global tracking pixels for Ad Conversions
+    try {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'generate_lead', {
+          currency: 'TRY',
+          value: 100,
+          event_category: 'Lead Generation',
+          event_label: leadPayload.service || 'Genel Form'
+        });
+      }
+      if (typeof window.fbq === 'function') {
+        window.fbq('track', 'Lead', {
+          content_name: leadPayload.service || 'Genel Form',
+          currency: 'TRY',
+          value: 100
+        });
+      }
+      if (typeof window.ttq !== 'undefined' && typeof window.ttq.track === 'function') {
+        window.ttq.track('SubmitForm', {
+          content_name: leadPayload.service || 'Genel Form',
+          currency: 'TRY',
+          value: 100
+        });
+      }
+    } catch (e) {
+      console.warn("Conversion tracking script error:", e);
+    }
   };
   const handleGenerateReport = async e => {
     e.preventDefault();
