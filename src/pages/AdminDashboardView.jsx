@@ -11420,6 +11420,47 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                       </div>
                     </div>
                   </div>
+                  </div>
+
+                  {/* AI Summary Input */}
+                  <div style={{
+                    border: '1px solid var(--glass-border)',
+                    padding: '1.25rem',
+                    borderRadius: '10px',
+                    background: 'rgba(99, 102, 241, 0.05)',
+                    marginBottom: '1rem',
+                    borderLeft: '4px solid var(--primary)'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                      <span style={{ fontWeight: '800', fontSize: '0.9rem', color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <i className="fa-solid fa-robot" style={{ color: 'var(--primary)' }}></i> Yapay Zeka Yönetici Özeti
+                      </span>
+                      <button className="btn btn-primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem' }} onClick={() => alert('Groq API ile KPI verileri okunup otomatik özet yazdırılıyor... (Demo)')}>
+                        <i className="fa-solid fa-wand-magic-sparkles"></i> Otomatik Yazdır
+                      </button>
+                    </div>
+                    <textarea 
+                      rows="3" 
+                      placeholder="Müşteriye gösterilecek haftalık stratejik AI yorumu..."
+                      value={clientReports[editingReportBrand]?.aiSummary || ''}
+                      onChange={e => {
+                        const updated = { ...clientReports };
+                        if (!updated[editingReportBrand]) updated[editingReportBrand] = {};
+                        updated[editingReportBrand].aiSummary = e.target.value;
+                        setClientReports(updated);
+                      }}
+                      style={{
+                        width: '100%',
+                        padding: '0.8rem',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
+                        fontSize: '0.85rem',
+                        fontFamily: 'inherit',
+                        resize: 'vertical',
+                        background: '#fff'
+                      }}
+                    ></textarea>
+                  </div>
 
                   <div style={{
                 border: '1px solid var(--glass-border)',

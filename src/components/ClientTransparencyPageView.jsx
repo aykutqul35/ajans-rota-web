@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 export default function ClientTransparencyPageView({ clientReports, onBack, onContactClick }) {
   const [activeBrand, setActiveBrand] = useState('ecommerce'); // ecommerce, b2b
   const [dateRange, setDateRange] = useState('30days'); // 7days, 30days, thismonth
   const [animTrigger, setAnimTrigger] = useState(false);
+  
+  // V2 Dashboard States
+  const [activeTab, setActiveTab] = useState('overview'); // overview, creatives, vault, api
 
   // Login States
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -77,7 +81,25 @@ export default function ClientTransparencyPageView({ clientReports, onBack, onCo
       { date: "15 Haziran 2026", title: "Checkout Funnel Hız Optimizasyonu", desc: "E-ticaret sitesinde ödeme adımındaki görseller sıkıştırıldı, gereksiz JS kütüphaneleri ertelendi. Sepetten dönme oranı %4 düşürüldü.", author: "Emre T. (Web Developer)" },
       { date: "12 Haziran 2026", title: "Haftalık Durum & ROAS Optimizasyon Toplantısı", desc: "Müşteri yönetim ekibiyle ROAS hedeflerinin 6,9x düzeyine ulaşması değerlendirildi. Gelecek haftanın bütçe dağılımı onaylandı.", author: "Selin Y. (Müşteri İlişkileri)" },
       { date: "08 Haziran 2026", title: "Google PMax Kampanyasında Bütçe Ölçekleme", desc: "Performansı yüksek seyreden Soğuk Sıkım PMax kampanyasının bütçesi ROI korunarak %15 oranında kontrollü şekilde artırıldı.", author: "Yiğit K. (SEO & Google Ads)" }
-    ]
+    ],
+    creatives: [
+      { id: 1, title: "Urla Hasat Instagram Reels", type: "video", url: "https://vimeo.com/76979871", status: "pending", date: "22 Haziran 2026", feedback: "" },
+      { id: 2, title: "1 Alana 1 Bedava Post", type: "image", url: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&q=80&w=400", status: "approved", date: "15 Haziran 2026", feedback: "Logoyu biraz daha büyütelim." }
+    ],
+    files: [
+      { id: 1, title: "Mayıs 2026 Performans Raporu", type: "pdf", url: "#", date: "01 Haziran 2026" },
+      { id: 2, title: "Ajans Rota E-Fatura (Mayıs)", type: "invoice", url: "#", date: "03 Haziran 2026" }
+    ],
+    chartData: [
+      { month: 'Oca', roas: 4.2, spend: 20000, revenue: 84000 },
+      { month: 'Şub', roas: 4.5, spend: 25000, revenue: 112500 },
+      { month: 'Mar', roas: 5.1, spend: 30000, revenue: 153000 },
+      { month: 'Nis', roas: 5.8, spend: 35000, revenue: 203000 },
+      { month: 'May', roas: 6.2, spend: 42000, revenue: 260400 },
+      { month: 'Haz', roas: 6.9, spend: 48240, revenue: 333820 }
+    ],
+    aiSummary: "Merhaba Ege Hanım, bu ayki reklam performansınızı inceledim. Meta reklamlarında başlattığımız yeni 'Katalog Satış' kampanyası ROAS oranını 7,2x seviyesine taşıyarak büyük başarı elde etti. Bütçenin bir kısmını bu kampanyaya kaydırmanızı öneririm.",
+    apiSync: { googleAds: true, metaAds: true, lastSync: "Bugün 09:14" }
   };
 
   // Mock data for B2B (İzmir Liman Lojistik)
@@ -112,7 +134,25 @@ export default function ClientTransparencyPageView({ clientReports, onBack, onCo
       { date: "16 Haziran 2026", title: "LinkedIn & Meta Lead Form Optimizasyonu", desc: "Form alanlarına \"Şirket Unvanı\" ve \"Yıllık Konteyner Hacmi\" soruları zorunlu olarak eklendi. Çöp form girdileri sıfırlandı.", author: "Melis S. (Kreatif Direktör)" },
       { date: "11 Haziran 2026", title: "Liman Depolama Görsel Testleri", desc: "Depoların güvenliğini ve büyüklüğünü gösteren yüksek kaliteli drone fotoğrafları reklam görselleriyle değiştirildi. CPL %15 düştü.", author: "Melis S. (Kreatif Direktör)" },
       { date: "06 Haziran 2026", title: "SEO: İçerik Optimizasyon Çalışması", desc: "\"İzmir Liman Lojistik Süreçleri\" rehber makalesi blogda yayınlandı ve hedeflenen 3 anahtar kelimede anında sıralama kazanıldı.", author: "Yiğit K. (SEO & Google Ads)" }
-    ]
+    ],
+    creatives: [
+      { id: 3, title: "Liman Tanıtım LinkedIn PDF", type: "pdf", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", status: "pending", date: "21 Haziran 2026", feedback: "" },
+      { id: 4, title: "Gümrük Hizmetleri Carousel", type: "image", url: "https://images.unsplash.com/photo-1586528116311-ad8c7bd75a04?auto=format&fit=crop&q=80&w=400", status: "rejected", date: "10 Haziran 2026", feedback: "Renkler çok koyu olmuş." }
+    ],
+    files: [
+      { id: 3, title: "Mayıs 2026 B2B Lead Raporu", type: "pdf", url: "#", date: "01 Haziran 2026" },
+      { id: 4, title: "Ajans Rota E-Fatura (Mayıs)", type: "invoice", url: "#", date: "03 Haziran 2026" }
+    ],
+    chartData: [
+      { month: 'Oca', cpl: 210, leads: 85, spend: 17850 },
+      { month: 'Şub', cpl: 195, leads: 110, spend: 21450 },
+      { month: 'Mar', cpl: 188, leads: 145, spend: 27260 },
+      { month: 'Nis', cpl: 175, leads: 160, spend: 28000 },
+      { month: 'May', cpl: 168, leads: 185, spend: 31080 },
+      { month: 'Haz', cpl: 164, leads: 192, spend: 31500 }
+    ],
+    aiSummary: "Liman Lojistik Yönetimi, bu ay form başı maliyetlerimiz (CPL) 164 TL'ye düşerek yılın en verimli dönemine ulaştı. LinkedIn Lead Generation formlarındaki optimizasyonlar meyvesini verdi. Gelecek ay Google Arama Ağı bütçesini %15 artırmayı planlıyoruz.",
+    apiSync: { googleAds: true, metaAds: false, lastSync: "Dün 18:30" }
   };
 
   const rawEcommerce = clientReports?.ecommerce || defaultEcommerceData;
@@ -568,318 +608,330 @@ export default function ClientTransparencyPageView({ clientReports, onBack, onCo
           </div>
         </div>
 
-        {/* Selected Brand Title & Details */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-          <div>
-            <h2 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-dark)' }}>
-              {currentData.brandName}
-            </h2>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              Sektör: <strong>{currentData.industry}</strong>
-            </p>
-          </div>
-        </div>
-
-        {/* KPI Grid */}
-        <div className={`client-kpi-grid ${animTrigger ? 'animate-kpis' : ''}`} style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '1.25rem',
-          marginBottom: '2.5rem'
+        {/* V2 Dashboard Tabs Navigation */}
+        <div className="v2-dashboard-tabs" style={{
+          display: 'flex',
+          gap: '0.5rem',
+          borderBottom: '2px solid rgba(15, 23, 42, 0.05)',
+          marginBottom: '2rem',
+          overflowX: 'auto',
+          paddingBottom: '0.5rem'
         }}>
-          {currentData.kpis.map((kpi, idx) => (
-            <div key={idx} className="client-kpi-card" style={{
-              backgroundColor: '#fff',
-              padding: '1.5rem',
-              borderRadius: '16px',
-              border: '1px solid rgba(15, 23, 42, 0.05)',
-              boxShadow: '0 4px 20px rgba(15, 23, 42, 0.015)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              position: 'relative',
-              overflow: 'hidden'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-light)', fontWeight: 600 }}>{kpi.label}</span>
-                <div style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: 'rgba(15, 23, 42, 0.03)',
-                  color: kpi.color
-                }}>
-                  <i className={kpi.icon}></i>
-                </div>
-              </div>
-              <div>
-                <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.25rem' }}>{kpi.value}</h3>
-                <span style={{ fontSize: '0.75rem', color: kpi.change.includes('-') ? '#ef4444' : '#16a34a', fontWeight: 600 }}>
-                  {kpi.change}
-                </span>
-              </div>
-              <div style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                width: '100%',
-                height: '3px',
-                background: kpi.color,
-                opacity: 0.8
-              }}></div>
-            </div>
+          {[
+            { id: 'overview', label: 'Genel Bakış & Grafikler', icon: 'fa-solid fa-chart-pie' },
+            { id: 'creatives', label: 'Kreatif Onayları', icon: 'fa-solid fa-paint-roller' },
+            { id: 'vault', label: 'Dosya Kasam', icon: 'fa-solid fa-vault' },
+            { id: 'api', label: 'API Entegrasyonları', icon: 'fa-solid fa-plug' }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                padding: '0.75rem 1.25rem',
+                border: 'none',
+                background: activeTab === tab.id ? 'var(--primary)' : 'transparent',
+                color: activeTab === tab.id ? '#fff' : 'var(--text-light)',
+                borderRadius: '12px',
+                fontWeight: 700,
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.2s',
+                whiteSpace: 'nowrap',
+                boxShadow: activeTab === tab.id ? '0 4px 12px rgba(15, 23, 42, 0.1)' : 'none'
+              }}
+            >
+              <i className={tab.icon}></i>
+              {tab.label}
+            </button>
           ))}
         </div>
 
-        {/* Dashboard Content Grid */}
-        <div className="client-dashboard-layout-grid">
-          
-          {/* LEFT COLUMN: Campaign Tables */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            
-            {/* Google Ads Section */}
-            <div style={{
-              backgroundColor: '#fff',
-              borderRadius: '16px',
-              padding: '1.5rem',
-              border: '1px solid rgba(15, 23, 42, 0.06)',
-              boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(14, 165, 233, 0.08)', color: '#0ea5e9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <i className="fa-brands fa-google" style={{ fontSize: '1rem' }}></i>
+        {/* --- TAB: OVERVIEW --- */}
+        {activeTab === 'overview' && (
+          <div className="tab-content-overview fade-in">
+            {/* AI Summary Box */}
+            {currentData.aiSummary && (
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%)',
+                border: '1px solid rgba(99, 102, 241, 0.2)',
+                borderRadius: '16px',
+                padding: '1.5rem',
+                marginBottom: '2rem',
+                display: 'flex',
+                gap: '1.25rem',
+                alignItems: 'flex-start'
+              }}>
+                <div style={{
+                  width: '48px', height: '48px', borderRadius: '12px',
+                  background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
+                  color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '1.5rem', flexShrink: 0, boxShadow: '0 8px 16px rgba(99, 102, 241, 0.2)'
+                }}>
+                  <i className="fa-solid fa-robot"></i>
                 </div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)' }}>Google Ads Kampanya Performansı</h3>
+                <div>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.5rem' }}>
+                    Yapay Zeka Yönetici Özeti (Groq AI)
+                  </h3>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-light)', lineHeight: '1.6', margin: 0 }}>
+                    {currentData.aiSummary}
+                  </p>
+                </div>
               </div>
+            )}
 
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid rgba(15, 23, 42, 0.08)' }}>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700 }}>Kampanya Adı</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700 }}>Harcama</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'center' }}>Tıklama</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'center' }}>TO (CTR)</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'center' }}>Dönüşüm</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'right' }}>{isEcommerceBrand ? 'ROAS' : 'CPL'}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentData.googleAds.map((camp, idx) => (
-                      <tr key={idx} style={{ borderBottom: '1px solid rgba(15, 23, 42, 0.04)' }}>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-dark)' }}>{camp.name}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-light)' }}>{camp.spend}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: 'var(--text-light)', textAlign: 'center' }}>{camp.clicks}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: 'var(--text-light)', textAlign: 'center' }}>{camp.ctr}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dark)', textAlign: 'center' }}>{camp.conversions}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#16a34a', textAlign: 'right' }}>{camp.roas}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            {/* KPI Grid */}
+            <div className={`client-kpi-grid ${animTrigger ? 'animate-kpis' : ''}`} style={{
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginBottom: '2rem'
+            }}>
+              {currentData.kpis.map((kpi, idx) => (
+                <div key={idx} className="client-kpi-card" style={{
+                  backgroundColor: '#fff', padding: '1.5rem', borderRadius: '16px',
+                  border: '1px solid rgba(15, 23, 42, 0.05)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.015)',
+                  display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', overflow: 'hidden'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-light)', fontWeight: 600 }}>{kpi.label}</span>
+                    <div style={{
+                      width: '36px', height: '36px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'rgba(15, 23, 42, 0.03)', color: kpi.color
+                    }}>
+                      <i className={kpi.icon}></i>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.25rem' }}>{kpi.value}</h3>
+                    <span style={{ fontSize: '0.75rem', color: kpi.change.includes('-') ? '#ef4444' : '#16a34a', fontWeight: 600 }}>
+                      {kpi.change}
+                    </span>
+                  </div>
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '3px', background: kpi.color, opacity: 0.8 }}></div>
+                </div>
+              ))}
             </div>
 
-            {/* Meta Ads Section */}
-            <div style={{
-              backgroundColor: '#fff',
-              borderRadius: '16px',
-              padding: '1.5rem',
-              border: '1px solid rgba(15, 23, 42, 0.06)',
-              boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(236, 72, 153, 0.08)', color: '#ec4899', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <i className="fa-brands fa-meta" style={{ fontSize: '1rem' }}></i>
+            {/* Interactive Charts (Recharts) */}
+            {currentData.chartData && (
+              <div style={{
+                backgroundColor: '#fff', borderRadius: '16px', padding: '1.5rem',
+                border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)',
+                marginBottom: '2rem'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(99, 102, 241, 0.08)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <i className="fa-solid fa-chart-line" style={{ fontSize: '1rem' }}></i>
+                  </div>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)' }}>6 Aylık Performans Trendi</h3>
                 </div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)' }}>Meta Ads (Facebook & Instagram) Performansı</h3>
+                <div style={{ width: '100%', height: '300px' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={currentData.chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                      <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis yAxisId="left" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis yAxisId="right" orientation="right" stroke="#ec4899" fontSize={12} tickLine={false} axisLine={false} />
+                      <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} />
+                      <Line yAxisId="left" type="monotone" dataKey="spend" stroke="var(--primary)" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} name="Harcama (TL)" />
+                      {activeBrand === 'ecommerce' ? (
+                        <>
+                          <Line yAxisId="left" type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} name="Ciro (TL)" />
+                          <Line yAxisId="right" type="monotone" dataKey="roas" stroke="var(--secondary)" strokeWidth={3} dot={{ r: 4 }} name="ROAS (x)" />
+                        </>
+                      ) : (
+                        <>
+                          <Line yAxisId="left" type="monotone" dataKey="leads" stroke="#10b981" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} name="Lead Sayısı" />
+                          <Line yAxisId="right" type="monotone" dataKey="cpl" stroke="var(--secondary)" strokeWidth={3} dot={{ r: 4 }} name="CPL (TL)" />
+                        </>
+                      )}
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
+            )}
 
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid rgba(15, 23, 42, 0.08)' }}>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700 }}>Reklam Seti / Kreatif</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700 }}>Harcama</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'center' }}>Tıklama</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'center' }}>TO (CTR)</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'center' }}>Dönüşüm</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'center' }}>Durum</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'right' }}>{isEcommerceBrand ? 'ROAS' : 'CPL'}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentData.metaAds.map((camp, idx) => (
-                      <tr key={idx} style={{ borderBottom: '1px solid rgba(15, 23, 42, 0.04)' }}>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-dark)' }}>{camp.name}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-light)' }}>{camp.spend}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: 'var(--text-light)', textAlign: 'center' }}>{camp.clicks}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: 'var(--text-light)', textAlign: 'center' }}>{camp.ctr}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dark)', textAlign: 'center' }}>{camp.conversions}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.75rem', textAlign: 'center' }}>
-                          <span style={{
-                            padding: '2px 8px',
-                            borderRadius: '10px',
-                            fontWeight: '600',
-                            backgroundColor: camp.status === 'Aktif' ? 'rgba(22, 163, 74, 0.08)' : 'rgba(100, 116, 139, 0.08)',
-                            color: camp.status === 'Aktif' ? '#16a34a' : '#64748b'
-                          }}>
-                            {camp.status}
-                          </span>
-                        </td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#16a34a', textAlign: 'right' }}>{camp.roas}</td>
-                      </tr>
+            {/* Content Grid (Campaigns + Timeline) */}
+            <div className="client-dashboard-layout-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                {/* Google Ads Section */}
+                <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(14, 165, 233, 0.08)', color: '#0ea5e9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <i className="fa-brands fa-google" style={{ fontSize: '1rem' }}></i>
+                    </div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)' }}>Google Ads Performansı</h3>
+                  </div>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid rgba(15, 23, 42, 0.08)' }}>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700 }}>Kampanya Adı</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700 }}>Harcama</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'center' }}>Tıklama</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'right' }}>{activeBrand === 'ecommerce' ? 'ROAS' : 'CPL'}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {currentData.googleAds.map((camp, idx) => (
+                          <tr key={idx} style={{ borderBottom: '1px solid rgba(15, 23, 42, 0.04)' }}>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-dark)' }}>{camp.name}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-light)' }}>{camp.spend}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: 'var(--text-light)', textAlign: 'center' }}>{camp.clicks}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#16a34a', textAlign: 'right' }}>{camp.roas}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Timeline Wrapper */}
+                <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--primary-glow)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <i className="fa-solid fa-timeline" style={{ fontSize: '1rem' }}></i>
+                    </div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)' }}>Ajans İş Defteri (Timeline)</h3>
+                  </div>
+                  <div className="transparency-timeline" style={{ position: 'relative', paddingLeft: '1.25rem', borderLeft: '2px solid rgba(15, 23, 42, 0.06)' }}>
+                    {currentData.timeline.map((act, idx) => (
+                      <div key={idx} className="timeline-item" style={{ position: 'relative', marginBottom: idx === currentData.timeline.length - 1 ? 0 : '1.75rem' }}>
+                        <div style={{ position: 'absolute', left: '-26px', top: '2px', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--primary)', border: '3px solid #fff', boxShadow: '0 0 0 2px rgba(15, 23, 42, 0.08)' }}></div>
+                        <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.2rem' }}>{act.date}</div>
+                        <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.25rem', lineHeight: '1.3' }}>{act.title}</h4>
+                        <p style={{ fontSize: '0.78rem', color: 'var(--text-light)', lineHeight: '1.4', marginBottom: '0.35rem' }}>{act.desc}</p>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <i className="fa-solid fa-user-tie" style={{ fontSize: '0.65rem' }}></i> Uzman: {act.author}
+                        </div>
+                      </div>
                     ))}
-                  </tbody>
-                </table>
+                  </div>
+                </div>
               </div>
             </div>
-
-            {/* SEO Organic Performance */}
-            <div style={{
-              backgroundColor: '#fff',
-              borderRadius: '16px',
-              padding: '1.5rem',
-              border: '1px solid rgba(15, 23, 42, 0.06)',
-              boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(34, 197, 94, 0.08)', color: '#22c55e', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <i className="fa-solid fa-chart-line" style={{ fontSize: '1rem' }}></i>
-                </div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)' }}>SEO & Organik Sıralamalar</h3>
-              </div>
-
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid rgba(15, 23, 42, 0.08)' }}>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700 }}>Hedef Anahtar Kelime</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'center' }}>Google Sırası</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'center' }}>Aylık Hacim</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'center' }}>Organik Tıklama</th>
-                      <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'right' }}>Trend</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentData.seo.map((item, idx) => (
-                      <tr key={idx} style={{ borderBottom: '1px solid rgba(15, 23, 42, 0.04)' }}>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-dark)' }}>{item.keyword}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)', textAlign: 'center' }}>
-                          <span style={{ padding: '2px 8px', borderRadius: '6px', background: 'var(--primary-glow)' }}>{item.rank}</span>
-                        </td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: 'var(--text-light)', textAlign: 'center' }}>{item.volume}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dark)', textAlign: 'center' }}>{item.monthlyClicks}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', textAlign: 'right', color: item.trend === 'up' ? '#16a34a' : '#64748b' }}>
-                          {item.trend === 'up' ? <i className="fa-solid fa-circle-chevron-up"></i> : <i className="fa-solid fa-minus"></i>}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
           </div>
+        )}
 
-          {/* RIGHT COLUMN: Agency Activity Timeline */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            
-            {/* Timeline Wrapper */}
-            <div style={{
-              backgroundColor: '#fff',
-              borderRadius: '16px',
-              padding: '1.5rem',
-              border: '1px solid rgba(15, 23, 42, 0.06)',
-              boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)'
-            }}>
+        {/* --- TAB: CREATIVES (Kreatif Onayları) --- */}
+        {activeTab === 'creatives' && (
+          <div className="tab-content-creatives fade-in">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+              {currentData.creatives?.map(creative => (
+                <div key={creative.id} style={{
+                  backgroundColor: '#fff', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)', display: 'flex', flexDirection: 'column'
+                }}>
+                  <div style={{ height: '160px', background: '#f1f5f9', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {creative.type === 'video' ? (
+                      <i className="fa-solid fa-play-circle" style={{ fontSize: '3rem', color: 'var(--primary)' }}></i>
+                    ) : creative.type === 'pdf' ? (
+                      <i className="fa-solid fa-file-pdf" style={{ fontSize: '3rem', color: '#ef4444' }}></i>
+                    ) : (
+                      <img src={creative.url} alt={creative.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    )}
+                    <div style={{ position: 'absolute', top: '10px', right: '10px', padding: '4px 10px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 800, background: creative.status === 'approved' ? '#16a34a' : creative.status === 'rejected' ? '#ef4444' : '#f59e0b', color: '#fff' }}>
+                      {creative.status === 'approved' ? 'Onaylandı' : creative.status === 'rejected' ? 'Reddedildi' : 'Onay Bekliyor'}
+                    </div>
+                  </div>
+                  <div style={{ padding: '1.25rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    <h4 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.25rem' }}>{creative.title}</h4>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Yüklenme: {creative.date}</span>
+                    {creative.feedback && (
+                      <div style={{ background: '#f8fafc', padding: '0.75rem', borderRadius: '8px', fontSize: '0.8rem', color: 'var(--text-light)', marginBottom: '1rem', borderLeft: '3px solid var(--primary)' }}>
+                        <strong>Geri Bildirim:</strong> {creative.feedback}
+                      </div>
+                    )}
+                    <div style={{ marginTop: 'auto', display: 'flex', gap: '0.5rem' }}>
+                      <button className="btn btn-primary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', background: '#16a34a', borderColor: '#16a34a' }} onClick={() => alert('Onaylandı olarak işaretlendi (Demo)')}>
+                        <i className="fa-solid fa-check"></i> Onayla
+                      </button>
+                      <button className="btn btn-secondary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', color: '#ef4444', borderColor: '#ef4444' }} onClick={() => alert('Reddedildi olarak işaretlendi (Demo)')}>
+                        <i className="fa-solid fa-xmark"></i> Reddet
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* --- TAB: VAULT (Dosya Kasam) --- */}
+        {activeTab === 'vault' && (
+          <div className="tab-content-vault fade-in">
+            <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
                 <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--primary-glow)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <i className="fa-solid fa-timeline" style={{ fontSize: '1rem' }}></i>
+                  <i className="fa-solid fa-vault" style={{ fontSize: '1rem' }}></i>
                 </div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)' }}>Ajans İş Defteri (Son 30 Gün)</h3>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)' }}>Güvenli Dosya Kasası</h3>
               </div>
-
-              <div className="transparency-timeline" style={{
-                position: 'relative',
-                paddingLeft: '1.25rem',
-                borderLeft: '2px solid rgba(15, 23, 42, 0.06)'
-              }}>
-                {currentData.timeline.map((act, idx) => (
-                  <div key={idx} className="timeline-item" style={{
-                    position: 'relative',
-                    marginBottom: idx === currentData.timeline.length - 1 ? 0 : '1.75rem'
-                  }}>
-                    {/* Circle icon marker */}
-                    <div style={{
-                      position: 'absolute',
-                      left: '-26px',
-                      top: '2px',
-                      width: '10px',
-                      height: '10px',
-                      borderRadius: '50%',
-                      background: 'var(--primary)',
-                      border: '3px solid #fff',
-                      boxShadow: '0 0 0 2px rgba(15, 23, 42, 0.08)'
-                    }}></div>
-
-                    <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.2rem' }}>
-                      {act.date}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {currentData.files?.map(file => (
+                  <div key={file.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', border: '1px solid rgba(15, 23, 42, 0.08)', borderRadius: '12px', transition: 'all 0.2s', cursor: 'pointer' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: file.type === 'pdf' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(14, 165, 233, 0.1)', color: file.type === 'pdf' ? '#ef4444' : '#0ea5e9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>
+                        <i className={file.type === 'pdf' ? "fa-solid fa-file-pdf" : "fa-solid fa-file-invoice"}></i>
+                      </div>
+                      <div>
+                        <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-dark)', marginBottom: '0.2rem' }}>{file.title}</h4>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{file.date}</span>
+                      </div>
                     </div>
-                    <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.25rem', lineHeight: '1.3' }}>
-                      {act.title}
-                    </h4>
-                    <p style={{ fontSize: '0.78rem', color: 'var(--text-light)', lineHeight: '1.4', marginBottom: '0.35rem' }}>
-                      {act.desc}
-                    </p>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <i className="fa-solid fa-user-tie" style={{ fontSize: '0.65rem' }}></i> Uzman: {act.author}
-                    </div>
+                    <button className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', borderRadius: '8px' }}>
+                      <i className="fa-solid fa-download"></i> İndir
+                    </button>
                   </div>
                 ))}
               </div>
             </div>
+          </div>
+        )}
 
-            {/* Quick Pitch Box */}
-            <div style={{
-              background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-              color: '#fff',
-              borderRadius: '16px',
-              padding: '1.5rem',
-              boxShadow: '0 10px 30px rgba(15, 23, 42, 0.1)'
-            }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '0.75rem', color: '#fff' }}>
-                Veriyle Büyümek İster misiniz?
-              </h3>
-              <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: '1.5', marginBottom: '1.25rem' }}>
-                Sizin de reklam bütçenizin nereye gittiğini saniye saniye takip edeceğimiz, şeffaf ve ROI odaklı bir dijital pazarlama yönetimi için ilk strateji toplantımızı planlayalım.
-              </p>
-              <button 
-                onClick={onContactClick}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: 'var(--secondary)',
-                  color: '#fff',
-                  fontWeight: 700,
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  boxShadow: '0 4px 12px rgba(236, 72, 153, 0.2)'
-                }}
-              >
-                Ücretsiz Büyüme Analizi Al
+        {/* --- TAB: API (API Entegrasyonları) --- */}
+        {activeTab === 'api' && (
+          <div className="tab-content-api fade-in">
+            <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '2rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)', maxWidth: '600px', margin: '0 auto' }}>
+              <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-dark)', textAlign: 'center', marginBottom: '0.5rem' }}>Gerçek Zamanlı Veri Eşitleme</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-light)', textAlign: 'center', marginBottom: '2rem' }}>Mevcut API entegrasyon durumunuzu aşağıdan inceleyebilirsiniz.</p>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
+                {/* Google Ads API */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem', border: '1px solid rgba(15, 23, 42, 0.08)', borderRadius: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <i className="fa-brands fa-google" style={{ fontSize: '1.5rem', color: '#0ea5e9' }}></i>
+                    <div>
+                      <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-dark)' }}>Google Ads API</h4>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Son senkronize: {currentData.apiSync?.lastSync}</span>
+                    </div>
+                  </div>
+                  <div style={{ padding: '4px 12px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700, background: currentData.apiSync?.googleAds ? '#dcfce7' : '#fef08a', color: currentData.apiSync?.googleAds ? '#16a34a' : '#b45309' }}>
+                    {currentData.apiSync?.googleAds ? 'Bağlı' : 'Bağlantı Bekliyor'}
+                  </div>
+                </div>
+
+                {/* Meta Ads API */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem', border: '1px solid rgba(15, 23, 42, 0.08)', borderRadius: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <i className="fa-brands fa-meta" style={{ fontSize: '1.5rem', color: '#ec4899' }}></i>
+                    <div>
+                      <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-dark)' }}>Meta Marketing API</h4>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Son senkronize: {currentData.apiSync?.lastSync}</span>
+                    </div>
+                  </div>
+                  <div style={{ padding: '4px 12px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700, background: currentData.apiSync?.metaAds ? '#dcfce7' : '#fee2e2', color: currentData.apiSync?.metaAds ? '#16a34a' : '#ef4444' }}>
+                    {currentData.apiSync?.metaAds ? 'Bağlı' : 'Kopuk'}
+                  </div>
+                </div>
+              </div>
+
+              <button className="btn btn-primary" style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontWeight: 700 }} onClick={() => alert('Veriler API üzerinden eşitleniyor... (Demo)')}>
+                <i className="fa-solid fa-rotate"></i> Şimdi Eşitle
               </button>
             </div>
-
           </div>
-
-        </div>
+        )}
 
       </div>
     </div>
