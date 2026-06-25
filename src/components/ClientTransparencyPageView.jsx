@@ -199,7 +199,8 @@ export default function ClientTransparencyPageView({ clientReports, onBack, onCo
     setLoginError('');
   };
 
-  const rawCurrentBrandData = clientReports?.[activeBrand] || (activeBrand === 'ecommerce' ? defaultEcommerceData : defaultB2bData);
+  const defaultDataForActive = activeBrand === 'ecommerce' ? defaultEcommerceData : defaultB2bData;
+  const rawCurrentBrandData = clientReports?.[activeBrand] || defaultDataForActive;
 
   const currentData = {
     ...rawCurrentBrandData,
@@ -211,7 +212,12 @@ export default function ClientTransparencyPageView({ clientReports, onBack, onCo
     googleAds: rawCurrentBrandData.googleAds || [],
     metaAds: rawCurrentBrandData.metaAds || [],
     seo: rawCurrentBrandData.seo || [],
-    timeline: rawCurrentBrandData.timeline || []
+    timeline: rawCurrentBrandData.timeline || [],
+    creatives: rawCurrentBrandData.creatives || defaultDataForActive.creatives,
+    files: rawCurrentBrandData.files || defaultDataForActive.files,
+    chartData: rawCurrentBrandData.chartData || defaultDataForActive.chartData,
+    aiSummary: rawCurrentBrandData.aiSummary || defaultDataForActive.aiSummary,
+    apiSync: rawCurrentBrandData.apiSync || defaultDataForActive.apiSync
   };
 
   const isEcommerceBrand = activeBrand === 'ecommerce' || currentData.industry?.toLowerCase().includes('e-ticaret') || currentData.industry?.toLowerCase().includes('gıda') || currentData.industry?.toLowerCase().includes('ecom');
