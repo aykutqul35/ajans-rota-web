@@ -1409,14 +1409,24 @@ function App() {
     const safeAppend = (parent, child) => {
       try {
         if (child.tagName && child.tagName.toLowerCase() === 'script') {
-          let content = child.innerHTML.trim();
-          if (content.startsWith('<script') || content.startsWith('<!--')) {
+          let content = child.innerHTML;
+          if (/<script|<!--/i.test(content)) {
             console.warn('Admin panelinden gelen script hatalı formatlanmış (HTML etiketleri içeriyor). Otomatik temizleniyor...');
             content = content.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '').replace(/<!--/g, '').replace(/-->/g, '');
-            child.innerHTML = content;
+            child.innerHTML = content.trim();
           }
+          // Script'leri asenkron ekleyerek (setTimeout) olası JS Sözdizimi (Syntax) hatalarının 
+          // React'ı çökertmesini (Uncaught SyntaxError) engelliyoruz.
+          setTimeout(() => {
+            try {
+              parent.appendChild(child);
+            } catch (err) {
+              console.error('Dynamic script parse/append error:', err);
+            }
+          }, 0);
+        } else {
+          parent.appendChild(child);
         }
-        parent.appendChild(child);
       } catch (e) {
         console.error('Dynamic tracker append error. Invalid tag in admin panel.', e);
       }
