@@ -680,7 +680,7 @@ export default function ClientTransparencyPageView({ clientReports, onBack, onCo
                 </div>
                 <div>
                   <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.5rem' }}>
-                    Yapay Zeka Yönetici Özeti (Groq AI)
+                    Yapay Zeka Yönetici Özeti
                   </h3>
                   <p style={{ fontSize: '0.9rem', color: 'var(--text-light)', lineHeight: '1.6', margin: 0 }}>
                     {currentData.aiSummary}
