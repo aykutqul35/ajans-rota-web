@@ -20,8 +20,8 @@ export default async function handler(req, res) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    // Hızlı yanıtlar için gemini-1.5-flash modeli idealdir.
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // V1Beta sürümünde bazen 'gemini-1.5-flash' ismi bulanamazsa diye '-latest' ekliyoruz
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
     // Türkiye saati (UTC+3)
     const currentHour = (new Date().getUTCHours() + 3) % 24;
