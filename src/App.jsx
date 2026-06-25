@@ -3113,7 +3113,6 @@ function App() {
               {[
                 { icon: 'fa-solid fa-car-side', text: 'Müşterimizin yanına gidiyoruz', color: '#0ea5e9' },
                 { icon: 'fa-solid fa-map-location-dot', text: 'Ege Bölgesi genelinde aktif', color: '#10b981' },
-                { icon: 'fa-solid fa-building', text: 'Yakında ofisimizle büyüyoruz', color: '#f59e0b' },
               ].map((item, i) => (
                 <div key={i} style={{
                   display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
