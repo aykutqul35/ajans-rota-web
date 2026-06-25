@@ -130,6 +130,11 @@ export default async function handler(req, res) {
      }
   }
 
+  // Stats uç noktaları için 404 dönüyoruz ki frontend localStorage fallback mekanizmasını kullansın
+  if (['get_stats', 'save_demo_stats', 'reset_stats'].includes(action)) {
+    return res.status(404).json({ success: false, message: 'Stats API not implemented in Vercel mode, use local fallback' });
+  }
+
   // Diğer tüm istekler için (şimdilik) boş cevap dönelim veya başarılı gibi yapalım.
   return res.status(200).json({ success: true, message: 'Action ignored in Vercel mode' });
 }
