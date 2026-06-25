@@ -44,8 +44,13 @@ Kurallar:
     // Gemini chat API formatını hazırlıyoruz.
     const history = [];
     
+    // Gemini her zaman user -> model -> user -> model şeklinde ardışık (alternating) gitmek zorundadır.
+    // İlk mesaj (frontend'den gelen selamlama) model mesajı olduğu için, onu siliyoruz (zaten promptta var).
     if (messages && messages.length > 1) {
       for (let i = 0; i < messages.length - 1; i++) {
+        // İlk mesaj otomatik asistan selamlamasıysa bunu history'e ekleme. (Ardışık model hatasını engeller)
+        if (i === 0 && messages[i].role === 'assistant') continue;
+        
         history.push({
           role: messages[i].role === 'assistant' ? 'model' : 'user',
           parts: [{ text: messages[i].content }]
@@ -53,11 +58,25 @@ Kurallar:
       }
     }
     
+    // Olası ardışık aynı rol hatalarını önlemek için ufak bir filtreleme yapalım
+    const safeHistory = [];
+    let lastRole = null;
+    
+    for (const msg of history) {
+      if (msg.role !== lastRole) {
+        safeHistory.push(msg);
+        lastRole = msg.role;
+      } else {
+        // Eğer aynı rol peşpeşe geldiyse son mesajın metnine ekleyelim
+        safeHistory[safeHistory.length - 1].parts[0].text += "\\n" + msg.parts[0].text;
+      }
+    }
+
     const chat = model.startChat({
       history: [
         { role: 'user', parts: [{ text: systemInstruction }] },
         { role: 'model', parts: [{ text: "Anladım. Ajans Rota'nın Yapay Zeka Asistanı olarak görevime hazırım. Gelen ziyaretçileri sıcak karşılayıp telefon numaralarını almaya odaklanacağım." }] },
-        ...history
+        ...safeHistory
       ]
     });
 
