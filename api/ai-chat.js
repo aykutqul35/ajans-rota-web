@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import Groq from 'groq-sdk';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -8,19 +8,17 @@ export default async function handler(req, res) {
   try {
     const { messages } = req.body;
     
-    // API Key'i çevre değişkeninden alıyoruz. 
-    // Vercel paneline GEMINI_API_KEY eklenmeli.
-    const apiKey = process.env.GEMINI_API_KEY;
+    // Çevre değişkenini artık GROQ_API_KEY olarak okuyacağız (Geriye dönük uyumluluk için GEMINI_API_KEY de destekleyelim ki Vercel'i değiştirmeye gerek kalmasın)
+    const apiKey = process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY;
     
-    if (!apiKey) {
+    if (!apiKey || apiKey.trim() === '') {
       return res.status(200).json({ 
         success: true, 
-        reply: "Merhaba! Şu an yapay zeka beynim (API Key) yapılandırılmadığı için size standart yanıt veriyorum. Detaylı bilgi için iletişim formunu doldurabilirsiniz." 
+        reply: "Merhaba! Şu an yapay zeka beynim (API Key) yapılandırılmadığı için size standart yanıt veriyorum. Lütfen Vercel panelinden GROQ_API_KEY'inizi tanımlayın." 
       });
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const groq = new Groq({ apiKey: apiKey });
 
     // Türkiye saati (UTC+3)
     const currentHour = (new Date().getUTCHours() + 3) % 24;
@@ -39,49 +37,30 @@ Kurallar:
 5. Kullanıcı farklı, alakasız bir konu sorarsa nazikçe dijital pazarlama ajansı asistanı olduğunu hatırlatıp konuyu geri çek.
 `;
 
-    // Sistem promptunu inject edebilmek için sohbet geçmişinin en başına bağlam (context) ekleyelim
-    // Gemini chat API formatını hazırlıyoruz.
-    const history = [];
+    // Groq (OpenAI formatı) için History hazırlığı
+    const apiMessages = [
+      { role: "system", content: systemInstruction }
+    ];
     
-    // Gemini her zaman user -> model -> user -> model şeklinde ardışık (alternating) gitmek zorundadır.
-    // İlk mesaj (frontend'den gelen selamlama) model mesajı olduğu için, onu siliyoruz (zaten promptta var).
-    if (messages && messages.length > 1) {
-      for (let i = 0; i < messages.length - 1; i++) {
-        // İlk mesaj otomatik asistan selamlamasıysa bunu history'e ekleme. (Ardışık model hatasını engeller)
-        if (i === 0 && messages[i].role === 'assistant') continue;
-        
-        history.push({
-          role: messages[i].role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: messages[i].content }]
+    // Gelen messages: [{ role: 'assistant'/'user', content: '...' }]
+    // Sadece ilk otomatik selamlamayı atlayabiliriz veya dahil edebiliriz. Groq için sorun yok, ama dahil etmek bağlamı korur.
+    if (messages && messages.length > 0) {
+      for (let i = 0; i < messages.length; i++) {
+        apiMessages.push({
+          role: messages[i].role === 'assistant' ? 'assistant' : 'user',
+          content: messages[i].content
         });
       }
     }
     
-    // Olası ardışık aynı rol hatalarını önlemek için ufak bir filtreleme yapalım
-    const safeHistory = [];
-    let lastRole = null;
-    
-    for (const msg of history) {
-      if (msg.role !== lastRole) {
-        safeHistory.push(msg);
-        lastRole = msg.role;
-      } else {
-        // Eğer aynı rol peşpeşe geldiyse son mesajın metnine ekleyelim
-        safeHistory[safeHistory.length - 1].parts[0].text += "\\n" + msg.parts[0].text;
-      }
-    }
-
-    const chat = model.startChat({
-      history: [
-        { role: 'user', parts: [{ text: systemInstruction }] },
-        { role: 'model', parts: [{ text: "Anladım. Ajans Rota'nın Yapay Zeka Asistanı olarak görevime hazırım. Gelen ziyaretçileri sıcak karşılayıp telefon numaralarını almaya odaklanacağım." }] },
-        ...safeHistory
-      ]
+    const chatCompletion = await groq.chat.completions.create({
+      messages: apiMessages,
+      model: "llama3-70b-8192", // Çok akıllı ve süper hızlı model
+      temperature: 0.7,
+      max_tokens: 500,
     });
 
-    const lastUserMessage = messages[messages.length - 1].content;
-    const result = await chat.sendMessage(lastUserMessage);
-    const responseText = result.response.text();
+    const responseText = chatCompletion.choices[0]?.message?.content || "Üzgünüm, yanıt veremedim.";
 
     return res.status(200).json({ success: true, reply: responseText });
 
