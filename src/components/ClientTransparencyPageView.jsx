@@ -885,9 +885,9 @@ export default function ClientTransparencyPageView({ clientReports, onBack, onCo
                         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{file.date}</span>
                       </div>
                     </div>
-                    <button className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', borderRadius: '8px' }}>
+                    <a href={file.url} target="_blank" rel="noreferrer" className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', borderRadius: '8px', textDecoration: 'none' }}>
                       <i className="fa-solid fa-download"></i> İndir
-                    </button>
+                    </a>
                   </div>
                 ))}
               </div>

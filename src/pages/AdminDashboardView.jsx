@@ -11926,6 +11926,14 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                             feedback: ''
                           });
                           setClientReports(updated);
+                          const localDbStr = localStorage.getItem('ajans_rota_db');
+                          if (localDbStr) {
+                            try {
+                              const dbPayload = JSON.parse(localDbStr);
+                              dbPayload.clientReports = updated;
+                              localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
+                            } catch(e) {}
+                          }
                           alert('Dosya başarıyla Vercel Blob\'a yüklendi!');
                         } catch (err) {
                           console.error(err);
@@ -12009,6 +12017,14 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                             date: new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' })
                           });
                           setClientReports(updated);
+                          const localDbStr = localStorage.getItem('ajans_rota_db');
+                          if (localDbStr) {
+                            try {
+                              const dbPayload = JSON.parse(localDbStr);
+                              dbPayload.clientReports = updated;
+                              localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
+                            } catch(e) {}
+                          }
                           alert('Dosya başarıyla Vercel Blob\'a yüklendi!');
                         } catch (err) {
                           console.error(err);
