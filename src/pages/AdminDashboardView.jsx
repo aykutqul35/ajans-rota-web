@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { upload } from '@vercel/blob/client';
 import { motion } from 'framer-motion';
 import { budgetSteps, initialServicePagesData, featuredStories, initialTeamMembers, initialBlogPosts, categories, whyAgencyData, testimonials } from '../data/mockData';
 import FadeIn from '../components/FadeIn';
@@ -11928,7 +11930,6 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                         if (!file) return;
                         
                         try {
-                          const { upload } = await import('@vercel/blob/client');
                           const newBlob = await upload(file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
                           
                           const updated = { ...clientReports };
@@ -12044,7 +12045,6 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                         if (!file) return;
                         
                         try {
-                          const { upload } = await import('@vercel/blob/client');
                           const newBlob = await upload(file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
                           
                           const updated = { ...clientReports };
