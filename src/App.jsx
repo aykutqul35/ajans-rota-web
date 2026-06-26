@@ -187,7 +187,7 @@ function App() {
     };
     document.addEventListener('mouseleave', handleMouseLeave);
     return () => document.removeEventListener('mouseleave', handleMouseLeave);
-  }, [isLeadPopupOpen]);
+  }, [isLeadPopupOpen, currentPath]);
 
   // Handle scrolling to hash when location changes
   useEffect(() => {
