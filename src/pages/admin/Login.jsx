@@ -28,7 +28,7 @@ const Login = () => {
       if (response.ok && data.success) {
         localStorage.setItem('admin_token', data.token);
         localStorage.setItem('admin_username', data.user.username);
-        navigate('/admin');
+        navigate('/rota-management-vault-x9');
         window.location.reload();
       } else {
         setError(data.message || 'Geçersiz kullanıcı adı veya şifre.');

@@ -5,7 +5,7 @@ const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('admin_token');
   
   if (!token) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/portal-girisi-x9" replace />;
   }
 
   return children;
