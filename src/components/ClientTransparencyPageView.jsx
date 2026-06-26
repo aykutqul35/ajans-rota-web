@@ -281,7 +281,7 @@ export default function ClientTransparencyPageView({
         minHeight: '100vh', 
         paddingTop: '120px', 
         paddingBottom: '4rem', 
-        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+        background: '#0f172a',
         position: 'relative',
         overflow: 'hidden',
         display: 'flex',
@@ -342,11 +342,11 @@ export default function ClientTransparencyPageView({
           </div>
 
           <div style={{
-            background: 'rgba(255, 255, 255, 0.75)',
+            background: 'rgba(30, 41, 59, 0.75)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.8)',
-            boxShadow: '0 20px 40px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
             borderRadius: '24px',
             padding: '2.5rem 2rem',
             textAlign: 'center'
@@ -494,8 +494,8 @@ export default function ClientTransparencyPageView({
                 marginTop: '2rem',
                 padding: '1rem',
                 borderRadius: '14px',
-                background: 'rgba(15, 23, 42, 0.03)',
-                border: '1px solid rgba(15, 23, 42, 0.05)',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.05)',
                 textAlign: 'left'
               }}>
                 <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#f8fafc', display: 'block', marginBottom: '0.5rem' }}>
