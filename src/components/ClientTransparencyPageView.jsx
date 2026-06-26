@@ -22,6 +22,53 @@ export default function ClientTransparencyPageView({
   const [loginError, setLoginError] = useState('');
   const [showDemoInfo, setShowDemoInfo] = useState(false);
 
+  // SaaS Features States
+  const [aiRequestLoading, setAiRequestLoading] = useState(false);
+  const [aiRequestSuccess, setAiRequestSuccess] = useState(false);
+  const [billingLoading, setBillingLoading] = useState(false);
+  
+  const handleAiActionRequest = async (insightText) => {
+    setAiRequestLoading(true);
+    try {
+      const updated = { ...clientReports };
+      if (!updated[activeBrand]) return;
+      if (!updated[activeBrand].ai_requests) updated[activeBrand].ai_requests = [];
+      updated[activeBrand].ai_requests.push({
+        id: Date.now(),
+        date: new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }),
+        insight: insightText,
+        status: 'pending'
+      });
+      setClientReports(updated);
+      
+      const localDbStr = localStorage.getItem('ajans_rota_db');
+      if (localDbStr) {
+        try {
+          const dbPayload = JSON.parse(localDbStr);
+          dbPayload.clientReports = updated;
+          localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
+        } catch(e) {}
+      }
+      
+      if (updated[activeBrand].client_id) {
+        await fetch('/api/clients/update', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            client_id: updated[activeBrand].client_id, 
+            report_data: updated[activeBrand]
+          })
+        });
+      }
+      setAiRequestSuccess(true);
+      setTimeout(() => setAiRequestSuccess(false), 3000);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAiRequestLoading(false);
+    }
+  };
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('demo') === 'true' || params.get('demo') === '1') {
@@ -632,6 +679,7 @@ export default function ClientTransparencyPageView({
             { id: 'overview', label: 'Genel Bakış & Grafikler', icon: 'fa-solid fa-chart-pie' },
             { id: 'creatives', label: 'Kreatif Onayları', icon: 'fa-solid fa-paint-roller' },
             { id: 'vault', label: 'Dosya Kasam', icon: 'fa-solid fa-vault' },
+            { id: 'billing', label: 'Faturalar & Bütçe', icon: 'fa-solid fa-file-invoice-dollar' },
             { id: 'api', label: 'API Entegrasyonları', icon: 'fa-solid fa-plug' }
           ].map(tab => (
             <button
@@ -685,11 +733,59 @@ export default function ClientTransparencyPageView({
                 </div>
                 <div>
                   <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.5rem' }}>
-                    Yapay Zeka Yönetici Özeti
+                    Yapay Zeka Yönetici Özeti & Öneriler
                   </h3>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--text-light)', lineHeight: '1.6', margin: 0 }}>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-light)', lineHeight: '1.6', margin: '0 0 1rem 0' }}>
                     {currentData.aiSummary}
                   </p>
+                  
+                  {/* AI Actionable Insight */}
+                  <div style={{
+                    background: '#fff',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    border: '1px solid rgba(99, 102, 241, 0.2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '1rem'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 0 4px rgba(16, 185, 129, 0.1)' }}></div>
+                      <span style={{ fontSize: '0.85rem', color: 'var(--text-dark)', fontWeight: 600 }}>
+                        {activeBrand === 'ecommerce' 
+                          ? "CPL maliyetiniz düştü, yeni bir Reels kreatifi çekmenizi öneriyoruz." 
+                          : "LinkedIn form optimizasyonu için bütçe artırımı tavsiye ediliyor."}
+                      </span>
+                    </div>
+                    <button 
+                      onClick={() => handleAiActionRequest(activeBrand === 'ecommerce' ? "Yeni Reels Kreatif Çekimi" : "LinkedIn Bütçe Artırımı")}
+                      disabled={aiRequestLoading || aiRequestSuccess}
+                      style={{
+                        padding: '0.5rem 1.25rem',
+                        background: aiRequestSuccess ? '#10b981' : 'var(--text-dark)',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '8px',
+                        fontSize: '0.8rem',
+                        fontWeight: 700,
+                        cursor: (aiRequestLoading || aiRequestSuccess) ? 'not-allowed' : 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                      }}
+                    >
+                      {aiRequestLoading ? (
+                        <><i className="fa-solid fa-spinner fa-spin"></i> İletiliyor...</>
+                      ) : aiRequestSuccess ? (
+                        <><i className="fa-solid fa-check"></i> Talep Edildi</>
+                      ) : (
+                        <>Talep Et <i className="fa-solid fa-arrow-right"></i></>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -876,6 +972,12 @@ export default function ClientTransparencyPageView({
 
                              const localDbStr = localStorage.getItem('ajans_rota_db');
                              if(localDbStr){ try{ const dbPayload=JSON.parse(localDbStr); dbPayload.clientReports=updated; localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload)); }catch(e){} }
+                             const waPhone = localStorage.getItem('rota_wa_phone');
+                             const waApiKey = localStorage.getItem('rota_wa_apikey');
+                             if (waPhone && waApiKey) {
+                               const text = encodeURIComponent(`✅ *Rota Kreatif Onayı:* \n${currentData.brandName}, "${creative.title}" adlı kreatifi ONAYLADI.`);
+                               fetch(`https://api.callmebot.com/whatsapp.php?phone=${waPhone}&text=${text}&apikey=${waApiKey}`, { mode: 'no-cors' }).catch(() => {});
+                             }
                              alert('Tasarım onaylandı olarak işaretlendi ve ajansa bildirildi!');
                            }
                         }

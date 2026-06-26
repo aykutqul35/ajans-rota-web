@@ -48,6 +48,8 @@ function AdminDashboardView({
   const [securityUsername, setSecurityUsername] = useState('');
   const [securityOldPassword, setSecurityOldPassword] = useState('');
   const [securityNewPassword, setSecurityNewPassword] = useState('');
+  const [waPhone, setWaPhone] = useState(localStorage.getItem('rota_wa_phone') || '');
+  const [waApiKey, setWaApiKey] = useState(localStorage.getItem('rota_wa_apikey') || '');
   const [securityIsLoading, setSecurityIsLoading] = useState(false);
   const toggleSettingsSection = (key) => setSettingsAccordion(prev => ({ ...prev, [key]: !prev[key] }));
 
@@ -5422,6 +5424,57 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                   Web sitenizin genel ayarlarını, görsel varlıklarını, SEO meta etiketlerini ve site haritasını buradan yapılandırabilirsiniz.
                 </p>
 
+                {/* ── ACCORDION: Webhook ve Bildirimler ── */}
+                <div style={{ marginBottom: '0.75rem', borderRadius: '14px', overflow: 'hidden', border: '1px solid rgba(99,102,241,0.2)', transition: 'box-shadow 0.2s' }}>
+                  <button type="button" onClick={() => toggleSettingsSection('webhook')} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: settingsAccordion.webhook ? 'rgba(37, 211, 102, 0.05)' : 'rgba(255,255,255,0.7)', border: 'none', cursor: 'pointer' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1rem', color: 'var(--text-dark)' }}>
+                      <i className="fa-brands fa-whatsapp" style={{ color: '#25D366', fontSize: '1.05rem' }}></i>
+                      SaaS Bildirim Ayarları (WhatsApp)
+                    </span>
+                    <i className={`fa-solid ${settingsAccordion.webhook ? 'fa-chevron-up' : 'fa-chevron-down'}`} style={{ color: '#25D366', fontSize: '0.85rem' }}></i>
+                  </button>
+                  {settingsAccordion.webhook && (
+                    <div style={{ padding: '1.5rem', background: '#fff' }}>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginBottom: '1.25rem', lineHeight: '1.5', padding: '1rem', background: 'rgba(37, 211, 102, 0.05)', borderRadius: '8px', border: '1px solid rgba(37, 211, 102, 0.2)' }}>
+                          <strong>Kurulum Adımları (Sadece 10 saniye sürer):</strong><br/>
+                          1. Telefonunuzun WhatsApp uygulamasına girin ve <b>+34 624 54 22 28</b> numarasını rehberinize "CallMeBot" olarak kaydedin.<br/>
+                          2. Bu numaraya WhatsApp'tan <b>I allow callmebot to send me messages</b> yazıp gönderin.<br/>
+                          3. Bot size otomatik olarak "API Key" değerinizi yanıt olarak gönderecektir.<br/>
+                          4. Numaranızı ve botun verdiği API Key'i aşağıdaki alanlara girin.
+                        </div>
+                        
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                          <div className="admin-form-group">
+                            <label>WhatsApp Numaranız</label>
+                            <input 
+                              type="text" 
+                              value={waPhone} 
+                              onChange={e => {
+                                 setWaPhone(e.target.value);
+                                 localStorage.setItem('rota_wa_phone', e.target.value);
+                              }} 
+                              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--glass-border)', background: '#fff' }} 
+                              placeholder="+905321234567 (Uluslararası formatta boşluksuz)" 
+                            />
+                          </div>
+                          <div className="admin-form-group">
+                            <label>API Key (CallMeBot)</label>
+                            <input 
+                              type="text" 
+                              value={waApiKey} 
+                              onChange={e => {
+                                 setWaApiKey(e.target.value);
+                                 localStorage.setItem('rota_wa_apikey', e.target.value);
+                              }} 
+                              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--glass-border)', background: '#fff' }} 
+                              placeholder="Örn: 123456" 
+                            />
+                          </div>
+                        </div>
+                    </div>
+                  )}
+                </div>
+                
                 {/* ── ACCORDION: Güvenlik ve Hesap Bilgileri ── */}
                 <div style={{ marginBottom: '0.75rem', borderRadius: '14px', overflow: 'hidden', border: '1px solid rgba(239,68,68,0.2)', boxShadow: settingsAccordion.security ? '0 4px 16px rgba(239,68,68,0.08)' : 'none', transition: 'box-shadow 0.2s' }}>
                   <button type="button" onClick={() => toggleSettingsSection('security')} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: settingsAccordion.security ? 'linear-gradient(135deg, rgba(239,68,68,0.10) 0%, rgba(220,38,38,0.06) 100%)' : 'rgba(255,255,255,0.7)', border: 'none', cursor: 'pointer', borderBottom: settingsAccordion.security ? '1px solid rgba(239,68,68,0.15)' : 'none', transition: 'background 0.2s' }}>
