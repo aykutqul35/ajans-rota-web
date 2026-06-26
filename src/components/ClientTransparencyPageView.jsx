@@ -329,8 +329,8 @@ export default function ClientTransparencyPageView({
                 fontWeight: '600',
                 cursor: 'pointer',
                 border: '1px solid var(--glass-border)',
-                background: '#fff',
-                color: 'var(--text-light)',
+                background: '#1e293b',
+                color: '#94a3b8',
                 boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
                 height: 'auto',
                 width: 'auto'
@@ -367,10 +367,10 @@ export default function ClientTransparencyPageView({
               <i className="fa-solid fa-lock"></i>
             </div>
 
-            <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.5rem' }}>
+            <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#f8fafc', marginBottom: '0.5rem' }}>
               Rota Growth OS
             </h1>
-            <p style={{ color: 'var(--text-light)', fontSize: '0.85rem', lineHeight: '1.5', marginBottom: '2rem' }}>
+            <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', marginBottom: '2rem' }}>
               Reklam performansınızı ve operasyon süreçlerini canlı izlemek için firmanıza tanımlanan giriş bilgilerini kullanın.
             </p>
 
@@ -396,9 +396,9 @@ export default function ClientTransparencyPageView({
 
             <form onSubmit={handleLogin} style={{ textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div className="admin-form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dark)', marginBottom: '0.4rem', display: 'block' }}>Kullanıcı Adı</label>
+                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#f8fafc', marginBottom: '0.4rem', display: 'block' }}>Kullanıcı Adı</label>
                 <div style={{ position: 'relative' }}>
-                  <i className="fa-solid fa-user" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.85rem' }}></i>
+                  <i className="fa-solid fa-user" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '0.85rem' }}></i>
                   <input
                     type="text"
                     required
@@ -410,9 +410,9 @@ export default function ClientTransparencyPageView({
                       padding: '0.75rem 1rem 0.75rem 2.25rem',
                       borderRadius: '12px',
                       border: '1px solid rgba(15, 23, 42, 0.15)',
-                      background: '#fff',
+                      background: '#1e293b',
                       fontSize: '0.85rem',
-                      color: 'var(--text-dark)',
+                      color: '#f8fafc',
                       outline: 'none',
                       boxShadow: 'none',
                       transition: 'border-color 0.2s, box-shadow 0.2s'
@@ -422,9 +422,9 @@ export default function ClientTransparencyPageView({
               </div>
 
               <div className="admin-form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dark)', marginBottom: '0.4rem', display: 'block' }}>Şifre</label>
+                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#f8fafc', marginBottom: '0.4rem', display: 'block' }}>Şifre</label>
                 <div style={{ position: 'relative' }}>
-                  <i className="fa-solid fa-key" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.85rem' }}></i>
+                  <i className="fa-solid fa-key" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '0.85rem' }}></i>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
@@ -436,9 +436,9 @@ export default function ClientTransparencyPageView({
                       padding: '0.75rem 2.5rem 0.75rem 2.25rem',
                       borderRadius: '12px',
                       border: '1px solid rgba(15, 23, 42, 0.15)',
-                      background: '#fff',
+                      background: '#1e293b',
                       fontSize: '0.85rem',
-                      color: 'var(--text-dark)',
+                      color: '#f8fafc',
                       outline: 'none',
                       boxShadow: 'none',
                       transition: 'border-color 0.2s, box-shadow 0.2s'
@@ -454,7 +454,7 @@ export default function ClientTransparencyPageView({
                       transform: 'translateY(-50%)',
                       background: 'none',
                       border: 'none',
-                      color: 'var(--text-muted)',
+                      color: '#64748b',
                       cursor: 'pointer',
                       fontSize: '0.9rem',
                       padding: 0
@@ -498,19 +498,19 @@ export default function ClientTransparencyPageView({
                 border: '1px solid rgba(15, 23, 42, 0.05)',
                 textAlign: 'left'
               }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-dark)', display: 'block', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#f8fafc', display: 'block', marginBottom: '0.5rem' }}>
                   <i className="fa-solid fa-circle-info" style={{ color: 'var(--primary)', marginRight: '4px' }}></i> Test Giriş Bilgileri (Demo Modu)
                 </span>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', color: 'var(--text-light)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', color: '#94a3b8' }}>
                     <span>E-Ticaret Müşterisi:</span>
-                    <code style={{ background: '#fff', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(15,23,42,0.06)' }}>
+                    <code style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(15,23,42,0.06)' }}>
                       {rawEcommerce.username || 'ege'} / {rawEcommerce.password || 'ege123'}
                     </code>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', color: 'var(--text-light)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', color: '#94a3b8' }}>
                     <span>B2B Müşterisi:</span>
-                    <code style={{ background: '#fff', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(15,23,42,0.06)' }}>
+                    <code style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(15,23,42,0.06)' }}>
                       {rawB2b.username || 'liman'} / {rawB2b.password || 'liman123'}
                     </code>
                   </div>
@@ -607,18 +607,18 @@ export default function ClientTransparencyPageView({
           
           /* Override hardcoded light mode styles */
           .client-os-content *[style*="background-color: #fff"],
-          .client-os-content *[style*="backgroundColor: '#fff'"],
-          .client-os-content *[style*="background: '#fff'"] {
+          .client-os-content *[style*="backgroundColor: '#1e293b'"],
+          .client-os-content *[style*="background: '#1e293b'"] {
              background-color: #1e293b !important;
              background: #1e293b !important;
              border-color: rgba(255,255,255,0.1) !important;
              box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
           }
-          .client-os-content *[style*="color: 'var(--text-dark)'"] {
+          .client-os-content *[style*="color: '#f8fafc'"] {
              color: #f1f5f9 !important;
           }
-          .client-os-content *[style*="color: 'var(--text-light)'"],
-          .client-os-content *[style*="color: 'var(--text-muted)'"] {
+          .client-os-content *[style*="color: '#94a3b8'"],
+          .client-os-content *[style*="color: '#64748b'"] {
              color: #94a3b8 !important;
           }
        `}</style>
@@ -680,8 +680,8 @@ export default function ClientTransparencyPageView({
               fontWeight: '600',
               cursor: 'pointer',
               border: '1px solid var(--glass-border)',
-              background: '#fff',
-              color: 'var(--text-light)',
+              background: '#1e293b',
+              color: '#94a3b8',
               boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
               height: 'auto',
               width: 'auto'
@@ -701,7 +701,7 @@ export default function ClientTransparencyPageView({
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '1.25rem',
-          backgroundColor: '#fff',
+          backgroundColor: '#1e293b',
           padding: '1.25rem',
           borderRadius: '16px',
           border: '1px solid rgba(15, 23, 42, 0.06)',
@@ -712,7 +712,7 @@ export default function ClientTransparencyPageView({
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--primary-glow)', padding: '6px 12px', borderRadius: '8px', border: '1px solid rgba(99, 102, 241, 0.15)' }}>
               <i className="fa-solid fa-circle-check" style={{ color: 'var(--primary)', fontSize: '0.8rem' }}></i>
-              <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-dark)' }}>
+              <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#f8fafc' }}>
                 {currentData.brandName || (activeBrand === 'ecommerce' ? 'E-Ticaret Müşterisi' : 'B2B Müşterisi')} Oturumu Aktif
               </span>
             </div>
@@ -755,7 +755,7 @@ export default function ClientTransparencyPageView({
               <span style={{ fontSize: '0.8rem', color: '#16a34a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.3rem', justifyContent: 'flex-end' }}>
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#16a34a', display: 'inline-block', animation: 'ping 1.5s infinite' }}></span> Canlı Veri Aktif
               </span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
                 Son Güncelleme: Bugün 17:45
               </span>
             </div>
@@ -768,8 +768,8 @@ export default function ClientTransparencyPageView({
                 border: '1px solid rgba(15, 23, 42, 0.12)',
                 fontSize: '0.8rem',
                 fontWeight: 600,
-                color: 'var(--text-light)',
-                background: '#fff',
+                color: '#94a3b8',
+                background: '#1e293b',
                 cursor: 'pointer'
               }}
             >
@@ -846,16 +846,16 @@ export default function ClientTransparencyPageView({
                   <i className="fa-solid fa-robot"></i>
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.5rem' }}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f8fafc', marginBottom: '0.5rem' }}>
                     Yapay Zeka Yönetici Özeti & Öneriler
                   </h3>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--text-light)', lineHeight: '1.6', margin: '0 0 1rem 0' }}>
+                  <p style={{ fontSize: '0.9rem', color: '#94a3b8', lineHeight: '1.6', margin: '0 0 1rem 0' }}>
                     {currentData.aiSummary}
                   </p>
                   
                   {/* AI Actionable Insight */}
                   <div style={{
-                    background: '#fff',
+                    background: '#1e293b',
                     borderRadius: '12px',
                     padding: '1rem',
                     border: '1px solid rgba(99, 102, 241, 0.2)',
@@ -867,7 +867,7 @@ export default function ClientTransparencyPageView({
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 0 4px rgba(16, 185, 129, 0.1)' }}></div>
-                      <span style={{ fontSize: '0.85rem', color: 'var(--text-dark)', fontWeight: 600 }}>
+                      <span style={{ fontSize: '0.85rem', color: '#f8fafc', fontWeight: 600 }}>
                         {activeBrand === 'ecommerce' 
                           ? "CPL maliyetiniz düştü, yeni bir Reels kreatifi çekmenizi öneriyoruz." 
                           : "LinkedIn form optimizasyonu için bütçe artırımı tavsiye ediliyor."}
@@ -910,12 +910,12 @@ export default function ClientTransparencyPageView({
             }}>
               {currentData.kpis.map((kpi, idx) => (
                 <div key={idx} className="client-kpi-card" style={{
-                  backgroundColor: '#fff', padding: '1.5rem', borderRadius: '16px',
+                  backgroundColor: '#1e293b', padding: '1.5rem', borderRadius: '16px',
                   border: '1px solid rgba(15, 23, 42, 0.05)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.015)',
                   display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', overflow: 'hidden'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-light)', fontWeight: 600 }}>{kpi.label}</span>
+                    <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600 }}>{kpi.label}</span>
                     <div style={{
                       width: '36px', height: '36px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                       background: 'rgba(15, 23, 42, 0.03)', color: kpi.color
@@ -924,7 +924,7 @@ export default function ClientTransparencyPageView({
                     </div>
                   </div>
                   <div>
-                    <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.25rem' }}>{kpi.value}</h3>
+                    <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#f8fafc', marginBottom: '0.25rem' }}>{kpi.value}</h3>
                     <span style={{ fontSize: '0.75rem', color: kpi.change.includes('-') ? '#ef4444' : '#16a34a', fontWeight: 600 }}>
                       {kpi.change}
                     </span>
@@ -937,7 +937,7 @@ export default function ClientTransparencyPageView({
             {/* Interactive Charts (Recharts) */}
             {currentData.chartData && (
               <div style={{
-                backgroundColor: '#fff', borderRadius: '16px', padding: '1.5rem',
+                backgroundColor: '#1e293b', borderRadius: '16px', padding: '1.5rem',
                 border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)',
                 marginBottom: '2rem'
               }}>
@@ -945,7 +945,7 @@ export default function ClientTransparencyPageView({
                   <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(99, 102, 241, 0.08)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <i className="fa-solid fa-chart-line" style={{ fontSize: '1rem' }}></i>
                   </div>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)' }}>6 Aylık Performans Trendi</h3>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f8fafc' }}>6 Aylık Performans Trendi</h3>
                 </div>
                 <div style={{ width: '100%', height: '300px' }}>
                   <ResponsiveContainer width="100%" height="100%">
@@ -977,29 +977,29 @@ export default function ClientTransparencyPageView({
             <div className="client-dashboard-layout-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                 {/* Google Ads Section */}
-                <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)' }}>
+                <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                     <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(14, 165, 233, 0.08)', color: '#0ea5e9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <i className="fa-brands fa-google" style={{ fontSize: '1rem' }}></i>
                     </div>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)' }}>Google Ads Performansı</h3>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f8fafc' }}>Google Ads Performansı</h3>
                   </div>
                   <div style={{ overflowX: 'auto' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                       <thead>
                         <tr style={{ borderBottom: '1px solid rgba(15, 23, 42, 0.08)' }}>
-                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700 }}>Kampanya Adı</th>
-                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700 }}>Harcama</th>
-                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'center' }}>Tıklama</th>
-                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textAlign: 'right' }}>{activeBrand === 'ecommerce' ? 'ROAS' : 'CPL'}</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700 }}>Kampanya Adı</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700 }}>Harcama</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700, textAlign: 'center' }}>Tıklama</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700, textAlign: 'right' }}>{activeBrand === 'ecommerce' ? 'ROAS' : 'CPL'}</th>
                         </tr>
                       </thead>
                       <tbody>
                         {currentData.googleAds.map((camp, idx) => (
                           <tr key={idx} style={{ borderBottom: '1px solid rgba(15, 23, 42, 0.04)' }}>
-                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-dark)' }}>{camp.name}</td>
-                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-light)' }}>{camp.spend}</td>
-                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: 'var(--text-light)', textAlign: 'center' }}>{camp.clicks}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 600, color: '#f8fafc' }}>{camp.name}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#94a3b8' }}>{camp.spend}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: '#94a3b8', textAlign: 'center' }}>{camp.clicks}</td>
                             <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#16a34a', textAlign: 'right' }}>{camp.roas}</td>
                           </tr>
                         ))}
@@ -1008,22 +1008,89 @@ export default function ClientTransparencyPageView({
                   </div>
                 </div>
 
+                {/* Meta Ads Section */}
+                <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(236, 72, 153, 0.1)', color: '#ec4899', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <i className="fa-brands fa-meta" style={{ fontSize: '1rem' }}></i>
+                    </div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f8fafc' }}>Meta Ads Performansı</h3>
+                  </div>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700 }}>Kampanya Adı</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700 }}>Harcama</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700, textAlign: 'center' }}>Tıklama</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700, textAlign: 'right' }}>{activeBrand === 'ecommerce' ? 'ROAS' : 'CPL'}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {currentData.metaAds.map((camp, idx) => (
+                          <tr key={idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.03)' }}>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 600, color: '#f8fafc' }}>{camp.name}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#94a3b8' }}>{camp.spend}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: '#94a3b8', textAlign: 'center' }}>{camp.clicks}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#16a34a', textAlign: 'right' }}>{camp.roas}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* SEO Section */}
+                <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <i className="fa-solid fa-magnifying-glass" style={{ fontSize: '1rem' }}></i>
+                    </div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f8fafc' }}>SEO Kelime Sıralamaları</h3>
+                  </div>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700 }}>Anahtar Kelime</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700 }}>Sıra</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700, textAlign: 'center' }}>Aylık Hacim</th>
+                          <th style={{ padding: '0.75rem 0.5rem', fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700, textAlign: 'right' }}>Trend</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {currentData.seo.map((item, idx) => (
+                          <tr key={idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.03)' }}>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 600, color: '#f8fafc' }}>{item.keyword}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#0ea5e9' }}>{item.rank}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: '#94a3b8', textAlign: 'center' }}>{item.volume}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', textAlign: 'right', color: item.trend === 'up' ? '#16a34a' : '#94a3b8' }}>
+                              <i className={`fa-solid fa-arrow-${item.trend === 'up' ? 'trend-up' : 'right'}`}></i>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+
                 {/* Timeline Wrapper */}
-                <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)' }}>
+                <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
                     <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--primary-glow)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <i className="fa-solid fa-timeline" style={{ fontSize: '1rem' }}></i>
                     </div>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)' }}>Ajans İş Defteri (Timeline)</h3>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f8fafc' }}>Ajans İş Defteri (Timeline)</h3>
                   </div>
                   <div className="transparency-timeline" style={{ position: 'relative', paddingLeft: '1.25rem', borderLeft: '2px solid rgba(15, 23, 42, 0.06)' }}>
                     {currentData.timeline.map((act, idx) => (
                       <div key={idx} className="timeline-item" style={{ position: 'relative', marginBottom: idx === currentData.timeline.length - 1 ? 0 : '1.75rem' }}>
                         <div style={{ position: 'absolute', left: '-26px', top: '2px', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--primary)', border: '3px solid #fff', boxShadow: '0 0 0 2px rgba(15, 23, 42, 0.08)' }}></div>
                         <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.2rem' }}>{act.date}</div>
-                        <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.25rem', lineHeight: '1.3' }}>{act.title}</h4>
-                        <p style={{ fontSize: '0.78rem', color: 'var(--text-light)', lineHeight: '1.4', marginBottom: '0.35rem' }}>{act.desc}</p>
-                        <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                        <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#f8fafc', marginBottom: '0.25rem', lineHeight: '1.3' }}>{act.title}</h4>
+                        <p style={{ fontSize: '0.78rem', color: '#94a3b8', lineHeight: '1.4', marginBottom: '0.35rem' }}>{act.desc}</p>
+                        <div style={{ fontSize: '0.7rem', color: '#64748b', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                           <i className="fa-solid fa-user-tie" style={{ fontSize: '0.65rem' }}></i> Uzman: {act.author}
                         </div>
                       </div>
@@ -1041,9 +1108,9 @@ export default function ClientTransparencyPageView({
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
               {currentData.creatives?.map(creative => (
                 <div key={creative.id} style={{
-                  backgroundColor: '#fff', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)', display: 'flex', flexDirection: 'column'
+                  backgroundColor: '#1e293b', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)', display: 'flex', flexDirection: 'column'
                 }}>
-                  <div style={{ height: '160px', background: '#f1f5f9', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ height: '160px', background: 'rgba(255,255,255,0.02)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {creative.type === 'video' ? (
                       <i className="fa-solid fa-play-circle" style={{ fontSize: '3rem', color: 'var(--primary)' }}></i>
                     ) : creative.type === 'pdf' ? (
@@ -1056,10 +1123,10 @@ export default function ClientTransparencyPageView({
                     </div>
                   </div>
                   <div style={{ padding: '1.25rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <h4 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-dark)', marginBottom: '0.25rem' }}>{creative.title}</h4>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Yüklenme: {creative.date}</span>
+                    <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#f8fafc', marginBottom: '0.25rem' }}>{creative.title}</h4>
+                    <span style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '1rem' }}>Yüklenme: {creative.date}</span>
                     {creative.feedback && (
-                      <div style={{ background: '#f8fafc', padding: '0.75rem', borderRadius: '8px', fontSize: '0.8rem', color: 'var(--text-light)', marginBottom: '1rem', borderLeft: '3px solid var(--primary)' }}>
+                      <div style={{ background: 'rgba(255,255,255,0.05)', padding: '0.75rem', borderRadius: '8px', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '1rem', borderLeft: '3px solid var(--primary)' }}>
                         <strong>Geri Bildirim:</strong> {creative.feedback}
                       </div>
                     )}
@@ -1137,12 +1204,12 @@ export default function ClientTransparencyPageView({
         {/* --- TAB: VAULT (Dosya Kasam) --- */}
         {activeTab === 'vault' && (
           <div className="tab-content-vault fade-in">
-            <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)' }}>
+            <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
                 <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--primary-glow)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <i className="fa-solid fa-vault" style={{ fontSize: '1rem' }}></i>
                 </div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-dark)' }}>Güvenli Dosya Kasası</h3>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f8fafc' }}>Güvenli Dosya Kasası</h3>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {currentData.files?.map(file => (
@@ -1152,8 +1219,8 @@ export default function ClientTransparencyPageView({
                         <i className={file.type === 'pdf' ? "fa-solid fa-file-pdf" : "fa-solid fa-file-invoice"}></i>
                       </div>
                       <div>
-                        <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-dark)', marginBottom: '0.2rem' }}>{file.title}</h4>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{file.date}</span>
+                        <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#f8fafc', marginBottom: '0.2rem' }}>{file.title}</h4>
+                        <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{file.date}</span>
                       </div>
                     </div>
                     <a href={file.url} target="_blank" rel="noreferrer" className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', borderRadius: '8px', textDecoration: 'none' }}>
@@ -1169,9 +1236,9 @@ export default function ClientTransparencyPageView({
         {/* --- TAB: API (API Entegrasyonları) --- */}
         {activeTab === 'api' && (
           <div className="tab-content-api fade-in">
-            <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '2rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)', maxWidth: '600px', margin: '0 auto' }}>
-              <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-dark)', textAlign: 'center', marginBottom: '0.5rem' }}>Gerçek Zamanlı Veri Eşitleme</h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-light)', textAlign: 'center', marginBottom: '2rem' }}>Mevcut API entegrasyon durumunuzu aşağıdan inceleyebilirsiniz.</p>
+            <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '2rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)', maxWidth: '600px', margin: '0 auto' }}>
+              <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#f8fafc', textAlign: 'center', marginBottom: '0.5rem' }}>Gerçek Zamanlı Veri Eşitleme</h3>
+              <p style={{ fontSize: '0.85rem', color: '#94a3b8', textAlign: 'center', marginBottom: '2rem' }}>Mevcut API entegrasyon durumunuzu aşağıdan inceleyebilirsiniz.</p>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
                 {/* Google Ads API */}
@@ -1179,8 +1246,8 @@ export default function ClientTransparencyPageView({
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <i className="fa-brands fa-google" style={{ fontSize: '1.5rem', color: '#0ea5e9' }}></i>
                     <div>
-                      <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-dark)' }}>Google Ads API</h4>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Son senkronize: {currentData.apiSync?.lastSync}</span>
+                      <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc' }}>Google Ads API</h4>
+                      <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Son senkronize: {currentData.apiSync?.lastSync}</span>
                     </div>
                   </div>
                   <div style={{ padding: '4px 12px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700, background: currentData.apiSync?.googleAds ? '#dcfce7' : '#fef08a', color: currentData.apiSync?.googleAds ? '#16a34a' : '#b45309' }}>
@@ -1193,8 +1260,8 @@ export default function ClientTransparencyPageView({
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <i className="fa-brands fa-meta" style={{ fontSize: '1.5rem', color: '#ec4899' }}></i>
                     <div>
-                      <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-dark)' }}>Meta Marketing API</h4>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Son senkronize: {currentData.apiSync?.lastSync}</span>
+                      <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc' }}>Meta Marketing API</h4>
+                      <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Son senkronize: {currentData.apiSync?.lastSync}</span>
                     </div>
                   </div>
                   <div style={{ padding: '4px 12px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700, background: currentData.apiSync?.metaAds ? '#dcfce7' : '#fee2e2', color: currentData.apiSync?.metaAds ? '#16a34a' : '#ef4444' }}>
