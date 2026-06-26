@@ -1497,6 +1497,7 @@ function App() {
   // Dynamic SEO meta tags updater
   useEffect(() => {
     let title = settingsData.meta_title || "Ajans Rota | İzmir Google & Meta Reklam ve SEO Ajansı";
+    let noIndex = false;
     let description = settingsData.meta_description || "İzmir'de Google Ads, Meta reklamları, SEO ve sosyal medya yönetimi ile markanızı Ege'den dünyaya açın. Veri odaklı dijital büyüme ajansı.";
     let keywords = settingsData.meta_keywords || "izmir dijital ajans, google ads, meta ads, seo, sosyal medya, web tasarim";
     if (currentPath === '/neden-izmir') {
