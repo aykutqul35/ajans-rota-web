@@ -103,6 +103,28 @@ export default function SEO({
   const canonicalUrl = `${siteUrl}${canonicalPath}`;
   const absImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
   const localBusinessSchema = buildSchema({ siteUrl, phone, email });
+  
+  // Dinamik Breadcrumb Schema
+  const paths = canonicalPath.split('/').filter(p => p);
+  const breadcrumbSchema = paths.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Ana Sayfa",
+        "item": siteUrl
+      },
+      ...paths.map((p, i) => ({
+        "@type": "ListItem",
+        "position": i + 2,
+        "name": p.replace(/-/g, ' ').replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()),
+        "item": `${siteUrl}/${paths.slice(0, i+1).join('/')}`
+      }))
+    ]
+  } : null;
+
 
   return (
     <Helmet>
@@ -141,6 +163,13 @@ export default function SEO({
       <script type="application/ld+json">
         {JSON.stringify(localBusinessSchema)}
       </script>
+
+      {/* ── Breadcrumb Schema ── */}
+      {breadcrumbSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(breadcrumbSchema)}
+        </script>
+      )}
 
       {/* ── Sayfa özel schema (opsiyonel) ── */}
       {schema && (

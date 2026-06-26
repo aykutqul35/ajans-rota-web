@@ -202,7 +202,7 @@ function App() {
           window.scrollTo({ top: y, behavior: 'smooth' });
         }
       }, 300);
-    } else if (!location.pathname.startsWith('/admin')) {
+    } else if (!location.pathname.startsWith('/rota-management-vault-x9')) {
       // Don't auto-scroll to top for admin routes to preserve state
       window.scrollTo(0, 0);
     }
@@ -310,7 +310,7 @@ function App() {
       title: "Blog & Akademi | Ajans Rota",
       description: "Dijital pazarlama trendleri, SEO ipuçları ve e-ticaret büyüme taktikleri."
     };
-    if (path === '/seffaf-panel') return {
+    if (path === '/client-portal-secure') return {
       title: "Müşteri Paneli | Ajans Rota",
       description: "Ajans Rota müşterilerine özel şeffaf raporlama ve canlı data takip paneli."
     };
@@ -988,7 +988,7 @@ function App() {
     if (path === '/kobi-endeksi' && settingsData.hide_page_kobi) return true;
     if (path === '/rakip-analizi' && settingsData.hide_page_rakip) return true;
     if (path === '/kreatif-vitrin' && settingsData.hide_page_kreatif) return true;
-    if (path === '/seffaf-panel' && settingsData.hide_page_seffaf) return true;
+    if (path === '/client-portal-secure' && settingsData.hide_page_seffaf) return true;
     if (path === '/akademi' && settingsData.hide_page_akademi) return true;
     return false;
   };
@@ -1026,7 +1026,7 @@ function App() {
   }, [currentPath, settingsData]);
   const logHit = (path, action = 'view', value = 0) => {
     // Don't track if we are in admin panel
-    if (path && path.startsWith('/admin')) {
+    if (path && path.startsWith('/rota-management-vault-x9')) {
       return;
     }
 
@@ -1095,7 +1095,7 @@ function App() {
 
   // Automatically track page duration
   useEffect(() => {
-    if (!currentPath || currentPath.startsWith('/admin')) return;
+    if (!currentPath || currentPath.startsWith('/rota-management-vault-x9')) return;
     let startTime = Date.now();
     const activePath = currentPath;
     const sendDuration = () => {
@@ -1259,8 +1259,11 @@ function App() {
     };
     
     const loadClientsFromDB = async () => {
+      if (!authToken) return; // Only fetch if we have an admin token
       try {
-        const res = await fetch('/api/clients');
+        const res = await fetch('/api/clients', {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
         if (res.ok) {
           const result = await res.json();
           if (result.success && result.data) {
@@ -1536,7 +1539,9 @@ function App() {
       title = "Siz vs. Rakibiniz Karşılaştırma Modülü | Ajans Rota";
       description = "Kendi web siteniz ile rakip sitenin hız, güvenlik ve dizin değerlerini yan yana karşılaştırın, öne geçme planı talep edin.";
       keywords = "rakip analizi aracı, web site karşılaştırma, rakip seo denetimi, hız kıyaslama";
-    } else if (currentPath === '/seffaf-panel') {
+    } else if (currentPath === '/client-portal-secure' || currentPath === '/portal-girisi-x9' || currentPath === '/rota-management-vault-x9') {
+      noIndex = true;
+
       title = "Müşteri Raporlama & Şeffaflık Paneli Demosu | Ajans Rota";
       description = "Ajans Rota şeffaf raporlama paneli. E-ticaret ve B2B markalarımız için yürüttüğümüz Google/Meta kampanya verilerini ve ajans aktivite günlüğünü canlı inceleyin.";
       keywords = "şeffaf raporlama paneli, ajans paneli demosu, google ads raporu, meta ads raporu, ajans iş defteri";
@@ -2853,7 +2858,7 @@ function App() {
       </div>;
   };
   
-  const isAdminRoute = currentPath.startsWith('/admin');
+  const isAdminRoute = currentPath.startsWith('/rota-management-vault-x9');
 
   return <>
       <SEO
@@ -3005,7 +3010,7 @@ function App() {
                 }}><i className="fa-solid fa-wand-magic-sparkles nav-icon"></i>Kreatif Reklam Vitrini</a></li>}
                 {!settingsData.hide_page_seffaf && <li><a href="#" onClick={e => {
                   e.preventDefault();
-                  navigateTo('/seffaf-panel');
+                  navigateTo('/client-portal-secure');
                 }}><i className="fa-solid fa-chart-pie nav-icon"></i>Müşteri Raporlama Paneli</a></li>}
                 {!settingsData.hide_page_akademi && <li><a href="#" onClick={e => {
                   e.preventDefault();
@@ -3026,7 +3031,7 @@ function App() {
           <div className="nav-actions">
             <a href="#" className="btn btn-secondary" style={{ background: 'transparent', color: 'var(--text-dark)', border: '1px solid var(--glass-border)' }} onClick={e => {
               e.preventDefault();
-              navigateTo('/seffaf-panel');
+              navigateTo('/client-portal-secure');
               setIsMobileMenuOpen(false);
             }}>
               <i className="fa-solid fa-lock" style={{ marginRight: '6px' }}></i>
@@ -3050,15 +3055,15 @@ function App() {
         </div>
       }>
         <Routes>
-        <Route path="/admin" element={<ProtectedRoute><AdminDashboardView settingsData={settingsData} setSettingsData={setSettingsData} servicesData={servicesData} setServicesData={setServicesData} teamMembersData={teamMembersData} setTeamMembersData={setTeamMembersData} blogsData={blogsData} setBlogsData={setBlogsData} testimonialsData={testimonialsData} setTestimonialsData={setTestimonialsData} leadsData={leadsData} setLeadsData={setLeadsData} authToken={authToken} setAuthToken={setAuthToken} clientReports={clientReports} setClientReports={setClientReports} onLogout={() => { localStorage.removeItem('admin_token'); navigate('/admin/login'); }} /></ProtectedRoute>} />
-        <Route path="/admin/login" element={<Login />} />
+        <Route path="/rota-management-vault-x9" element={<ProtectedRoute><AdminDashboardView settingsData={settingsData} setSettingsData={setSettingsData} servicesData={servicesData} setServicesData={setServicesData} teamMembersData={teamMembersData} setTeamMembersData={setTeamMembersData} blogsData={blogsData} setBlogsData={setBlogsData} testimonialsData={testimonialsData} setTestimonialsData={setTestimonialsData} leadsData={leadsData} setLeadsData={setLeadsData} authToken={authToken} setAuthToken={setAuthToken} clientReports={clientReports} setClientReports={setClientReports} onLogout={() => { localStorage.removeItem('admin_token'); navigate('/portal-girisi-x9'); }} /></ProtectedRoute>} />
+        <Route path="/portal-girisi-x9" element={<Login />} />
         <Route path="/neden-izmir" element={<IzmirPageView onBack={() => navigate('/')} onNavToContact={() => navigate('/iletisim')} onSaveLead={simulateLeadLocally} />} />
         <Route path="/seo-analizi" element={<SeoAuditPageView onBack={() => navigate('/')} onNavToContact={() => navigate('/iletisim')} onSaveLead={simulateLeadLocally} logHit={logHit} />} />
         <Route path="/kobi-endeksi" element={<KobiIndexPageView onBack={() => navigate('/')} onSaveLead={simulateLeadLocally} logHit={logHit} />} />
         <Route path="/kreatif-vitrin" element={<CreativeShowcasePageView onBack={() => navigate('/')} />} />
         <Route path="/rakip-analizi" element={<CompetitorAnalysisPageView onBack={() => navigate('/')} onSaveLead={simulateLeadLocally} logHit={logHit} />} />
         <Route path="/akademi" element={<AkademiPageView onBack={() => navigate('/')} onSaveLead={simulateLeadLocally} logHit={logHit} />} />
-        <Route path="/seffaf-panel" element={<Suspense fallback={<SkeletonLoader />}><ClientTransparencyPageView clientReports={clientReports} setClientReports={setClientReports} onBack={() => navigate('/')} onContactClick={() => navigate('/iletisim')} /></Suspense>} />
+        <Route path="/client-portal-secure" element={<Suspense fallback={<SkeletonLoader />}><ClientTransparencyPageView clientReports={clientReports} setClientReports={setClientReports} onBack={() => navigate('/')} onContactClick={() => navigate('/iletisim')} /></Suspense>} />
         <Route path="/hakkimizda" element={<AboutPageView onBack={() => navigate('/')} onNavToContact={() => navigate('/iletisim')} settingsData={settingsData} />} />
         <Route path="/gizlilik-politikasi" element={<LegalPageView onBack={() => navigate('/')} currentPath={'/gizlilik-politikasi'} settingsData={settingsData} />} />
         <Route path="/kullanim-kosullari" element={<LegalPageView onBack={() => navigate('/')} currentPath={'/kullanim-kosullari'} settingsData={settingsData} />} />
@@ -5582,7 +5587,7 @@ function App() {
                   }}><span className="link-bullet"></span><span>Reklam Vitrini</span></a></li>}
                   {!settingsData.hide_page_seffaf && <li><a href="#" onClick={e => {
                     e.preventDefault();
-                    navigateTo('/seffaf-panel');
+                    navigateTo('/client-portal-secure');
                   }}><span className="link-bullet"></span><span>Müşteri Raporlama</span></a></li>}
                   {!settingsData.hide_page_akademi && <li><a href="#" onClick={e => {
                     e.preventDefault();
@@ -5973,7 +5978,7 @@ function App() {
         </div>
       </footer>
       )}
-      {currentPath !== '/admin' && <WhatsAppAssistantWidget settingsData={settingsData} onSaveLead={simulateLeadLocally} logHit={logHit} />}
+      {currentPath !== '/rota-management-vault-x9' && <WhatsAppAssistantWidget settingsData={settingsData} onSaveLead={simulateLeadLocally} logHit={logHit} />}
       {/* Custom Global Popup */}
       <LeadPopup 
         isOpen={isLeadPopupOpen} 

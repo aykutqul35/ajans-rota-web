@@ -53,7 +53,7 @@ export default function ClientTransparencyPageView({
       if (updated[activeBrand].client_id) {
         await fetch('/api/clients/update', {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('client_token')}` },
           body: JSON.stringify({ 
             client_id: updated[activeBrand].client_id, 
             report_data: updated[activeBrand]

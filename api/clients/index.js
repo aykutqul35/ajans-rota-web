@@ -1,10 +1,28 @@
 import { neon } from '@neondatabase/serverless';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
   const sql = neon(process.env.DATABASE_URL);
 
   if (req.method === 'GET') {
     try {
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Yetkisiz erişim.' });
+      }
+
+      const token = authHeader.split(' ')[1];
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'ajansrota_fallback_secret');
+        // İsteği yapan Admin olmalı (çünkü tüm müşterileri çekiyor)
+        if (decoded.role === 'client') {
+           return res.status(403).json({ success: false, message: 'Erişim reddedildi.' });
+        }
+      } catch (err) {
+        return res.status(401).json({ success: false, message: 'Geçersiz token.' });
+      }
+
       // Get all clients with their reports
       const clients = await sql`
         SELECT c.id, c.username, c.brand_name, r.report_data 
@@ -25,7 +43,7 @@ export default async function handler(req, res) {
       
       // In a real app, hash the password! But since this is a demo/prototype we'll keep it simple for now, 
       // or use a mock hash. The prompt didn't specify hashing requirements for clients, but Admin is hashed.
-      const password_hash = password; // Warning: Plain text for simplicity in this demo!
+      const password_hash = await bcrypt.hash(password, 10);
 
       const newClient = await sql`
         INSERT INTO client_accounts (username, password_hash, brand_name)
