@@ -2859,6 +2859,7 @@ function App() {
       </div>;
   };
   
+  const isSecurePanel = currentPath.startsWith('/rota-management-vault-x9') || currentPath.startsWith('/portal-girisi-x9') || currentPath.startsWith('/client-portal-secure');
   const isAdminRoute = currentPath.startsWith('/rota-management-vault-x9');
 
   return <>
@@ -2871,7 +2872,7 @@ function App() {
       />
 
       {/* Navigation Bar */}
-      {!isAdminRoute && (
+      {!isSecurePanel && (
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''} ${location.pathname.startsWith('/dijital-ajans/') ? 'dark-hero' : ''}`}>
         <div className="nav-container container">
           <a href="#" className="logo" onClick={e => {
@@ -5448,7 +5449,7 @@ function App() {
       </Suspense>
 
       {/* Footer Section */}
-      {!isAdminRoute && (
+      {!isSecurePanel && (
       <footer className="footer">
         {/* Top CTA Banner */}
         {currentPath !== '/referanslar' && currentPath !== '/ekiplerimiz' && currentPath !== '/neden-izmir' && !currentPath.startsWith('/hizmetlerimiz/') && <div className="container">
