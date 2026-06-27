@@ -2919,6 +2919,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
   };
   const handleSaveAll = async () => {
     setIsSaving(true);
+    window._adminLastWrite = Date.now();
     const dbPayload = {
       settings: settingsData,
       servicePagesData: servicesData,
@@ -3568,6 +3569,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
       });
       
       ticket.status = 'Müşteri Yanıtı Bekleniyor';
+      window._adminLastWrite = Date.now();
       
       setClientReports(updatedClientReports);
       

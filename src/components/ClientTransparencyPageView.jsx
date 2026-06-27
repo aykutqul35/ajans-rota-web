@@ -72,6 +72,8 @@ export default function ClientTransparencyPageView({
                 const key = serverData._key || (data.data.brand_name.toLowerCase().includes('e-ticaret') ? 'ecommerce' : 'b2b');
                 
                 // Only update if data actually changed to prevent re-renders
+                if (window._clientLastWrite && Date.now() - window._clientLastWrite < 5000) return;
+                
                 if (setClientReports && typeof setClientReports === 'function') {
                   setClientReports(prev => {
                     const prevBrand = prev?.[key];
@@ -389,6 +391,7 @@ export default function ClientTransparencyPageView({
       
       // Update status
       ticket.status = 'Yanıt Bekliyor';
+      window._clientLastWrite = Date.now();
       
       // Update state
       if (setClientReports) setClientReports(updatedClientReports);
@@ -440,6 +443,7 @@ export default function ClientTransparencyPageView({
       
       currentReports[activeBrand] = brandData;
       
+      window._clientLastWrite = Date.now();
       // Update global React state
       if (setClientReports) setClientReports(currentReports);
       
