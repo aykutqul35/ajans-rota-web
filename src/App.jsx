@@ -1287,7 +1287,18 @@ function App() {
       }
     };
 
-    fetchData().then(() => loadClientsFromDB());
+    fetchData().then(() => {
+      loadClientsFromDB();
+      if (authToken) {
+        // Poll for real-time ticket updates (Admin side)
+        const intervalId = setInterval(loadClientsFromDB, 5000);
+        window._adminPollInterval = intervalId;
+      }
+    });
+    
+    return () => {
+      if (window._adminPollInterval) clearInterval(window._adminPollInterval);
+    };
   }, [authToken]);
 
   // Dynamic Marketing and Analytics Code Injector
