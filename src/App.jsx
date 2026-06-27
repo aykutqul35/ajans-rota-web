@@ -25,8 +25,9 @@ const AdminDashboardView = lazy(() => import('./pages/AdminDashboardView'));
 const Login = lazy(() => import('./pages/admin/Login'));
 const LocationPageView = lazy(() => import('./pages/LocationPageView'));
 import ProtectedRoute from './components/ProtectedRoute';
-
 import LeadPopup from './components/LeadPopup';
+import SocialProofToast from './components/SocialProofToast';
+import RoasSimulatorWidget from './components/RoasSimulatorWidget';
 
 const PremiumHeroText = ({ greeting }) => {
   const container = {
@@ -5484,6 +5485,13 @@ function App() {
         </div>
       </section>
 
+      {/* NEW: ROAS Simulator Widget */}
+      <section id="simulator">
+        <div className="container">
+          <RoasSimulatorWidget onSaveLead={simulateLeadLocally} />
+        </div>
+      </section>
+
       <section id="contact" className="contact-section">
         <div className="container">
           <div className="contact-merged-grid">
@@ -6137,6 +6145,7 @@ function App() {
       </footer>
       )}
       {currentPath !== '/rota-management-vault-x9' && <WhatsAppAssistantWidget settingsData={settingsData} onSaveLead={simulateLeadLocally} logHit={logHit} />}
+      {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && <SocialProofToast />}
       {/* Custom Global Popup */}
       <LeadPopup 
         isOpen={isLeadPopupOpen} 

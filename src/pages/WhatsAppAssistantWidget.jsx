@@ -121,30 +121,40 @@ export default function WhatsAppAssistantWidget({
         position: 'fixed',
         bottom: '1.5rem',
         right: '1.5rem',
-        width: '60px',
-        height: '60px',
+        width: '64px',
+        height: '64px',
         borderRadius: '50%',
-        background: 'linear-gradient(135deg, #25d366 0%, #128c7e 100%)',
+        background: 'linear-gradient(135deg, #38bdf8 0%, #818cf8 100%)',
         color: '#fff',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '1.6rem',
-        boxShadow: '0 8px 32px rgba(37, 211, 102, 0.3)',
+        fontSize: '1.8rem',
+        boxShadow: '0 8px 32px rgba(56, 189, 248, 0.4)',
         cursor: 'pointer',
         zIndex: 9999,
-        transition: 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-      }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
-        {isOpen ? <i className="fa-solid fa-xmark"></i> : <i className="fa-brands fa-whatsapp"></i>}
+        transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+      }} onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(129, 140, 248, 0.6)'; }} onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(56, 189, 248, 0.4)'; }}>
+        {isOpen ? <i className="fa-solid fa-xmark"></i> : (
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+            <i className="fa-solid fa-robot" style={{ zIndex: 2 }}></i>
+            <motion.div
+              animate={{ opacity: [0.3, 0.8, 0.3], scale: [1, 1.2, 1] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%)', zIndex: 1 }}
+            />
+          </div>
+        )}
         {!isOpen && <span style={{
           position: 'absolute',
           top: '-2px',
           right: '-2px',
-          width: '12px',
-          height: '12px',
+          width: '14px',
+          height: '14px',
           background: '#ef4444',
           borderRadius: '50%',
-          border: '2px solid #fff'
+          border: '2px solid #fff',
+          boxShadow: '0 0 10px rgba(239, 68, 68, 0.5)'
         }}></span>}
       </div>
 
@@ -166,7 +176,7 @@ export default function WhatsAppAssistantWidget({
         }}>
           {/* Header */}
           <div style={{
-            background: 'linear-gradient(135deg, #25d366 0%, #128c7e 100%)',
+            background: 'linear-gradient(135deg, #38bdf8 0%, #818cf8 100%)',
             padding: '1rem',
             color: '#fff',
             display: 'flex',
@@ -185,20 +195,20 @@ export default function WhatsAppAssistantWidget({
                 fontSize: '1rem',
                 fontWeight: 'bold'
               }}>
-                <i className="fa-solid fa-robot"></i>
+                <i className="fa-solid fa-bolt"></i>
               </div>
               <div>
                 <h4 style={{ fontSize: '0.9rem', fontWeight: '700', margin: 0 }}>Rota AI Asistan</h4>
                 <span style={{ fontSize: '0.65rem', opacity: 0.9, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                  <span style={{ width: '6px', height: '6px', background: '#4ade80', borderRadius: '50%', display: 'inline-block' }}></span> 
-                  Yapay Zeka Destekli
+                  <motion.span animate={{ opacity: [1, 0.4, 1] }} transition={{ repeat: Infinity, duration: 1.5 }} style={{ width: '6px', height: '6px', background: '#4ade80', borderRadius: '50%', display: 'inline-block', boxShadow: '0 0 5px #4ade80' }}></motion.span> 
+                  Yapay Zeka Destekli (Online)
                 </span>
               </div>
             </div>
             <a href={getWhatsAppLink()} target="_blank" rel="noreferrer" style={{
-              color: '#fff', fontSize: '1.2rem', textDecoration: 'none'
+              color: '#fff', fontSize: '1.2rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: 0.9
             }} title="Gerçek WhatsApp'a Geç">
-              <i className="fa-solid fa-arrow-up-right-from-square"></i>
+              <i className="fa-brands fa-whatsapp"></i>
             </a>
           </div>
 
@@ -220,13 +230,13 @@ export default function WhatsAppAssistantWidget({
                 style={{
                   alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
                   maxWidth: '85%',
-                  background: msg.role === 'user' ? '#dcf8c6' : '#fff',
-                  color: '#0f172a',
+                  background: msg.role === 'user' ? 'linear-gradient(135deg, #38bdf8 0%, #818cf8 100%)' : '#fff',
+                  color: msg.role === 'user' ? '#fff' : '#0f172a',
                   padding: '0.6rem 0.8rem',
-                  borderRadius: msg.role === 'user' ? '12px 0 12px 12px' : '0 12px 12px 12px',
+                  borderRadius: msg.role === 'user' ? '16px 16px 0 16px' : '16px 16px 16px 0',
                   fontSize: '0.8rem',
                   lineHeight: '1.4',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+                  boxShadow: msg.role === 'user' ? '0 4px 10px rgba(56, 189, 248, 0.2)' : '0 4px 10px rgba(0,0,0,0.05)',
                   border: msg.role === 'assistant' ? '1px solid #e2e8f0' : 'none'
                 }}
               >
@@ -285,14 +295,15 @@ export default function WhatsAppAssistantWidget({
                 width: '38px',
                 height: '38px',
                 borderRadius: '50%',
-                background: inputValue.trim() ? '#25d366' : '#cbd5e1',
+                background: inputValue.trim() ? 'linear-gradient(135deg, #38bdf8 0%, #818cf8 100%)' : '#cbd5e1',
                 color: '#fff',
                 border: 'none',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: inputValue.trim() ? 'pointer' : 'default',
-                transition: 'background 0.2s'
+                transition: 'all 0.2s',
+                boxShadow: inputValue.trim() ? '0 2px 8px rgba(56, 189, 248, 0.3)' : 'none'
               }}
             >
               <i className="fa-solid fa-paper-plane"></i>
