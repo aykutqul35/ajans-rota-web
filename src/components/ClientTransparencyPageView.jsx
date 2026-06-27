@@ -954,22 +954,25 @@ export default function ClientTransparencyPageView({
              <i className="fa-solid fa-bolt" style={{color: '#0ea5e9'}}></i> <span>Rota Growth OS</span>
           </div>
           <div className={`client-os-nav-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>
-             <i className="fa-solid fa-chart-pie"></i> Genel Bakış
+             <i className="fa-solid fa-chart-pie"></i> Genel Bakış & Grafikler
           </div>
           <div className={`client-os-nav-item ${activeTab === 'creatives' ? 'active' : ''}`} onClick={() => setActiveTab('creatives')}>
-             <i className="fa-solid fa-wand-magic-sparkles"></i> Kreatif Onayları
+             <i className="fa-solid fa-paint-roller"></i> Kreatif Onayları
           </div>
           <div className={`client-os-nav-item ${activeTab === 'vault' ? 'active' : ''}`} onClick={() => setActiveTab('vault')}>
-             <i className="fa-solid fa-vault"></i> Dosya Kasası
+             <i className="fa-solid fa-vault"></i> Dosya Kasam
+          </div>
+          <div className={`client-os-nav-item ${activeTab === 'billing' ? 'active' : ''}`} onClick={() => setActiveTab('billing')}>
+             <i className="fa-solid fa-file-invoice-dollar"></i> Faturalar & Bütçe
           </div>
           <div className={`client-os-nav-item ${activeTab === 'api' ? 'active' : ''}`} onClick={() => setActiveTab('api')}>
-             <i className="fa-solid fa-plug"></i> API Entegrasyonu
+             <i className="fa-solid fa-plug"></i> API Entegrasyonları
           </div>
           <div className={`client-os-nav-item ${activeTab === 'strategy' ? 'active' : ''}`} onClick={() => setActiveTab('strategy')}>
              <i className="fa-solid fa-map"></i> Strateji & Yol Haritası
           </div>
           <div className={`client-os-nav-item ${activeTab === 'support' ? 'active' : ''}`} onClick={() => setActiveTab('support')}>
-             <i className="fa-solid fa-ticket"></i> Destek Talepleri
+             <i className="fa-solid fa-headset"></i> Destek Talepleri
           </div>
           <div style={{marginTop: 'auto'}}></div>
           <div className="client-os-nav-item" onClick={() => {
@@ -1126,6 +1129,7 @@ export default function ClientTransparencyPageView({
             { id: 'vault', label: 'Dosya Kasam', icon: 'fa-solid fa-vault' },
             { id: 'billing', label: 'Faturalar & Bütçe', icon: 'fa-solid fa-file-invoice-dollar' },
             { id: 'api', label: 'API Entegrasyonları', icon: 'fa-solid fa-plug' },
+            { id: 'strategy', label: 'Strateji & Yol Haritası', icon: 'fa-solid fa-map' },
             { id: 'support', label: 'Destek Talepleri', icon: 'fa-solid fa-headset' }
           ].map(tab => (
             <button
@@ -1600,6 +1604,23 @@ export default function ClientTransparencyPageView({
         )}
 
         {/* --- TAB: API (API Entegrasyonları) --- */}
+        {activeTab === 'billing' && (
+          <div className="tab-content-billing fade-in">
+            <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(234, 179, 8, 0.1)', color: '#eab308', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <i className="fa-solid fa-file-invoice-dollar" style={{ fontSize: '1rem' }}></i>
+                </div>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f8fafc' }}>Faturalar & Bütçe</h3>
+              </div>
+              <div style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>
+                <i className="fa-solid fa-receipt" style={{ fontSize: '3rem', opacity: 0.5, marginBottom: '1rem' }}></i>
+                <p>Faturalarınız ve bütçe raporlamalarınız yakında bu alanda görüntülenebilecektir.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {activeTab === 'api' && (
           <div className="tab-content-api fade-in">
             <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '2rem', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)', maxWidth: '600px', margin: '0 auto' }}>
