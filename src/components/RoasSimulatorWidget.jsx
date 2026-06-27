@@ -39,6 +39,13 @@ export default function RoasSimulatorWidget({ onSaveLead }) {
   const expectedRoas = selectedSector.multiplier.toFixed(1);
   const finalRevenue = chartData[5].ciro;
 
+  const formatMillions = (value) => {
+    if (value >= 1000000) {
+      return (value / 1000000).toFixed(1).replace('.', ',') + ' Milyon TL';
+    }
+    return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(value);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (email) {
@@ -48,8 +55,8 @@ export default function RoasSimulatorWidget({ onSaveLead }) {
           email: email,
           phone: '',
           company: selectedSector.label,
-          service: 'ROAS Simülasyon Raporu Talebi',
-          message: `Aylık Bütçe: ${budget} TL\nBeklenen ROAS: ${expectedRoas}x\nHedef Ciro: ${new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(finalRevenue)}`,
+          service: 'Genel Talepler',
+          message: `Aylık Bütçe: ${budget} TL\nBeklenen ROAS: ${expectedRoas}x\nHedef Ciro: ${formatMillions(finalRevenue)}`,
           trafficSource: 'Büyüme Simülatörü'
         });
       }
@@ -189,7 +196,7 @@ export default function RoasSimulatorWidget({ onSaveLead }) {
         {!isSubmitted ? (
           <>
             <div>
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#fff' }}>6. Ayın Sonunda Tahmini Ciro: {new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(finalRevenue)}</h3>
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#fff' }}>6. Ayın Sonunda Tahmini Ciro: {formatMillions(finalRevenue)}</h3>
               <p style={{ color: 'rgba(255,255,255,0.8)', margin: 0 }}>Rakiplerinizin önüne geçmek ve detaylı büyüme yol haritanızı ücretsiz almak için e-posta adresinizi bırakın.</p>
             </div>
             
