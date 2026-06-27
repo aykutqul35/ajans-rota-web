@@ -12116,7 +12116,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                         if (!file) return;
                         
                         try {
-                          const newBlob = await upload(file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
+                          const newBlob = await upload(Date.now() + '-' + file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
                           
                           const updated = { ...clientReports };
                           if (!updated[editingReportBrand].creatives) updated[editingReportBrand].creatives = [];
@@ -12231,7 +12231,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                         if (!file) return;
                         
                         try {
-                          const newBlob = await upload(file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
+                          const newBlob = await upload(Date.now() + '-' + file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
                           
                           const updated = { ...clientReports };
                           if (!updated[editingReportBrand].files) updated[editingReportBrand].files = [];
