@@ -1125,7 +1125,8 @@ export default function ClientTransparencyPageView({
             { id: 'creatives', label: 'Kreatif Onayları', icon: 'fa-solid fa-paint-roller' },
             { id: 'vault', label: 'Dosya Kasam', icon: 'fa-solid fa-vault' },
             { id: 'billing', label: 'Faturalar & Bütçe', icon: 'fa-solid fa-file-invoice-dollar' },
-            { id: 'api', label: 'API Entegrasyonları', icon: 'fa-solid fa-plug' }
+            { id: 'api', label: 'API Entegrasyonları', icon: 'fa-solid fa-plug' },
+            { id: 'support', label: 'Destek Talepleri', icon: 'fa-solid fa-headset' }
           ].map(tab => (
             <button
               key={tab.id}
