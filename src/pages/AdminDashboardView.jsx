@@ -3570,7 +3570,33 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
       ticket.status = 'Müşteri Yanıtı Bekleniyor';
       
       setClientReports(updatedClientReports);
-      handleSaveAll(); 
+      
+      // Save locally
+      const dbPayload = {
+        settings: settingsData,
+        servicePagesData: servicesData,
+        teamMembers: teamMembersData,
+        blogPosts: blogsData,
+        testimonials: testimonialsData,
+        leads: leadsData,
+        clientReports: updatedClientReports
+      };
+      localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
+
+      // Specifically push the target brand to Neon DB
+      if (brandData.client_id) {
+        fetch('/api/clients/update', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ 
+            client_id: brandData.client_id,
+            report_data: brandData
+          })
+        }).catch(e => console.error("Admin ticket reply sync error", e));
+      }
       
       setViewingTicket({ ...ticket, brandKey: viewingTicket.brandKey });
       setAdminReplyText('');
