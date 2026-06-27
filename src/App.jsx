@@ -6142,7 +6142,7 @@ function App() {
         </div>
       </footer>
       )}
-      {currentPath !== '/rota-management-vault-x9' && <WhatsAppAssistantWidget settingsData={settingsData} onSaveLead={simulateLeadLocally} logHit={logHit} />}
+      {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && <WhatsAppAssistantWidget settingsData={settingsData} onSaveLead={simulateLeadLocally} logHit={logHit} />}
       {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && <SocialProofToast />}
       {/* Custom Global Popup */}
       <LeadPopup 
