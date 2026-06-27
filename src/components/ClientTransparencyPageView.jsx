@@ -240,6 +240,41 @@ export default function ClientTransparencyPageView({
   const rawEcommerce = clientReports?.ecommerce || defaultEcommerceData;
   const rawB2b = clientReports?.b2b || defaultB2bData;
 
+  const handleCreateTicket = async (e) => {
+    e.preventDefault();
+    setIsSubmittingTicket(true);
+    
+    const newTicket = {
+      id: "T-" + Math.floor(1000 + Math.random() * 9000),
+      subject: newTicketSubject,
+      department: newTicketDepartment,
+      message: newTicketMessage,
+      status: "Açık",
+      date: new Date().toLocaleDateString('tr-TR') + " " + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+    };
+
+    try {
+      const currentReports = JSON.parse(localStorage.getItem('clientReports')) || { ecommerce: defaultEcommerceData, b2b: defaultB2bData };
+      const brandData = currentReports[activeBrand];
+      
+      if (!brandData.tickets) brandData.tickets = [];
+      brandData.tickets.unshift(newTicket);
+      
+      currentReports[activeBrand] = brandData;
+      localStorage.setItem('clientReports', JSON.stringify(currentReports));
+      
+      setShowTicketModal(false);
+      setNewTicketSubject('');
+      setNewTicketMessage('');
+      alert('Talebiniz başarıyla oluşturuldu. Ekibimiz en kısa sürede dönüş yapacaktır.');
+    } catch (err) {
+      console.error(err);
+      alert('Talep oluşturulurken bir hata oluştu.');
+    } finally {
+      setIsSubmittingTicket(false);
+    }
+  };
+
   const handleLogin = (e) => {
     e.preventDefault();
     setLoginError('');
