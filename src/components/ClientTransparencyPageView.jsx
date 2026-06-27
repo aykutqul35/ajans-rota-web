@@ -65,6 +65,11 @@ export default function ClientTransparencyPageView({
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ token_login: true, token })
             });
+            if (res.status === 401) {
+              clearInterval(intervalId);
+              console.error("Client token invalid or expired. Stopping polling.");
+              return;
+            }
             if (res.ok) {
               const data = await res.json();
               if (data.success && data.data) {

@@ -1267,6 +1267,12 @@ function App() {
         const res = await fetch('/api/clients', {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
+        if (res.status === 401) {
+          clearInterval(window._adminPollInterval);
+          console.error("Admin token invalid or expired. Stopping polling.");
+          // Optional: localStorage.removeItem('admin_token'); window.location.reload();
+          return;
+        }
         if (res.ok) {
           const result = await res.json();
           if (result.success && result.data) {
