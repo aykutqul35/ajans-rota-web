@@ -61,7 +61,7 @@ export default function RoasSimulatorWidget({ onSaveLead }) {
     <div className="roas-simulator-widget glass-card" style={{
       padding: '2rem',
       borderRadius: '24px',
-      margin: '4rem auto',
+      margin: '2rem auto',
       maxWidth: '1000px',
       display: 'flex',
       flexDirection: 'column',
@@ -69,6 +69,17 @@ export default function RoasSimulatorWidget({ onSaveLead }) {
       position: 'relative',
       overflow: 'hidden'
     }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .roas-simulator-widget {
+            padding: 1.25rem !important;
+            margin: 1rem auto !important;
+          }
+          .roas-simulator-widget h2 {
+            fontSize: 1.5rem !important;
+          }
+        }
+      `}</style>
       {/* Decorative background glow */}
       <div style={{
         position: 'absolute',

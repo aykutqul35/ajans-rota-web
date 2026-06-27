@@ -3309,6 +3309,11 @@ function App() {
             <h2 className="section-title">Büyüme Potansiyelinizi Görün</h2>
             <p className="section-desc">Reklam bütçenizi, ortalama sepet tutarınızı ve dönüşüm oranınızı sürükleyerek tahmini reklam getirinizi hemen simüle edin.</p>
           </FadeIn>
+          
+          {/* Moved ROAS Simulator Widget to here */}
+          <FadeIn direction="up" delay={0.1}>
+            <RoasSimulatorWidget onSaveLead={simulateLeadLocally} />
+          </FadeIn>
 
           <FadeIn direction="up" delay={0.2} className={`glass-card calculator-wrapper ${calculatorTab !== 'fee' ? 'compact-wrapper' : ''}`}>
             {/* Tab Navigation */}
@@ -5482,13 +5487,6 @@ function App() {
               </div>
             </FadeIn>
           </div>
-        </div>
-      </section>
-
-      {/* NEW: ROAS Simulator Widget */}
-      <section id="simulator">
-        <div className="container">
-          <RoasSimulatorWidget onSaveLead={simulateLeadLocally} />
         </div>
       </section>
 
