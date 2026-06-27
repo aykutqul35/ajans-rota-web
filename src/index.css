@@ -1701,9 +1701,25 @@ p {
   .orbit-4 { display: none; }
   
   .services-grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    gap: 1.25rem;
+    padding: 0.5rem 0 2rem 0;
+    margin: 0 -1.5rem; /* Bleed out of the container padding on mobile */
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .services-grid::-webkit-scrollbar {
+    display: none;
   }
   .service-card {
+    flex: 0 0 85%;
+    scroll-snap-align: center;
     padding: 2rem 1.25rem;
   }
   .service-features li {
