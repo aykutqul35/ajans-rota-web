@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { upload } from '@vercel/blob/client';
@@ -88,15 +89,15 @@ function AdminDashboardView({
       const data = await response.json();
 
       if (response.ok && data.success) {
-        alert(data.message || 'Hesap bilgileriniz başarıyla güncellendi!');
+        toast.success(data.message || 'Hesap bilgileriniz başarıyla güncellendi!');
         setSecurityOldPassword('');
         setSecurityNewPassword('');
         setSecurityUsername('');
       } else {
-        alert('Hata: ' + (data.message || 'Bilgiler güncellenemedi.'));
+        toast.error('Hata: ' + (data.message || 'Bilgiler güncellenemedi.'));
       }
     } catch (error) {
-      alert('Sunucu hatası. Daha sonra tekrar deneyin.');
+      toast.error('Sunucu hatası. Daha sonra tekrar deneyin.');
     } finally {
       setSecurityIsLoading(false);
     }
@@ -164,7 +165,7 @@ function AdminDashboardView({
   const handleImageUpload = async (key, file) => {
     if (!file) return;
     if (!authToken) {
-      alert("Yükleme yapmak için oturum açmış olmalısınız.");
+      toast("Yükleme yapmak için oturum açmış olmalısınız.");
       return;
     }
     setUploadStates(prev => ({
@@ -490,12 +491,12 @@ function AdminDashboardView({
           localStorage.setItem('ajans_rota_stats', JSON.stringify(data));
         }
         setStatsData(data);
-        alert("Simülasyon verileri başarıyla oluşturuldu!");
+        toast.success("Simülasyon verileri başarıyla oluşturuldu!");
       } else {
         const data = generateLocalMockStats();
         localStorage.setItem('ajans_rota_stats', JSON.stringify(data));
         setStatsData(data);
-        alert("Simülasyon verileri yerel depolama alanında oluşturuldu!");
+        toast("Simülasyon verileri yerel depolama alanında oluşturuldu!");
       }
     } catch (err) {
       console.warn("API demo stats generation failed, using localStorage fallback", err);
@@ -503,7 +504,7 @@ function AdminDashboardView({
         const data = generateLocalMockStats();
         localStorage.setItem('ajans_rota_stats', JSON.stringify(data));
         setStatsData(data);
-        alert("Simülasyon verileri yerel depolama alanında oluşturuldu!");
+        toast("Simülasyon verileri yerel depolama alanında oluşturuldu!");
       } catch (localErr) {
         setStatsError('Demo verisi oluşturulurken hata oluştu.');
       }
@@ -581,16 +582,16 @@ function AdminDashboardView({
       localStorage.removeItem('ajans_rota_stats');
       if (response.ok) {
         setStatsData({});
-        alert("Tüm analiz ve ziyaretçi verileri başarıyla sıfırlandı!");
+        toast.success("Tüm analiz ve ziyaretçi verileri başarıyla sıfırlandı!");
       } else {
         setStatsData({});
-        alert("Analiz verileri yerel depolama ve sunucudan sıfırlandı!");
+        toast("Analiz verileri yerel depolama ve sunucudan sıfırlandı!");
       }
     } catch (err) {
       console.warn("API stats reset failed, cleared local storage anyway", err);
       localStorage.removeItem('ajans_rota_stats');
       setStatsData({});
-      alert("Analiz verileri yerel depolamadan sıfırlandı!");
+      toast("Analiz verileri yerel depolamadan sıfırlandı!");
     } finally {
       setStatsLoading(false);
     }
@@ -1168,7 +1169,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
       } : null);
       saveLeadsOnly(updated);
       setIsSendingGuide(false);
-      alert(`Tebrikler! Özel Yapay Zeka Rehberi, ${lead.email} adresine başarıyla e-posta ile gönderildi ve talep durumu "Gönderildi" olarak güncellendi.`);
+      toast.success(`Tebrikler! Özel Yapay Zeka Rehberi, ${lead.email} adresine başarıyla e-posta ile gönderildi ve talep durumu "Gönderildi" olarak güncellendi.`);
     }, 1200);
   };
 
@@ -1683,7 +1684,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
       });
       saveLeadsOnly(updated);
       setIsSendingProposal(false);
-      alert(`Teklif başarıyla gönderildi! Durum "Teklif İletildi" olarak güncellendi. \n\nMüşterinin e-posta adresi (${lead.email}) için e-posta taslağı tetikleniyor...`);
+      toast.success(`Teklif başarıyla gönderildi! Durum "Teklif İletildi" olarak güncellendi. \n\nMüşterinin e-posta adresi (${lead.email}) için e-posta taslağı tetikleniyor...`);
       if (lead.email) {
         window.open(mailtoUrl, '_blank');
       }
@@ -1770,7 +1771,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
       activityHistory: history
     } : null);
     saveLeadsOnly(updated);
-    alert('CRM Bilgileri (Durum, Notlar ve Takip Tarihi) başarıyla kaydedildi.');
+    toast('CRM Bilgileri (Durum, Notlar ve Takip Tarihi) başarıyla kaydedildi.');
   };
   const handleDownloadPDF = lead => {
     if (!lead || !lead.simulatorData) return;
@@ -2824,7 +2825,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
   const exportLeadsToCSV = dataToExport => {
     const data = dataToExport || leadsData;
     if (data.length === 0) {
-      alert("Dışa aktarılacak veri bulunamadı.");
+      toast("Dışa aktarılacak veri bulunamadı.");
       return;
     }
     const headers = ["ID", "Tarih", "Ad Soyad", "E-Posta", "Telefon", "Şirket/Web Sitesi", "Hizmet Grubu", "Trafik Kaynağı", "Durum", "Mesaj Detayı"];
@@ -2958,12 +2959,12 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
       try {
         result = JSON.parse(text);
       } catch (err) {
-        alert('Değişiklikler tarayıcı hafızasına kaydedildi (Yerel Mod). Canlı sunucuya yüklendiğinde PHP üzerinden kaydedilecektir.');
+        toast('Değişiklikler tarayıcı hafızasına kaydedildi (Yerel Mod). Canlı sunucuya yüklendiğinde PHP üzerinden kaydedilecektir.');
         setIsSaving(false);
         return;
       }
       if (result.success) {
-        alert('Değişiklikler başarıyla kaydedildi.');
+        toast.success('Değişiklikler başarıyla kaydedildi.');
         fetch('/api.php?action=generate_sitemap', {
           method: 'POST',
           headers: {
@@ -2971,10 +2972,10 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
           }
         }).catch(err => console.error("Auto sitemap generation failed:", err));
       } else {
-        alert('Hata: ' + result.error);
+        toast.error('Hata: ' + result.error);
       }
     } catch (err) {
-      alert('Değişiklikler tarayıcı hafızasına kaydedildi (Çevrimdışı Mod).');
+      toast('Değişiklikler tarayıcı hafızasına kaydedildi (Çevrimdışı Mod).');
     } finally {
       setIsSaving(false);
     }
@@ -3356,11 +3357,11 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
     if (!slug) return;
     const cleanSlug = slug.toLowerCase().replace(/[^a-z0-9-_]/g, '');
     if (!cleanSlug) {
-      alert("Geçersiz anahtar kelime!");
+      toast.error("Geçersiz anahtar kelime!");
       return;
     }
     if (servicesData[cleanSlug]) {
-      alert("Bu anahtar kelime zaten kullanımda!");
+      toast("Bu anahtar kelime zaten kullanımda!");
       return;
     }
     const title = window.prompt("Hizmet başlığını girin (Örn: Video ve Kreatif Üretimi):");
@@ -3417,7 +3418,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
   };
   const handleDeleteService = keyToDelete => {
     if (keyToDelete === 'google' || keyToDelete === 'meta') {
-      alert("Google Ads ve Meta Ads hizmetleri temel yapının bir parçasıdır ve silinemez.");
+      toast("Google Ads ve Meta Ads hizmetleri temel yapının bir parçasıdır ve silinemez.");
       return;
     }
     if (window.confirm(`"${servicesData[keyToDelete]?.title || keyToDelete}" hizmetini tamamen silmek istediğinizden emin misiniz?`)) {
@@ -11280,11 +11281,11 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
               if (!code) return;
               const cleanCode = code.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
               if (!cleanCode) {
-                alert("Geçersiz firma kodu!");
+                toast.error("Geçersiz firma kodu!");
                 return;
               }
               if (clientReports[cleanCode]) {
-                alert("Bu firma kodu zaten mevcut!");
+                toast("Bu firma kodu zaten mevcut!");
                 return;
               }
               const name = prompt("Firma / Müşteri Adı girin:", "Yeni Müşteri A.Ş.");
@@ -11652,7 +11653,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                       <span style={{ fontWeight: '800', fontSize: '0.9rem', color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <i className="fa-solid fa-robot" style={{ color: 'var(--primary)' }}></i> Yapay Zeka Yönetici Özeti
                       </span>
-                      <button className="btn btn-primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem' }} onClick={() => alert('Groq API ile KPI verileri okunup otomatik özet yazdırılıyor... (Demo)')}>
+                      <button className="btn btn-primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem' }} onClick={() => toast('Groq API ile KPI verileri okunup otomatik özet yazdırılıyor... (Demo)')}>
                         <i className="fa-solid fa-wand-magic-sparkles"></i> Otomatik Yazdır
                       </button>
                     </div>
@@ -12162,10 +12163,10 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                               })
                             }).catch(console.error);
                           }
-                          alert('Dosya başarıyla Vercel Blob\'a yüklendi!');
+                          toast.success('Dosya başarıyla Vercel Blob\'a yüklendi!');
                         } catch (err) {
                           console.error('Vercel Blob Upload Error:', err);
-                          alert('Dosya yüklenirken Vercel kaynaklı bir hata oluştu:\n\n' + err.message + '\n\nLütfen Vercel ayarlarınızı kontrol edin.');
+                          toast.error('Dosya yüklenirken Vercel kaynaklı bir hata oluştu:\n\n' + err.message + '\n\nLütfen Vercel ayarlarınızı kontrol edin.');
                         }
                       }} />
                     </label>
@@ -12275,10 +12276,10 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                               })
                             }).catch(console.error);
                           }
-                          alert('Dosya başarıyla Vercel Blob\'a yüklendi!');
+                          toast.success('Dosya başarıyla Vercel Blob\'a yüklendi!');
                         } catch (err) {
                           console.error('Vercel Blob Upload Error:', err);
-                          alert('Dosya yüklenirken Vercel kaynaklı bir hata oluştu:\n\n' + err.message + '\n\nLütfen Vercel ayarlarınızı kontrol edin.');
+                          toast.error('Dosya yüklenirken Vercel kaynaklı bir hata oluştu:\n\n' + err.message + '\n\nLütfen Vercel ayarlarınızı kontrol edin.');
                         }
                       }} />
                     </label>

@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -127,7 +128,7 @@ export default function LeadPopup({ isOpen, onClose, isExitIntent = false }) {
               background: 'var(--bg-dark)',
               overflowY: 'auto'
             }}>
-              <form onSubmit={(e) => { e.preventDefault(); alert('Talebiniz başarıyla alındı! Ekibimiz en kısa sürede iletişime geçecektir.'); onClose(); }} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <form onSubmit={(e) => { e.preventDefault(); toast.success('Talebiniz başarıyla alındı! Ekibimiz en kısa sürede iletişime geçecektir.'); onClose(); }} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 
                 {/* Modern Input Group 1 */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>

@@ -1,3 +1,4 @@
+import { Toaster } from 'react-hot-toast';
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import SEO from './components/SEO';

@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
@@ -280,10 +281,10 @@ export default function ClientTransparencyPageView({
       setShowTicketModal(false);
       setNewTicketSubject('');
       setNewTicketMessage('');
-      alert('Talebiniz başarıyla oluşturuldu. Ekibimiz en kısa sürede dönüş yapacaktır.');
+      toast.success('Talebiniz başarıyla oluşturuldu. Ekibimiz en kısa sürede dönüş yapacaktır.');
     } catch (err) {
       console.error(err);
-      alert('Talep oluşturulurken bir hata oluştu.');
+      toast.error('Talep oluşturulurken bir hata oluştu.');
     } finally {
       setIsSubmittingTicket(false);
     }
@@ -1281,7 +1282,7 @@ export default function ClientTransparencyPageView({
                                const text = encodeURIComponent(`✅ *Rota Kreatif Onayı:* \n${currentData.brandName}, "${creative.title}" adlı kreatifi ONAYLADI.`);
                                fetch(`https://api.callmebot.com/whatsapp.php?phone=${waPhone}&text=${text}&apikey=${waApiKey}`, { mode: 'no-cors' }).catch(() => {});
                              }
-                             alert('Tasarım onaylandı olarak işaretlendi ve ajansa bildirildi!');
+                             toast('Tasarım onaylandı olarak işaretlendi ve ajansa bildirildi!');
                            }
                         }
                       }}>
@@ -1309,7 +1310,7 @@ export default function ClientTransparencyPageView({
 
                              const localDbStr = localStorage.getItem('ajans_rota_db');
                              if(localDbStr){ try{ const dbPayload=JSON.parse(localDbStr); dbPayload.clientReports=updated; localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload)); }catch(e){} }
-                             alert('Tasarım reddedildi. Lütfen yöneticinizle revizyon için iletişime geçiniz.');
+                             toast.error('Tasarım reddedildi. Lütfen yöneticinizle revizyon için iletişime geçiniz.');
                            }
                         }
                       }}>
@@ -1392,7 +1393,7 @@ export default function ClientTransparencyPageView({
                 </div>
               </div>
 
-              <button className="btn btn-primary" style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontWeight: 700 }} onClick={() => alert('Veriler API üzerinden eşitleniyor... (Demo)')}>
+              <button className="btn btn-primary" style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontWeight: 700 }} onClick={() => toast('Veriler API üzerinden eşitleniyor... (Demo)')}>
                 <i className="fa-solid fa-rotate"></i> Şimdi Eşitle
               </button>
             </div>
