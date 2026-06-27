@@ -3546,6 +3546,37 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
       </div>;
   }
   const unreadLeadsCount = leadsData.filter(l => l.status === 'unread').length;
+  const handleAdminReplySubmit = (e) => {
+    e.preventDefault();
+    if (!adminReplyText.trim()) return;
+
+    const updatedClientReports = { ...clientReports };
+    const brandData = updatedClientReports[viewingTicket.brandKey];
+    const ticketIdx = brandData.tickets.findIndex(t => t.id === viewingTicket.id);
+    
+    if (ticketIdx > -1) {
+      const ticket = brandData.tickets[ticketIdx];
+      if (!ticket.messages) {
+        ticket.messages = [{ sender: 'client', text: ticket.message || 'Detaylı mesaj girilmemiş.', date: ticket.date }];
+      }
+      
+      const now = new Date();
+      ticket.messages.push({
+        sender: 'admin',
+        text: adminReplyText.trim(),
+        date: now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+      });
+      
+      ticket.status = 'Müşteri Yanıtı Bekleniyor';
+      
+      setClientReports(updatedClientReports);
+      handleSaveAll(); 
+      
+      setViewingTicket({ ...ticket, brandKey: viewingTicket.brandKey });
+      setAdminReplyText('');
+    }
+  };
+
   return <div className="container admin-dashboard" style={{
     paddingTop: '2rem'
   }}>
