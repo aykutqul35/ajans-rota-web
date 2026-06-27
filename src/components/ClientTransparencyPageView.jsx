@@ -14,6 +14,19 @@ export default function ClientTransparencyPageView({
   // V2 Dashboard States
   const [activeTab, setActiveTab] = useState('overview');
   const [showTicketModal, setShowTicketModal] = useState(false);
+
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'clientReports') {
+        try {
+          if (e.newValue) setClientReports(JSON.parse(e.newValue));
+        } catch(err) {}
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   const [newTicketSubject, setNewTicketSubject] = useState('');
   const [newTicketDepartment, setNewTicketDepartment] = useState('Genel Destek');
   const [newTicketMessage, setNewTicketMessage] = useState('');

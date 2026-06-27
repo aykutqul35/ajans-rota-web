@@ -30,6 +30,19 @@ function AdminDashboardView({
   const [activeTab, setActiveTab] = useState('leads');
   const [viewingTicket, setViewingTicket] = useState(null); // leads, settings, services, testimonials, team, blogs, analytics
   const [editingReportBrand, setEditingReportBrand] = useState('ecommerce');
+
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'clientReports') {
+        try {
+          if (e.newValue) setClientReports(JSON.parse(e.newValue));
+        } catch(err) {}
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [isSaving, setIsSaving] = useState(false);
