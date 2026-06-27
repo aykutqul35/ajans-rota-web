@@ -31,7 +31,8 @@ export default function ClientTransparencyPageView({
   const [newTicketSubject, setNewTicketSubject] = useState('');
   const [newTicketDepartment, setNewTicketDepartment] = useState('Genel Destek');
   const [newTicketMessage, setNewTicketMessage] = useState('');
-  const [isSubmittingTicket, setIsSubmittingTicket] = useState(false); // overview, creatives, vault, api
+  const [isSubmittingTicket, setIsSubmittingTicket] = useState(false);
+  const [ticketSuccess, setTicketSuccess] = useState(false);
 
   // Login States
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -294,10 +295,9 @@ export default function ClientTransparencyPageView({
         }
       } catch(e) {}
       
-      setShowTicketModal(false);
       setNewTicketSubject('');
       setNewTicketMessage('');
-      toast.success('Talebiniz başarıyla oluşturuldu. Ekibimiz en kısa sürede dönüş yapacaktır.');
+      setTicketSuccess(true);
     } catch (err) {
       console.error(err);
       toast.error('Talep oluşturulurken bir hata oluştu.');
@@ -1536,13 +1536,32 @@ export default function ClientTransparencyPageView({
               maxWidth: '500px',
               boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc', margin: 0 }}>Yeni Talep Oluştur</h3>
-                <button onClick={() => setShowTicketModal(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.2rem' }}>
-                  <i className="fa-solid fa-xmark"></i>
-                </button>
-              </div>
-              <form onSubmit={handleCreateTicket} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {ticketSuccess ? (
+                <div style={{ textAlign: 'center', padding: '1rem' }}>
+                  <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' }}>
+                    <i className="fa-solid fa-check" style={{ fontSize: '2.5rem', color: '#10b981' }}></i>
+                  </div>
+                  <h3 style={{ fontSize: '1.5rem', color: '#f8fafc', marginBottom: '1rem' }}>Talebiniz Alındı</h3>
+                  <p style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '2rem' }}>
+                    Talebiniz başarıyla ekibimize iletilmiştir. İlgili departman yöneticiniz konuyla ilgili en kısa sürede sizinle iletişime geçecektir.
+                  </p>
+                  <button 
+                    onClick={() => { setShowTicketModal(false); setTicketSuccess(false); }}
+                    className="btn btn-primary"
+                    style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', fontWeight: 600, background: '#0ea5e9', color: '#fff', border: 'none', cursor: 'pointer' }}
+                  >
+                    Tamam, Anladım
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc', margin: 0 }}>Yeni Talep Oluştur</h3>
+                    <button onClick={() => setShowTicketModal(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.2rem' }}>
+                      <i className="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+                  <form onSubmit={handleCreateTicket} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', color: '#f8fafc', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>Departman</label>
                   <select 
@@ -1587,6 +1606,8 @@ export default function ClientTransparencyPageView({
                   </button>
                 </div>
               </form>
+              </>
+            )}
             </div>
           </div>
         )}
