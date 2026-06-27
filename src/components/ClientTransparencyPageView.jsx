@@ -262,6 +262,7 @@ export default function ClientTransparencyPageView({
       
       currentReports[activeBrand] = brandData;
       localStorage.setItem('clientReports', JSON.stringify(currentReports));
+      setClientReports(currentReports);
       
       setShowTicketModal(false);
       setNewTicketSubject('');
@@ -988,7 +989,10 @@ export default function ClientTransparencyPageView({
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f8fafc' }}>Hesap Yöneticileriniz</h3>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-                {currentData.teamManagers.map((member, idx) => (
+                {(!currentData.teamManagers || currentData.teamManagers.length === 0) && (
+                  <div style={{ color: '#94a3b8', fontSize: '0.85rem', fontStyle: 'italic', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}>Atanmış hesap yöneticisi bulunamadı.</div>
+                )}
+                {(currentData.teamManagers || []).map((member, idx) => (
                   <div key={idx} style={{ 
                     background: '#1e293b', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '1rem', 
                     display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' 

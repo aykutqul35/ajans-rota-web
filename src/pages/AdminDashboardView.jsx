@@ -12766,7 +12766,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                       const updated = { ...clientReports };
                       if (!updated[editingReportBrand].teamManagers) updated[editingReportBrand].teamManagers = [];
                       updated[editingReportBrand].teamManagers.push({
-                        name: "Yeni Üye", role: "Uzman", avatar: "https://i.pravatar.cc/150", online: true
+                        name: "Aykut K.", role: "Ajans Başkanı", avatar: "https://i.pravatar.cc/150?u=aykut", online: true
                       });
                       setClientReports(updated);
                     }} style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}>
@@ -12782,11 +12782,35 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                           setClientReports(updated);
                         }} style={{ position: 'absolute', top: '0.2rem', right: '0.2rem', border: 'none', background: 'none', cursor: 'pointer', color: '#ef4444' }}><i className="fa-solid fa-xmark"></i></button>
                         
-                        <input type="text" value={member.name} onChange={e => {
-                          const updated = { ...clientReports };
-                          updated[editingReportBrand].teamManagers[idx].name = e.target.value;
-                          setClientReports(updated);
-                        }} placeholder="İsim" style={{ width: '100%', marginBottom: '0.5rem', padding: '0.35rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.75rem' }} />
+                        <select 
+                          value={member.name}
+                          onChange={(e) => {
+                            const agencyTeam = [
+                              { name: "Aykut K.", role: "Ajans Başkanı", avatar: "https://i.pravatar.cc/150?u=aykut" },
+                              { name: "Yiğit K.", role: "Google Ads & SEO", avatar: "https://i.pravatar.cc/150?u=yigit" },
+                              { name: "Melis S.", role: "Meta Ads & Kreatif", avatar: "https://i.pravatar.cc/150?u=melis" },
+                              { name: "Selin Y.", role: "Müşteri Başarı Yöneticisi", avatar: "https://i.pravatar.cc/150?u=selin" },
+                              { name: "Büşra T.", role: "Sosyal Medya", avatar: "https://i.pravatar.cc/150?u=busra" },
+                              { name: "Kemal D.", role: "Yazılım Uzmanı", avatar: "https://i.pravatar.cc/150?u=kemal" }
+                            ];
+                            const selectedName = e.target.value;
+                            const found = agencyTeam.find(t => t.name === selectedName) || { role: "", avatar: "https://i.pravatar.cc/150" };
+                            
+                            const updated = { ...clientReports };
+                            updated[editingReportBrand].teamManagers[idx].name = selectedName;
+                            updated[editingReportBrand].teamManagers[idx].role = found.role;
+                            updated[editingReportBrand].teamManagers[idx].avatar = found.avatar;
+                            setClientReports(updated);
+                          }}
+                          style={{ width: '100%', marginBottom: '0.5rem', padding: '0.35rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-dark)' }}
+                        >
+                          <option value="Aykut K.">Aykut K.</option>
+                          <option value="Yiğit K.">Yiğit K.</option>
+                          <option value="Melis S.">Melis S.</option>
+                          <option value="Selin Y.">Selin Y.</option>
+                          <option value="Büşra T.">Büşra T.</option>
+                          <option value="Kemal D.">Kemal D.</option>
+                        </select>
                         
                         <input type="text" value={member.role} onChange={e => {
                           const updated = { ...clientReports };
