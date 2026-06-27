@@ -8,7 +8,7 @@ export default function ClientTransparencyPageView({
   onBack,
   onContactClick
 }) {
-  const [activeBrand, setActiveBrand] = useState('ecommerce'); // ecommerce, b2b
+  const [activeBrand, setActiveBrand] = useState(() => localStorage.getItem('local_client_brand') || 'ecommerce'); // ecommerce, b2b
   const [dateRange, setDateRange] = useState('30days'); // 7days, 30days, thismonth
   const [animTrigger, setAnimTrigger] = useState(false);
   
@@ -78,7 +78,7 @@ export default function ClientTransparencyPageView({
   const [ticketSuccess, setTicketSuccess] = useState(false);
 
   // Login States
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('local_client_logged_in') === 'true');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -448,6 +448,8 @@ export default function ClientTransparencyPageView({
         
         setActiveBrand(key);
         setIsLoggedIn(true);
+        localStorage.setItem('local_client_brand', key);
+        localStorage.setItem('local_client_logged_in', 'true');
       } else {
         // Fallback to local auth if DB fails or isn't seeded yet
         const matchedBrandKey = Object.keys(clientReports || {}).find(key => {
@@ -458,6 +460,8 @@ export default function ClientTransparencyPageView({
         if (matchedBrandKey) {
           setActiveBrand(matchedBrandKey);
           setIsLoggedIn(true);
+          localStorage.setItem('local_client_brand', matchedBrandKey);
+          localStorage.setItem('local_client_logged_in', 'true');
         } else {
           const expectedEcomUser = rawEcommerce.username || 'ege';
           const expectedEcomPass = rawEcommerce.password || 'ege123';
@@ -467,9 +471,13 @@ export default function ClientTransparencyPageView({
           if (u === expectedEcomUser && p === expectedEcomPass) {
             setActiveBrand('ecommerce');
             setIsLoggedIn(true);
+            localStorage.setItem('local_client_brand', 'ecommerce');
+            localStorage.setItem('local_client_logged_in', 'true');
           } else if (u === expectedB2bUser && p === expectedB2bPass) {
             setActiveBrand('b2b');
             setIsLoggedIn(true);
+            localStorage.setItem('local_client_brand', 'b2b');
+            localStorage.setItem('local_client_logged_in', 'true');
           } else {
             setLoginError('Hatalı kullanıcı adı veya şifre! Lütfen bilgilerinizi kontrol edin.');
           }
