@@ -7,7 +7,31 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  const { username, password } = req.body;
+  const { username, password, token_login, token } = req.body;
+
+  if (token_login && token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'ajansrota_fallback_secret');
+      if (decoded && decoded.clientId) {
+        const sql = neon(process.env.DATABASE_URL);
+        const clients = await sql`SELECT id, username, brand_name, report_data FROM client_accounts WHERE id = ${decoded.clientId}`;
+        if (clients.length > 0) {
+          const client = clients[0];
+          return res.status(200).json({ 
+            success: true, 
+            data: {
+              id: client.id,
+              username: client.username,
+              brand_name: client.brand_name,
+              report_data: client.report_data
+            }
+          });
+        }
+      }
+    } catch (err) {
+      return res.status(401).json({ success: false, message: 'Geçersiz token.' });
+    }
+  }
 
   if (!username || !password) {
     return res.status(400).json({ message: 'Kullanıcı adı ve şifre zorunludur.' });
@@ -16,7 +40,7 @@ export default async function handler(req, res) {
   try {
     const sql = neon(process.env.DATABASE_URL);
     
-    const clients = await sql\`SELECT id, username, password_hash, brand_name, report_data FROM client_accounts WHERE username = \${username}\`;
+    const clients = await sql`SELECT id, username, password_hash, brand_name, report_data FROM client_accounts WHERE username = ${username}`;
     
     if (clients.length === 0) {
       return res.status(401).json({ message: 'Geçersiz kullanıcı adı veya şifre.' });

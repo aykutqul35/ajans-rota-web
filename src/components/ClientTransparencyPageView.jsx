@@ -16,6 +16,47 @@ export default function ClientTransparencyPageView({
   const [activeTab, setActiveTab] = useState('overview');
   const [showTicketModal, setShowTicketModal] = useState(false);
 
+  // Auto-login client if token exists
+  useEffect(() => {
+    const token = localStorage.getItem('client_token');
+    if (token && !isLoggedIn) {
+      const verifyToken = async () => {
+        try {
+          const res = await fetch('/api/clients/auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token_login: true, token })
+          });
+          
+          if (res.ok) {
+            const data = await res.json();
+            if (data.success && data.data) {
+              const serverData = data.data.report_data || {};
+              const key = serverData._key || (data.data.brand_name.toLowerCase().includes('e-ticaret') ? 'ecommerce' : 'b2b');
+              
+              const updatedReports = { ...clientReports };
+              updatedReports[key] = {
+                ...serverData,
+                client_id: data.data.id,
+                username: data.data.username,
+                brandName: data.data.brand_name
+              };
+              
+              if (setClientReports) setClientReports(updatedReports);
+              setActiveBrand(key);
+              setIsLoggedIn(true);
+            }
+          }
+        } catch (e) {
+          console.error("Auto login failed", e);
+        }
+      };
+      // We need a server endpoint that supports token_login.
+      // Wait, api/clients/auth.js doesn't support token_login.
+      // I will update auth.js to support it.
+    }
+  }, []);
+
   useEffect(() => {
     const handleStorageChange = (e) => {
       if (e.key === 'clientReports') {
@@ -40,6 +81,7 @@ export default function ClientTransparencyPageView({
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showDemoInfo, setShowDemoInfo] = useState(false);
 
   // SaaS Features States
@@ -295,6 +337,16 @@ export default function ClientTransparencyPageView({
         }
       } catch(e) {}
       
+      // SYNC TO NEON DB SERVER
+      const token = localStorage.getItem('client_token');
+      if (token && brandData.client_id) {
+         fetch('/api/clients/update', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ client_id: brandData.client_id, report_data: brandData })
+         }).catch(e => console.error("Ticket sync error:", e));
+      }
+      
       setNewTicketSubject('');
       setNewTicketMessage('');
       setTicketSuccess(true);
@@ -306,41 +358,77 @@ export default function ClientTransparencyPageView({
     }
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoginError('');
+    setIsLoggingIn(true);
     const u = username.trim();
     const p = password.trim();
 
-    // Check if there is a match in dynamic clientReports
-    const matchedBrandKey = Object.keys(clientReports || {}).find(key => {
-      const report = clientReports[key];
-      return report && report.username === u && report.password === p;
-    });
-
-    if (matchedBrandKey) {
-      setActiveBrand(matchedBrandKey);
-      setIsLoggedIn(true);
-    } else {
-      // Check fallbacks for default accounts
-      const expectedEcomUser = rawEcommerce.username || 'ege';
-      const expectedEcomPass = rawEcommerce.password || 'ege123';
-      const expectedB2bUser = rawB2b.username || 'liman';
-      const expectedB2bPass = rawB2b.password || 'liman123';
-
-      if (u === expectedEcomUser && p === expectedEcomPass) {
-        setActiveBrand('ecommerce');
-        setIsLoggedIn(true);
-      } else if (u === expectedB2bUser && p === expectedB2bPass) {
-        setActiveBrand('b2b');
+    try {
+      const res = await fetch('/api/clients/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: u, password: p })
+      });
+      
+      const data = await res.json();
+      
+      if (data.success && data.token) {
+        localStorage.setItem('client_token', data.token);
+        const serverData = data.data.report_data || {};
+        const key = serverData._key || (data.data.brand_name.toLowerCase().includes('e-ticaret') ? 'ecommerce' : 'b2b');
+        
+        const updatedReports = { ...clientReports };
+        updatedReports[key] = {
+          ...serverData,
+          client_id: data.data.id,
+          username: data.data.username,
+          brandName: data.data.brand_name
+        };
+        
+        if (setClientReports) setClientReports(updatedReports);
+        localStorage.setItem('clientReports', JSON.stringify(updatedReports));
+        
+        setActiveBrand(key);
         setIsLoggedIn(true);
       } else {
-        setLoginError('Hatalı kullanıcı adı veya şifre! Lütfen bilgilerinizi kontrol edin.');
+        // Fallback to local auth if DB fails or isn't seeded yet
+        const matchedBrandKey = Object.keys(clientReports || {}).find(key => {
+          const report = clientReports[key];
+          return report && report.username === u && report.password === p;
+        });
+
+        if (matchedBrandKey) {
+          setActiveBrand(matchedBrandKey);
+          setIsLoggedIn(true);
+        } else {
+          const expectedEcomUser = rawEcommerce.username || 'ege';
+          const expectedEcomPass = rawEcommerce.password || 'ege123';
+          const expectedB2bUser = rawB2b.username || 'liman';
+          const expectedB2bPass = rawB2b.password || 'liman123';
+
+          if (u === expectedEcomUser && p === expectedEcomPass) {
+            setActiveBrand('ecommerce');
+            setIsLoggedIn(true);
+          } else if (u === expectedB2bUser && p === expectedB2bPass) {
+            setActiveBrand('b2b');
+            setIsLoggedIn(true);
+          } else {
+            setLoginError('Hatalı kullanıcı adı veya şifre! Lütfen bilgilerinizi kontrol edin.');
+          }
+        }
       }
+    } catch (err) {
+      console.error("Login Error:", err);
+      setLoginError('Sunucuya bağlanılamadı. Lütfen tekrar deneyin.');
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('client_token');
     setIsLoggedIn(false);
     setUsername('');
     setPassword('');
@@ -583,7 +671,7 @@ export default function ClientTransparencyPageView({
                   height: 'auto'
                 }}
               >
-                Giriş Yap <i className="fa-solid fa-arrow-right-to-bracket" style={{ marginLeft: '6px' }}></i>
+                {isLoggingIn ? 'Giriş Yapılıyor...' : 'Giriş Yap'} <i className="fa-solid fa-arrow-right-to-bracket" style={{ marginLeft: '6px' }}></i>
               </button>
             </form>
 
