@@ -1401,10 +1401,10 @@ function App() {
         gtag('js', new Date());
       `;
       if (gaId) {
-        initCode += `\\n        gtag('config', '${gaId}');`;
+        initCode += `\n        gtag('config', '${gaId}');`;
       }
       if (adsId) {
-        initCode += `\\n        gtag('config', '${adsId}');`;
+        initCode += `\n        gtag('config', '${adsId}');`;
       }
       gtagInit.innerHTML = initCode;
       safeAppend(document.head,gtagInit);
