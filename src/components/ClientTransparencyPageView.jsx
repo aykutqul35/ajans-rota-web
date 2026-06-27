@@ -268,15 +268,31 @@ export default function ClientTransparencyPageView({
     };
 
     try {
-      const currentReports = JSON.parse(localStorage.getItem('clientReports')) || { ecommerce: defaultEcommerceData, b2b: defaultB2bData };
-      const brandData = currentReports[activeBrand];
+      const currentReports = { ...clientReports };
+      const brandData = { ...currentReports[activeBrand] };
       
       if (!brandData.tickets) brandData.tickets = [];
-      brandData.tickets.unshift(newTicket);
+      brandData.tickets = [newTicket, ...brandData.tickets];
       
       currentReports[activeBrand] = brandData;
+      
+      // Update global React state
+      if (setClientReports) setClientReports(currentReports);
+      
+      // Trigger cross-tab sync
       localStorage.setItem('clientReports', JSON.stringify(currentReports));
-      setClientReports(currentReports);
+      
+      // Persist to main database so it survives refresh
+      try {
+        const localDbStr = localStorage.getItem('ajans_rota_db');
+        if(localDbStr){
+           const dbPayload = JSON.parse(localDbStr);
+           dbPayload.clientReports = currentReports;
+           localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
+        } else {
+           localStorage.setItem('ajans_rota_db', JSON.stringify({ clientReports: currentReports }));
+        }
+      } catch(e) {}
       
       setShowTicketModal(false);
       setNewTicketSubject('');
