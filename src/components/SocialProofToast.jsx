@@ -1,17 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const NOTIFICATIONS = [
-  { location: "Urla'dan", firm: "bir turizm acentesi", action: "Ücretsiz SEO Analizi talep etti", time: "Az önce" },
-  { location: "Karşıyaka'dan", firm: "bir e-ticaret markası", action: "KOBİ Dijitalleşme Endeksini çözdü", time: "2 dk önce" },
-  { location: "Buca'dan", firm: "bir tekstil atölyesi", action: "Büyüme Danışmanlığı randevusu oluşturdu", time: "5 dk önce" },
-  { location: "Çeşme'den", firm: "bir butik otel", action: "Meta Ads analizi istedi", time: "Az önce" },
-  { location: "Bornova'dan", firm: "bir sanayi üreticisi", action: "Web tasarım portfolyomuzu inceledi", time: "10 dk önce" }
+  { location: "Urla'dan", firm: "bir turizm acentesi", action: "SEO sözleşmesini imzaladı", time: "Az önce" },
+  { location: "Karşıyaka'dan", firm: "bir e-ticaret markası", action: "Büyüme Simülatörü raporunu indirdi", time: "2 dk önce" },
+  { location: "Buca'dan", firm: "bir tekstil atölyesi", action: "Yüz yüze strateji toplantısı talep etti", time: "5 dk önce" },
+  { location: "Çeşme'den", firm: "bir butik otel", action: "Google Ads yönetimi için anlaştı", time: "Az önce" },
+  { location: "Bornova'dan", firm: "bir sanayi üreticisi", action: "Dijital ihracat danışmanlığı randevusu oluşturdu", time: "10 dk önce" },
+  { location: "Alsancak'tan", firm: "bir hukuk bürosu", action: "Web tasarım projesini başlattı", time: "1 dk önce" },
+  { location: "Kemalpaşa'dan", firm: "bir lojistik firması", action: "B2B Kurumsal SEO raporunu indirdi", time: "12 dk önce" },
+  { location: "Mavişehir'den", firm: "bir sağlık kliniği", action: "Meta Ads kampanyalarını Ajans Rota'ya taşıdı", time: "Az önce" },
+  { location: "Manisa'dan", firm: "bir mobilya üreticisi", action: "E-ticaret ciro projeksiyon raporunu aldı", time: "4 dk önce" },
+  { location: "Tire'den", firm: "bir gıda markası", action: "Performans pazarlama toplantısı ayarladı", time: "8 dk önce" },
+  { location: "Balçova'dan", firm: "bir eğitim kurumu", action: "Sosyal medya yönetimi için sözleşme imzaladı", time: "Az önce" },
+  { location: "Gaziemir'den", firm: "bir araç kiralama firması", action: "Reklam bütçesi planlama randevusu aldı", time: "3 dk önce" },
 ];
 
 export default function SocialProofToast() {
   const [currentNotif, setCurrentNotif] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const lastIndex = useRef(-1);
 
   useEffect(() => {
     let timeoutIds = [];
@@ -27,9 +35,14 @@ export default function SocialProofToast() {
   }, []);
 
   const showNextNotification = (timeoutIds) => {
-    // Pick a random notification
-    const randomNotif = NOTIFICATIONS[Math.floor(Math.random() * NOTIFICATIONS.length)];
-    setCurrentNotif(randomNotif);
+    // Pick a random notification avoiding immediate repetition
+    let nextIndex;
+    do {
+      nextIndex = Math.floor(Math.random() * NOTIFICATIONS.length);
+    } while (nextIndex === lastIndex.current);
+    
+    lastIndex.current = nextIndex;
+    setCurrentNotif(NOTIFICATIONS[nextIndex]);
     setIsVisible(true);
 
     // Hide it after 5 seconds
