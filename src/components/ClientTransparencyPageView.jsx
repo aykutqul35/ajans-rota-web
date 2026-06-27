@@ -1117,10 +1117,10 @@ export default function ClientTransparencyPageView({
         {/* V2 Dashboard Tabs Navigation */}
         <div className="v2-dashboard-tabs" style={{
           display: 'flex',
+          flexWrap: 'wrap',
           gap: '0.5rem',
           borderBottom: '2px solid rgba(15, 23, 42, 0.05)',
           marginBottom: '2rem',
-          overflowX: 'auto',
           paddingBottom: '0.5rem'
         }}>
           {[
