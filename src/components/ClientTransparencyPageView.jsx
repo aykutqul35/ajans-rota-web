@@ -11,6 +11,26 @@ export default function ClientTransparencyPageView({
   const [activeBrand, setActiveBrand] = useState(() => localStorage.getItem('local_client_brand') || 'ecommerce'); // ecommerce, b2b
   const [dateRange, setDateRange] = useState('30days'); // 7days, 30days, thismonth
   const [animTrigger, setAnimTrigger] = useState(false);
+
+  const [newTicketSubject, setNewTicketSubject] = useState('');
+  const [newTicketDepartment, setNewTicketDepartment] = useState('Genel Destek');
+  const [newTicketMessage, setNewTicketMessage] = useState('');
+  const [isSubmittingTicket, setIsSubmittingTicket] = useState(false);
+  const [ticketSuccess, setTicketSuccess] = useState(false);
+
+  // Login States
+  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('local_client_logged_in') === 'true');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [showDemoInfo, setShowDemoInfo] = useState(false);
+
+  // SaaS Features States
+  const [aiRequestLoading, setAiRequestLoading] = useState(false);
+  const [aiRequestSuccess, setAiRequestSuccess] = useState(false);
+  const [billingLoading, setBillingLoading] = useState(false);
   
   // V2 Dashboard States
   const [activeTab, setActiveTab] = useState('overview');
@@ -134,25 +154,7 @@ export default function ClientTransparencyPageView({
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  const [newTicketSubject, setNewTicketSubject] = useState('');
-  const [newTicketDepartment, setNewTicketDepartment] = useState('Genel Destek');
-  const [newTicketMessage, setNewTicketMessage] = useState('');
-  const [isSubmittingTicket, setIsSubmittingTicket] = useState(false);
-  const [ticketSuccess, setTicketSuccess] = useState(false);
 
-  // Login States
-  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('local_client_logged_in') === 'true');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginError, setLoginError] = useState('');
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [showDemoInfo, setShowDemoInfo] = useState(false);
-
-  // SaaS Features States
-  const [aiRequestLoading, setAiRequestLoading] = useState(false);
-  const [aiRequestSuccess, setAiRequestSuccess] = useState(false);
-  const [billingLoading, setBillingLoading] = useState(false);
   
   const handleAiActionRequest = async (insightText) => {
     setAiRequestLoading(true);
