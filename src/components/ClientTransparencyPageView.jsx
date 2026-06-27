@@ -1138,8 +1138,8 @@ export default function ClientTransparencyPageView({
               style={{
                 padding: '0.75rem 1.25rem',
                 border: 'none',
-                background: activeTab === tab.id ? 'var(--primary)' : 'transparent',
-                color: activeTab === tab.id ? '#fff' : 'var(--text-light)',
+                background: activeTab === tab.id ? 'var(--primary)' : 'rgba(255, 255, 255, 0.05)',
+                color: activeTab === tab.id ? '#fff' : '#94a3b8',
                 borderRadius: '12px',
                 fontWeight: 700,
                 fontSize: '0.85rem',

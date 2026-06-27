@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html><body>
+<script>
+try {
+  const s = document.createElement('script');
+  s.appendChild(document.createTextNode("+++"));
+  document.body.appendChild(s);
+} catch (e) {
+  console.log("Error:", e.name, e.message);
+}
+</script>
+</body></html>
