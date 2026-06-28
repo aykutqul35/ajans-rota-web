@@ -3,7 +3,7 @@ import React from 'react';
 export default function LeadsTab({
   leadsData, leadSearchText, setLeadSearchText, leadSourceFilter, setLeadSourceFilter,
   leadServiceFilter, setLeadServiceFilter, leadStatusFilter, setLeadStatusFilter,
-  exportLeadsToCSV, handleViewLead, handleDeleteLead
+  exportLeadsToCSV, handleViewLead, handleDeleteLead, servicesData
 }) {
   const totalLeads = leadsData.length;
           const googleCount = leadsData.filter(l => l.trafficSource === 'Google Ads').length;
