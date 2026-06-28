@@ -3606,9 +3606,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
     }
   };
 
-  return <div className="container admin-dashboard" style={{
-    paddingTop: '2rem'
-  }}>
+  return <div className="container admin-dashboard">
       <div className="admin-dashboard-header">
         <h1>
           Ajans Rota <span>Yönetim ve Kontrol Paneli</span>
