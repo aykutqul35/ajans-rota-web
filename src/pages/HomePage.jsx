@@ -343,14 +343,15 @@ export default function HomePage(props) {
             <p className="section-desc">Reklam bütçenizi, ortalama sepet tutarınızı ve dönüşüm oranınızı sürükleyerek tahmini reklam getirinizi hemen simüle edin.</p>
           </FadeIn>
           
-          {/* Moved ROAS Simulator Widget to here */}
+          {/* Moved ROAS Simulator Widget to here 
           <div className="calculator-widget-container">
             <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-main)' }}>ROAS Simülatörü Yükleniyor...</div>}>
               <RoasSimulatorWidget onSaveLead={simulateLeadLocally} />
             </Suspense>
           </div>
+          */}
 
-          <FadeIn direction="up" delay={0.2} className={`glass-card calculator-wrapper ${calculatorTab !== 'fee' ? 'compact-wrapper' : ''}`}>
+          <FadeIn direction="up" delay={0.2} className={`calculator-wrapper ${calculatorTab !== 'fee' ? 'compact-wrapper' : ''}`}>
             {/* Tab Navigation */}
             <div className="calculator-tabs">
               <button className={`filter-btn ${calculatorTab === 'fee' ? 'active' : ''}`} style={{
