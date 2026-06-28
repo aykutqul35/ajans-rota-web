@@ -3640,7 +3640,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
               handleViewLead={handleViewLead}
               handleDeleteLead={handleDeleteLead}
 
-              updateLeadStatus={updateLeadStatus}
+
             />
           )}
 
