@@ -33,7 +33,6 @@ import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
 import ErrorBoundary from './components/ErrorBoundary';
 import useCalculator from './hooks/useCalculator';
-import useNewsletter from './hooks/useNewsletter';
 
 
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
@@ -612,13 +611,11 @@ function App() {
   const [blogsData, setBlogsData] = useState(initialBlogPosts);
   // Leads state
   const [leadsData, setLeadsData] = useState([]);
-  // Newsletter (custom hook — callbacks set after simulateLeadLocally is defined)
-  const {
-    newsletterEmail, setNewsletterEmail,
-    newsletterLoading, newsletterSubmitted, newsletterError,
-    handleNewsletterSubmit,
-    setNewsletterCallbacks,
-  } = useNewsletter();
+  // Newsletter subscription states
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterLoading, setNewsletterLoading] = useState(false);
+  const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
+  const [newsletterError, setNewsletterError] = useState('');
   // Client Transparency Reports state
   const [clientReports, setClientReports] = useState({
     ecommerce: {
@@ -1768,8 +1765,43 @@ function App() {
     }
   };
 
-  // Register newsletter callbacks now that simulateLeadLocally is defined
-  setNewsletterCallbacks(simulateLeadLocally, detectTrafficSource);
+  const handleNewsletterSubmit = async e => {
+    e.preventDefault();
+    if (!newsletterEmail || !newsletterEmail.includes('@')) {
+      setNewsletterError('Lütfen geçerli bir e-posta adresi girin.');
+      return;
+    }
+    setNewsletterLoading(true);
+    setNewsletterError('');
+    const leadPayload = {
+      fullName: 'Bülten Abonesi',
+      email: newsletterEmail,
+      phone: '-',
+      company: 'Bülten Aboneliği',
+      service: 'Bülten Aboneliği',
+      message: 'Kullanıcı bültene kaydoldu.',
+      trafficSource: detectTrafficSource()
+    };
+    try {
+      await fetch('/api.php?action=save_lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(leadPayload)
+      });
+      simulateLeadLocally(leadPayload);
+      setNewsletterLoading(false);
+      setNewsletterSubmitted(true);
+      setNewsletterEmail('');
+      setTimeout(() => setNewsletterSubmitted(false), 5000);
+    } catch (err) {
+      console.error("Newsletter submission failed, simulating locally:", err);
+      simulateLeadLocally(leadPayload);
+      setNewsletterLoading(false);
+      setNewsletterSubmitted(true);
+      setNewsletterEmail('');
+      setTimeout(() => setNewsletterSubmitted(false), 5000);
+    }
+  };
 
   const handleGenerateReport = async e => {
     e.preventDefault();
