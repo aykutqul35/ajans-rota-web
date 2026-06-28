@@ -3639,7 +3639,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
               exportLeadsToCSV={exportLeadsToCSV}
               handleViewLead={handleViewLead}
               handleDeleteLead={handleDeleteLead}
-              activeFollowUps={activeFollowUps}
+
               updateLeadStatus={updateLeadStatus}
             />
           )}
