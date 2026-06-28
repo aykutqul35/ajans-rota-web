@@ -57,6 +57,21 @@ body {
   position: relative;
 }
 
+/* Accessibility: Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* CLS Prevention: Reserve space for key layout sections */
+.hero { min-height: 90vh; }
+.services { min-height: 400px; }
+.navbar { min-height: 70px; }
+img { content-visibility: auto; }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {

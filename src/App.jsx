@@ -254,62 +254,92 @@ function App() {
   // SEO Data Helper
   const getSeoData = path => {
     if (path === '/') return {
-      title: "Ajans Rota | İzmir Dijital Büyüme Ajansı",
-      description: "İzmir'in öncü Google Ads, SEO ve Meta Reklam ajansı. Veri odaklı stratejiler."
+      title: "Ajans Rota | İzmir Dijital Pazarlama Ajansı — Google Ads, SEO, Meta Reklam",
+      description: "İzmir, Urla, Alaçatı ve Çeşme'de Google Ads, SEO, Meta Reklam ve sosyal medya yönetimi. Ege bölgesinin büyüme odaklı dijital ajansı. Ücretsiz analiz için hemen iletişime geçin.",
+      canonicalPath: '/'
     };
     if (path === '/hakkimizda') return {
-      title: "Hakkımızda | Ajans Rota",
-      description: "Ajans Rota'nın kuruluş hikayesi, ekibimiz ve vizyonumuz."
+      title: "Hakkımızda — Hikayemiz ve Vizyonumuz | Ajans Rota İzmir",
+      description: "Ajans Rota'nın kuruluş hikayesi, Ege'nin dijital büyüme ajansı olarak vizyonumuz ve İzmir'den tüm Türkiye'ye uzanan yolculuğumuz.",
+      canonicalPath: '/hakkimizda'
     };
     if (path === '/iletisim') return {
-      title: "İletişim | Ajans Rota",
-      description: "Bizimle iletişime geçin. İzmir ofisimizden tüm Türkiye'ye dijital pazarlama hizmeti."
+      title: "İletişim — Ücretsiz Dijital Analiz Talebi | Ajans Rota İzmir",
+      description: "Dijital pazarlama ihtiyaçlarınız için bizimle iletişime geçin. İzmir merkezli ofisimizden tüm Ege bölgesine hizmet veriyoruz.",
+      canonicalPath: '/iletisim'
     };
     if (path === '/neden-izmir') return {
-      title: "Neden İzmir? | Ajans Rota",
-      description: "İzmir'de bir dijital ajansla çalışmanın avantajları ve Ege bölgesindeki tecrübemiz."
+      title: "Neden İzmir? — Ege'nin Dijital Avantajları | Ajans Rota",
+      description: "İzmir'de bir dijital ajansla çalışmanın avantajları: Ege bölgesi e-ticaret ekosistemi, yerel pazar bilgisi ve maliyet avantajları.",
+      canonicalPath: '/neden-izmir'
     };
     if (path === '/referanslar') return {
-      title: "Referanslar & Başarı Hikayeleri | Ajans Rota",
-      description: "Müşterilerimizin başarı hikayeleri, case study'ler ve referanslarımız."
+      title: "Müşteri Yorumları ve Başarı Hikayeleri | Ajans Rota İzmir",
+      description: "İzmir ve Ege bölgesinden 50+ müşterimizin gerçek başarı hikayeleri. Google Ads, SEO ve sosyal medya kampanya sonuçları.",
+      canonicalPath: '/referanslar'
     };
     if (path === '/ekiplerimiz') return {
-      title: "Ekibimiz | Ajans Rota",
-      description: "Google Ads, SEO ve Sosyal Medya uzmanlarından oluşan yetenekli ekibimizle tanışın."
+      title: "Uzman Ekibimiz — Google & Meta Sertifikalı Profesyoneller | Ajans Rota",
+      description: "Google Ads, SEO, Meta Reklam ve Sosyal Medya alanlarında sertifikalı uzmanlardan oluşan İzmir ekibimizle tanışın.",
+      canonicalPath: '/ekiplerimiz'
     };
     if (path === '/blog' || path.startsWith('/blog/')) return {
-      title: "Blog & Akademi | Ajans Rota",
-      description: "Dijital pazarlama trendleri, SEO ipuçları ve e-ticaret büyüme taktikleri."
+      title: "Dijital Pazarlama Blogu — SEO, Google Ads, Sosyal Medya Rehberleri | Ajans Rota",
+      description: "İzmir ve Ege bölgesi işletmeleri için dijital pazarlama trendleri, SEO ipuçları, Google Ads optimizasyonu ve e-ticaret büyüme taktikleri.",
+      canonicalPath: path
     };
-    if (path === '/client-portal-secure') return {
-      title: "Müşteri Paneli | Ajans Rota",
-      description: "Ajans Rota müşterilerine özel şeffaf raporlama ve canlı data takip paneli."
+    if (path.startsWith('/hizmetlerimiz/')) return {
+      title: `${path.split('/').pop()?.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, m => m.toUpperCase())} Hizmeti | Ajans Rota İzmir`,
+      description: `İzmir ve Ege bölgesinde profesyonel ${path.split('/').pop()?.replace(/-/g, ' ')} hizmeti. Veri odaklı stratejiler ve ölçülebilir sonuçlar.`,
+      canonicalPath: path
+    };
+    if (path.startsWith('/dijital-ajans/')) return {
+      title: `${path.split('/').pop()?.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, m => m.toUpperCase())} Dijital Ajans | Ajans Rota`,
+      description: `${path.split('/').pop()?.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, m => m.toUpperCase())} bölgesinde Google Ads, SEO ve sosyal medya yönetimi hizmetleri. Yerel pazar bilgisiyle dijital büyüme.`,
+      canonicalPath: path
     };
     if (path === '/seo-analizi') return {
-      title: "Ücretsiz SEO Analizi | Ajans Rota",
-      description: "Sitenizin SEO hatalarını anında görün. Ücretsiz SEO analizi raporunuzu hemen alın."
+      title: "Ücretsiz SEO Analizi — Sitenizi Hemen Test Edin | Ajans Rota İzmir",
+      description: "Web sitenizin SEO performansını ücretsiz analiz edin. Teknik SEO hataları, sayfa hızı ve mobil uyumluluk raporunuzu anında alın.",
+      canonicalPath: '/seo-analizi'
     };
     if (path === '/kobi-endeksi') return {
-      title: "KOBİ Dijitalleşme Endeksi | Ajans Rota",
-      description: "İşletmenizin dijital olgunluk seviyesini test edin ve dijitalleşme yol haritanızı çizin."
+      title: "KOBİ Dijitalleşme Endeksi — Dijital Olgunluk Testi | Ajans Rota",
+      description: "İşletmenizin dijital olgunluk seviyesini test edin. Kişiselleştirilmiş dijitalleşme yol haritanızı ücretsiz çizin.",
+      canonicalPath: '/kobi-endeksi'
     };
     if (path === '/kreatif-vitrin') return {
-      title: "Kreatif Vitrin | Ajans Rota",
-      description: "Tasarım ekibimizin elinden çıkan modern web tasarımları ve video kreatifleri."
+      title: "Kreatif Vitrin — Web Tasarım ve Video Portföyü | Ajans Rota İzmir",
+      description: "Ajans Rota tasarım ekibinin modern web siteleri, landing page tasarımları ve video kreatifleri portföyü.",
+      canonicalPath: '/kreatif-vitrin'
     };
     if (path === '/rakip-analizi') return {
-      title: "Rakip Analizi | Ajans Rota",
-      description: "Rakiplerinizin reklam stratejilerini ve SEO sırlarını ücretsiz öğrenin."
+      title: "Ücretsiz Rakip Analizi — Dijital Strateji Karşılaştırma | Ajans Rota",
+      description: "Rakiplerinizin Google Ads stratejilerini, SEO sıralamalarını ve sosyal medya performansını ücretsiz analiz edin.",
+      canonicalPath: '/rakip-analizi'
     };
     if (path === '/akademi') return {
-      title: "Ajans Rota Akademi",
-      description: "Dijital pazarlama eğitimleri, sertifika programları ve sektörel workshoplar."
+      title: "Dijital Pazarlama Akademisi — Eğitim ve Sertifika | Ajans Rota İzmir",
+      description: "Google Ads, SEO ve sosyal medya konularında profesyonel dijital pazarlama eğitimleri ve sertifika programları.",
+      canonicalPath: '/akademi'
     };
-
+    if (path === '/seffaf-panel') return {
+      title: "Şeffaf Panel — Canlı Raporlama Sistemi | Ajans Rota",
+      description: "Müşterilerimize özel şeffaf raporlama paneli. Reklam harcamalarınızı ve kampanya performansınızı gerçek zamanlı takip edin.",
+      canonicalPath: '/seffaf-panel'
+    };
+    // Admin & portal pages (noindex)
+    if (path.startsWith('/rota-management-vault-x9') || path.startsWith('/portal-girisi-x9') || path.startsWith('/client-portal-secure')) return {
+      title: "Yönetim Paneli | Ajans Rota",
+      description: "Ajans Rota yönetim paneli.",
+      canonicalPath: path,
+      noIndex: true
+    };
     // Default fallback
     return {
-      title: "Ajans Rota | Dijital Büyüme Ajansı",
-      description: "İzmir'in en iyi performans pazarlama ajansı."
+      title: "Ajans Rota | İzmir Dijital Pazarlama ve Büyüme Ajansı",
+      description: "İzmir'in veri odaklı dijital pazarlama ajansı. Google Ads, SEO, Meta Reklam ve e-ticaret danışmanlığı.",
+      canonicalPath: path
     };
   };
   const seoData = getSeoData(currentPath);
@@ -2967,6 +2997,8 @@ function App() {
       <SEO
         title={seoData.title}
         description={seoData.description}
+        canonicalPath={seoData.canonicalPath || currentPath}
+        noIndex={seoData.noIndex || false}
         phone={settingsData.phone || '+90-232-000-0000'}
         email={settingsData.contact_email || 'info@ajansrota.com'}
         siteUrl={settingsData.site_url || 'https://ajansrota.com'}
