@@ -8464,3 +8464,8 @@ select:focus, input:focus {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Spinner animation for lazy loading */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

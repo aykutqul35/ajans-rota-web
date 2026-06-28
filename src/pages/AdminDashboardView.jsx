@@ -1,21 +1,26 @@
 import toast from 'react-hot-toast';
-import React, { useState, useEffect, useRef } from 'react';
-import LeadsTab from '../components/admin/tabs/LeadsTab';
-import TicketsTab from '../components/admin/tabs/TicketsTab';
-import BlogsTab from '../components/admin/tabs/BlogsTab';
-import TeamTab from '../components/admin/tabs/TeamTab';
-import TestimonialsTab from '../components/admin/tabs/TestimonialsTab';
-import ServicesTab from '../components/admin/tabs/ServicesTab';
-import LandingTab from '../components/admin/tabs/LandingTab';
-import SettingsTab from '../components/admin/tabs/SettingsTab';
-import MarketingTab from '../components/admin/tabs/MarketingTab';
-import AnalyticsTab from '../components/admin/tabs/AnalyticsTab';
-import ClientReportsTab from '../components/admin/tabs/ClientReportsTab';
+import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
+
+// Lazy-loaded tabs (only loaded when the user switches to that tab)
+const LeadsTab = lazy(() => import('../components/admin/tabs/LeadsTab'));
+const TicketsTab = lazy(() => import('../components/admin/tabs/TicketsTab'));
+const BlogsTab = lazy(() => import('../components/admin/tabs/BlogsTab'));
+const TeamTab = lazy(() => import('../components/admin/tabs/TeamTab'));
+const TestimonialsTab = lazy(() => import('../components/admin/tabs/TestimonialsTab'));
+const ServicesTab = lazy(() => import('../components/admin/tabs/ServicesTab'));
+const LandingTab = lazy(() => import('../components/admin/tabs/LandingTab'));
+const SettingsTab = lazy(() => import('../components/admin/tabs/SettingsTab'));
+const MarketingTab = lazy(() => import('../components/admin/tabs/MarketingTab'));
+const AnalyticsTab = lazy(() => import('../components/admin/tabs/AnalyticsTab'));
+const ClientReportsTab = lazy(() => import('../components/admin/tabs/ClientReportsTab'));
+
+// Lazy-loaded modals (only loaded when opened)
+const AddClientModal = lazy(() => import('../components/admin/modals/AddClientModal'));
+const LeadDetailModal = lazy(() => import('../components/admin/modals/LeadDetailModal'));
+const EditItemModal = lazy(() => import('../components/admin/modals/EditItemModal'));
+
 import AdminHeader from '../components/admin/AdminHeader';
 import AdminSidebar from '../components/admin/AdminSidebar';
-import AddClientModal from '../components/admin/modals/AddClientModal';
-import LeadDetailModal from '../components/admin/modals/LeadDetailModal';
-import EditItemModal from '../components/admin/modals/EditItemModal';
 import { useNavigate } from 'react-router-dom';
 import { upload } from '@vercel/blob/client';
 import { motion } from 'framer-motion';
@@ -1025,6 +1030,12 @@ function AdminDashboardView({
         />
 
         <main className="admin-content-card">
+          <Suspense fallback={
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '400px', gap: '1rem' }}>
+              <div style={{ width: '36px', height: '36px', border: '3px solid var(--glass-border)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Yükleniyor...</span>
+            </div>
+          }>
           {/* TAB 1: LEADS */}
           {activeTab === 'leads' && (
             <LeadsTab
@@ -1165,6 +1176,7 @@ function AdminDashboardView({
             teamMembersData={teamMembersData}
           />
         )}
+          </Suspense>
         </main>
       </div>
 
