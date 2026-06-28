@@ -13837,12 +13837,23 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                           </div>
                           <div className="admin-form-group">
                             <label>Yazar</label>
-                            <input type="text" required value={modalFormData.author || ''} onChange={e => handleModalFieldChange('author', e.target.value)} style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      borderRadius: '6px',
-                      border: '1px solid var(--glass-border)'
-                    }} />
+                            <select required value={modalFormData.author || ''} onChange={e => handleModalFieldChange('author', e.target.value)} style={{
+                              width: '100%',
+                              padding: '0.65rem',
+                              borderRadius: '6px',
+                              border: '1px solid var(--glass-border)',
+                              background: '#fff'
+                            }}>
+                              <option value="">Yazar Seçin</option>
+                              {teamMembersData.filter(member => member.dept !== 'management').map(member => (
+                                <option key={member.name} value={member.name}>
+                                  {member.name} - {member.role}
+                                </option>
+                              ))}
+                              {modalFormData.author && !teamMembersData.filter(member => member.dept !== 'management').some(m => m.name === modalFormData.author) && (
+                                <option value={modalFormData.author}>{modalFormData.author} (Mevcut)</option>
+                              )}
+                            </select>
                           </div>
                         </div>
                         <div className="admin-form-row">
