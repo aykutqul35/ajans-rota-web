@@ -40,13 +40,9 @@ export default function Navbar({
             handleNavClick('home');
           }}><i className="fa-solid fa-house nav-icon"></i>Ana Sayfa</a></li>
           <li className={`nav-link dropdown ${activeMobileDropdown === 'services' ? 'active' : ''}`}>
-            <a href="#services" onClick={e => {
+            <a href="#" onClick={e => {
             e.preventDefault();
-            if (window.innerWidth <= 768) {
-              setActiveMobileDropdown(activeMobileDropdown === 'services' ? null : 'services');
-            } else {
-              handleNavClick('services');
-            }
+            setActiveMobileDropdown(activeMobileDropdown === 'services' ? null : 'services');
           }} className="dropdown-toggle">
                 <span><i className="fa-solid fa-briefcase nav-icon"></i>Hizmetlerimiz</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
               </a>
