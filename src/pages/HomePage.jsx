@@ -80,7 +80,7 @@ export default function HomePage(props) {
     baselineB2bCustomers, baselineB2bRevenue, baselineB2bCpl, baselineB2bCac, baselineB2bRoi,
     rotaB2bLeads, rotaB2bConversion, rotaB2bCustomers, rotaB2bRevenue,
     rotaB2bCpl, rotaB2bCacFinal, rotaB2bRoi, rotaB2bRevenueIncrease,
-    isSocialSelected, selectedCount, isOnlyDesignSelected,
+    isSocialSelected, selectedCount, isOnlyDesignSelected, isOnlySocialSelected,
     bundleDiscountPercent, bundleDiscountAmount,
     activePricingModel, calculatedAgencyFee,
     discountPercent, discountAmount, finalAgencyFee,

@@ -3073,6 +3073,7 @@ function App() {
             rotaB2bRoi={rotaB2bRoi} rotaB2bRevenueIncrease={rotaB2bRevenueIncrease}
             isSocialSelected={isSocialSelected} selectedCount={selectedCount}
             isOnlyDesignSelected={isOnlyDesignSelected}
+            isOnlySocialSelected={isOnlySocialSelected}
             bundleDiscountPercent={bundleDiscountPercent} bundleDiscountAmount={bundleDiscountAmount}
             activePricingModel={activePricingModel} calculatedAgencyFee={calculatedAgencyFee}
             discountPercent={discountPercent} discountAmount={discountAmount}
