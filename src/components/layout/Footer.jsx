@@ -110,11 +110,11 @@ export default function Footer({
                   e.preventDefault();
                   handleNavClick('home');
                 }}><span className="link-bullet"></span><span>Ana Sayfa</span></a></li>
-                {!settingsData.hide_page_hakkimizda && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_hakkimizda && <li><a href="/hakkimizda" onClick={e => {
                   e.preventDefault();
                   navigateTo('/hakkimizda');
                 }}><span className="link-bullet"></span><span>Hakkımızda</span></a></li>}
-                {!settingsData.hide_page_ekiplerimiz && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_ekiplerimiz && <li><a href="/ekiplerimiz" onClick={e => {
                   e.preventDefault();
                   navigateTo('/ekiplerimiz');
                 }}><span className="link-bullet"></span><span>Ekiplerimiz</span></a></li>}
@@ -126,7 +126,7 @@ export default function Footer({
                   e.preventDefault();
                   handleNavClick('izmir');
                 }}><span className="link-bullet"></span><span>Neden İzmir?</span></a></li>}
-                {!settingsData.hide_page_blog && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_blog && <li><a href="/blog" onClick={e => {
                   e.preventDefault();
                   navigateTo('/blog');
                 }}><span className="link-bullet"></span><span>Rehber & Blog</span></a></li>}
@@ -140,27 +140,27 @@ export default function Footer({
             <div className="footer-col">
               <h4>Büyüme Araçları</h4>
               <ul className="footer-links">
-                {!settingsData.hide_page_seo && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_seo && <li><a href="/seo-analizi" onClick={e => {
                   e.preventDefault();
                   navigateTo('/seo-analizi');
                 }}><span className="link-bullet"></span><span>Ücretsiz SEO Analizi</span></a></li>}
-                {!settingsData.hide_page_kobi && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_kobi && <li><a href="/kobi-endeksi" onClick={e => {
                   e.preventDefault();
                   navigateTo('/kobi-endeksi');
                 }}><span className="link-bullet"></span><span>KOBİ Dijital Endeksi</span></a></li>}
-                {!settingsData.hide_page_rakip && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_rakip && <li><a href="/rakip-analizi" onClick={e => {
                   e.preventDefault();
                   navigateTo('/rakip-analizi');
                 }}><span className="link-bullet"></span><span>Rakip Analiz Motoru</span></a></li>}
-                {!settingsData.hide_page_kreatif && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_kreatif && <li><a href="/kreatif-vitrin" onClick={e => {
                   e.preventDefault();
                   navigateTo('/kreatif-vitrin');
                 }}><span className="link-bullet"></span><span>Reklam Vitrini</span></a></li>}
-                {!settingsData.hide_page_seffaf && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_seffaf && <li><a href="/client-portal-secure" onClick={e => {
                   e.preventDefault();
                   navigateTo('/client-portal-secure');
                 }}><span className="link-bullet"></span><span>Müşteri Raporlama</span></a></li>}
-                {!settingsData.hide_page_akademi && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_akademi && <li><a href="/akademi" onClick={e => {
                   e.preventDefault();
                   navigateTo('/akademi');
                 }}><span className="link-bullet"></span><span>Rota Akademi</span></a></li>}
@@ -522,21 +522,21 @@ export default function Footer({
           </div>
           <div className="footer-bottom-right">
             <div className="footer-meta-links">
-              <a href="#" onClick={e => {
-              e.preventDefault();
-              navigateTo('/gizlilik-politikasi');
+              <a href="/gizlilik-politikasi" onClick={e => {
+                  e.preventDefault();
+                  navigateTo('/gizlilik-politikasi');
             }}>Gizlilik Politikası</a>
-              <a href="#" onClick={e => {
-              e.preventDefault();
-              navigateTo('/kullanim-kosullari');
+              <a href="/kullanim-kosullari" onClick={e => {
+                  e.preventDefault();
+                  navigateTo('/kullanim-kosullari');
             }}>Kullanım Koşulları</a>
-              <a href="#" onClick={e => {
-              e.preventDefault();
-              navigateTo('/kvkk-aydinlatma-metni');
+              <a href="/kvkk-aydinlatma-metni" onClick={e => {
+                  e.preventDefault();
+                  navigateTo('/kvkk-aydinlatma-metni');
             }}>KVKK Aydınlatma Metni</a>
-              <a href="#" onClick={e => {
-              e.preventDefault();
-              navigateTo('/cerez-politikasi');
+              <a href="/cerez-politikasi" onClick={e => {
+                  e.preventDefault();
+                  navigateTo('/cerez-politikasi');
             }}>Çerez Politikası</a>
             </div>
             <div className="social-links">

@@ -79,23 +79,23 @@ export default function Navbar({
                 <span><i className="fa-solid fa-building nav-icon"></i>Kurumsal</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
               </a>
               <ul className={`dropdown-menu ${activeMobileDropdown === 'corporate' ? 'mobile-active' : ''}`}>
-                {!settingsData.hide_page_hakkimizda && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_hakkimizda && <li><a href="/hakkimizda" onClick={e => {
                   e.preventDefault();
                   navigateTo('/hakkimizda');
                 }}><i className="fa-solid fa-address-card nav-icon"></i>Hakkımızda</a></li>}
-                {!settingsData.hide_page_ekiplerimiz && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_ekiplerimiz && <li><a href="/ekiplerimiz" onClick={e => {
                   e.preventDefault();
                   navigateTo('/ekiplerimiz');
                 }}><i className="fa-solid fa-users nav-icon"></i>Ekiplerimiz</a></li>}
-                {!settingsData.hide_page_blog && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_blog && <li><a href="/blog" onClick={e => {
                   e.preventDefault();
                   navigateTo('/blog');
                 }}><i className="fa-solid fa-newspaper nav-icon"></i>Blog</a></li>}
-                {!settingsData.hide_page_izmir && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_izmir && <li><a href="/neden-izmir" onClick={e => {
                   e.preventDefault();
                   navigateTo('/neden-izmir');
                 }}><i className="fa-solid fa-map-location-dot nav-icon"></i>Neden İzmir?</a></li>}
-                {!settingsData.hide_page_iletisim && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_iletisim && <li><a href="/iletisim" onClick={e => {
                   e.preventDefault();
                   navigateTo('/iletisim');
                 }}><i className="fa-solid fa-envelope nav-icon"></i>İletişim</a></li>}
@@ -137,27 +137,27 @@ export default function Navbar({
                 <span><i className="fa-solid fa-screwdriver-wrench nav-icon"></i>Büyüme Araçları</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
               </a>
               <ul className={`dropdown-menu ${activeMobileDropdown === 'tools' ? 'mobile-active' : ''}`}>
-                {!settingsData.hide_page_seo && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_seo && <li><a href="/seo-analizi" onClick={e => {
                   e.preventDefault();
                   navigateTo('/seo-analizi');
                 }}><i className="fa-solid fa-magnifying-glass-chart nav-icon"></i>Ücretsiz SEO Analizi</a></li>}
-                {!settingsData.hide_page_kobi && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_kobi && <li><a href="/kobi-endeksi" onClick={e => {
                   e.preventDefault();
                   navigateTo('/kobi-endeksi');
                 }}><i className="fa-solid fa-chart-line nav-icon"></i>KOBİ Dijitalleşme Endeksi</a></li>}
-                {!settingsData.hide_page_rakip && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_rakip && <li><a href="/rakip-analizi" onClick={e => {
                   e.preventDefault();
                   navigateTo('/rakip-analizi');
                 }}><i className="fa-solid fa-code-compare nav-icon"></i>Siz vs. Rakibiniz</a></li>}
-                {!settingsData.hide_page_kreatif && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_kreatif && <li><a href="/kreatif-vitrin" onClick={e => {
                   e.preventDefault();
                   navigateTo('/kreatif-vitrin');
                 }}><i className="fa-solid fa-wand-magic-sparkles nav-icon"></i>Kreatif Reklam Vitrini</a></li>}
-                {!settingsData.hide_page_seffaf && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_seffaf && <li><a href="/client-portal-secure" onClick={e => {
                   e.preventDefault();
                   navigateTo('/client-portal-secure');
                 }}><i className="fa-solid fa-chart-pie nav-icon"></i>Müşteri Raporlama Paneli</a></li>}
-                {!settingsData.hide_page_akademi && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_akademi && <li><a href="/akademi" onClick={e => {
                   e.preventDefault();
                   navigateTo('/akademi');
                 }}><i className="fa-solid fa-graduation-cap nav-icon"></i>Rota Akademi</a></li>}
@@ -174,9 +174,9 @@ export default function Navbar({
           </ul>
 
           <div className="nav-actions">
-            <a href="#" className="btn btn-secondary" style={{ background: 'transparent', color: 'var(--text-dark)', border: '1px solid var(--glass-border)' }} onClick={e => {
-              e.preventDefault();
-              navigateTo('/client-portal-secure');
+            <a href="/client-portal-secure" className="btn btn-secondary" style={{ background: 'transparent', color: 'var(--text-dark)', border: '1px solid var(--glass-border)' }} onClick={e => {
+                  e.preventDefault();
+                  navigateTo('/client-portal-secure');
               setIsMobileMenuOpen(false);
             }}>
               <i className="fa-solid fa-lock" style={{ marginRight: '6px' }}></i>
