@@ -2778,9 +2778,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
   const [editingItem, setEditingItem] = useState(null); // null = none, 'new' = adding, object = editing
   const [editingType, setEditingType] = useState(''); // testimonial, team, blog
   const [modalFormData, setModalFormData] = useState({});
-  useEffect(() => {
-    setBlogCurrentPage(1);
-  }, [blogSearch, blogCatFilter]);
+
   const handleLogin = async e => {
     e.preventDefault();
     try {
@@ -2959,45 +2957,6 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
       }
     }
   };
-  const openEditModal = (type, item) => {
-    setEditingType(type);
-    setEditingItem(item);
-    if (type === 'blog') {
-      setBlogEditTab('edit');
-    }
-    if (item === 'new') {
-      if (type === 'testimonial') {
-        setModalFormData({
-          name: '',
-          company: '',
-          role: '',
-          category: 'google-ads',
-          rating: 5,
-          quote: '',
-          metric: '',
-          initials: ''
-        });
-      } else if (type === 'team') {
-        setModalFormData({
-          name: '',
-          role: '',
-          init: '',
-          gradient: 'linear-gradient(135deg, #00ebd6, #00b4d8)',
-          desc: '',
-          dept: 'performance',
-          stars: 5,
-          exp: ''
-        });
-      } else if (type === 'blog') {
-        setModalFormData({
-          title: '',
-          category: 'google',
-          excerpt: '',
-          date: new Date().toLocaleDateString('tr-TR'),
-          readTime: '5 dk okuma',
-          author: '',
-          content: ''
-        });
   const handleAdminReplySubmit = (e) => {
     e.preventDefault();
     if (!adminReplyText.trim()) return;
@@ -3055,6 +3014,45 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
       setAdminReplyText('');
     }
   };
+  const openEditModal = (type, item) => {
+    setEditingType(type);
+    setEditingItem(item);
+    if (type === 'blog') {
+      setBlogEditTab('edit');
+    }
+    if (item === 'new') {
+      if (type === 'testimonial') {
+        setModalFormData({
+          name: '',
+          company: '',
+          role: '',
+          category: 'google-ads',
+          rating: 5,
+          quote: '',
+          metric: '',
+          initials: ''
+        });
+      } else if (type === 'team') {
+        setModalFormData({
+          name: '',
+          role: '',
+          init: '',
+          gradient: 'linear-gradient(135deg, #00ebd6, #00b4d8)',
+          desc: '',
+          dept: 'performance',
+          stars: 5,
+          exp: ''
+        });
+      } else if (type === 'blog') {
+        setModalFormData({
+          title: '',
+          category: 'google',
+          excerpt: '',
+          date: new Date().toLocaleDateString('tr-TR'),
+          readTime: '5 dk okuma',
+          author: '',
+          content: ''
+        });
       }
     } else {
       setModalFormData({
