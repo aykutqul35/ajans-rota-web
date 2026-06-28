@@ -196,6 +196,11 @@ export default function HomePage(props) {
             <p className="section-desc">{settingsData.services_section_desc || "E-ticaret ve dijital satış hunilerinde en yüksek verimi alabilmeniz için veriye dayalı stratejiler geliştiriyoruz."}</p>
           </FadeIn>
 
+          <div className="mobile-swipe-hint">
+            <i className="fa-solid fa-arrows-left-right"></i>
+            <span>Tüm hizmetleri görmek için kaydırın</span>
+          </div>
+
           <StaggerContainer className="services-grid">
             {Object.keys(servicesData).map(key => {
               const service = servicesData[key];
