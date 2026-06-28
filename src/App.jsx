@@ -1269,8 +1269,7 @@ function App() {
         });
         if (res.status === 401) {
           clearInterval(window._adminPollInterval);
-          console.error("Admin token invalid or expired. Stopping polling.");
-          // Optional: localStorage.removeItem('admin_token'); window.location.reload();
+          localStorage.removeItem('admin_token');
           return;
         }
         if (res.ok) {
