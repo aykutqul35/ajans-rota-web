@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import LeadsTab from '../components/admin/tabs/LeadsTab';
 import AdminHeader from '../components/admin/AdminHeader';
 import AdminSidebar from '../components/admin/AdminSidebar';
+import AddClientModal from '../components/admin/modals/AddClientModal';
 import { useNavigate } from 'react-router-dom';
 import { upload } from '@vercel/blob/client';
 import { motion } from 'framer-motion';
