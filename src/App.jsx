@@ -612,12 +612,13 @@ function App() {
   const [blogsData, setBlogsData] = useState(initialBlogPosts);
   // Leads state
   const [leadsData, setLeadsData] = useState([]);
-  // Newsletter (custom hook)
+  // Newsletter (custom hook — callbacks set after simulateLeadLocally is defined)
   const {
     newsletterEmail, setNewsletterEmail,
     newsletterLoading, newsletterSubmitted, newsletterError,
     handleNewsletterSubmit,
-  } = useNewsletter(simulateLeadLocally, detectTrafficSource);
+    setNewsletterCallbacks,
+  } = useNewsletter();
   // Client Transparency Reports state
   const [clientReports, setClientReports] = useState({
     ecommerce: {
@@ -1766,6 +1767,10 @@ function App() {
       console.warn("Conversion tracking script error:", e);
     }
   };
+
+  // Register newsletter callbacks now that simulateLeadLocally is defined
+  setNewsletterCallbacks(simulateLeadLocally, detectTrafficSource);
+
   const handleGenerateReport = async e => {
     e.preventDefault();
     if (!reportFullName) {
