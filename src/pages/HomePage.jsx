@@ -1,8 +1,57 @@
 import { motion } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState, useEffect, useRef, useCallback } from 'react';
 const RoasSimulatorWidget = lazy(() => import('../components/RoasSimulatorWidget'));
+
+// Counter-up animation component for hero stats
+const CountUpStat = ({ value, label, delay = 0 }) => {
+  const [displayValue, setDisplayValue] = useState(value);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          // Parse the numeric portion
+          const numMatch = value.match(/([\d.,]+)/);
+          if (!numMatch) return;
+          const target = parseFloat(numMatch[1].replace(',', '.'));
+          const prefix = value.substring(0, value.indexOf(numMatch[1]));
+          const suffix = value.substring(value.indexOf(numMatch[1]) + numMatch[1].length);
+          const duration = 1600;
+          const startTime = Date.now() + delay;
+
+          const animate = () => {
+            const elapsed = Date.now() - startTime;
+            if (elapsed < 0) { requestAnimationFrame(animate); return; }
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+            const current = target * eased;
+            const formatted = target % 1 !== 0 ? current.toFixed(1) : Math.floor(current).toString();
+            setDisplayValue(`${prefix}${formatted}${suffix}`);
+            if (progress < 1) requestAnimationFrame(animate);
+          };
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [value, delay, hasAnimated]);
+
+  return (
+    <div className="stat-item" ref={ref}>
+      <span className="stat-number">{displayValue}</span>
+      <span className="stat-label">{label}</span>
+    </div>
+  );
+};
 
 const PremiumHeroText = ({ greeting }) => {
   const container = {
@@ -152,18 +201,13 @@ export default function HomePage(props) {
             </div>
 
             <div className="hero-stats">
-              <div className="stat-item">
-                <span className="stat-number">{settingsData.hero_stat1_num || "%320+"}</span>
-                <span className="stat-label">{settingsData.hero_stat1_lbl || "Ortalama ROAS Artışı"}</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">{settingsData.hero_stat2_num || "12M₺+"}</span>
-                <span className="stat-label">{settingsData.hero_stat2_lbl || "Yönetilen Yıllık Bütçe"}</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">{settingsData.hero_stat3_num || "%98.4"}</span>
-                <span className="stat-label">{settingsData.hero_stat3_lbl || "Müşteri Memnuniyeti"}</span>
-              </div>
+              {[
+                { num: settingsData.hero_stat1_num || "%320+", label: settingsData.hero_stat1_lbl || "Ortalama ROAS Artışı" },
+                { num: settingsData.hero_stat2_num || "12M₺+", label: settingsData.hero_stat2_lbl || "Yönetilen Yıllık Bütçe" },
+                { num: settingsData.hero_stat3_num || "%98.4", label: settingsData.hero_stat3_lbl || "Müşteri Memnuniyeti" },
+              ].map((stat, i) => (
+                <CountUpStat key={i} value={stat.num} label={stat.label} delay={i * 200} />
+              ))}
             </div>
           </FadeIn>
 
@@ -188,6 +232,35 @@ export default function HomePage(props) {
         </div>
       </section>
 
+      {/* Client Logos Marquee */}
+      <section className="client-logos-section">
+        <div className="container">
+          <p className="client-logos-label">Güvenilir Markalarla Çalışıyoruz</p>
+        </div>
+        <div className="marquee-wrapper">
+          <div className="marquee-track">
+            {[...Array(2)].map((_, setIdx) => (
+              <div key={setIdx} className="marquee-set" aria-hidden={setIdx > 0}>
+                {[
+                  { name: 'TechVista', icon: 'fa-solid fa-microchip' },
+                  { name: 'EgeExport', icon: 'fa-solid fa-ship' },
+                  { name: 'OliveDigital', icon: 'fa-solid fa-leaf' },
+                  { name: 'İzmirPazar', icon: 'fa-solid fa-store' },
+                  { name: 'AegeanCraft', icon: 'fa-solid fa-gem' },
+                  { name: 'SmartGrow', icon: 'fa-solid fa-chart-line' },
+                  { name: 'BlueBay', icon: 'fa-solid fa-water' },
+                  { name: 'SunriseTech', icon: 'fa-solid fa-sun' },
+                ].map((brand, i) => (
+                  <div key={i} className="marquee-logo-item">
+                    <i className={brand.icon}></i>
+                    <span>{brand.name}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
       {/* 4. Calculator Section */}
       <section id="services" className="services">
         <div className="container">
