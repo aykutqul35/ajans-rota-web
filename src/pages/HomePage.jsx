@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
 import { lazy, Suspense } from 'react';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 const RoasSimulatorWidget = lazy(() => import('../components/RoasSimulatorWidget'));
 
 const PremiumHeroText = ({ greeting }) => {
