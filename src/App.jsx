@@ -1,5 +1,5 @@
 import { Toaster } from 'react-hot-toast';
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense, memo } from 'react';
 import { motion } from 'framer-motion';
 import SEO from './components/SEO';
 import SkeletonLoader from './components/SkeletonLoader';
@@ -31,6 +31,9 @@ import RoasSimulatorWidget from './components/RoasSimulatorWidget';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
+import ErrorBoundary from './components/ErrorBoundary';
+import useCalculator from './hooks/useCalculator';
+import useNewsletter from './hooks/useNewsletter';
 
 
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
@@ -609,11 +612,12 @@ function App() {
   const [blogsData, setBlogsData] = useState(initialBlogPosts);
   // Leads state
   const [leadsData, setLeadsData] = useState([]);
-  // Newsletter subscription states
-  const [newsletterEmail, setNewsletterEmail] = useState('');
-  const [newsletterLoading, setNewsletterLoading] = useState(false);
-  const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
-  const [newsletterError, setNewsletterError] = useState('');
+  // Newsletter (custom hook)
+  const {
+    newsletterEmail, setNewsletterEmail,
+    newsletterLoading, newsletterSubmitted, newsletterError,
+    handleNewsletterSubmit,
+  } = useNewsletter(simulateLeadLocally, detectTrafficSource);
   // Client Transparency Reports state
   const [clientReports, setClientReports] = useState({
     ecommerce: {
@@ -882,72 +886,39 @@ function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-
-  // Calculator States
-  const [calculatorTab, setCalculatorTab] = useState('fee'); // fee, roas_ecommerce, roas_b2b
-  const [feeAdBudget, setFeeAdBudget] = useState(50000);
-  const [pricingModel, setPricingModel] = useState('hybrid'); // hybrid, performance
-  const [targetRevenue, setTargetRevenue] = useState(500000); // For performance model
-  const [selectedServices, setSelectedServices] = useState({
-    google_ads: true,
-    meta_ads: true,
-    seo: false,
-    design: false,
-    consultancy: false
-  });
-
-  // ROI Calculator States (General)
-  const [googleSpend, setGoogleSpend] = useState(15000);
-  const [googleRoas, setGoogleRoas] = useState(3.5);
-  const [metaSpend, setMetaSpend] = useState(10000);
-  const [metaRoas, setMetaRoas] = useState(4.0);
-
-  // E-commerce Calculator States
-  const [ecomTraffic, setEcomTraffic] = useState(15000);
-  const [ecomAov, setEcomAov] = useState(650);
-  const [ecomSpend, setEcomSpend] = useState(25000);
-  const [ecomRevenue, setEcomRevenue] = useState(85000);
-
-  // B2B Calculator States
-  const [b2bSpend, setB2bSpend] = useState(15000);
-  const [b2bLeads, setB2bLeads] = useState(120);
-  const [b2bConversion, setB2bConversion] = useState(8);
-  const [b2bLtv, setB2bLtv] = useState(12000);
-
-  // Additional Missing States
-  const [budgetIndex, setBudgetIndex] = useState(2);
-  const [reportFullName, setReportFullName] = useState('');
-  const [reportEmail, setReportEmail] = useState('');
-  const [reportWebsite, setReportWebsite] = useState('');
-  const [reportPhone, setReportPhone] = useState('');
-  const [proposalFullName, setProposalFullName] = useState('');
-  const [proposalEmail, setProposalEmail] = useState('');
-  const [proposalWebsite, setProposalWebsite] = useState('');
-  const [proposalPhone, setProposalPhone] = useState('');
-  const [isReportGenerated, setIsReportGenerated] = useState(false);
-  const [reportLoading, setReportLoading] = useState(false);
-  const [reportError, setReportError] = useState('');
-  const [isProposalGenerated, setIsProposalGenerated] = useState(false);
-  const [proposalLoading, setProposalLoading] = useState(false);
-  const [proposalError, setProposalError] = useState('');
-  
-  const [ecomSector, setEcomSector] = useState('');
-  const handleEcomSectorChange = val => {
-    setEcomSector(val);
-    if (val === 'giyim') { setEcomAov(500); setEcomTraffic(20000); setEcomSpend(25000); }
-    else if (val === 'elektronik') { setEcomAov(2500); setEcomTraffic(10000); setEcomSpend(30000); }
-    else if (val === 'kozmetik') { setEcomAov(350); setEcomTraffic(30000); setEcomSpend(20000); }
-  };
-
-  const [b2bSector, setB2bSector] = useState('');
-  const handleB2bSectorChange = val => {
-    setB2bSector(val);
-    if (val === 'yazilim') { setB2bLeads(50); setB2bSpend(15000); setB2bConversion(5); setB2bLtv(50000); }
-    else if (val === 'makine') { setB2bLeads(30); setB2bSpend(20000); setB2bConversion(10); setB2bLtv(150000); }
-    else if (val === 'hizmet') { setB2bLeads(100); setB2bSpend(10000); setB2bConversion(15); setB2bLtv(10000); }
-  };
-
-
+  // Calculator (custom hook)
+  const calc = useCalculator(servicesData, settingsData);
+  const {
+    calculatorTab, setCalculatorTab,
+    feeAdBudget, setFeeAdBudget,
+    pricingModel, setPricingModel,
+    targetRevenue, setTargetRevenue,
+    selectedServices, setSelectedServices,
+    googleSpend, setGoogleSpend, googleRoas, setGoogleRoas,
+    metaSpend, setMetaSpend, metaRoas, setMetaRoas,
+    ecomTraffic, setEcomTraffic, ecomAov, setEcomAov,
+    ecomSpend, setEcomSpend, ecomRevenue, setEcomRevenue,
+    ecomSector, handleEcomSectorChange,
+    b2bSpend, b2bLeads, b2bConversion, b2bLtv,
+    b2bSector, handleB2bSectorChange,
+    budgetIndex, setBudgetIndex,
+    commitment, setCommitment,
+    reportingPackage, setReportingPackage,
+    smPackage, setSmPackage,
+    webDesignType, setWebDesignType,
+    baselineEcomOrders, baselineEcomCR, baselineEcomRoas, baselineEcomCac,
+    rotaEcomCR, rotaEcomOrders, rotaEcomRevenue, rotaEcomRoas, rotaEcomCac,
+    rotaEcomRevenueIncrease, ecomBudgetSavings,
+    baselineB2bCustomers, baselineB2bRevenue, baselineB2bCpl, baselineB2bCac, baselineB2bRoi,
+    rotaB2bLeads, rotaB2bConversion, rotaB2bCustomers, rotaB2bRevenue,
+    rotaB2bCpl, rotaB2bCacFinal, rotaB2bRoi, rotaB2bRevenueIncrease,
+    isSocialSelected, selectedCount, isOnlyDesignSelected,
+    bundleDiscountPercent, bundleDiscountAmount,
+    activePricingModel, calculatedAgencyFee,
+    discountPercent, discountAmount, finalAgencyFee,
+    baseRetainerLabel, managementFeeDesc,
+    rawBaseRetainer, smPackagePrice,
+  } = calc;
   const isPageHidden = path => {
     if (!settingsData) return false;
     if (path === '/neden-izmir' && settingsData.hide_page_izmir) return true;
@@ -1674,16 +1645,6 @@ function App() {
       return updated;
     });
   }, [servicesData]);
-  const [commitment, setCommitment] = useState(1);
-  const [reportingPackage, setReportingPackage] = useState('temel');
-  const [smPackage, setSmPackage] = useState('orta'); // 'baslangic' | 'orta' | 'zirve'
-  const [webDesignType, setWebDesignType] = useState(''); // '', 'e-ticaret', 'kurumsal'
-  const [webDesignFullName, setWebDesignFullName] = useState('');
-  const [webDesignEmail, setWebDesignEmail] = useState('');
-  const [webDesignPhone, setWebDesignPhone] = useState('');
-  const [webDesignMessage, setWebDesignMessage] = useState('');
-  const [webDesignLoading, setWebDesignLoading] = useState(false);
-  const [webDesignSubmitted, setWebDesignSubmitted] = useState(false);
 
   // Contact form state
   const [formData, setFormData] = useState({
@@ -2422,183 +2383,6 @@ function App() {
       setWebDesignSubmitted(true);
     }
   };
-  const handleNewsletterSubmit = async e => {
-    e.preventDefault();
-    if (!newsletterEmail || !newsletterEmail.includes('@')) {
-      setNewsletterError('Lütfen geçerli bir e-posta adresi girin.');
-      return;
-    }
-    setNewsletterLoading(true);
-    setNewsletterError('');
-    const leadPayload = {
-      fullName: 'Bülten Abonesi',
-      email: newsletterEmail,
-      phone: '-',
-      company: 'Bülten Aboneliği',
-      service: 'Bülten Aboneliği',
-      message: 'Kullanıcı bültene kaydoldu.',
-      trafficSource: detectTrafficSource()
-    };
-    try {
-      const response = await fetch('/api.php?action=save_lead', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(leadPayload)
-      });
-      simulateLeadLocally(leadPayload);
-      setNewsletterLoading(false);
-      setNewsletterSubmitted(true);
-      setNewsletterEmail('');
-      setTimeout(() => setNewsletterSubmitted(false), 5000);
-    } catch (err) {
-      console.error("Newsletter submission failed, simulating locally:", err);
-      simulateLeadLocally(leadPayload);
-      setNewsletterLoading(false);
-      setNewsletterSubmitted(true);
-      setNewsletterEmail('');
-      setTimeout(() => setNewsletterSubmitted(false), 5000);
-    }
-  };
-
-  // ROI calculations (Google Ads & Meta Ads Integration)
-  const googleRevenue = googleSpend * googleRoas;
-  const metaRevenue = metaSpend * metaRoas;
-  const totalAdBudget = googleSpend + metaSpend;
-  const totalRevenue = googleRevenue + metaRevenue;
-  const overallRoas = totalAdBudget > 0 ? (totalRevenue / totalAdBudget).toFixed(1) : 0;
-  const totalNetProfit = totalRevenue - totalAdBudget;
-
-  // E-Commerce calculations
-  const baselineEcomOrders = ecomAov > 0 ? Math.round(ecomRevenue / ecomAov) : 0;
-  const baselineEcomCR = ecomTraffic > 0 ? baselineEcomOrders / ecomTraffic * 100 : 0;
-  const baselineEcomRoas = ecomSpend > 0 ? (ecomRevenue / ecomSpend).toFixed(1) : '0';
-  const baselineEcomCac = baselineEcomOrders > 0 ? Math.round(ecomSpend / baselineEcomOrders) : 0;
-  const rotaEcomTraffic = Math.round(ecomTraffic * 1.15);
-  const rotaEcomCR = parseFloat((baselineEcomCR * 1.5).toFixed(2));
-  const rotaEcomAov = Math.round(ecomAov * 1.2);
-  const rotaEcomOrders = Math.round(rotaEcomTraffic * (rotaEcomCR / 100));
-  const rotaEcomRevenue = rotaEcomOrders * rotaEcomAov;
-  const rotaEcomRoas = ecomSpend > 0 ? (rotaEcomRevenue / ecomSpend).toFixed(1) : '0';
-  const rotaEcomCac = rotaEcomOrders > 0 ? Math.round(ecomSpend / rotaEcomOrders) : 0;
-  const rotaEcomRevenueIncrease = rotaEcomRevenue - ecomRevenue;
-  const ecomBudgetSavings = rotaEcomRevenue > 0 ? Math.round(ecomSpend * (1 - ecomRevenue / rotaEcomRevenue)) : 0;
-
-  // B2B calculations
-  const baselineB2bCustomers = Math.round(b2bLeads * (b2bConversion / 100));
-  const baselineB2bRevenue = baselineB2bCustomers * b2bLtv;
-  const baselineB2bCpl = b2bLeads > 0 ? Math.round(b2bSpend / b2bLeads) : 0;
-  const baselineB2bCac = baselineB2bCustomers > 0 ? Math.round(b2bSpend / baselineB2bCustomers) : 0;
-  const baselineB2bRoi = b2bSpend > 0 ? (baselineB2bRevenue / b2bSpend).toFixed(1) : '0';
-  const rotaB2bLeads = Math.round(b2bLeads * 1.2);
-  const rotaB2bConversion = parseFloat((b2bConversion * 1.3).toFixed(1));
-  const rotaB2bCustomers = Math.round(rotaB2bLeads * (rotaB2bConversion / 100));
-  const rotaB2bRevenue = rotaB2bCustomers * b2bLtv;
-  const rotaB2bCpl = rotaB2bLeads > 0 ? Math.round(b2bSpend / rotaB2bLeads) : 0;
-  const rotaB2bCac = rotaB2bCustomers > 0 ? Math.round(b2bSpend / rotaB2bLeads) : 0; // Wait, let's use rotaB2bCustomers instead of leads for CAC
-  const rotaB2bCacFinal = rotaB2bCustomers > 0 ? Math.round(b2bSpend / rotaB2bCustomers) : 0;
-  const rotaB2bRoi = b2bSpend > 0 ? (rotaB2bRevenue / b2bSpend).toFixed(1) : '0';
-  const rotaB2bRevenueIncrease = rotaB2bRevenue - baselineB2bRevenue;
-  const b2bBudgetSavings = rotaB2bRevenue > 0 ? Math.round(b2bSpend * (1 - baselineB2bRevenue / rotaB2bRevenue)) : 0;
-
-  // Sosyal Medya paketi seçili mi?
-  const isSocialSelected = !!selectedServices.social;
-
-  // Calculate selected services count (must be before isOnlySocialSelected)
-  const selectedCount = Object.values(selectedServices).filter(Boolean).length;
-
-  // SM tek seçili mi? (slider ve çalışma modeli gizleme için)
-  const isOnlySocialSelected = isSocialSelected && selectedCount === 1;
-
-  // Sosyal Medya paket fiyatı (settingsData'dan okunur)
-  const smPackagePrice = isSocialSelected
-    ? smPackage === 'baslangic'
-      ? Number(settingsData.sm_pkg_baslangic_price) || 8000
-      : smPackage === 'zirve'
-      ? Number(settingsData.sm_pkg_zirve_price) || 18000
-      : Number(settingsData.sm_pkg_orta_price) || 12000
-    : 0;
-
-  // Agency Fee calculations
-  // Dynamic base fee calculation per service — social baseFee yerine smPackagePrice ayrıca eklenir
-  const rawBaseRetainer = Object.keys(selectedServices).reduce((sum, key) => {
-    if (selectedServices[key] && servicesData[key]) {
-      if (key !== 'design' && key !== 'social') {
-        const fee = Number(servicesData[key].baseFee) || 20000;
-        return sum + fee;
-      }
-    }
-    return sum;
-  }, 0);
-
-  // Check if only Conversion-Oriented Web Design is selected
-  const isOnlyDesignSelected = selectedServices.design && selectedCount === 1;
-
-  // Tiered Multi-service bundle discount: 2 services = 5%, 3 = 10%, 4 = 15%, 5 = 20%, 6 or more = 25%
-  let bundleDiscountPercent = 0;
-  if (selectedCount === 2) bundleDiscountPercent = 5;else if (selectedCount === 3) bundleDiscountPercent = 10;else if (selectedCount === 4) bundleDiscountPercent = 15;else if (selectedCount === 5) bundleDiscountPercent = 20;else if (selectedCount >= 6) bundleDiscountPercent = 25;
-  const bundleDiscountAmount = Math.round(rawBaseRetainer * (bundleDiscountPercent / 100));
-  const discountedRawBase = rawBaseRetainer - bundleDiscountAmount;
-
-  // Account complexity scales with ad budget: base retainer increases up to 1.5x
-  // Adjusted scaling factor to match Izmir market: 1.0 + (budget * 0.000003)
-  const budgetMultiplier = isOnlyDesignSelected ? 1.0 : 1.0 + feeAdBudget * 0.000003;
-
-  // Standard base retainer before bundle discount but scaled by complexity
-  const standardBaseRetainer = Math.round(rawBaseRetainer * budgetMultiplier);
-
-  // Scaled bundle discount amount to display in the result breakdown
-  const scaledBundleDiscountAmount = Math.round(standardBaseRetainer * (bundleDiscountPercent / 100));
-
-  // Active base retainer after bundle discount, scaled
-  const activeBaseRetainer = standardBaseRetainer - scaledBundleDiscountAmount;
-  const activePricingModel = isOnlyDesignSelected ? 'hybrid' : pricingModel;
-  let calculatedAgencyFee = 0;
-  let managementFeeDesc = '';
-  let baseRetainerLabel = '';
-  if (activePricingModel === 'hybrid') {
-    // 12% ad spend commission applies only to budgets of 100k and above
-    const showCommission = feeAdBudget >= 100000 && !isOnlyDesignSelected;
-    const commissionFee = showCommission ? feeAdBudget * 0.12 : 0;
-    calculatedAgencyFee = Math.round(activeBaseRetainer + commissionFee);
-    managementFeeDesc = showCommission ? `%12 Bütçe Yönetimi (${commissionFee.toLocaleString('tr-TR')} ₺)` : '';
-    baseRetainerLabel = isOnlyDesignSelected
-      ? `Web Tasarım Bedeli (${standardBaseRetainer.toLocaleString('tr-TR')} ₺)`
-      : isSocialSelected
-      ? `Seçilen Paket Bedeli (${smPackagePrice.toLocaleString('tr-TR')} ₺)`
-      : `Hizmet Sabit Bedeli (${standardBaseRetainer.toLocaleString('tr-TR')} ₺)`;
-  } else {
-    // Performance Model: 20% discount on base retainer + 1.5% of Target Revenue
-    // Under performance model, the base is reduced by 20%
-    const reducedBase = Math.round(activeBaseRetainer * 0.8);
-    const standardReducedBase = Math.round(standardBaseRetainer * 0.8);
-    const performanceBonus = targetRevenue * 0.015;
-    calculatedAgencyFee = Math.round(reducedBase + performanceBonus);
-    managementFeeDesc = `%1.5 Ciro Primi Bedeli (${performanceBonus.toLocaleString('tr-TR')} ₺)`;
-    baseRetainerLabel = isSocialSelected
-      ? `Seçilen Paket Bedeli (${smPackagePrice.toLocaleString('tr-TR')} ₺)`
-      : `E-Ticaret Yarı-Sabit Bedel (${standardReducedBase.toLocaleString('tr-TR')} ₺)`;
-  }
-
-  // Calculate performance bundle discount
-  const performanceBundleDiscountAmount = Math.round(standardBaseRetainer * 0.8 * (bundleDiscountPercent / 100));
-
-  // Calculate Reporting Package Fee (under-the-hood base fee addition)
-  let reportingFee = 0;
-  if (reportingPackage === 'gelismis') reportingFee = 1500;else if (reportingPackage === 'premium') reportingFee = 3500;else if (reportingPackage === 'kurumsal') reportingFee = 7000;
-
-  // Add reporting fee to calculatedAgencyFee
-  calculatedAgencyFee = calculatedAgencyFee + reportingFee;
-
-  // Sosyal Medya paket fiyatı sabit tutulur — multiplier ve bundle discount dışındadır
-  calculatedAgencyFee = calculatedAgencyFee + smPackagePrice;
-
-  // Commitment Contract Discounts: 3 months = 5%, 6 months = 15%, 9 months = 25%
-  let discountPercent = 0;
-  if (commitment === 3) discountPercent = 5;else if (commitment === 6) discountPercent = 15;else if (commitment === 9) discountPercent = 25;
-  const discountAmount = Math.round(calculatedAgencyFee * (discountPercent / 100));
-  const finalAgencyFee = calculatedAgencyFee - discountAmount;
   const handleInputChange = e => {
     const {
       name,
@@ -2989,6 +2773,7 @@ function App() {
         navigateTo={navigateTo}
       />
       )}
+      <ErrorBoundary>
       <Suspense fallback={
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw' }}>
           <SkeletonLoader />
@@ -3148,6 +2933,7 @@ function App() {
       
       </Routes>
       </Suspense>
+      </ErrorBoundary>
 
       {!isSecurePanel && (
       <Footer

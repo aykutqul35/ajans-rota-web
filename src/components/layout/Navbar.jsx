@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { useLocation } from 'react-router-dom';
 
-export default function Navbar({
+const Navbar = memo(function Navbar({
   isScrolled,
   isMobileMenuOpen,
   setIsMobileMenuOpen,
@@ -47,10 +48,10 @@ export default function Navbar({
             } else {
               handleNavClick('services');
             }
-          }} className="dropdown-toggle">
+          }} className="dropdown-toggle" aria-haspopup="true" aria-expanded={activeMobileDropdown === 'services'}>
                 <span><i className="fa-solid fa-briefcase nav-icon"></i>Hizmetlerimiz</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
               </a>
-              <ul className={`dropdown-menu ${activeMobileDropdown === 'services' ? 'mobile-active' : ''}`}>
+              <ul className={`dropdown-menu ${activeMobileDropdown === 'services' ? 'mobile-active' : ''}`} role="menu">
                 {Object.keys(servicesData).map(key => {
                 let iconClass = 'fa-solid fa-chevron-right';
                 if (key === 'google') iconClass = 'fa-brands fa-google';
@@ -70,7 +71,7 @@ export default function Navbar({
               </ul>
             </li>
             <li className={`nav-link dropdown ${activeMobileDropdown === 'corporate' ? 'active' : ''}`}>
-              <a href="#" className="dropdown-toggle" onClick={e => {
+              <a href="#" className="dropdown-toggle" aria-haspopup="true" aria-expanded={activeMobileDropdown === 'corporate'} onClick={e => {
               e.preventDefault();
               if (window.innerWidth <= 768) {
                 setActiveMobileDropdown(activeMobileDropdown === 'corporate' ? null : 'corporate');
@@ -78,7 +79,7 @@ export default function Navbar({
             }}>
                 <span><i className="fa-solid fa-building nav-icon"></i>Kurumsal</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
               </a>
-              <ul className={`dropdown-menu ${activeMobileDropdown === 'corporate' ? 'mobile-active' : ''}`}>
+              <ul className={`dropdown-menu ${activeMobileDropdown === 'corporate' ? 'mobile-active' : ''}`} role="menu">
                 {!settingsData.hide_page_hakkimizda && <li><a href="#" onClick={e => {
                   e.preventDefault();
                   navigateTo('/hakkimizda');
@@ -102,7 +103,7 @@ export default function Navbar({
               </ul>
             </li>
             <li className={`nav-link dropdown ${activeMobileDropdown === 'calculators' ? 'active' : ''}`}>
-              <a href="#" className="dropdown-toggle" onClick={e => {
+              <a href="#" className="dropdown-toggle" aria-haspopup="true" aria-expanded={activeMobileDropdown === 'calculators'} onClick={e => {
               e.preventDefault();
               if (window.innerWidth <= 768) {
                 setActiveMobileDropdown(activeMobileDropdown === 'calculators' ? null : 'calculators');
@@ -112,7 +113,7 @@ export default function Navbar({
             }}>
                 <span><i className="fa-solid fa-calculator nav-icon"></i>Hesaplayıcılar</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
               </a>
-              <ul className={`dropdown-menu ${activeMobileDropdown === 'calculators' ? 'mobile-active' : ''}`}>
+              <ul className={`dropdown-menu ${activeMobileDropdown === 'calculators' ? 'mobile-active' : ''}`} role="menu">
                 <li><a href="#" onClick={e => {
                   e.preventDefault();
                   handleCalculatorNavClick('fee');
@@ -128,7 +129,7 @@ export default function Navbar({
               </ul>
             </li>
             <li className={`nav-link dropdown ${activeMobileDropdown === 'tools' ? 'active' : ''}`}>
-              <a href="#" className="dropdown-toggle" onClick={e => {
+              <a href="#" className="dropdown-toggle" aria-haspopup="true" aria-expanded={activeMobileDropdown === 'tools'} onClick={e => {
               e.preventDefault();
               if (window.innerWidth <= 768) {
                 setActiveMobileDropdown(activeMobileDropdown === 'tools' ? null : 'tools');
@@ -136,7 +137,7 @@ export default function Navbar({
             }}>
                 <span><i className="fa-solid fa-screwdriver-wrench nav-icon"></i>Büyüme Araçları</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
               </a>
-              <ul className={`dropdown-menu ${activeMobileDropdown === 'tools' ? 'mobile-active' : ''}`}>
+              <ul className={`dropdown-menu ${activeMobileDropdown === 'tools' ? 'mobile-active' : ''}`} role="menu">
                 {!settingsData.hide_page_seo && <li><a href="#" onClick={e => {
                   e.preventDefault();
                   navigateTo('/seo-analizi');
@@ -194,4 +195,6 @@ export default function Navbar({
         </div>
       </nav>
   );
-}
+});
+
+export default Navbar;

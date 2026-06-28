@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-export default function Footer({
+const Footer = memo(function Footer({
   settingsData,
   servicesData,
   handleNavClick,
@@ -549,4 +550,6 @@ export default function Footer({
       </div>
     </footer>
   );
-}
+});
+
+export default Footer;
