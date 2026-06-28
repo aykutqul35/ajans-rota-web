@@ -32,7 +32,8 @@ function AdminDashboardView({
   const [viewingTicket, setViewingTicket] = useState(null); // leads, settings, services, testimonials, team, blogs, analytics
   const [adminReplyText, setAdminReplyText] = useState('');
   const [editingReportBrand, setEditingReportBrand] = useState('ecommerce');
-
+  const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
+  const [newClientFormData, setNewClientFormData] = useState({ code: '', name: '', username: '', password: '' });
   useEffect(() => {
     const handleStorageChange = (e) => {
       if (e.key === 'clientReports') {
@@ -11350,89 +11351,8 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
 
                 {/* Add New Client Button */}
                 <button type="button" onClick={() => {
-              const code = prompt("Yeni Müşteri Firma Kodu girin (Örn: ege-naturel, aydın-incir - Türkçe karakter ve boşluk kullanmayın):");
-              if (!code) return;
-              const cleanCode = code.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
-              if (!cleanCode) {
-                toast.error("Geçersiz firma kodu!");
-                return;
-              }
-              if (clientReports[cleanCode]) {
-                toast("Bu firma kodu zaten mevcut!");
-                return;
-              }
-              const name = prompt("Firma / Müşteri Adı girin:", "Yeni Müşteri A.Ş.");
-              if (!name) return;
-              const user = prompt("Giriş Kullanıcı Adı (İşletmeci):", cleanCode);
-              if (!user) return;
-              const pass = prompt("Giriş Şifresi (İşletmeci):", "123456");
-              if (!pass) return;
-              const updated = {
-                ...clientReports
-              };
-              updated[cleanCode] = {
-                username: user,
-                password: pass,
-                brandName: name,
-                industry: "E-Ticaret & Dijital Pazarlama",
-                kpis: [{
-                  label: "Harcanan Bütçe",
-                  value: "0 TL",
-                  change: "%0 geçen ay",
-                  icon: "fa-solid fa-wallet",
-                  color: "var(--primary)"
-                }, {
-                  label: "Toplam Dönüşüm",
-                  value: "0",
-                  change: "%0 geçen ay",
-                  icon: "fa-solid fa-cart-shopping",
-                  color: "var(--secondary)"
-                }, {
-                  label: "Performans Oranı",
-                  value: "0x",
-                  change: "Hedef: 1.0x",
-                  icon: "fa-solid fa-arrow-trend-up",
-                  color: "#16a34a"
-                }, {
-                  label: "Toplam Ciro / Getiri",
-                  value: "0 TL",
-                  change: "%0 geçen ay",
-                  icon: "fa-solid fa-turkish-lira-sign",
-                  color: "var(--primary)"
-                }],
-                googleAds: [{
-                  name: "PMax - Arama Ağı",
-                  spend: "0 TL",
-                  clicks: "0",
-                  ctr: "0.0%",
-                  conversions: "0",
-                  roas: "1.0x"
-                }],
-                metaAds: [{
-                  name: "Feed - Dönüşüm Reklamları",
-                  spend: "0 TL",
-                  clicks: "0",
-                  ctr: "0.0%",
-                  conversions: "0",
-                  roas: "1.0x",
-                  status: "Aktif"
-                }],
-                seo: [{
-                  keyword: "anahtar kelime",
-                  rank: "1. Sıra",
-                  volume: "100",
-                  monthlyClicks: "0",
-                  trend: "stable"
-                }],
-                timeline: [{
-                  date: "Bugün",
-                  title: "Müşteri Hesabı Oluşturuldu",
-                  desc: "Ajans şeffaf performans raporlama hesabı başarıyla aktif edildi.",
-                  author: "Sistem"
-                }]
-              };
-              setClientReports(updated);
-              setEditingReportBrand(cleanCode);
+              setNewClientFormData({ code: '', name: '', username: '', password: '' });
+              setIsAddClientModalOpen(true);
             }} style={{
               padding: '8px 16px',
               borderRadius: '8px',
@@ -14177,5 +14097,115 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
             </form>
           </div>
         </div>}
+
+      {/* --- ADD NEW CLIENT MODAL --- */}
+      {isAddClientModalOpen && (
+        <div className="lead-modal-overlay" style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(15, 23, 42, 0.75)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999
+        }}>
+          <div className="lead-modal" style={{
+            background: 'linear-gradient(145deg, #1e293b, #0f172a)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '24px', width: '90%', maxWidth: '480px',
+            boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', overflow: 'hidden'
+          }}>
+            <div className="lead-modal-header" style={{
+              padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+            }}>
+              <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <i className="fa-solid fa-user-plus" style={{ color: 'var(--primary)' }}></i> Yeni Müşteri Ekle
+              </h3>
+              <button type="button" onClick={() => setIsAddClientModalOpen(false)} style={{
+                background: 'rgba(255,255,255,0.1)', border: 'none', width: '32px', height: '32px',
+                borderRadius: '50%', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <i className="fa-solid fa-times"></i>
+              </button>
+            </div>
+            
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const { code, name, username, password } = newClientFormData;
+              if (!code || !name || !username || !password) {
+                toast.error("Lütfen tüm alanları doldurun.");
+                return;
+              }
+              const cleanCode = code.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+              if (!cleanCode) {
+                toast.error("Geçersiz firma kodu! Türkçe karakter kullanmayın.");
+                return;
+              }
+              if (clientReports[cleanCode]) {
+                toast.error("Bu firma kodu zaten mevcut!");
+                return;
+              }
+              
+              const updated = { ...clientReports };
+              updated[cleanCode] = {
+                username: username,
+                password: password,
+                brandName: name,
+                industry: "E-Ticaret & Dijital Pazarlama",
+                kpis: [{
+                  label: "Harcanan Bütçe", value: "0 TL", change: "%0 geçen ay", icon: "fa-solid fa-wallet", color: "var(--primary)"
+                }, {
+                  label: "Toplam Dönüşüm", value: "0", change: "%0 geçen ay", icon: "fa-solid fa-cart-shopping", color: "var(--secondary)"
+                }, {
+                  label: "Performans Oranı", value: "0x", change: "Hedef: 1.0x", icon: "fa-solid fa-arrow-trend-up", color: "#16a34a"
+                }, {
+                  label: "Toplam Ciro / Getiri", value: "0 TL", change: "%0 geçen ay", icon: "fa-solid fa-turkish-lira-sign", color: "var(--primary)"
+                }],
+                googleAds: [{ name: "PMax - Arama Ağı", spend: "0 TL", clicks: "0", ctr: "0.0%", conversions: "0", roas: "1.0x" }],
+                metaAds: [{ name: "Feed - Dönüşüm Reklamları", spend: "0 TL", clicks: "0", ctr: "0.0%", conversions: "0", roas: "1.0x", status: "Aktif" }],
+                seo: [{ keyword: "anahtar kelime", rank: "1. Sıra", volume: "100", monthlyClicks: "0", trend: "stable" }],
+                timeline: [{ date: "Bugün", title: "Müşteri Hesabı Oluşturuldu", desc: "Ajans şeffaf performans raporlama hesabı başarıyla aktif edildi.", author: "Sistem" }]
+              };
+              setClientReports(updated);
+              setEditingReportBrand(cleanCode);
+              setIsAddClientModalOpen(false);
+              toast.success("Müşteri başarıyla eklendi!");
+            }}>
+              <div className="lead-modal-body" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div className="form-group">
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 500 }}>Firma Kodu (URL'de görünür)</label>
+                  <input type="text" className="form-control" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: '#fff' }} placeholder="Örn: ege-naturel" value={newClientFormData.code} onChange={(e) => setNewClientFormData({...newClientFormData, code: e.target.value})} required />
+                  <small style={{ color: 'var(--primary)', fontSize: '0.75rem', marginTop: '0.25rem', display: 'block' }}>* Türkçe karakter ve boşluk kullanmayın</small>
+                </div>
+                <div className="form-group">
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 500 }}>Firma / Müşteri Adı</label>
+                  <input type="text" className="form-control" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: '#fff' }} placeholder="Örn: Ege Naturel A.Ş." value={newClientFormData.name} onChange={(e) => setNewClientFormData({...newClientFormData, name: e.target.value})} required />
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div className="form-group">
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 500 }}>Giriş Kullanıcı Adı</label>
+                    <input type="text" className="form-control" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: '#fff' }} placeholder="Kullanıcı adı" value={newClientFormData.username} onChange={(e) => setNewClientFormData({...newClientFormData, username: e.target.value})} required />
+                  </div>
+                  <div className="form-group">
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 500 }}>Giriş Şifresi</label>
+                    <input type="text" className="form-control" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: '#fff' }} placeholder="Şifre" value={newClientFormData.password} onChange={(e) => setNewClientFormData({...newClientFormData, password: e.target.value})} required />
+                  </div>
+                </div>
+              </div>
+              <div className="lead-modal-footer" style={{
+                padding: '1.25rem 1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)',
+                display: 'flex', justifyContent: 'flex-end', gap: '1rem', background: 'rgba(0,0,0,0.2)'
+              }}>
+                <button type="button" onClick={() => setIsAddClientModalOpen(false)} style={{
+                  padding: '0.75rem 1.5rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'transparent', color: '#fff', cursor: 'pointer', fontWeight: 600
+                }}>İptal</button>
+                <button type="submit" style={{
+                  padding: '0.75rem 1.5rem', borderRadius: '8px', border: 'none',
+                  background: 'var(--primary)', color: '#fff', cursor: 'pointer', fontWeight: 600,
+                  boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)'
+                }}>Müşteriyi Oluştur</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>;
 }
