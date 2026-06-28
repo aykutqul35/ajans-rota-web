@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
-import RoasSimulatorWidget from '../components/RoasSimulatorWidget';
+import { lazy, Suspense } from 'react';
+const RoasSimulatorWidget = lazy(() => import('../components/RoasSimulatorWidget'));
 
 const PremiumHeroText = ({ greeting }) => {
   const container = {
@@ -343,9 +344,11 @@ export default function HomePage(props) {
           </FadeIn>
           
           {/* Moved ROAS Simulator Widget to here */}
-          <FadeIn direction="up" delay={0.1}>
-            <RoasSimulatorWidget onSaveLead={simulateLeadLocally} />
-          </FadeIn>
+          <div className="calculator-widget-container">
+            <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-main)' }}>ROAS Simülatörü Yükleniyor...</div>}>
+              <RoasSimulatorWidget onSaveLead={simulateLeadLocally} />
+            </Suspense>
+          </div>
 
           <FadeIn direction="up" delay={0.2} className={`glass-card calculator-wrapper ${calculatorTab !== 'fee' ? 'compact-wrapper' : ''}`}>
             {/* Tab Navigation */}

@@ -27,7 +27,6 @@ const LocationPageView = lazy(() => import('./pages/LocationPageView'));
 import ProtectedRoute from './components/ProtectedRoute';
 import LeadPopup from './components/LeadPopup';
 import SocialProofToast from './components/SocialProofToast';
-import RoasSimulatorWidget from './components/RoasSimulatorWidget';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
