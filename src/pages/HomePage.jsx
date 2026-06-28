@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
 import { lazy, Suspense } from 'react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 const RoasSimulatorWidget = lazy(() => import('../components/RoasSimulatorWidget'));
 
 const PremiumHeroText = ({ greeting }) => {
@@ -351,7 +350,7 @@ export default function HomePage(props) {
             </Suspense>
           </div>
 
-          <FadeIn direction="up" delay={0.2} className={`premium-light-glass-card calculator-wrapper ${calculatorTab !== 'fee' ? 'compact-wrapper' : ''}`}>
+          <FadeIn direction="up" delay={0.2} className={`glass-card calculator-wrapper ${calculatorTab !== 'fee' ? 'compact-wrapper' : ''}`}>
             {/* Tab Navigation */}
             <div className="calculator-tabs">
               <button className={`filter-btn ${calculatorTab === 'fee' ? 'active' : ''}`} style={{
@@ -477,7 +476,7 @@ export default function HomePage(props) {
                     const idx = Number(e.target.value);
                     setBudgetIndex(idx);
                     setFeeAdBudget(budgetSteps[idx]);
-                  }} className="corporate-slider" />
+                  }} className="calc-range-slider" />
                       {/* Discrete steps labels */}
                       <div className="slider-labels">
                         <span>30k</span>
@@ -623,7 +622,7 @@ export default function HomePage(props) {
                         <span>Tahmini Aylık Ciro Hedefiniz</span>
                         <span className="calc-val">{targetRevenue.toLocaleString('tr-TR')} ₺</span>
                       </div>
-                      <input type="range" min="30000" max="1000000" step="10000" value={targetRevenue} onChange={e => setTargetRevenue(Number(e.target.value))} className="corporate-slider" />
+                      <input type="range" min="30000" max="1000000" step="10000" value={targetRevenue} onChange={e => setTargetRevenue(Number(e.target.value))} className="calc-range-slider" />
                     </div>}
 
                   {/* Commitment Selection */}
@@ -1248,7 +1247,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{ecomSpend.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input type="range" min="10000" max="500000" step="5000" value={ecomSpend} onChange={e => setEcomSpend(Number(e.target.value))} className="corporate-slider" />
+                    <input type="range" min="10000" max="500000" step="5000" value={ecomSpend} onChange={e => setEcomSpend(Number(e.target.value))} className="calc-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1281,7 +1280,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{ecomTraffic.toLocaleString('tr-TR')}</span>
                     </div>
-                    <input type="range" min="5000" max="500000" step="5000" value={ecomTraffic} onChange={e => setEcomTraffic(Number(e.target.value))} className="corporate-slider" />
+                    <input type="range" min="5000" max="500000" step="5000" value={ecomTraffic} onChange={e => setEcomTraffic(Number(e.target.value))} className="calc-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1314,7 +1313,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{ecomAov.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input type="range" min="100" max="10000" step="50" value={ecomAov} onChange={e => setEcomAov(Number(e.target.value))} className="corporate-slider" />
+                    <input type="range" min="100" max="10000" step="50" value={ecomAov} onChange={e => setEcomAov(Number(e.target.value))} className="calc-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1347,7 +1346,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{ecomRevenue.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input type="range" min="10000" max="2000000" step="10000" value={ecomRevenue} onChange={e => setEcomRevenue(Number(e.target.value))} className="corporate-slider" />
+                    <input type="range" min="10000" max="2000000" step="10000" value={ecomRevenue} onChange={e => setEcomRevenue(Number(e.target.value))} className="calc-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1401,70 +1400,8 @@ export default function HomePage(props) {
                   }}>{rotaEcomRevenue.toLocaleString('tr-TR')} ₺</div>
                   </div>
 
-                  {/* PREMIUM CHART & STATS SECTION */}
-                  <div style={{ height: '260px', marginTop: '1rem', marginBottom: '1.5rem', width: '100%', paddingRight: '1rem' }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={[1, 2, 3, 4, 5, 6].map(m => {
-                        // Exponential growth simulation for chart
-                        const diff = rotaEcomRevenue - ecomRevenue;
-                        const progress = Math.pow(m/6, 1.5); 
-                        return {
-                          name: `${m}. Ay`,
-                          ciro: Math.round(ecomRevenue + (diff * progress))
-                        };
-                      })}>
-                        <defs>
-                          <linearGradient id="colorEcomCiro" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#0284c7" stopOpacity={0.6}/>
-                            <stop offset="95%" stopColor="#0284c7" stopOpacity={0.0}/>
-                          </linearGradient>
-                          <filter id="glowEcom" x="-20%" y="-20%" width="140%" height="140%">
-                            <feGaussianBlur stdDeviation="4" result="blur" />
-                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                          </filter>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.06)" />
-                        <XAxis dataKey="name" tick={{fill: 'var(--text-muted)', fontSize: 11, fontWeight: 500}} axisLine={false} tickLine={false} dy={10} />
-                        <YAxis 
-                          tickFormatter={(val) => `₺${(val/1000).toFixed(0)}k`} 
-                          tick={{fill: 'var(--text-muted)', fontSize: 11, fontWeight: 500}} 
-                          axisLine={false} 
-                          tickLine={false} 
-                          dx={-10}
-                          domain={['dataMin', 'dataMax']}
-                        />
-                        <Tooltip 
-                          formatter={(value) => [`₺${value.toLocaleString('tr-TR')}`, 'Tahmini Ciro']}
-                          contentStyle={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', boxShadow: '0 8px 32px rgba(0, 153, 255, 0.15)', fontWeight: 600, color: 'var(--text-dark)' }}
-                          itemStyle={{ color: 'var(--primary)', fontWeight: 700 }}
-                        />
-                        <Area type="monotone" dataKey="ciro" stroke="#0284c7" strokeWidth={4} fillOpacity={1} fill="url(#colorEcomCiro)" filter="url(#glowEcom)" />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-
-                  {/* PREMIUM KEY PERFORMANCE INDICATORS */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginTop: '1rem', marginBottom: '1rem', background: 'rgba(255,255,255,0.4)', padding: '1rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.6)' }}>
-                    <div>
-                      <div className="premium-stat-title">ORT. ROAS</div>
-                      <div className="premium-stat-value" style={{ fontSize: '1.8rem' }}>{rotaEcomRoas}x</div>
-                      <div style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600 }}>+{baselineEcomRoas !== '0' ? (parseFloat(rotaEcomRoas) - parseFloat(baselineEcomRoas)).toFixed(1) : 0}x Artış</div>
-                    </div>
-                    <div>
-                      <div className="premium-stat-title">DÖNÜŞÜM (CR)</div>
-                      <div className="premium-stat-value" style={{ fontSize: '1.8rem' }}>%{rotaEcomCR.toFixed(2)}</div>
-                      <div style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600 }}>+{Math.round((rotaEcomCR - baselineEcomCR) / (baselineEcomCR || 1) * 100)}% İyileşme</div>
-                    </div>
-                    <div>
-                      <div className="premium-stat-title">YENİ CAC</div>
-                      <div className="premium-stat-value" style={{ fontSize: '1.8rem' }}>₺{rotaEcomCac.toLocaleString('tr-TR')}</div>
-                      <div style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600 }}>Daha Düşük Maliyet</div>
-                    </div>
-                  </div>
-
                   {/* Comparison Side-by-Side Table */}
                   <div className="comparison-table-wrapper" style={{
-                  display: 'none', // Hide old table to keep premium look clean
                   marginTop: '0.5rem',
                   border: '1px solid var(--glass-border)',
                   borderRadius: '12px',
@@ -1898,7 +1835,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{b2bSpend.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input type="range" min="10000" max="500000" step="5000" value={b2bSpend} onChange={e => setB2bSpend(Number(e.target.value))} className="corporate-slider" />
+                    <input type="range" min="10000" max="500000" step="5000" value={b2bSpend} onChange={e => setB2bSpend(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1931,7 +1868,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{b2bLeads}</span>
                     </div>
-                    <input type="range" min="10" max="1000" step="10" value={b2bLeads} onChange={e => setB2bLeads(Number(e.target.value))} className="corporate-slider" />
+                    <input type="range" min="10" max="1000" step="10" value={b2bLeads} onChange={e => setB2bLeads(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1964,7 +1901,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>%{b2bConversion}</span>
                     </div>
-                    <input type="range" min="1" max="50" step="1" value={b2bConversion} onChange={e => setB2bConversion(Number(e.target.value))} className="corporate-slider" />
+                    <input type="range" min="1" max="50" step="1" value={b2bConversion} onChange={e => setB2bConversion(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1997,7 +1934,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{b2bLtv.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input type="range" min="1000" max="100000" step="1000" value={b2bLtv} onChange={e => setB2bLtv(Number(e.target.value))} className="corporate-slider" />
+                    <input type="range" min="1000" max="100000" step="1000" value={b2bLtv} onChange={e => setB2bLtv(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -2051,70 +1988,8 @@ export default function HomePage(props) {
                   }}>{rotaB2bRevenue.toLocaleString('tr-TR')} ₺</div>
                   </div>
 
-                  {/* PREMIUM CHART & STATS SECTION */}
-                  <div style={{ height: '260px', marginTop: '1rem', marginBottom: '1.5rem', width: '100%', paddingRight: '1rem' }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={[1, 2, 3, 4, 5, 6].map(m => {
-                        // Exponential growth simulation for B2B chart
-                        const diff = rotaB2bRevenue - baselineB2bRevenue;
-                        const progress = Math.pow(m/6, 1.5); 
-                        return {
-                          name: `${m}. Ay`,
-                          ciro: Math.round(baselineB2bRevenue + (diff * progress))
-                        };
-                      })}>
-                        <defs>
-                          <linearGradient id="colorB2bCiro" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#0d9488" stopOpacity={0.6}/>
-                            <stop offset="95%" stopColor="#0d9488" stopOpacity={0.0}/>
-                          </linearGradient>
-                          <filter id="glowB2b" x="-20%" y="-20%" width="140%" height="140%">
-                            <feGaussianBlur stdDeviation="4" result="blur" />
-                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                          </filter>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.06)" />
-                        <XAxis dataKey="name" tick={{fill: 'var(--text-muted)', fontSize: 11, fontWeight: 500}} axisLine={false} tickLine={false} dy={10} />
-                        <YAxis 
-                          tickFormatter={(val) => `₺${(val/1000).toFixed(0)}k`} 
-                          tick={{fill: 'var(--text-muted)', fontSize: 11, fontWeight: 500}} 
-                          axisLine={false} 
-                          tickLine={false} 
-                          dx={-10}
-                          domain={['dataMin', 'dataMax']}
-                        />
-                        <Tooltip 
-                          formatter={(value) => [`₺${value.toLocaleString('tr-TR')}`, 'Tahmini Gelir']}
-                          contentStyle={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', boxShadow: '0 8px 32px rgba(13, 148, 136, 0.15)', fontWeight: 600, color: 'var(--text-dark)' }}
-                          itemStyle={{ color: 'var(--secondary)', fontWeight: 700 }}
-                        />
-                        <Area type="monotone" dataKey="ciro" stroke="#0d9488" strokeWidth={4} fillOpacity={1} fill="url(#colorB2bCiro)" filter="url(#glowB2b)" />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-
-                  {/* PREMIUM KEY PERFORMANCE INDICATORS */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginTop: '1rem', marginBottom: '1rem', background: 'rgba(255,255,255,0.4)', padding: '1rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.6)' }}>
-                    <div>
-                      <div className="premium-stat-title">ORT. ROAS</div>
-                      <div className="premium-stat-value" style={{ fontSize: '1.8rem' }}>{rotaB2bRoi}x</div>
-                      <div style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600 }}>+{baselineB2bRoi !== '0' ? (parseFloat(rotaB2bRoi) - parseFloat(baselineB2bRoi)).toFixed(1) : 0}x Artış</div>
-                    </div>
-                    <div>
-                      <div className="premium-stat-title">DÖNÜŞÜM (CR)</div>
-                      <div className="premium-stat-value" style={{ fontSize: '1.8rem' }}>%{rotaB2bConversion.toFixed(1)}</div>
-                      <div style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600 }}>+{Math.round((rotaB2bConversion - b2bConversion) / (b2bConversion || 1) * 100)}% İyileşme</div>
-                    </div>
-                    <div>
-                      <div className="premium-stat-title">YENİ CAC</div>
-                      <div className="premium-stat-value" style={{ fontSize: '1.8rem' }}>₺{rotaB2bCpl.toLocaleString('tr-TR')}</div>
-                      <div style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600 }}>Daha Düşük Maliyet</div>
-                    </div>
-                  </div>
-
                   {/* Comparison Side-by-Side Table */}
                   <div className="comparison-table-wrapper" style={{
-                  display: 'none', // Hide old table to keep premium look clean
                   marginTop: '0.5rem',
                   border: '1px solid var(--glass-border)',
                   borderRadius: '12px',
