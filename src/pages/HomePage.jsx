@@ -51,7 +51,7 @@ export default function HomePage(props) {
     ecomTraffic, setEcomTraffic, ecomAov, setEcomAov,
     ecomSpend, setEcomSpend, ecomRevenue, setEcomRevenue,
     ecomSector, handleEcomSectorChange,
-    b2bSpend, b2bLeads, b2bConversion, b2bLtv,
+    b2bSpend, setB2bSpend, b2bLeads, setB2bLeads, b2bConversion, setB2bConversion, b2bLtv, setB2bLtv,
     b2bSector, handleB2bSectorChange,
     budgetIndex, setBudgetIndex, budgetSteps,
     commitment, setCommitment,
@@ -86,6 +86,8 @@ export default function HomePage(props) {
     discountPercent, discountAmount, finalAgencyFee,
     baseRetainerLabel, managementFeeDesc,
     rawBaseRetainer, smPkgs,
+    scaledBundleDiscountAmount, performanceBundleDiscountAmount,
+    setProposalError, b2bBudgetSavings,
     // Render functions
     renderReportForm, renderContactForm, renderWebDesignForm,
     // Why Agency

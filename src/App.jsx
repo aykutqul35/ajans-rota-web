@@ -3035,7 +3035,7 @@ function App() {
             ecomSpend={ecomSpend} setEcomSpend={setEcomSpend}
             ecomRevenue={ecomRevenue} setEcomRevenue={setEcomRevenue}
             ecomSector={ecomSector} handleEcomSectorChange={handleEcomSectorChange}
-            b2bSpend={b2bSpend} b2bLeads={b2bLeads} b2bConversion={b2bConversion} b2bLtv={b2bLtv}
+            b2bSpend={b2bSpend} setB2bSpend={setB2bSpend} b2bLeads={b2bLeads} setB2bLeads={setB2bLeads} b2bConversion={b2bConversion} setB2bConversion={setB2bConversion} b2bLtv={b2bLtv} setB2bLtv={setB2bLtv}
             b2bSector={b2bSector} handleB2bSectorChange={handleB2bSectorChange}
             budgetIndex={budgetIndex} setBudgetIndex={setBudgetIndex} budgetSteps={budgetSteps}
             commitment={commitment} setCommitment={setCommitment}
@@ -3080,6 +3080,10 @@ function App() {
             finalAgencyFee={finalAgencyFee}
             baseRetainerLabel={baseRetainerLabel} managementFeeDesc={managementFeeDesc}
             rawBaseRetainer={rawBaseRetainer}
+            scaledBundleDiscountAmount={scaledBundleDiscountAmount}
+            performanceBundleDiscountAmount={performanceBundleDiscountAmount}
+            setProposalError={setProposalError}
+            b2bBudgetSavings={b2bBudgetSavings}
             renderReportForm={renderReportForm}
             renderContactForm={renderContactForm}
             renderWebDesignForm={renderWebDesignForm}
