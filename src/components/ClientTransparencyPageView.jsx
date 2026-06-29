@@ -168,13 +168,32 @@ export default function ClientTransparencyPageView({
     try {
       const updated = { ...clientReports };
       if (!updated[activeBrand]) return;
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' });
+      const requestId = Date.now();
+      
+      // Add to ai_requests (client panel display)
       if (!updated[activeBrand].ai_requests) updated[activeBrand].ai_requests = [];
       updated[activeBrand].ai_requests.push({
-        id: Date.now(),
-        date: new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }),
+        id: requestId,
+        date: dateStr,
         insight: insightText,
         status: 'pending'
       });
+      
+      // Add to tickets (admin panel TicketsTab)
+      if (!updated[activeBrand].tickets) updated[activeBrand].tickets = [];
+      updated[activeBrand].tickets.push({
+        id: requestId,
+        date: dateStr,
+        subject: `AI Öneri Talebi: ${insightText}`,
+        message: `Müşteri, yapay zeka önerisi doğrultusunda "${insightText}" talebinde bulundu.`,
+        department: 'Yapay Zeka Önerileri',
+        status: 'Açık',
+        priority: 'medium',
+        source: 'ai-recommendation'
+      });
+      
       setClientReports(updated);
       
       const localDbStr = localStorage.getItem('ajans_rota_db');

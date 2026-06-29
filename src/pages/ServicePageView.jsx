@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { budgetSteps, initialServicePagesData, featuredStories, initialTeamMembers, initialBlogPosts, categories, whyAgencyData, testimonials } from '../data/mockData';
 import FadeIn from '../components/FadeIn';
 import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
@@ -153,6 +154,7 @@ export default function ServicePageView({
   testimonialsData = []
 }) {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const serviceKey = slug;
 
   // FAQ accordion state
@@ -255,7 +257,46 @@ export default function ServicePageView({
     solution: data.caseStudy.solution,
     metrics: data.caseStudy.metrics
   } : null);
+
+  // Other services for "Related Services" section
+  const allServiceKeys = Object.keys(servicesData).filter(k => k !== resolvedKey);
+  const otherServices = allServiceKeys.slice(0, 3).map(key => ({
+    key,
+    ...servicesData[key]
+  }));
+
+  // Service slug mapping for navigation
+  const serviceSlugs = {
+    google: 'google-ads-danismanligi',
+    meta: 'meta-reklam-yonetimi',
+    seo: 'arama-motoru-optimizasyonu-seo',
+    social: 'sosyal-medya-yonetimi',
+    ecommerce: 'e-ticaret-ve-pazaryeri-yonetimi',
+    design: 'donusum-odakli-web-tasarim'
+  };
+
+  // FAQ Schema for Google Rich Snippets
+  const faqSchema = data.faqs ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": data.faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.a
+      }
+    }))
+  } : null;
+
   return <div className="service-page-view container">
+      {/* FAQ Schema JSON-LD */}
+      {faqSchema && (
+        <Helmet>
+          <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
+        </Helmet>
+      )}
+
       {/* Back to Home & Breadcrumb */}
       <div className="service-page-nav">
         <button className="btn btn-secondary back-btn" onClick={onBack}>
@@ -266,15 +307,26 @@ export default function ServicePageView({
         </div>
       </div>
 
-      {/* Header Info */}
-      <div className="service-page-hero">
-        <div className="service-hero-icon">
+      {/* Header Info — Premium Animated Hero */}
+      <motion.div
+        className="service-page-hero service-hero-premium"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div className="service-hero-glow"></div>
+        <motion.div
+          className="service-hero-icon service-hero-icon-animated"
+          initial={{ scale: 0, rotate: -30 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ duration: 0.5, delay: 0.2, type: 'spring', stiffness: 200 }}
+        >
           <i className={data.iconName}></i>
-        </div>
+        </motion.div>
         <h1 className="service-title-text">{data.title}</h1>
         <p className="service-tagline-text">{data.tagline}</p>
         <p className="service-desc-text">{data.description}</p>
-      </div>
+      </motion.div>
 
       {/* Grid of Key Features & Case Study */}
       <div className="service-page-grid">
@@ -353,11 +405,20 @@ export default function ServicePageView({
         </div>
         
         <div className="service-process-grid">
-          {data.process.map((step, idx) => <div key={idx} className="glass-card service-process-step-card">
+          {data.process.map((step, idx) => (
+            <motion.div
+              key={idx}
+              className="glass-card service-process-step-card"
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5, delay: idx * 0.12 }}
+            >
               <span className="step-badge">{step.step}</span>
               <h4>{step.title}</h4>
               <p>{step.desc}</p>
-            </div>)}
+            </motion.div>
+          ))}
         </div>
       </div>
 
@@ -384,6 +445,41 @@ export default function ServicePageView({
       </div>
 
       {/* Service-Specific Bottom CTA Redirect Banner */}
+      {/* Related Services */}
+      {otherServices.length > 0 && (
+        <div className="service-related-section">
+          <div className="section-header">
+            <span className="section-tag">Keşfet</span>
+            <h2>Diğer Hizmetlerimiz</h2>
+            <p className="section-desc">360° dijital büyüme için diğer hizmetlerimize de göz atın.</p>
+          </div>
+          <div className="service-related-grid">
+            {otherServices.map((svc, idx) => (
+              <motion.div
+                key={svc.key}
+                className="glass-card service-related-card"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                onClick={() => navigate(`/hizmetlerimiz/${serviceSlugs[svc.key] || svc.key}`)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="service-related-icon">
+                  <i className={svc.iconName}></i>
+                </div>
+                <h4>{svc.title}</h4>
+                <p>{svc.tagline}</p>
+                <span className="service-related-link">
+                  Detayları Gör <i className="fa-solid fa-arrow-right"></i>
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Bottom CTA */}
       <div className="glass-card service-bottom-cta">
         <div className="cta-content">
           <h2>Ege'nin Üretim Gücünü Dijitalle Katlayalım</h2>
