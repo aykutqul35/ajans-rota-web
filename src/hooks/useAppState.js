@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getSeoData } from '../utils/helpers';
 import { initialSettingsData } from '../data/initialSettings';
 import { initialServicePagesData, initialTeamMembers, initialBlogPosts } from '../data/mockData';
 
 export const useAppState = (currentPath) => {
+const navigate = useNavigate();
 const [isLeadPopupOpen, setIsLeadPopupOpen] = useState(false);
   const [isExitIntentPopup, setIsExitIntentPopup] = useState(false);
 
