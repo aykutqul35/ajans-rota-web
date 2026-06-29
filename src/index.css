@@ -8814,6 +8814,144 @@ select:focus, input:focus {
   to { transform: rotate(360deg); }
 }
 
+/* ========== 404 Not Found Page ========== */
+.not-found-page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 4rem 0;
+}
+.not-found-bg-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+.not-found-container {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.not-found-content {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.not-found-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.not-found-number span {
+  font-family: var(--font-heading);
+  font-size: 8rem;
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--text-light) 0%, var(--text-muted) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.not-found-compass {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 40px rgba(79, 172, 254, 0.3);
+  animation: compass-spin 8s linear infinite;
+}
+.not-found-compass i {
+  font-size: 2.8rem;
+  color: #fff;
+}
+@keyframes compass-spin {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(15deg); }
+  50% { transform: rotate(-10deg); }
+  75% { transform: rotate(5deg); }
+}
+
+.not-found-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-light);
+  margin-bottom: 0.75rem;
+}
+.not-found-desc {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.not-found-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+.not-found-actions .btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.not-found-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.not-found-links-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.not-found-links a {
+  font-size: 0.85rem;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+.not-found-links a:hover {
+  background: var(--primary-glow);
+  border-color: var(--primary);
+}
+
+@media (max-width: 640px) {
+  .not-found-number span {
+    font-size: 5rem;
+  }
+  .not-found-compass {
+    width: 70px;
+    height: 70px;
+  }
+  .not-found-compass i {
+    font-size: 2rem;
+  }
+  .not-found-title {
+    font-size: 1.5rem;
+  }
+}
+
 /* ========== Cookie Consent Banner ========== */
 .cookie-banner-overlay {
   position: fixed;

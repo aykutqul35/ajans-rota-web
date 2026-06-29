@@ -31,6 +31,7 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import CookieConsent from './components/CookieConsent';
 import HomePage from './pages/HomePage';
+import NotFoundPage from './pages/NotFoundPage';
 
 
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
@@ -3180,8 +3181,9 @@ function App() {
             </div>
           </div>
         </section>
-      </>} />
-      
+      </>
+      } />
+      <Route path="*" element={<NotFoundPage onGoHome={() => navigate('/')} />} />
       </Routes>
       </Suspense>
 
