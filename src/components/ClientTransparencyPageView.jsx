@@ -1074,9 +1074,6 @@ export default function ClientTransparencyPageView({
           <div className={`client-os-nav-item ${activeTab === 'ai_simulator' ? 'active' : ''}`} onClick={() => setActiveTab('ai_simulator')}>
              <i className="fa-solid fa-brain" style={{ color: activeTab === 'ai_simulator' ? '#fff' : '#c084fc' }}></i> AI Büyüme Simülasyonu
           </div>
-          <div className={`client-os-nav-item ${activeTab === 'creatives' ? 'active' : ''}`} onClick={() => setActiveTab('creatives')}>
-             <i className="fa-solid fa-paint-roller"></i> Kreatif Onayları
-          </div>
           <div className={`client-os-nav-item ${activeTab === 'vault' ? 'active' : ''}`} onClick={() => setActiveTab('vault')}>
              <i className="fa-solid fa-vault"></i> Dosya Kasam
           </div>
@@ -1244,7 +1241,6 @@ export default function ClientTransparencyPageView({
           {[
             { id: 'overview', label: 'Genel Bakış & Grafikler', icon: 'fa-solid fa-chart-pie' },
             { id: 'ai_simulator', label: 'AI Büyüme Simülasyonu', icon: 'fa-solid fa-brain' },
-            { id: 'creatives', label: 'Kreatif Onayları', icon: 'fa-solid fa-paint-roller' },
             { id: 'vault', label: 'Dosya Kasam', icon: 'fa-solid fa-vault' },
             { id: 'billing', label: 'Faturalar & Bütçe', icon: 'fa-solid fa-file-invoice-dollar' },
             { id: 'api', label: 'API Entegrasyonları', icon: 'fa-solid fa-plug' },
@@ -1907,141 +1903,6 @@ export default function ClientTransparencyPageView({
         )}
 
         {/* --- TAB: CREATIVES (Kreatif Onayları) --- */}
-        {activeTab === 'creatives' && (
-          <div className="tab-content-creatives fade-in">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
-              {currentData.creatives?.map(creative => (
-                <div key={creative.id} style={{
-                  backgroundColor: '#1e293b', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(15, 23, 42, 0.06)', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.02)', display: 'flex', flexDirection: 'column'
-                }}>
-                  <div style={{ height: '160px', background: 'rgba(255,255,255,0.02)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {creative.type === 'video' ? (
-                      <i className="fa-solid fa-play-circle" style={{ fontSize: '3rem', color: 'var(--primary)' }}></i>
-                    ) : creative.type === 'pdf' ? (
-                      <i className="fa-solid fa-file-pdf" style={{ fontSize: '3rem', color: '#ef4444' }}></i>
-                    ) : (
-                      <img src={creative.url} alt={creative.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    )}
-                    <div style={{ position: 'absolute', top: '10px', right: '10px', padding: '4px 10px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 800, background: creative.status === 'approved' ? '#16a34a' : creative.status === 'rejected' ? '#ef4444' : '#f59e0b', color: '#fff' }}>
-                      {creative.status === 'approved' ? 'Onaylandı' : creative.status === 'rejected' ? 'Reddedildi' : 'Onay Bekliyor'}
-                    </div>
-                  </div>
-                  <div style={{ padding: '1.25rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#f8fafc', marginBottom: '0.25rem' }}>{creative.title}</h4>
-                    <span style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '1rem' }}>Yüklenme: {creative.date}</span>
-                    {creative.feedback && (
-                      <div style={{ background: 'rgba(255,255,255,0.05)', padding: '0.75rem', borderRadius: '8px', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '1rem', borderLeft: '3px solid var(--primary)' }}>
-                        <strong>Geri Bildirim:</strong> {creative.feedback}
-                      </div>
-                    )}
-                    <div style={{ marginTop: 'auto', display: 'flex', gap: '0.5rem' }}>
-                      <button className="btn btn-primary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', background: '#16a34a', borderColor: '#16a34a' }} onClick={async () => {
-                        if(setClientReports) {
-                           setClientReports(prev => {
-                             const updated = { ...prev };
-                             const brandData = { ...updated[activeBrand] };
-                             if (!brandData.creatives) return prev;
-                             const newCreatives = [...brandData.creatives];
-                             const idx = newCreatives.findIndex(c => c.id === creative.id);
-                             if (idx > -1) {
-                               newCreatives[idx] = { ...newCreatives[idx], status: 'approved' };
-                               brandData.creatives = newCreatives;
-                               updated[activeBrand] = brandData;
-                               
-                               window._clientLastWrite = Date.now();
-                               
-                               const clientId = brandData.client_id;
-                               if (clientId) {
-                                 fetch('/api/clients/update', {
-                                   method: 'PUT',
-                                   headers: { 
-                                     'Content-Type': 'application/json',
-                                     'Authorization': `Bearer ${localStorage.getItem('client_token')}`
-                                   },
-                                   body: JSON.stringify({ client_id: clientId, report_data: brandData })
-                                 }).catch(console.error);
-                               }
-
-                               const localDbStr = localStorage.getItem('ajans_rota_db');
-                               if(localDbStr){ 
-                                 try{ 
-                                   const dbPayload=JSON.parse(localDbStr); 
-                                   dbPayload.clientReports=updated; 
-                                   localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload)); 
-                                 }catch(e){} 
-                               }
-                               const waPhone = localStorage.getItem('rota_wa_phone');
-                               const waApiKey = localStorage.getItem('rota_wa_apikey');
-                               if (waPhone && waApiKey) {
-                                 const text = encodeURIComponent(`✅ *Rota Kreatif Onayı:* \n${currentData.brandName}, "${creative.title}" adlı kreatifi ONAYLADI.`);
-                                 fetch(`https://api.callmebot.com/whatsapp.php?phone=${waPhone}&text=${text}&apikey=${waApiKey}`, { mode: 'no-cors' }).catch(() => {});
-                               }
-                               toast('Tasarım onaylandı olarak işaretlendi ve ajansa bildirildi!');
-                               return updated;
-                             }
-                             return prev;
-                           });
-                        }
-                      }}>
-                        <i className="fa-solid fa-check"></i> Onayla
-                      </button>
-                      <button className="btn btn-secondary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', color: '#ef4444', borderColor: '#ef4444' }} onClick={async () => {
-                        if(setClientReports) {
-                           setClientReports(prev => {
-                             const updated = { ...prev };
-                             const brandData = { ...updated[activeBrand] };
-                             if (!brandData.creatives) return prev;
-                             const newCreatives = [...brandData.creatives];
-                             const idx = newCreatives.findIndex(c => c.id === creative.id);
-                             if (idx > -1) {
-                               newCreatives[idx] = { ...newCreatives[idx], status: 'rejected' };
-                               brandData.creatives = newCreatives;
-                               updated[activeBrand] = brandData;
-                               
-                               window._clientLastWrite = Date.now();
-                               
-                               const clientId = brandData.client_id;
-                               if (clientId) {
-                                 fetch('/api/clients/update', {
-                                   method: 'PUT',
-                                   headers: { 
-                                     'Content-Type': 'application/json',
-                                     'Authorization': `Bearer ${localStorage.getItem('client_token')}`
-                                   },
-                                   body: JSON.stringify({ client_id: clientId, report_data: brandData })
-                                 }).catch(console.error);
-                               }
-
-                               const localDbStr = localStorage.getItem('ajans_rota_db');
-                               if(localDbStr){ 
-                                 try{ 
-                                   const dbPayload=JSON.parse(localDbStr); 
-                                   dbPayload.clientReports=updated; 
-                                   localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload)); 
-                                 }catch(e){} 
-                               }
-                               const waPhone = localStorage.getItem('rota_wa_phone');
-                               const waApiKey = localStorage.getItem('rota_wa_apikey');
-                               if (waPhone && waApiKey) {
-                                 const text = encodeURIComponent(`❌ *Rota Kreatif Reddi:* \n${currentData.brandName}, "${creative.title}" adlı kreatifi REDDETTİ.`);
-                                 fetch(`https://api.callmebot.com/whatsapp.php?phone=${waPhone}&text=${text}&apikey=${waApiKey}`, { mode: 'no-cors' }).catch(() => {});
-                               }
-                               toast.error('Tasarım reddedildi. Lütfen yöneticinizle revizyon için iletişime geçiniz.');
-                               return updated;
-                             }
-                             return prev;
-                           });
-                        }
-                      }}>
-                        <i className="fa-solid fa-xmark"></i> Reddet
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* --- TAB: VAULT (Dosya Kasam) --- */}
         {activeTab === 'vault' && (
