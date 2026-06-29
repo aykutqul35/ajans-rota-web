@@ -1699,6 +1699,9 @@ export default function ClientTransparencyPageView({
               const currentGoogleCAC = actualGoogleConv > 0 ? actualGoogleSpend / actualGoogleConv : 0;
               const currentMetaCAC = actualMetaConv > 0 ? actualMetaSpend / actualMetaConv : 0;
 
+              const currentGoogleROI = actualGoogleSpend > 0 ? (((googleRevenue - actualGoogleSpend) / actualGoogleSpend) * 100) : 0;
+              const currentMetaROI = actualMetaSpend > 0 ? (((metaRevenue - actualMetaSpend) / actualMetaSpend) * 100) : 0;
+
               const simGoogleSpend = simGoogleSpendSlider !== null ? simGoogleSpendSlider : actualGoogleSpend;
               const simMetaSpend = simMetaSpendSlider !== null ? simMetaSpendSlider : actualMetaSpend;
 
@@ -1749,8 +1752,8 @@ export default function ClientTransparencyPageView({
                            <strong style={{ color: '#94a3b8' }}>{actualGoogleSpend.toLocaleString('tr-TR')} ₺</strong>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
-                           <span style={{ color: '#cbd5e1' }}>Mevcut CAC / ROAS:</span>
-                           <strong style={{ color: '#94a3b8' }}>{Math.round(currentGoogleCAC).toLocaleString('tr-TR')} ₺ / {((googleRevenue / actualGoogleSpend) || 0).toFixed(2)}x</strong>
+                           <span style={{ color: '#cbd5e1' }}>Mevcut CAC / ROAS / ROI:</span>
+                           <strong style={{ color: '#94a3b8' }}>{Math.round(currentGoogleCAC).toLocaleString('tr-TR')} ₺ / {((googleRevenue / actualGoogleSpend) || 0).toFixed(2)}x / %{currentGoogleROI.toFixed(0)}</strong>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem', marginTop: '0.5rem' }}>
                            <span style={{ color: '#cbd5e1' }}>Yeni Bütçe:</span>
@@ -1801,8 +1804,8 @@ export default function ClientTransparencyPageView({
                            <strong style={{ color: '#94a3b8' }}>{actualMetaSpend.toLocaleString('tr-TR')} ₺</strong>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
-                           <span style={{ color: '#cbd5e1' }}>Mevcut CAC / ROAS:</span>
-                           <strong style={{ color: '#94a3b8' }}>{Math.round(currentMetaCAC).toLocaleString('tr-TR')} ₺ / {((metaRevenue / actualMetaSpend) || 0).toFixed(2)}x</strong>
+                           <span style={{ color: '#cbd5e1' }}>Mevcut CAC / ROAS / ROI:</span>
+                           <strong style={{ color: '#94a3b8' }}>{Math.round(currentMetaCAC).toLocaleString('tr-TR')} ₺ / {((metaRevenue / actualMetaSpend) || 0).toFixed(2)}x / %{currentMetaROI.toFixed(0)}</strong>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem', marginTop: '0.5rem' }}>
                            <span style={{ color: '#cbd5e1' }}>Yeni Bütçe:</span>
