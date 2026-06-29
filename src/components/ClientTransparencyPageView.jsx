@@ -152,9 +152,14 @@ export default function ClientTransparencyPageView({
 
   useEffect(() => {
     const handleStorageChange = (e) => {
-      if (e.key === 'clientReports') {
+      if (e.key === 'ajans_rota_db') {
         try {
-          if (e.newValue) setClientReports(JSON.parse(e.newValue));
+          if (e.newValue) {
+            const parsed = JSON.parse(e.newValue);
+            if (parsed && parsed.clientReports) {
+              setClientReports(parsed.clientReports);
+            }
+          }
         } catch(err) {}
       }
     };

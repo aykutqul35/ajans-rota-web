@@ -487,20 +487,24 @@ export default function ClientReportsTab({
                         Zaman Çizelgesi (Yapılan Çalışmalar)
                       </span>
                       <button type="button" onClick={() => {
-                    const updated = {
-                      ...clientReports
-                    };
-                    updated[editingReportBrand].timeline.unshift({
-                      date: new Date().toLocaleDateString('tr-TR', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                      }),
-                      title: "Yeni Çalışma Maddesi",
-                      desc: "Yapılan çalışmanın detaylı açıklaması buraya yazılır.",
-                      author: "Yiğit K. (SEO & Google Ads)"
+                    setClientReports(prev => {
+                      const updated = { ...prev };
+                      const brandData = { ...updated[editingReportBrand] };
+                      const newTimeline = [...(brandData.timeline || [])];
+                      newTimeline.unshift({
+                        date: new Date().toLocaleDateString('tr-TR', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric'
+                        }),
+                        title: "Yeni Çalışma Maddesi",
+                        desc: "Yapılan çalışmanın detaylı açıklaması buraya yazılır.",
+                        author: "Yiğit K. (SEO & Google Ads)"
+                      });
+                      brandData.timeline = newTimeline;
+                      updated[editingReportBrand] = brandData;
+                      return updated;
                     });
-                    setClientReports(updated);
                   }} className="btn btn-primary" style={{
                     padding: '0.25rem 0.6rem',
                     fontSize: '0.75rem',
@@ -648,11 +652,16 @@ export default function ClientReportsTab({
                         gap: '0.75rem'
                       }}>
                               <input type="text" placeholder="Başlık (örn: SEO Çalışmaları)" value={event.title} onChange={e => {
-                          const updated = {
-                            ...clientReports
-                          };
-                          updated[editingReportBrand].timeline[idx].title = e.target.value;
-                          setClientReports(updated);
+                          const val = e.target.value;
+                          setClientReports(prev => {
+                            const updated = { ...prev };
+                            const brandData = { ...updated[editingReportBrand] };
+                            const newTimeline = [...(brandData.timeline || [])];
+                            newTimeline[idx] = { ...newTimeline[idx], title: val };
+                            brandData.timeline = newTimeline;
+                            updated[editingReportBrand] = brandData;
+                            return updated;
+                          });
                         }} style={{
                           flex: 1,
                           padding: '0.35rem 0.5rem',
@@ -666,11 +675,15 @@ export default function ClientReportsTab({
                         }} />
                               <button type="button" onClick={() => {
                           if (window.confirm('Bu zaman çizelgesi maddesini silmek istediğinizden emin misiniz?')) {
-                            const updated = {
-                              ...clientReports
-                            };
-                            updated[editingReportBrand].timeline.splice(idx, 1);
-                            setClientReports(updated);
+                            setClientReports(prev => {
+                              const updated = { ...prev };
+                              const brandData = { ...updated[editingReportBrand] };
+                              const newTimeline = [...(brandData.timeline || [])];
+                              newTimeline.splice(idx, 1);
+                              brandData.timeline = newTimeline;
+                              updated[editingReportBrand] = brandData;
+                              return updated;
+                            });
                           }
                         }} style={{
                           border: 'none',
@@ -706,11 +719,15 @@ export default function ClientReportsTab({
                           }}>Tarih</span>
                                 <input type="date" value={dateInputValue} onChange={e => {
                             const formattedDate = formatToTurkishDate(e.target.value);
-                            const updated = {
-                              ...clientReports
-                            };
-                            updated[editingReportBrand].timeline[idx].date = formattedDate;
-                            setClientReports(updated);
+                            setClientReports(prev => {
+                              const updated = { ...prev };
+                              const brandData = { ...updated[editingReportBrand] };
+                              const newTimeline = [...(brandData.timeline || [])];
+                              newTimeline[idx] = { ...newTimeline[idx], date: formattedDate };
+                              brandData.timeline = newTimeline;
+                              updated[editingReportBrand] = brandData;
+                              return updated;
+                            });
                           }} style={{
                             width: '100%',
                             padding: '0.3rem 0.45rem',
@@ -731,11 +748,16 @@ export default function ClientReportsTab({
                             fontWeight: 600
                           }}>Sorumlu</span>
                                 <select value={event.author} onChange={e => {
-                            const updated = {
-                              ...clientReports
-                            };
-                            updated[editingReportBrand].timeline[idx].author = e.target.value;
-                            setClientReports(updated);
+                            const val = e.target.value;
+                            setClientReports(prev => {
+                              const updated = { ...prev };
+                              const brandData = { ...updated[editingReportBrand] };
+                              const newTimeline = [...(brandData.timeline || [])];
+                              newTimeline[idx] = { ...newTimeline[idx], author: val };
+                              brandData.timeline = newTimeline;
+                              updated[editingReportBrand] = brandData;
+                              return updated;
+                            });
                           }} style={{
                             width: '100%',
                             padding: '0.3rem 0.45rem',
@@ -778,11 +800,16 @@ export default function ClientReportsTab({
                           fontWeight: 600
                         }}>Çalışma Detayları</span>
                               <textarea placeholder="Açıklama" rows="2" value={event.desc} onChange={e => {
-                          const updated = {
-                            ...clientReports
-                          };
-                          updated[editingReportBrand].timeline[idx].desc = e.target.value;
-                          setClientReports(updated);
+                          const val = e.target.value;
+                          setClientReports(prev => {
+                            const updated = { ...prev };
+                            const brandData = { ...updated[editingReportBrand] };
+                            const newTimeline = [...(brandData.timeline || [])];
+                            newTimeline[idx] = { ...newTimeline[idx], desc: val };
+                            brandData.timeline = newTimeline;
+                            updated[editingReportBrand] = brandData;
+                            return updated;
+                          });
                         }} style={{
                           width: '100%',
                           padding: '0.35rem 0.5rem',
@@ -1629,7 +1656,7 @@ export default function ClientReportsTab({
                             <option value="Genel">Genel Strateji</option>
                           </select>
 
-                          <input type="text" value={plan.date || ''} onChange={e => {
+                          <input type="date" value={plan.date || ''} onChange={e => {
                             const val = e.target.value;
                             setClientReports(prev => {
                               const updated = { ...prev };
@@ -1640,7 +1667,7 @@ export default function ClientReportsTab({
                               updated[editingReportBrand] = brandData;
                               return updated;
                             });
-                          }} placeholder="Tarih (örn: 15 Ağustos)" style={{ flex: 1, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }} />
+                          }} style={{ flex: 1, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }} />
                           
                           <select value={plan.status || 'Bekliyor'} onChange={e => {
                             const val = e.target.value;
