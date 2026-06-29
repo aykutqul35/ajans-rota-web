@@ -185,7 +185,7 @@ export default function ClientTransparencyPageView({
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          topic: `Müşteri Google Ads bütçesini ${actualSpend.google} TL'den ${simSpend.google} TL'ye (Beklenen Ciro: ${Math.round(expectedRevenue.google)} TL), Meta Ads bütçesini ${actualSpend.meta} TL'den ${simSpend.meta} TL'ye (Beklenen Ciro: ${Math.round(expectedRevenue.meta)} TL) çekiyor. Hangi platform daha karlı? Ajans olarak müşteriye profesyonel, veri odaklı ve yönlendirici 1 paragraflık net bir karar tavsiyesi yaz. Çok kısa olsun, her iki platformu sayılarla kıyaslayarak birine yönlendir. (Grok AI Karşılaştırmalı Büyüme Simülasyonu)`
+          topic: `Müşteri Google Ads bütçesini ${actualSpend.google} TL'den ${simSpend.google} TL'ye (Beklenen Ciro: ${Math.round(expectedRevenue.google)} TL), Meta Ads bütçesini ${actualSpend.meta} TL'den ${simSpend.meta} TL'ye (Beklenen Ciro: ${Math.round(expectedRevenue.meta)} TL) çekiyor. Hangi platform daha karlı? Ajans olarak müşteriye profesyonel, veri odaklı ve yönlendirici 1 paragraflık net bir karar tavsiyesi yaz. Çok kısa olsun, her iki platformu sayılarla kıyaslayarak birine yönlendir. (Rota AI Karşılaştırmalı Büyüme Simülasyonu)`
         })
       });
 
@@ -1858,7 +1858,7 @@ export default function ClientTransparencyPageView({
                       {isGeneratingInsight ? (
                         <><i className="fa-solid fa-spinner fa-spin"></i> AI Karşılaştırmalı Analiz Ediyor...</>
                       ) : (
-                        <><i className="fa-solid fa-wand-magic-sparkles"></i> Grok Stratejisi İste</>
+                        <><i className="fa-solid fa-wand-magic-sparkles"></i> Rota AI Stratejisi İste</>
                       )}
                     </button>
                   </div>
