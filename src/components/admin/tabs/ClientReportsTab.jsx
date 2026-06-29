@@ -866,37 +866,46 @@ export default function ClientReportsTab({
                         try {
                           const newBlob = await upload(Date.now() + '-' + file.name, file, { access: 'public', handleUploadUrl: '/api/upload' });
                           
-                          const updated = { ...clientReports };
-                          if (!updated[editingReportBrand].creatives) updated[editingReportBrand].creatives = [];
-                          updated[editingReportBrand].creatives.push({
-                            id: Date.now(),
-                            title: file.name,
-                            type: file.type.includes('pdf') ? 'pdf' : 'image',
-                            url: newBlob.url,
-                            status: 'pending',
-                            date: new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }),
-                            feedback: ''
+                          setClientReports(prev => {
+                            const updated = { ...prev };
+                            const brandData = { ...updated[editingReportBrand] };
+                            const newCreatives = [...(brandData.creatives || [])];
+                            newCreatives.push({
+                              id: Date.now(),
+                              title: file.name,
+                              type: file.type.includes('pdf') ? 'pdf' : 'image',
+                              url: newBlob.url,
+                              status: 'pending',
+                              date: new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }),
+                              feedback: ''
+                            });
+                            brandData.creatives = newCreatives;
+                            updated[editingReportBrand] = brandData;
+                            
+                            // Immediately save to local DB
+                            const localDbStr = localStorage.getItem('ajans_rota_db');
+                            if (localDbStr) {
+                              try {
+                                const dbPayload = JSON.parse(localDbStr);
+                                dbPayload.clientReports = updated;
+                                localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
+                              } catch(e) {}
+                            }
+                            
+                            // Save to Neon
+                            if (brandData.client_id) {
+                              fetch('/api/clients/update', {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ 
+                                  client_id: brandData.client_id, 
+                                  report_data: brandData 
+                                })
+                              }).catch(console.error);
+                            }
+                            
+                            return updated;
                           });
-                          setClientReports(updated);
-                          const localDbStr = localStorage.getItem('ajans_rota_db');
-                          if (localDbStr) {
-                            try {
-                              const dbPayload = JSON.parse(localDbStr);
-                              dbPayload.clientReports = updated;
-                              localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
-                            } catch(e) {}
-                          }
-                          // Save to Neon
-                          if (updated[editingReportBrand].client_id) {
-                            fetch('/api/clients/update', {
-                              method: 'PUT',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ 
-                                client_id: updated[editingReportBrand].client_id, 
-                                report_data: updated[editingReportBrand] 
-                              })
-                            }).catch(console.error);
-                          }
                           toast.success('Dosya başarıyla Vercel Blob\'a yüklendi!');
                         } catch (err) {
                           console.error('Vercel Blob Upload Error:', err);
@@ -935,9 +944,26 @@ export default function ClientReportsTab({
                         </div>
                         <button type="button" onClick={() => {
                           if (window.confirm('Bu kreatifi silmek istediğinize emin misiniz?')) {
-                            const updated = { ...clientReports };
-                            updated[editingReportBrand].creatives.splice(idx, 1);
-                            setClientReports(updated);
+                            setClientReports(prev => {
+                              const updated = { ...prev };
+                              const brandData = { ...updated[editingReportBrand] };
+                              const newCreatives = [...(brandData.creatives || [])];
+                              newCreatives.splice(idx, 1);
+                              brandData.creatives = newCreatives;
+                              updated[editingReportBrand] = brandData;
+                              
+                              // Optionally update localStorage if immediate sync is desired
+                              const localDbStr = localStorage.getItem('ajans_rota_db');
+                              if (localDbStr) {
+                                try {
+                                  const dbPayload = JSON.parse(localDbStr);
+                                  dbPayload.clientReports = updated;
+                                  localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
+                                } catch(e) {}
+                              }
+                              
+                              return updated;
+                            });
                           }
                         }} style={{
                           border: 'none', background: 'rgba(239, 68, 68, 0.08)', borderRadius: '6px',

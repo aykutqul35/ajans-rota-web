@@ -1631,63 +1631,91 @@ export default function ClientTransparencyPageView({
                     )}
                     <div style={{ marginTop: 'auto', display: 'flex', gap: '0.5rem' }}>
                       <button className="btn btn-primary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', background: '#16a34a', borderColor: '#16a34a' }} onClick={async () => {
-                        if(setClientReports && clientReports && clientReports[activeBrand]) {
-                           const updated = {...clientReports};
-                           if(!updated[activeBrand].creatives) return;
-                           const idx = updated[activeBrand].creatives.findIndex(c => c.id === creative.id);
-                           if(idx > -1) {
-                             updated[activeBrand].creatives[idx].status = 'approved';
-                             setClientReports(updated);
-                             
-                             const clientId = updated[activeBrand].client_id;
-                             if (clientId) {
-                               try {
-                                 await fetch('/api/clients/update', {
+                        if(setClientReports) {
+                           setClientReports(prev => {
+                             const updated = { ...prev };
+                             const brandData = { ...updated[activeBrand] };
+                             if (!brandData.creatives) return prev;
+                             const newCreatives = [...brandData.creatives];
+                             const idx = newCreatives.findIndex(c => c.id === creative.id);
+                             if (idx > -1) {
+                               newCreatives[idx] = { ...newCreatives[idx], status: 'approved' };
+                               brandData.creatives = newCreatives;
+                               updated[activeBrand] = brandData;
+                               
+                               const clientId = brandData.client_id;
+                               if (clientId) {
+                                 fetch('/api/clients/update', {
                                    method: 'PUT',
                                    headers: { 'Content-Type': 'application/json' },
-                                   body: JSON.stringify({ client_id: clientId, report_data: updated[activeBrand] })
-                                 });
-                               } catch (err) { console.error(err); }
-                             }
+                                   body: JSON.stringify({ client_id: clientId, report_data: brandData })
+                                 }).catch(console.error);
+                               }
 
-                             const localDbStr = localStorage.getItem('ajans_rota_db');
-                             if(localDbStr){ try{ const dbPayload=JSON.parse(localDbStr); dbPayload.clientReports=updated; localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload)); }catch(e){} }
-                             const waPhone = localStorage.getItem('rota_wa_phone');
-                             const waApiKey = localStorage.getItem('rota_wa_apikey');
-                             if (waPhone && waApiKey) {
-                               const text = encodeURIComponent(`✅ *Rota Kreatif Onayı:* \n${currentData.brandName}, "${creative.title}" adlı kreatifi ONAYLADI.`);
-                               fetch(`https://api.callmebot.com/whatsapp.php?phone=${waPhone}&text=${text}&apikey=${waApiKey}`, { mode: 'no-cors' }).catch(() => {});
+                               const localDbStr = localStorage.getItem('ajans_rota_db');
+                               if(localDbStr){ 
+                                 try{ 
+                                   const dbPayload=JSON.parse(localDbStr); 
+                                   dbPayload.clientReports=updated; 
+                                   localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload)); 
+                                 }catch(e){} 
+                               }
+                               const waPhone = localStorage.getItem('rota_wa_phone');
+                               const waApiKey = localStorage.getItem('rota_wa_apikey');
+                               if (waPhone && waApiKey) {
+                                 const text = encodeURIComponent(`✅ *Rota Kreatif Onayı:* \n${currentData.brandName}, "${creative.title}" adlı kreatifi ONAYLADI.`);
+                                 fetch(`https://api.callmebot.com/whatsapp.php?phone=${waPhone}&text=${text}&apikey=${waApiKey}`, { mode: 'no-cors' }).catch(() => {});
+                               }
+                               toast('Tasarım onaylandı olarak işaretlendi ve ajansa bildirildi!');
+                               return updated;
                              }
-                             toast('Tasarım onaylandı olarak işaretlendi ve ajansa bildirildi!');
-                           }
+                             return prev;
+                           });
                         }
                       }}>
                         <i className="fa-solid fa-check"></i> Onayla
                       </button>
                       <button className="btn btn-secondary" style={{ flex: 1, padding: '0.6rem', fontSize: '0.8rem', color: '#ef4444', borderColor: '#ef4444' }} onClick={async () => {
-                        if(setClientReports && clientReports && clientReports[activeBrand]) {
-                           const updated = {...clientReports};
-                           if(!updated[activeBrand].creatives) return;
-                           const idx = updated[activeBrand].creatives.findIndex(c => c.id === creative.id);
-                           if(idx > -1) {
-                             updated[activeBrand].creatives[idx].status = 'rejected';
-                             setClientReports(updated);
-                             
-                             const clientId = updated[activeBrand].client_id;
-                             if (clientId) {
-                               try {
-                                 await fetch('/api/clients/update', {
+                        if(setClientReports) {
+                           setClientReports(prev => {
+                             const updated = { ...prev };
+                             const brandData = { ...updated[activeBrand] };
+                             if (!brandData.creatives) return prev;
+                             const newCreatives = [...brandData.creatives];
+                             const idx = newCreatives.findIndex(c => c.id === creative.id);
+                             if (idx > -1) {
+                               newCreatives[idx] = { ...newCreatives[idx], status: 'rejected' };
+                               brandData.creatives = newCreatives;
+                               updated[activeBrand] = brandData;
+                               
+                               const clientId = brandData.client_id;
+                               if (clientId) {
+                                 fetch('/api/clients/update', {
                                    method: 'PUT',
                                    headers: { 'Content-Type': 'application/json' },
-                                   body: JSON.stringify({ client_id: clientId, report_data: updated[activeBrand] })
-                                 });
-                               } catch (err) { console.error(err); }
-                             }
+                                   body: JSON.stringify({ client_id: clientId, report_data: brandData })
+                                 }).catch(console.error);
+                               }
 
-                             const localDbStr = localStorage.getItem('ajans_rota_db');
-                             if(localDbStr){ try{ const dbPayload=JSON.parse(localDbStr); dbPayload.clientReports=updated; localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload)); }catch(e){} }
-                             toast.error('Tasarım reddedildi. Lütfen yöneticinizle revizyon için iletişime geçiniz.');
-                           }
+                               const localDbStr = localStorage.getItem('ajans_rota_db');
+                               if(localDbStr){ 
+                                 try{ 
+                                   const dbPayload=JSON.parse(localDbStr); 
+                                   dbPayload.clientReports=updated; 
+                                   localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload)); 
+                                 }catch(e){} 
+                               }
+                               const waPhone = localStorage.getItem('rota_wa_phone');
+                               const waApiKey = localStorage.getItem('rota_wa_apikey');
+                               if (waPhone && waApiKey) {
+                                 const text = encodeURIComponent(`❌ *Rota Kreatif Reddi:* \n${currentData.brandName}, "${creative.title}" adlı kreatifi REDDETTİ.`);
+                                 fetch(`https://api.callmebot.com/whatsapp.php?phone=${waPhone}&text=${text}&apikey=${waApiKey}`, { mode: 'no-cors' }).catch(() => {});
+                               }
+                               toast.error('Tasarım reddedildi. Lütfen yöneticinizle revizyon için iletişime geçiniz.');
+                               return updated;
+                             }
+                             return prev;
+                           });
                         }
                       }}>
                         <i className="fa-solid fa-xmark"></i> Reddet
