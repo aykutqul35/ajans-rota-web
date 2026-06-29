@@ -899,7 +899,10 @@ export default function ClientReportsTab({
                             if (brandData.client_id) {
                               fetch('/api/clients/update', {
                                 method: 'PUT',
-                                headers: { 'Content-Type': 'application/json' },
+                                headers: { 
+                                  'Content-Type': 'application/json',
+                                  'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                                },
                                 body: JSON.stringify({ 
                                   client_id: brandData.client_id, 
                                   report_data: brandData 
@@ -1035,7 +1038,10 @@ export default function ClientReportsTab({
                           if (updated[editingReportBrand].client_id) {
                             fetch('/api/clients/update', {
                               method: 'PUT',
-                              headers: { 'Content-Type': 'application/json' },
+                              headers: { 
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                              },
                               body: JSON.stringify({ 
                                 client_id: updated[editingReportBrand].client_id, 
                                 report_data: updated[editingReportBrand] 

@@ -233,7 +233,10 @@ export default function ClientTransparencyPageView({
       if (updated[activeBrand].client_id) {
         await fetch('/api/clients/update', {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('client_token')}` },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('client_token')}`
+          },
           body: JSON.stringify({ 
             client_id: updated[activeBrand].client_id, 
             report_data: updated[activeBrand]
@@ -454,7 +457,10 @@ export default function ClientTransparencyPageView({
         if (token && brandData.client_id) {
           fetch('/api/clients/update', {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
             body: JSON.stringify({ client_id: brandData.client_id, report_data: brandData })
           }).catch(e => console.error("Ticket reply sync error:", e));
         }
@@ -1643,11 +1649,16 @@ export default function ClientTransparencyPageView({
                                brandData.creatives = newCreatives;
                                updated[activeBrand] = brandData;
                                
+                               window._clientLastWrite = Date.now();
+                               
                                const clientId = brandData.client_id;
                                if (clientId) {
                                  fetch('/api/clients/update', {
                                    method: 'PUT',
-                                   headers: { 'Content-Type': 'application/json' },
+                                   headers: { 
+                                     'Content-Type': 'application/json',
+                                     'Authorization': `Bearer ${localStorage.getItem('client_token')}`
+                                   },
                                    body: JSON.stringify({ client_id: clientId, report_data: brandData })
                                  }).catch(console.error);
                                }
@@ -1688,11 +1699,16 @@ export default function ClientTransparencyPageView({
                                brandData.creatives = newCreatives;
                                updated[activeBrand] = brandData;
                                
+                               window._clientLastWrite = Date.now();
+                               
                                const clientId = brandData.client_id;
                                if (clientId) {
                                  fetch('/api/clients/update', {
                                    method: 'PUT',
-                                   headers: { 'Content-Type': 'application/json' },
+                                   headers: { 
+                                     'Content-Type': 'application/json',
+                                     'Authorization': `Bearer ${localStorage.getItem('client_token')}`
+                                   },
                                    body: JSON.stringify({ client_id: clientId, report_data: brandData })
                                  }).catch(console.error);
                                }

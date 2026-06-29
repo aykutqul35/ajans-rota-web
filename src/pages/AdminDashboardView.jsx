@@ -781,7 +781,10 @@ function AdminDashboardView({
       try {
         await fetch('/api/clients/update', {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
           body: JSON.stringify({ 
             client_id: clientReports[editingReportBrand].client_id, 
             report_data: clientReports[editingReportBrand] 
