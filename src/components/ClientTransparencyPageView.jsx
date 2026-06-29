@@ -196,13 +196,14 @@ export default function ClientTransparencyPageView({
       
       setClientReports(updated);
       
-      const localDbStr = localStorage.getItem('ajans_rota_db');
-      if (localDbStr) {
-        try {
-          const dbPayload = JSON.parse(localDbStr);
-          dbPayload.clientReports = updated;
-          localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
-        } catch(e) {}
+      // Persist to localStorage (create entry if it doesn't exist)
+      try {
+        const localDbStr = localStorage.getItem('ajans_rota_db');
+        const dbPayload = localDbStr ? JSON.parse(localDbStr) : {};
+        dbPayload.clientReports = updated;
+        localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
+      } catch(e) {
+        console.error('Failed to save to localStorage', e);
       }
       
       if (updated[activeBrand].client_id) {

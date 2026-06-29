@@ -1289,7 +1289,22 @@ function App() {
                 brandName: client.brand_name
               };
             });
-            setClientReports(prev => ({...prev, ...dbReports}));
+            // Merge: preserve locally-created tickets/ai_requests that DB doesn't have yet
+            setClientReports(prev => {
+              const merged = {...prev, ...dbReports};
+              // For each brand, keep local tickets/ai_requests if DB didn't have them
+              Object.keys(prev).forEach(key => {
+                if (merged[key]) {
+                  if (prev[key]?.tickets?.length && !dbReports[key]?.tickets?.length) {
+                    merged[key].tickets = prev[key].tickets;
+                  }
+                  if (prev[key]?.ai_requests?.length && !dbReports[key]?.ai_requests?.length) {
+                    merged[key].ai_requests = prev[key].ai_requests;
+                  }
+                }
+              });
+              return merged;
+            });
           }
         }
       } catch (err) {
