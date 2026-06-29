@@ -179,7 +179,7 @@ export default function ClientTransparencyPageView({
     setAiInsightResult('');
     
     try {
-      const response = await fetch('/api/blogs/generate', {
+      const response = await fetch('/api/ai-strategy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
