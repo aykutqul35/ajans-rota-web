@@ -40,7 +40,8 @@ export default function ClientTransparencyPageView({
   const [clientReplyText, setClientReplyText] = useState('');
 
   // AI Simulator States
-  const [simSpendSlider, setSimSpendSlider] = useState(null);
+  const [simGoogleSpendSlider, setSimGoogleSpendSlider] = useState(null);
+  const [simMetaSpendSlider, setSimMetaSpendSlider] = useState(null);
   const [aiInsightResult, setAiInsightResult] = useState('');
   const [isGeneratingInsight, setIsGeneratingInsight] = useState(false);
 
@@ -184,7 +185,7 @@ export default function ClientTransparencyPageView({
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          topic: `Müşteri reklam bütçesini ${actualSpend} TL'den ${simSpend} TL'ye çıkarırsa, beklenen ciro ${actualRevenue} TL'den ${expectedRevenue} TL'ye çıkıyor. Ajans olarak müşteriye profesyonel, finansal ve ikna edici 1 paragraflık bir tavsiye yaz. Sayılarla konuş. Çok kısa olsun. (Grok AI Büyüme Simülasyonu)`
+          topic: `Müşteri Google Ads bütçesini ${actualSpend.google} TL'den ${simSpend.google} TL'ye (Beklenen Ciro: ${Math.round(expectedRevenue.google)} TL), Meta Ads bütçesini ${actualSpend.meta} TL'den ${simSpend.meta} TL'ye (Beklenen Ciro: ${Math.round(expectedRevenue.meta)} TL) çekiyor. Hangi platform daha karlı? Ajans olarak müşteriye profesyonel, veri odaklı ve yönlendirici 1 paragraflık net bir karar tavsiyesi yaz. Çok kısa olsun, her iki platformu sayılarla kıyaslayarak birine yönlendir. (Grok AI Karşılaştırmalı Büyüme Simülasyonu)`
         })
       });
 
@@ -1653,122 +1654,160 @@ export default function ClientTransparencyPageView({
         {activeTab === 'ai_simulator' && (
           <div className="tab-content-ai fade-in">
             {(() => {
-              const actualSpend = currentData?.metrics?.adSpend?.current || 10000;
-              const actualRevenue = currentData?.metrics?.revenue?.current || 50000;
-              const actualConversions = currentData?.metrics?.conversions?.current || 50;
+              const parseMoney = (str) => {
+                if (!str) return 0;
+                return parseInt(str.toString().replace(/[^\d]/g, ''), 10) || 0;
+              };
+              const parseConv = (str) => {
+                if (!str) return 0;
+                return parseInt(str.toString().replace(/[^\d]/g, ''), 10) || 0;
+              };
+              const parseRoas = (str) => {
+                if (!str) return 0;
+                return parseFloat(str.toString().replace(',', '.').replace(/[^\d.]/g, '')) || 0;
+              };
+
+              let actualGoogleSpend = 0, actualGoogleConv = 0, googleRevenue = 0;
+              if (currentData.googleAds) {
+                 currentData.googleAds.forEach(ad => {
+                   const s = parseMoney(ad.spend);
+                   const c = parseConv(ad.conversions);
+                   const r = parseRoas(ad.roas);
+                   actualGoogleSpend += s;
+                   actualGoogleConv += c;
+                   googleRevenue += (s * r);
+                 });
+              }
+              if (actualGoogleSpend === 0) { actualGoogleSpend = 10000; actualGoogleConv = 150; googleRevenue = 50000; }
+
+              let actualMetaSpend = 0, actualMetaConv = 0, metaRevenue = 0;
+              if (currentData.metaAds) {
+                 currentData.metaAds.forEach(ad => {
+                   const s = parseMoney(ad.spend);
+                   const c = parseConv(ad.conversions);
+                   const r = parseRoas(ad.roas);
+                   actualMetaSpend += s;
+                   actualMetaConv += c;
+                   metaRevenue += (s * r);
+                 });
+              }
+              if (actualMetaSpend === 0) { actualMetaSpend = 10000; actualMetaConv = 150; metaRevenue = 50000; }
+
+              const currentGoogleAOV = actualGoogleConv > 0 ? googleRevenue / actualGoogleConv : 0;
+              const currentMetaAOV = actualMetaConv > 0 ? metaRevenue / actualMetaConv : 0;
               
-              const currentCAC = actualConversions > 0 ? actualSpend / actualConversions : 0;
-              const currentAOV = actualConversions > 0 ? actualRevenue / actualConversions : 0;
-              
-              const simSpend = simSpendSlider !== null ? simSpendSlider : actualSpend;
-              
-              // Diminishing returns formula: new_conv = actual_conv * (simSpend / actualSpend)^0.85
-              // If actualSpend is 0, default to linear to avoid Infinity.
-              const ratio = actualSpend > 0 ? (simSpend / actualSpend) : 1;
-              const projectedConversions = Math.round(actualConversions * Math.pow(ratio, 0.85));
-              const projectedRevenue = projectedConversions * currentAOV;
-              const projectedCAC = projectedConversions > 0 ? simSpend / projectedConversions : 0;
-              
+              const currentGoogleCAC = actualGoogleConv > 0 ? actualGoogleSpend / actualGoogleConv : 0;
+              const currentMetaCAC = actualMetaConv > 0 ? actualMetaSpend / actualMetaConv : 0;
+
+              const simGoogleSpend = simGoogleSpendSlider !== null ? simGoogleSpendSlider : actualGoogleSpend;
+              const simMetaSpend = simMetaSpendSlider !== null ? simMetaSpendSlider : actualMetaSpend;
+
+              const ratioGoogle = actualGoogleSpend > 0 ? (simGoogleSpend / actualGoogleSpend) : 1;
+              const projectedGoogleConv = Math.round(actualGoogleConv * Math.pow(ratioGoogle, 0.85));
+              const projectedGoogleRev = projectedGoogleConv * currentGoogleAOV;
+              const projectedGoogleCAC = projectedGoogleConv > 0 ? simGoogleSpend / projectedGoogleConv : 0;
+
+              const ratioMeta = actualMetaSpend > 0 ? (simMetaSpend / actualMetaSpend) : 1;
+              const projectedMetaConv = Math.round(actualMetaConv * Math.pow(ratioMeta, 0.85));
+              const projectedMetaRev = projectedMetaConv * currentMetaAOV;
+              const projectedMetaCAC = projectedMetaConv > 0 ? simMetaSpend / projectedMetaConv : 0;
+
               return (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
                   
                   {/* Başlık ve Vizyon */}
                   <div style={{ background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(139, 92, 246, 0.1))', padding: '2rem', borderRadius: '16px', border: '1px solid rgba(139, 92, 246, 0.2)' }}>
                     <h2 style={{ fontSize: '1.4rem', color: '#f8fafc', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <i className="fa-solid fa-brain" style={{ color: '#c084fc' }}></i> Yapay Zeka Büyüme Simülatörü
+                      <i className="fa-solid fa-brain" style={{ color: '#c084fc' }}></i> Çoklu Platform AI Simülatörü
                     </h2>
                     <p style={{ color: '#cbd5e1', fontSize: '0.95rem', lineHeight: '1.6', margin: 0 }}>
-                      Reklam bütçenizi hislere veya deneme-yanılma yöntemlerine göre değil, <strong>saf matematiğe ve veriye dayalı</strong> yönetin. Aşağıdaki çubuğu kaydırarak, algoritmalarımızın azalan verim kanunları (Diminishing Returns) ile hesapladığı gelecekteki dönüşüm maliyetlerini (CAC) ve potansiyel kârlılığı anında simüle edin.
+                      Google Ads ve Meta Ads bütçelerini <strong>ayrı ayrı simüle ederek</strong> hangi platformun marjinal getirisinin daha yüksek olduğunu keşfedin. Azalan verim kanunlarına (Diminishing Returns) göre kârlılık optimizasyonu yapın.
                     </p>
                   </div>
                   
-                  {/* Grid: Mevcut vs Simülasyon */}
+                  {/* Grid: Google vs Meta Simülasyon */}
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
                     
-                    {/* Mevcut Durum */}
-                    <div style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
-                      <h3 style={{ color: '#94a3b8', fontSize: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <i className="fa-solid fa-chart-line"></i> Geçen Ayın Gerçekleşen Verileri
+                    {/* Google Ads */}
+                    <div style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(14, 165, 233, 0.3)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+                      <h3 style={{ color: '#0ea5e9', fontSize: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <i className="fa-brands fa-google"></i> Google Ads Projeksiyonu
                       </h3>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
-                          <span style={{ color: '#cbd5e1' }}>Aylık Bütçe:</span>
-                          <strong style={{ color: '#f8fafc' }}>{actualSpend.toLocaleString('tr-TR')} ₺</strong>
+                           <span style={{ color: '#cbd5e1' }}>Mevcut Bütçe:</span>
+                           <strong style={{ color: '#94a3b8' }}>{actualGoogleSpend.toLocaleString('tr-TR')} ₺</strong>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
-                          <span style={{ color: '#cbd5e1' }}>Elde Edilen Ciro:</span>
-                          <strong style={{ color: '#f8fafc' }}>{actualRevenue.toLocaleString('tr-TR')} ₺</strong>
+                           <span style={{ color: '#cbd5e1' }}>Mevcut CAC / ROAS:</span>
+                           <strong style={{ color: '#94a3b8' }}>{Math.round(currentGoogleCAC).toLocaleString('tr-TR')} ₺ / {((googleRevenue / actualGoogleSpend) || 0).toFixed(2)}x</strong>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem', marginTop: '0.5rem' }}>
+                           <span style={{ color: '#cbd5e1' }}>Yeni Bütçe:</span>
+                           <strong style={{ color: '#0ea5e9' }}>{simGoogleSpend.toLocaleString('tr-TR')} ₺</strong>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
-                          <span style={{ color: '#cbd5e1' }}>Satış / Form Sayısı:</span>
-                          <strong style={{ color: '#f8fafc' }}>{actualConversions} İşlem</strong>
+                           <span style={{ color: '#cbd5e1' }}>Beklenen Ciro:</span>
+                           <strong style={{ color: '#22c55e' }}>{Math.round(projectedGoogleRev).toLocaleString('tr-TR')} ₺</strong>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span style={{ color: '#cbd5e1' }}>Birim Maliyet (CAC):</span>
-                          <strong style={{ color: '#ef4444' }}>{Math.round(currentCAC).toLocaleString('tr-TR')} ₺</strong>
+                           <span style={{ color: '#cbd5e1' }}>Yeni CAC:</span>
+                           <strong style={{ color: projectedGoogleCAC > currentGoogleCAC ? '#eab308' : '#22c55e' }}>
+                             {Math.round(projectedGoogleCAC).toLocaleString('tr-TR')} ₺
+                           </strong>
                         </div>
                       </div>
+                      <input 
+                        type="range" 
+                        min={Math.round(actualGoogleSpend * 0.5)} 
+                        max={Math.round(actualGoogleSpend * 3)} 
+                        step={500} 
+                        value={simGoogleSpend}
+                        onChange={(e) => setSimGoogleSpendSlider(Number(e.target.value))}
+                        style={{ width: '100%', accentColor: '#0ea5e9', height: '6px', background: '#334155', borderRadius: '4px', outline: 'none', cursor: 'pointer' }}
+                      />
                     </div>
 
-                    {/* AI Simülasyonu */}
-                    <div style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(14, 165, 233, 0.3)', boxShadow: '0 4px 25px rgba(14, 165, 233, 0.1)', position: 'relative', overflow: 'hidden' }}>
-                      <div style={{ position: 'absolute', top: '-20px', right: '-20px', opacity: 0.05 }}>
-                        <i className="fa-solid fa-microchip" style={{ fontSize: '8rem', color: '#0ea5e9' }}></i>
-                      </div>
-                      
-                      <h3 style={{ color: '#0ea5e9', fontSize: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px', position: 'relative' }}>
-                        <i className="fa-solid fa-wand-magic-sparkles"></i> AI Projeksiyonu
+                    {/* Meta Ads */}
+                    <div style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(139, 92, 246, 0.3)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+                      <h3 style={{ color: '#c084fc', fontSize: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <i className="fa-brands fa-meta"></i> Meta Ads Projeksiyonu
                       </h3>
-                      
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', position: 'relative' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
-                          <span style={{ color: '#cbd5e1' }}>Yeni Simüle Bütçe:</span>
-                          <strong style={{ color: '#0ea5e9' }}>{simSpend.toLocaleString('tr-TR')} ₺</strong>
+                           <span style={{ color: '#cbd5e1' }}>Mevcut Bütçe:</span>
+                           <strong style={{ color: '#94a3b8' }}>{actualMetaSpend.toLocaleString('tr-TR')} ₺</strong>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
-                          <span style={{ color: '#cbd5e1' }}>Beklenen Ciro:</span>
-                          <strong style={{ color: '#22c55e' }}>{Math.round(projectedRevenue).toLocaleString('tr-TR')} ₺</strong>
+                           <span style={{ color: '#cbd5e1' }}>Mevcut CAC / ROAS:</span>
+                           <strong style={{ color: '#94a3b8' }}>{Math.round(currentMetaCAC).toLocaleString('tr-TR')} ₺ / {((metaRevenue / actualMetaSpend) || 0).toFixed(2)}x</strong>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem', marginTop: '0.5rem' }}>
+                           <span style={{ color: '#cbd5e1' }}>Yeni Bütçe:</span>
+                           <strong style={{ color: '#c084fc' }}>{simMetaSpend.toLocaleString('tr-TR')} ₺</strong>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
-                          <span style={{ color: '#cbd5e1' }}>Tahmini Satış:</span>
-                          <strong style={{ color: '#f8fafc' }}>{projectedConversions} İşlem</strong>
+                           <span style={{ color: '#cbd5e1' }}>Beklenen Ciro:</span>
+                           <strong style={{ color: '#22c55e' }}>{Math.round(projectedMetaRev).toLocaleString('tr-TR')} ₺</strong>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span style={{ color: '#cbd5e1' }}>Yeni Birim Maliyet (CAC):</span>
-                          <strong style={{ color: projectedCAC > currentCAC ? '#eab308' : '#22c55e' }}>
-                            {Math.round(projectedCAC).toLocaleString('tr-TR')} ₺
-                          </strong>
+                           <span style={{ color: '#cbd5e1' }}>Yeni CAC:</span>
+                           <strong style={{ color: projectedMetaCAC > currentMetaCAC ? '#eab308' : '#22c55e' }}>
+                             {Math.round(projectedMetaCAC).toLocaleString('tr-TR')} ₺
+                           </strong>
                         </div>
                       </div>
+                      <input 
+                        type="range" 
+                        min={Math.round(actualMetaSpend * 0.5)} 
+                        max={Math.round(actualMetaSpend * 3)} 
+                        step={500} 
+                        value={simMetaSpend}
+                        onChange={(e) => setSimMetaSpendSlider(Number(e.target.value))}
+                        style={{ width: '100%', accentColor: '#c084fc', height: '6px', background: '#334155', borderRadius: '4px', outline: 'none', cursor: 'pointer' }}
+                      />
                     </div>
-                  </div>
 
-                  {/* Sürgü Kontrol Alanı */}
-                  <div style={{ background: '#1e293b', padding: '2rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
-                    <h4 style={{ color: '#f8fafc', marginBottom: '1.5rem', fontSize: '1.1rem' }}>Bütçe Optimizasyonunu Ayarlayın</h4>
-                    <input 
-                      type="range" 
-                      min={Math.round(actualSpend * 0.5)} 
-                      max={Math.round(actualSpend * 3)} 
-                      step={500} 
-                      value={simSpend}
-                      onChange={(e) => setSimSpendSlider(Number(e.target.value))}
-                      style={{ 
-                        width: '100%', 
-                        maxWidth: '600px', 
-                        accentColor: '#0ea5e9', 
-                        height: '6px', 
-                        background: '#334155', 
-                        borderRadius: '4px', 
-                        outline: 'none',
-                        cursor: 'pointer'
-                      }}
-                    />
-                    <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center', gap: '2rem', color: '#94a3b8', fontSize: '0.85rem' }}>
-                      <span>Min: {(actualSpend * 0.5).toLocaleString('tr-TR')} ₺</span>
-                      <span>Mevcut: {actualSpend.toLocaleString('tr-TR')} ₺</span>
-                      <span>Maks: {(actualSpend * 3).toLocaleString('tr-TR')} ₺</span>
-                    </div>
                   </div>
 
                   {/* Grok AI İçgörü Kutusu */}
@@ -1776,7 +1815,7 @@ export default function ClientTransparencyPageView({
                     {aiInsightResult ? (
                       <div style={{ width: '100%', maxWidth: '800px', padding: '1.5rem', background: 'rgba(139, 92, 246, 0.1)', borderLeft: '4px solid #c084fc', borderRadius: '8px' }}>
                         <h4 style={{ color: '#c084fc', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <i className="fa-solid fa-robot"></i> Rota AI Strateji Yorumu
+                          <i className="fa-solid fa-robot"></i> Rota AI Çoklu Platform Stratejisi
                         </h4>
                         <p style={{ color: '#e2e8f0', lineHeight: '1.6', fontSize: '0.95rem', margin: 0 }}>
                           {aiInsightResult.replace(/<[^>]+>/g, '')}
@@ -1786,13 +1825,18 @@ export default function ClientTransparencyPageView({
                       <>
                         <i className="fa-solid fa-microchip" style={{ fontSize: '2.5rem', color: '#475569', marginBottom: '1rem' }}></i>
                         <p style={{ color: '#94a3b8', marginBottom: '1.5rem', textAlign: 'center', maxWidth: '500px' }}>
-                          Yaptığınız bütçe değişikliğinin markanıza ve dönüşüm maliyetlerinize etkisini yapay zeka aracılığıyla analiz etmek için aşağıdaki butona tıklayın.
+                          Yaptığınız bütçe değişikliklerini (Google ve Meta) karşılaştırmalı olarak analiz etmek ve en kârlı stratejiyi belirlemek için tıklayın.
                         </p>
                       </>
                     )}
                     
                     <button 
-                      onClick={() => handleGenerateAiInsight(actualSpend, simSpend, projectedRevenue, actualRevenue)}
+                      onClick={() => handleGenerateAiInsight(
+                        { google: actualGoogleSpend, meta: actualMetaSpend }, 
+                        { google: simGoogleSpend, meta: simMetaSpend },
+                        { google: projectedGoogleRev, meta: projectedMetaRev },
+                        { google: googleRevenue, meta: metaRevenue }
+                      )}
                       disabled={isGeneratingInsight}
                       style={{ 
                         padding: '0.85rem 2rem', 
@@ -1812,9 +1856,9 @@ export default function ClientTransparencyPageView({
                       }}
                     >
                       {isGeneratingInsight ? (
-                        <><i className="fa-solid fa-spinner fa-spin"></i> AI Analiz Ediyor...</>
+                        <><i className="fa-solid fa-spinner fa-spin"></i> AI Karşılaştırmalı Analiz Ediyor...</>
                       ) : (
-                        <><i className="fa-solid fa-wand-magic-sparkles"></i> Grok ile Strateji Çıkar</>
+                        <><i className="fa-solid fa-wand-magic-sparkles"></i> Grok Stratejisi İste</>
                       )}
                     </button>
                   </div>
