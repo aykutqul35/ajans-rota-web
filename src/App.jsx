@@ -30,6 +30,7 @@ import SocialProofToast from './components/SocialProofToast';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import CookieConsent from './components/CookieConsent';
+import ScrollToTop from './components/ScrollToTop';
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -3215,6 +3216,7 @@ function App() {
           setTimeout(() => setIsExitIntentPopup(false), 300);
         }} 
       />
+      {!isSecurePanel && <ScrollToTop />}
       {!isSecurePanel && <CookieConsent onNavigateToPolicy={() => navigateTo('/cerez-politikasi')} />}
     </>;
 }
