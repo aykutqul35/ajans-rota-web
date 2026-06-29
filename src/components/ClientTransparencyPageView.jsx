@@ -1712,6 +1712,11 @@ export default function ClientTransparencyPageView({
               const projectedMetaRev = projectedMetaConv * currentMetaAOV;
               const projectedMetaCAC = projectedMetaConv > 0 ? simMetaSpend / projectedMetaConv : 0;
 
+              const projectedGoogleROAS = simGoogleSpend > 0 ? (projectedGoogleRev / simGoogleSpend) : 0;
+              const projectedGoogleROI = simGoogleSpend > 0 ? (((projectedGoogleRev - simGoogleSpend) / simGoogleSpend) * 100) : 0;
+              const projectedMetaROAS = simMetaSpend > 0 ? (projectedMetaRev / simMetaSpend) : 0;
+              const projectedMetaROI = simMetaSpend > 0 ? (((projectedMetaRev - simMetaSpend) / simMetaSpend) * 100) : 0;
+
               return (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
                   
@@ -1721,7 +1726,12 @@ export default function ClientTransparencyPageView({
                       <i className="fa-solid fa-brain" style={{ color: '#c084fc' }}></i> Çoklu Platform AI Simülatörü
                     </h2>
                     <p style={{ color: '#cbd5e1', fontSize: '0.95rem', lineHeight: '1.6', margin: 0 }}>
-                      Google Ads ve Meta Ads bütçelerini <strong>ayrı ayrı simüle ederek</strong> hangi platformun marjinal getirisinin daha yüksek olduğunu keşfedin. Azalan verim kanunlarına (Diminishing Returns) göre kârlılık optimizasyonu yapın.
+                      Google Ads ve Meta Ads bütçelerini <strong>ayrı ayrı simüle ederek</strong> hangi platformun marjinal getirisinin daha yüksek olduğunu keşfedin. Azalan verim kanunlarına (Diminishing Returns) göre kârlılık optimizasyonu yapın. 
+                      <br/><br/>
+                      <strong style={{color: '#f8fafc'}}>Terimler:</strong><br/>
+                      <strong>CAC (Müşteri Edinme Maliyeti):</strong> Yeni bir müşteri kazanmak için harcanan tutar. Düşük olması iyidir.<br/>
+                      <strong>ROAS (Reklam Harcaması Getirisi):</strong> Reklama harcanan her 1 ₺ için elde edilen ciro. Yüksek olması iyidir.<br/>
+                      <strong>ROI (Yatırım Getirisi):</strong> Harcamalar çıktıktan sonra kalan net kâr oranı.
                     </p>
                   </div>
                   
@@ -1750,10 +1760,22 @@ export default function ClientTransparencyPageView({
                            <span style={{ color: '#cbd5e1' }}>Beklenen Ciro:</span>
                            <strong style={{ color: '#22c55e' }}>{Math.round(projectedGoogleRev).toLocaleString('tr-TR')} ₺</strong>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
                            <span style={{ color: '#cbd5e1' }}>Yeni CAC:</span>
                            <strong style={{ color: projectedGoogleCAC > currentGoogleCAC ? '#eab308' : '#22c55e' }}>
                              {Math.round(projectedGoogleCAC).toLocaleString('tr-TR')} ₺
+                           </strong>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
+                           <span style={{ color: '#cbd5e1' }}>Yeni ROAS:</span>
+                           <strong style={{ color: projectedGoogleROAS < ((googleRevenue / actualGoogleSpend) || 0) ? '#eab308' : '#22c55e' }}>
+                             {projectedGoogleROAS.toFixed(2)}x
+                           </strong>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                           <span style={{ color: '#cbd5e1' }}>Yeni ROI:</span>
+                           <strong style={{ color: projectedGoogleROI > 0 ? '#22c55e' : '#ef4444' }}>
+                             %{projectedGoogleROI.toFixed(0)}
                            </strong>
                         </div>
                       </div>
@@ -1790,10 +1812,22 @@ export default function ClientTransparencyPageView({
                            <span style={{ color: '#cbd5e1' }}>Beklenen Ciro:</span>
                            <strong style={{ color: '#22c55e' }}>{Math.round(projectedMetaRev).toLocaleString('tr-TR')} ₺</strong>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
                            <span style={{ color: '#cbd5e1' }}>Yeni CAC:</span>
                            <strong style={{ color: projectedMetaCAC > currentMetaCAC ? '#eab308' : '#22c55e' }}>
                              {Math.round(projectedMetaCAC).toLocaleString('tr-TR')} ₺
+                           </strong>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
+                           <span style={{ color: '#cbd5e1' }}>Yeni ROAS:</span>
+                           <strong style={{ color: projectedMetaROAS < ((metaRevenue / actualMetaSpend) || 0) ? '#eab308' : '#22c55e' }}>
+                             {projectedMetaROAS.toFixed(2)}x
+                           </strong>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                           <span style={{ color: '#cbd5e1' }}>Yeni ROI:</span>
+                           <strong style={{ color: projectedMetaROI > 0 ? '#22c55e' : '#ef4444' }}>
+                             %{projectedMetaROI.toFixed(0)}
                            </strong>
                         </div>
                       </div>
