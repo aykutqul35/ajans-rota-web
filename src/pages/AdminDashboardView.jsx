@@ -1027,6 +1027,7 @@ function AdminDashboardView({
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           unreadLeadsCount={unreadLeadsCount}
+          clientReports={clientReports}
         />
 
         <main className="admin-content-card">

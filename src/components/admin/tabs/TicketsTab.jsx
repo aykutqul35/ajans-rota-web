@@ -1,18 +1,129 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function TicketsTab({
   clientReports, setClientReports, viewingTicket, setViewingTicket, adminReplyText, setAdminReplyText, handleAdminReplySubmit
 }) {
+  const [allTickets, setAllTickets] = useState([]);
 
+  // Merge tickets from clientReports + localStorage queue
+  useEffect(() => {
+    const ticketsFromReports = Object.entries(clientReports).flatMap(([brandKey, brandData]) => {
+      return (brandData.tickets || []).map((ticket, idx) => ({ ...ticket, brandKey, brandName: brandData.brandName || brandKey, idx, _source: 'reports' }));
+    });
+
+    // Read from dedicated localStorage queue
+    let queueTickets = [];
+    try {
+      const raw = localStorage.getItem('client_ticket_queue');
+      if (raw) {
+        queueTickets = JSON.parse(raw).map((t, idx) => ({ ...t, _source: 'queue', idx }));
+      }
+    } catch(e) {}
+
+    // Merge by ID (avoid duplicates)
+    const existingIds = new Set(ticketsFromReports.map(t => t.id));
+    const uniqueQueueTickets = queueTickets.filter(t => !existingIds.has(t.id));
+    
+    const merged = [...ticketsFromReports, ...uniqueQueueTickets].sort((a, b) => {
+      if (a.status === 'Açık' && b.status !== 'Açık') return -1;
+      if (b.status === 'Açık' && a.status !== 'Açık') return 1;
+      return (b.id || 0) - (a.id || 0);
+    });
+
+    setAllTickets(merged);
+  }, [clientReports]);
+
+  // Also poll localStorage every 3 seconds to catch new tickets in real time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      try {
+        const raw = localStorage.getItem('client_ticket_queue');
+        if (raw) {
+          const queue = JSON.parse(raw);
+          if (queue.length > 0) {
+            setAllTickets(prev => {
+              const existingIds = new Set(prev.map(t => t.id));
+              const newTickets = queue.filter(t => !existingIds.has(t.id)).map(t => ({ ...t, _source: 'queue' }));
+              if (newTickets.length > 0) {
+                return [...newTickets, ...prev];
+              }
+              return prev;
+            });
+          }
+        }
+      } catch(e) {}
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleStatusChange = (ticket, newStatus) => {
+    if (ticket._source === 'reports' && ticket.brandKey) {
+      const updated = { ...clientReports };
+      if (updated[ticket.brandKey]?.tickets?.[ticket.idx]) {
+        updated[ticket.brandKey].tickets[ticket.idx].status = newStatus;
+        setClientReports(updated);
+      }
+    }
+    // Also update in queue
+    try {
+      const raw = localStorage.getItem('client_ticket_queue');
+      if (raw) {
+        const queue = JSON.parse(raw);
+        const found = queue.find(t => t.id === ticket.id);
+        if (found) {
+          found.status = newStatus;
+          localStorage.setItem('client_ticket_queue', JSON.stringify(queue));
+        }
+      }
+    } catch(e) {}
+    setAllTickets(prev => prev.map(t => t.id === ticket.id ? { ...t, status: newStatus } : t));
+  };
+
+  const handleDelete = (ticket) => {
+    if (!confirm('Bu talebi tamamen silmek istediğinize emin misiniz?')) return;
+    if (ticket._source === 'reports' && ticket.brandKey) {
+      const updated = { ...clientReports };
+      if (updated[ticket.brandKey]?.tickets) {
+        updated[ticket.brandKey].tickets.splice(ticket.idx, 1);
+        setClientReports(updated);
+      }
+    }
+    try {
+      const raw = localStorage.getItem('client_ticket_queue');
+      if (raw) {
+        const queue = JSON.parse(raw).filter(t => t.id !== ticket.id);
+        localStorage.setItem('client_ticket_queue', JSON.stringify(queue));
+      }
+    } catch(e) {}
+    setAllTickets(prev => prev.filter(t => t.id !== ticket.id));
+  };
+
+  const openCount = allTickets.filter(t => t.status === 'Açık').length;
 
   return (
     <>
-              
           <div className="admin-section fade-in">
             {!viewingTicket ? (
             <>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-              <h2 style={{ fontSize: '1.5rem', color: 'var(--text-dark)' }}>Müşteri Destek Talepleri</h2>
+              <h2 style={{ fontSize: '1.5rem', color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                Müşteri Destek Talepleri
+                {openCount > 0 && (
+                  <span style={{ 
+                    background: 'linear-gradient(135deg, #ef4444, #f97316)', 
+                    color: '#fff', 
+                    fontSize: '0.75rem', 
+                    fontWeight: 800, 
+                    padding: '0.25rem 0.6rem', 
+                    borderRadius: '20px',
+                    animation: 'pulse 2s infinite',
+                    minWidth: '22px',
+                    textAlign: 'center'
+                  }}>
+                    {openCount}
+                  </span>
+                )}
+              </h2>
             </div>
             
             <div style={{ background: '#fff', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', overflowX: 'auto' }}>
@@ -28,14 +139,8 @@ export default function TicketsTab({
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.entries(clientReports).flatMap(([brandKey, brandData]) => {
-                    return (brandData.tickets || []).map((ticket, idx) => ({ ...ticket, brandKey, brandName: brandData.brandName || brandKey, idx }));
-                  }).sort((a,b) => {
-                     if (a.status === 'Açık' && b.status !== 'Açık') return -1;
-                     if (b.status === 'Açık' && a.status !== 'Açık') return 1;
-                     return 0;
-                  }).map((ticket, globalIdx) => (
-                    <tr key={globalIdx} style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                  {allTickets.map((ticket, globalIdx) => (
+                    <tr key={ticket.id || globalIdx} style={{ borderBottom: '1px solid var(--glass-border)', background: ticket.status === 'Açık' ? 'rgba(239, 68, 68, 0.02)' : 'transparent' }}>
                       <td style={{ padding: '1rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-dark)' }}>{ticket.brandName}</td>
                       <td style={{ padding: '1rem', fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 700 }}>{ticket.id}</td>
                       <td style={{ padding: '1rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>{ticket.department}</td>
@@ -47,11 +152,7 @@ export default function TicketsTab({
                         </button>
                         <select 
                           value={ticket.status} 
-                          onChange={(e) => {
-                            const updated = { ...clientReports };
-                            updated[ticket.brandKey].tickets[ticket.idx].status = e.target.value;
-                            setClientReports(updated);
-                          }}
+                          onChange={(e) => handleStatusChange(ticket, e.target.value)}
                           style={{
                             padding: '0.4rem 0.8rem',
                             borderRadius: '20px',
@@ -72,18 +173,13 @@ export default function TicketsTab({
                           <option value="İşlemde">İşlemde</option>
                           <option value="Çözüldü">Çözüldü</option>
                         </select>
-                        <button type="button" onClick={() => {
-                          if(!confirm('Bu talebi tamamen silmek istediğinize emin misiniz?')) return;
-                          const updated = { ...clientReports };
-                          updated[ticket.brandKey].tickets.splice(ticket.idx, 1);
-                          setClientReports(updated);
-                        }} style={{ marginLeft: '10px', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}>
+                        <button type="button" onClick={() => handleDelete(ticket)} style={{ marginLeft: '10px', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}>
                           <i className="fa-solid fa-trash"></i>
                         </button>
                       </td>
                     </tr>
                   ))}
-                  {Object.entries(clientReports).flatMap(([k, v]) => v.tickets || []).length === 0 && (
+                  {allTickets.length === 0 && (
                     <tr>
                       <td colSpan="6" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>Henüz hiçbir müşteriden destek talebi gelmedi.</td>
                     </tr>

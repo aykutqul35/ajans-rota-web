@@ -206,6 +206,24 @@ export default function ClientTransparencyPageView({
         console.error('Failed to save to localStorage', e);
       }
       
+      // Also save to dedicated ticket queue (guaranteed to work for admin panel)
+      try {
+        const existingQueue = JSON.parse(localStorage.getItem('client_ticket_queue') || '[]');
+        existingQueue.push({
+          id: requestId,
+          date: dateStr,
+          brandKey: activeBrand,
+          brandName: updated[activeBrand]?.brandName || activeBrand,
+          subject: `AI Öneri Talebi: ${insightText}`,
+          message: `Müşteri, yapay zeka önerisi doğrultusunda "${insightText}" talebinde bulundu.`,
+          department: 'Yapay Zeka Önerileri',
+          status: 'Açık',
+          priority: 'medium',
+          source: 'ai-recommendation'
+        });
+        localStorage.setItem('client_ticket_queue', JSON.stringify(existingQueue));
+      } catch(e) {}
+      
       if (updated[activeBrand].client_id) {
         await fetch('/api/clients/update', {
           method: 'PUT',
