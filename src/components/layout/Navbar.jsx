@@ -95,6 +95,10 @@ export default function Navbar({
                   e.preventDefault();
                   navigateTo('/iletisim');
                 }}><i className="fa-solid fa-envelope nav-icon"></i>İletişim</a></li>}
+                {!settingsData.hide_page_referanslar && <li><a href="/referanslar" onClick={e => {
+                  e.preventDefault();
+                  navigateTo('/referanslar');
+                }}><i className="fa-solid fa-star nav-icon"></i>Referanslarımız</a></li>}
               </ul>
             </li>
             <li className={`nav-link dropdown ${activeMobileDropdown === 'calculators' ? 'active' : ''}`}>
@@ -159,10 +163,7 @@ export default function Navbar({
                 }}><i className="fa-solid fa-graduation-cap nav-icon"></i>Rota Akademi</a></li>}
               </ul>
             </li>
-            {!settingsData.hide_page_referanslar && <li className="nav-link"><a href="#testimonials" onClick={e => {
-              e.preventDefault();
-              handleNavClick('testimonials');
-            }}><i className="fa-solid fa-star nav-icon"></i>Referanslarımız</a></li>}
+
             {!settingsData.hide_page_iletisim && <li className="nav-link"><a href="#contact" onClick={e => {
               e.preventDefault();
               handleNavClick('contact');
