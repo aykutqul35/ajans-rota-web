@@ -1,9 +1,14 @@
 import React from 'react';
 
 export default function ContactForm(props) {
-  const { isSubmitted, formData, setFormData, handleContactSubmit, reportFullName, setReportFullName, reportEmail, setReportEmail, reportWebsite, setReportWebsite, reportPhone, setReportPhone, reportLoading, reportError, handleReportSubmit, proposalFullName, setProposalFullName, proposalEmail, setProposalEmail, proposalWebsite, setProposalWebsite, proposalPhone, setProposalPhone, proposalLoading, proposalError, handleProposalSubmit, webDesignFullName, setWebDesignFullName, webDesignEmail, setWebDesignEmail, webDesignPhone, setWebDesignPhone, webDesignMessage, setWebDesignMessage, webDesignLoading, webDesignSubmitted, calculatorTab, feeAdBudget, activePricingModel, calculatedAgencyFee, discountPercent, discountAmount, finalAgencyFee, managementFeeDesc, rawBaseRetainer, scaledBundleDiscountAmount, performanceBundleDiscountAmount, ecomBudgetSavings, b2bBudgetSavings, rotaEcomRevenueIncrease, rotaB2bRevenueIncrease, ecomSpend, b2bSpend, targetRevenue, isCombined, handleGenerateReport, handleGenerateProposal } = props;
+  const { isSubmitted, formData, setFormData, handleContactSubmit, servicesData, reportFullName, setReportFullName, reportEmail, setReportEmail, reportWebsite, setReportWebsite, reportPhone, setReportPhone, reportLoading, reportError, handleReportSubmit, proposalFullName, setProposalFullName, proposalEmail, setProposalEmail, proposalWebsite, setProposalWebsite, proposalPhone, setProposalPhone, proposalLoading, proposalError, handleProposalSubmit, webDesignFullName, setWebDesignFullName, webDesignEmail, setWebDesignEmail, webDesignPhone, setWebDesignPhone, webDesignMessage, setWebDesignMessage, webDesignLoading, webDesignSubmitted, calculatorTab, feeAdBudget, activePricingModel, calculatedAgencyFee, discountPercent, discountAmount, finalAgencyFee, managementFeeDesc, rawBaseRetainer, scaledBundleDiscountAmount, performanceBundleDiscountAmount, ecomBudgetSavings, b2bBudgetSavings, rotaEcomRevenueIncrease, rotaB2bRevenueIncrease, ecomSpend, b2bSpend, targetRevenue, isCombined, handleGenerateReport, handleGenerateProposal } = props;
 
-    return isSubmitted ? <div className="form-success-message">
+    const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  return isSubmitted ? <div className="form-success-message">
         <i className="fa-solid fa-circle-check" style={{
         fontSize: '1.5rem'
       }}></i>
@@ -17,7 +22,7 @@ export default function ContactForm(props) {
             Dijital uzmanlarımız markanızı inceleyip sizinle en kısa sürede iletişime geçecektir.
           </p>
         </div>
-      </div> : <form className="contact-form" onSubmit={handleSubmit}>
+      </div> : <form className="contact-form" onSubmit={handleContactSubmit}>
         <div className="form-group">
           <label htmlFor="fullName">Ad Soyad *</label>
           <input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleInputChange} placeholder="Örn. Ahmet Yılmaz" required className="form-input" />

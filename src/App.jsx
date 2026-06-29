@@ -1378,11 +1378,11 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
   const { activePricingModel, discountPercent, isSocialSelected, smPackagePrice, finalAgencyFee } = calcData;
 
   // Merge calcData into a unified props object so it can be passed to AppRoutes and forms
-  const fullAppState = { ...appState, ...calcData };
+  const fullAppState = { ...appState, ...calcData, commitment, setCommitment, reportingPackage, setReportingPackage, smPackage, setSmPackage, webDesignType, setWebDesignType, webDesignFullName, setWebDesignFullName, webDesignEmail, setWebDesignEmail, webDesignPhone, setWebDesignPhone, webDesignMessage, setWebDesignMessage, webDesignLoading, setWebDesignLoading, webDesignSubmitted, setWebDesignSubmitted, formData, setFormData, isSubmitted, setIsSubmitted, handleWebDesignSubmit, handleContactSubmit, activeMobileDropdown, setActiveMobileDropdown };
 
 const renderReportForm = () => <ReportForm {...fullAppState} handleGenerateReport={handleGenerateReport} />;
   const renderContactForm = () => <ContactForm formData={formData} setFormData={setFormData} isSubmitted={isSubmitted} handleContactSubmit={handleContactSubmit} />;
-  const renderWebDesignForm = (isCombined = false) => <WebDesignForm {...fullAppState} isCombined={isCombined} />;
+  const renderWebDesignForm = (isCombined = false) => <WebDesignForm {...fullAppState} isCombined={isCombined} handleWebDesignSubmit={handleWebDesignSubmit} webDesignType={webDesignType} setWebDesignType={setWebDesignType} webDesignSubmitted={webDesignSubmitted} setWebDesignSubmitted={setWebDesignSubmitted} />;
 
   const isSecurePanel = currentPath.startsWith('/rota-management-vault-x9') || currentPath.startsWith('/portal-girisi-x9') || currentPath.startsWith('/client-portal-secure');
   const isAdminRoute = currentPath.startsWith('/rota-management-vault-x9');

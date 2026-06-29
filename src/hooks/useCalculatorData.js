@@ -1,5 +1,5 @@
 export const useCalculatorData = (appState) => {
-  const { googleSpend, metaSpend, googleRevenue, metaRevenue, ecomAov, ecomRevenue, ecomTraffic, ecomSpend, b2bLeads, b2bConversion, b2bLtv, b2bSpend, selectedServices, smPackage, settingsData, servicesData, feeAdBudget, pricingModel, commitment } = appState;
+  const { googleSpend, metaSpend, googleRevenue, metaRevenue, ecomAov, ecomRevenue, ecomTraffic, ecomSpend, b2bLeads, b2bConversion, b2bLtv, b2bSpend, selectedServices, smPackage, settingsData, servicesData, feeAdBudget, pricingModel, commitment, reportingPackage, targetRevenue } = appState;
   
   const totalAdBudget = googleSpend + metaSpend;
   const totalRevenue = googleRevenue + metaRevenue;
@@ -87,16 +87,22 @@ export const useCalculatorData = (appState) => {
   // Scaled bundle discount amount to display in the result breakdown
   const scaledBundleDiscountAmount = Math.round(standardBaseRetainer * (bundleDiscountPercent / 100));
 
-  // Active base retainer after bundle discount, scaled
   const activeBaseRetainer = standardBaseRetainer - scaledBundleDiscountAmount;
   const activePricingModel = isOnlyDesignSelected ? 'hybrid' : pricingModel;
   let calculatedAgencyFee = 0;
   let managementFeeDesc = '';
   let baseRetainerLabel = '';
+  
+  let showCommission = false;
+  let commissionFee = 0;
+  let reducedBase = 0;
+  let standardReducedBase = 0;
+  let performanceBonus = 0;
+  
   if (activePricingModel === 'hybrid') {
     // 12% ad spend commission applies only to budgets of 100k and above
-    const showCommission = feeAdBudget >= 100000 && !isOnlyDesignSelected;
-    const commissionFee = showCommission ? feeAdBudget * 0.12 : 0;
+    showCommission = feeAdBudget >= 100000 && !isOnlyDesignSelected;
+    commissionFee = showCommission ? feeAdBudget * 0.12 : 0;
     calculatedAgencyFee = Math.round(activeBaseRetainer + commissionFee);
     managementFeeDesc = showCommission ? `%12 Bütçe Yönetimi (${commissionFee.toLocaleString('tr-TR')} ₺)` : '';
     baseRetainerLabel = isOnlyDesignSelected
@@ -107,9 +113,9 @@ export const useCalculatorData = (appState) => {
   } else {
     // Performance Model: 20% discount on base retainer + 1.5% of Target Revenue
     // Under performance model, the base is reduced by 20%
-    const reducedBase = Math.round(activeBaseRetainer * 0.8);
-    const standardReducedBase = Math.round(standardBaseRetainer * 0.8);
-    const performanceBonus = targetRevenue * 0.015;
+    reducedBase = Math.round(activeBaseRetainer * 0.8);
+    standardReducedBase = Math.round(standardBaseRetainer * 0.8);
+    performanceBonus = targetRevenue * 0.015;
     calculatedAgencyFee = Math.round(reducedBase + performanceBonus);
     managementFeeDesc = `%1.5 Ciro Primi Bedeli (${performanceBonus.toLocaleString('tr-TR')} ₺)`;
     baseRetainerLabel = isSocialSelected
@@ -135,58 +141,7 @@ export const useCalculatorData = (appState) => {
   if (commitment === 3) discountPercent = 5;else if (commitment === 6) discountPercent = 15;else if (commitment === 9) discountPercent = 25;
   const discountAmount = Math.round(calculatedAgencyFee * (discountPercent / 100));
   const finalAgencyFee = calculatedAgencyFee - discountAmount;
-  const handleInputChange = e => {
-    const {
-      name,
-      value
-    } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-  const handleSubmit = async e => {
-    e.preventDefault();
-    const leadPayload = {
-      fullName: formData.fullName,
-      email: formData.email,
-      phone: formData.phone,
-      company: formData.company,
-      service: formData.service,
-      message: formData.message,
-      trafficSource: detectTrafficSource()
-    };
-    try {
-      const response = await fetch('/api.php?action=save_lead', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(leadPayload)
-      });
-      const text = await response.text();
-      try {
-        JSON.parse(text);
-      } catch (e) {}
-      simulateLeadLocally(leadPayload);
-      setIsSubmitted(true);
-    } catch (err) {
-      console.error("Lead submission failed, simulating locally:", err);
-      simulateLeadLocally(leadPayload);
-      setIsSubmitted(true);
-    }
-    setTimeout(() => {
-      setFormData({
-        fullName: '',
-        email: '',
-        phone: '',
-        company: '',
-        service: 'Google Ads Danışmanlığı',
-        message: ''
-      });
-    }, 5000);
-  };
-  
+
   return {
     totalAdBudget,
     totalRevenue,
@@ -225,7 +180,6 @@ export const useCalculatorData = (appState) => {
     isOnlySocialSelected,
     smPackagePrice,
     rawBaseRetainer,
-    fee,
     isOnlyDesignSelected,
     bundleDiscountPercent,
     bundleDiscountAmount,
@@ -247,11 +201,6 @@ export const useCalculatorData = (appState) => {
     reportingFee,
     discountPercent,
     discountAmount,
-    finalAgencyFee,
-    handleInputChange,
-    handleSubmit,
-    leadPayload,
-    response,
-    text
+    finalAgencyFee
   };
 };
