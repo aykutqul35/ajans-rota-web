@@ -8817,8 +8817,8 @@ select:focus, input:focus {
 /* ========== Scroll to Top Button ========== */
 .scroll-to-top {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 5.5rem;
+  right: 1.75rem;
   width: 44px;
   height: 44px;
   border-radius: 12px;
