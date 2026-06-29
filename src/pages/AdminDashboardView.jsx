@@ -1037,6 +1037,11 @@ function AdminDashboardView({
   }
   const unreadLeadsCount = leadsData.filter(l => l.status === 'unread').length;
 
+  const handleClientReportsUpdate = (updater) => {
+    window._adminLastWrite = Date.now();
+    setClientReports(updater);
+  };
+
   return <div className="container admin-dashboard">
       <AdminHeader
         handleSaveAll={handleSaveAll}
@@ -1175,7 +1180,7 @@ function AdminDashboardView({
         {activeTab === 'tickets' && (
           <TicketsTab
             clientReports={clientReports}
-            setClientReports={setClientReports}
+            setClientReports={handleClientReportsUpdate}
             viewingTicket={viewingTicket}
             setViewingTicket={setViewingTicket}
             adminReplyText={adminReplyText}
@@ -1187,7 +1192,7 @@ function AdminDashboardView({
         {activeTab === 'reports' && (
           <ClientReportsTab
             clientReports={clientReports}
-            setClientReports={setClientReports}
+            setClientReports={handleClientReportsUpdate}
             editingReportBrand={editingReportBrand}
             setEditingReportBrand={setEditingReportBrand}
             setIsAddClientModalOpen={setIsAddClientModalOpen}
