@@ -372,7 +372,7 @@ export default function ClientTransparencyPageView({
       { month: 'May', roas: 6.2, spend: 42000, revenue: 260400 },
       { month: 'Haz', roas: 6.9, spend: 48240, revenue: 333820 }
     ],
-    aiSummary: "Merhaba Ege Hanım, bu ayki reklam performansınızı inceledim. Meta reklamlarında başlattığımız yeni 'Katalog Satış' kampanyası ROAS oranını 7,2x seviyesine taşıyarak büyük başarı elde etti. Bütçenin bir kısmını bu kampanyaya kaydırmanızı öneririm.",
+    aiSummary: "Sayın Ege Soğuk Sıkım Yönetimi, bu ayki reklam performansınızı inceledim. Meta reklamlarında başlattığımız yeni 'Katalog Satış' kampanyası ROAS oranını 7,2x seviyesine taşıyarak büyük başarı elde etti. Bütçenin bir kısmını bu kampanyaya kaydırmanızı öneririm.",
     apiSync: { googleAds: true, metaAds: true, lastSync: "Bugün 09:14" },
     teamManagers: [
       { name: "Yiğit K.", role: "Google Ads & SEO", avatar: "https://i.pravatar.cc/150?u=yigit", online: true },

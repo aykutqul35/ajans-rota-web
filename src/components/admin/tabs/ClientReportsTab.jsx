@@ -24,7 +24,7 @@ export default function ClientReportsTab({
     
     try {
       const kpiString = currentData.kpis.map(k => `${k.label}: ${k.value} (${k.change})`).join(', ');
-      const topic = `Müşteri: ${currentData.name || editingReportBrand}. Güncel Performans Verileri: ${kpiString}. Lütfen Rota AI olarak (kendini tanıtma) direkt olarak gidişatı yorumlayan, sayısal ve profesyonel (en fazla 2-3 cümlelik) bir yönetici özeti ve stratejik tavsiye yaz.`;
+      const topic = `Müşteri Adı/Unvanı: ${currentData.name || currentData.brandName || editingReportBrand}. Güncel Performans Verileri: ${kpiString}. Lütfen Rota AI olarak (kendini tanıtma) direkt olarak gidişatı yorumlayan, sayısal ve profesyonel (en fazla 2-3 cümlelik) bir yönetici özeti ve stratejik tavsiye yaz. Başlangıçta müşteriye 'Sayın [Müşteri Adı] Yönetimi' veya 'Sayın Yetkili' şeklinde profesyonel kurumsal bir hitap kullan (kesinlikle Ayşe Hanım, Ali Bey gibi cinsiyet veya kişi tahmini yapma).`;
       
       const response = await fetch('/api/ai-strategy', {
         method: 'POST',
