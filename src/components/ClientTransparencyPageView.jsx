@@ -410,58 +410,71 @@ export default function ClientTransparencyPageView({
   const rawB2b = clientReports?.b2b || defaultB2bData;
 
     const handleClientReplySubmit = async (e) => {
-    e.preventDefault();
-    if (!clientReplyText.trim()) return;
+    if (e?.preventDefault) e.preventDefault();
+    if (!clientReplyText.trim() || !viewingTicket) return;
 
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    const replyMsg = {
+      sender: 'client',
+      text: clientReplyText.trim(),
+      date: dateStr
+    };
+
+    // Update in clientReports state
     const updatedClientReports = { ...clientReports };
     const brandData = updatedClientReports[activeBrand];
-    const ticketIdx = brandData.tickets.findIndex(t => t.id === viewingTicket.id);
-    
-    if (ticketIdx > -1) {
-      const ticket = brandData.tickets[ticketIdx];
-      // Ensure messages array exists
-      if (!ticket.messages) {
-        ticket.messages = [{ sender: 'client', text: ticket.message || 'Detaylı mesaj girilmemiş.', date: ticket.date }];
-      }
-      
-      // Add client reply
-      const now = new Date();
-      ticket.messages.push({
-        sender: 'client',
-        text: clientReplyText.trim(),
-        date: now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
-      });
-      
-      // Update status
-      ticket.status = 'Yanıt Bekliyor';
-      window._clientLastWrite = Date.now();
-      
-      // Update state
-      if (setClientReports) setClientReports(updatedClientReports);
-      
-      // Save locally
-      try {
-        const localDbStr = localStorage.getItem('ajans_rota_db');
-        if(localDbStr){
-           const dbPayload = JSON.parse(localDbStr);
-           dbPayload.clientReports = updatedClientReports;
-           localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
+    if (brandData?.tickets) {
+      const ticketIdx = brandData.tickets.findIndex(t => t.id === viewingTicket.id);
+      if (ticketIdx > -1) {
+        const ticket = brandData.tickets[ticketIdx];
+        if (!ticket.messages) {
+          ticket.messages = [{ sender: 'client', text: ticket.message || 'Detaylı mesaj girilmemiş.', date: ticket.date }];
         }
-      } catch(e) {}
+        ticket.messages.push(replyMsg);
+        ticket.status = 'Yanıt Bekliyor';
+        if (setClientReports) setClientReports(updatedClientReports);
+        
+        // Save to ajans_rota_db
+        try {
+          const localDbStr = localStorage.getItem('ajans_rota_db');
+          const dbPayload = localDbStr ? JSON.parse(localDbStr) : {};
+          dbPayload.clientReports = updatedClientReports;
+          localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
+        } catch(e) {}
 
-      // Push to Neon DB
-      const token = localStorage.getItem('client_token');
-      if (token && brandData.client_id) {
-         fetch('/api/clients/update', {
+        // Push to Neon DB
+        const token = localStorage.getItem('client_token');
+        if (token && brandData.client_id) {
+          fetch('/api/clients/update', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
             body: JSON.stringify({ client_id: brandData.client_id, report_data: brandData })
-         }).catch(e => console.error("Ticket reply sync error:", e));
-      }
+          }).catch(e => console.error("Ticket reply sync error:", e));
+        }
 
-      setViewingTicket({ ...ticket });
-      setClientReplyText('');
+        setViewingTicket({ ...ticket });
+      }
     }
+
+    // CRITICAL: Also sync to client_ticket_queue (shared channel with admin)
+    try {
+      const raw = localStorage.getItem('client_ticket_queue');
+      if (raw) {
+        const queue = JSON.parse(raw);
+        const found = queue.find(t => t.id === viewingTicket.id);
+        if (found) {
+          if (!found.messages) {
+            found.messages = [{ sender: 'client', text: found.message || 'Detaylı mesaj girilmemiş.', date: found.date }];
+          }
+          found.messages.push(replyMsg);
+          found.status = 'Yanıt Bekliyor';
+          localStorage.setItem('client_ticket_queue', JSON.stringify(queue));
+        }
+      }
+    } catch(err) {}
+
+    setClientReplyText('');
   };
 
   const handleCreateTicket = async (e) => {
@@ -514,6 +527,19 @@ export default function ClientTransparencyPageView({
             body: JSON.stringify({ client_id: brandData.client_id, report_data: brandData })
          }).catch(e => console.error("Ticket sync error:", e));
       }
+      
+      // CRITICAL: Also write to shared ticket queue for admin panel
+      try {
+        const existingQueue = JSON.parse(localStorage.getItem('client_ticket_queue') || '[]');
+        existingQueue.push({
+          ...newTicket,
+          brandKey: activeBrand,
+          brandName: brandData.brandName || activeBrand,
+          messages: [{ sender: 'client', text: newTicket.message, date: newTicket.date }],
+          source: 'client-ticket'
+        });
+        localStorage.setItem('client_ticket_queue', JSON.stringify(existingQueue));
+      } catch(e) {}
       
       setNewTicketSubject('');
       setNewTicketMessage('');
@@ -1930,7 +1956,23 @@ export default function ClientTransparencyPageView({
                   </div>
                   
                   <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', background: '#0f172a', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1rem' }}>
-                    {(viewingTicket.messages || [{ sender: 'client', text: viewingTicket.message || 'Bu talep için detaylı mesaj girilmemiş.', date: viewingTicket.date }]).map((msg, i) => (
+                    {(() => {
+                      // Read messages from localStorage queue (shared channel) as source of truth
+                      let msgs = viewingTicket.messages;
+                      try {
+                        const raw = localStorage.getItem('client_ticket_queue');
+                        if (raw) {
+                          const queueItem = JSON.parse(raw).find(t => t.id === viewingTicket.id);
+                          if (queueItem?.messages?.length) {
+                            msgs = queueItem.messages;
+                          }
+                        }
+                      } catch(e) {}
+                      if (!msgs || msgs.length === 0) {
+                        msgs = [{ sender: 'client', text: viewingTicket.message || 'Bu talep için detaylı mesaj girilmemiş.', date: viewingTicket.date }];
+                      }
+                      return msgs;
+                    })().map((msg, i) => (
                       <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: msg.sender === 'client' ? 'flex-end' : 'flex-start' }}>
                         <div style={{ 
                           maxWidth: '80%', 
