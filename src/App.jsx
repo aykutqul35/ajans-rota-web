@@ -1342,6 +1342,10 @@ function App() {
                   if (prev[key]?.nextMonthPlan?.length && (!dbReports[key]?.nextMonthPlan || dbReports[key].nextMonthPlan.length === 0)) {
                     merged[key].nextMonthPlan = prev[key].nextMonthPlan;
                   }
+                  // Keep local creatives if DB doesn't have them
+                  if (prev[key]?.creatives?.length && (!dbReports[key]?.creatives || dbReports[key].creatives.length === 0)) {
+                    merged[key].creatives = prev[key].creatives;
+                  }
                 }
               });
               return merged;

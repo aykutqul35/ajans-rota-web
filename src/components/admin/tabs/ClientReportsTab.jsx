@@ -882,6 +882,9 @@ export default function ClientReportsTab({
                             brandData.creatives = newCreatives;
                             updated[editingReportBrand] = brandData;
                             
+                            window._adminLastWrite = Date.now();
+                            window._adminHasUnsavedChanges = true;
+                            
                             // Immediately save to local DB
                             const localDbStr = localStorage.getItem('ajans_rota_db');
                             if (localDbStr) {
@@ -951,6 +954,9 @@ export default function ClientReportsTab({
                               newCreatives.splice(idx, 1);
                               brandData.creatives = newCreatives;
                               updated[editingReportBrand] = brandData;
+                              
+                              window._adminLastWrite = Date.now();
+                              window._adminHasUnsavedChanges = true;
                               
                               // Optionally update localStorage if immediate sync is desired
                               const localDbStr = localStorage.getItem('ajans_rota_db');
