@@ -29,6 +29,7 @@ import LeadPopup from './components/LeadPopup';
 import SocialProofToast from './components/SocialProofToast';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import CookieConsent from './components/CookieConsent';
 import HomePage from './pages/HomePage';
 
 
@@ -3212,6 +3213,7 @@ function App() {
           setTimeout(() => setIsExitIntentPopup(false), 300);
         }} 
       />
+      {!isSecurePanel && <CookieConsent onNavigateToPolicy={() => navigateTo('/cerez-politikasi')} />}
     </>;
 }
 export default App;
