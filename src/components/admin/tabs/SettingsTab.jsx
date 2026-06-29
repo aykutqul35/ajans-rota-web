@@ -297,6 +297,33 @@ const [aboutSettingsSubTab, setAboutSettingsSubTab] = useState('hero');
                             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.25rem', display: 'block' }}>Schema.org kaydında görünür</span>
                           </div>
                         </div>
+                        
+                        <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(2,132,199,0.1)' }}>
+                          <h4 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-light)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <i className="fa-solid fa-share-nodes" style={{ color: 'var(--primary)' }}></i> Sosyal Medya Linkleri
+                          </h4>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+                            <div>
+                              <label style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-light)', marginBottom: '0.4rem', display: 'block' }}>
+                                <i className="fa-brands fa-linkedin" style={{ color: '#0077b5', marginRight: '0.3rem' }}></i>LinkedIn URL
+                              </label>
+                              <input type="url" value={settingsData.linkedin_url || ''} onChange={e => setSettingsData({ ...settingsData, linkedin_url: e.target.value })} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--glass-border)', background: '#fff', fontSize: '0.9rem' }} placeholder="https://linkedin.com/company/ajansrota" />
+                            </div>
+                            <div>
+                              <label style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-light)', marginBottom: '0.4rem', display: 'block' }}>
+                                <i className="fa-brands fa-instagram" style={{ color: '#e1306c', marginRight: '0.3rem' }}></i>Instagram URL
+                              </label>
+                              <input type="url" value={settingsData.instagram_url || ''} onChange={e => setSettingsData({ ...settingsData, instagram_url: e.target.value })} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--glass-border)', background: '#fff', fontSize: '0.9rem' }} placeholder="https://instagram.com/ajansrota" />
+                            </div>
+                            <div>
+                              <label style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-light)', marginBottom: '0.4rem', display: 'block' }}>
+                                <i className="fa-brands fa-whatsapp" style={{ color: '#25D366', marginRight: '0.3rem' }}></i>WhatsApp URL
+                              </label>
+                              <input type="url" value={settingsData.whatsapp_url || ''} onChange={e => setSettingsData({ ...settingsData, whatsapp_url: e.target.value })} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--glass-border)', background: '#fff', fontSize: '0.9rem' }} placeholder="https://wa.me/90500..." />
+                              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.25rem', display: 'block' }}>Eğer üstteki WhatsApp Bot (SaaS) alanı boşsa bu kullanılır</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
