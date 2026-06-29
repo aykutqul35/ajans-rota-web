@@ -1278,6 +1278,65 @@ export default function ClientTransparencyPageView({
               </div>
             )}
 
+            {/* Show status of previous AI requests from queue */}
+            {(() => {
+              let queueItems = [];
+              try {
+                const raw = localStorage.getItem('client_ticket_queue');
+                if (raw) {
+                  queueItems = JSON.parse(raw).filter(t => t.brandKey === activeBrand && t.source === 'ai-recommendation');
+                }
+              } catch(e) {}
+              if (queueItems.length === 0) return null;
+              return (
+                <div style={{ 
+                  marginTop: '1rem', 
+                  background: '#1e293b', 
+                  borderRadius: '12px', 
+                  padding: '1rem', 
+                  border: '1px solid rgba(255,255,255,0.05)' 
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                    <i className="fa-solid fa-bell" style={{ color: '#f59e0b', fontSize: '0.85rem' }}></i>
+                    <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#f8fafc' }}>Talep Durumlarınız</span>
+                  </div>
+                  {queueItems.map((item, idx) => {
+                    const isResolved = item.status === 'Çözüldü';
+                    const isInProgress = item.status === 'İşlemde';
+                    return (
+                      <div key={item.id || idx} style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'space-between',
+                        padding: '0.6rem 0.75rem', 
+                        borderRadius: '8px', 
+                        background: isResolved ? 'rgba(16, 185, 129, 0.08)' : isInProgress ? 'rgba(245, 158, 11, 0.08)' : 'rgba(239, 68, 68, 0.05)',
+                        border: `1px solid ${isResolved ? 'rgba(16, 185, 129, 0.2)' : isInProgress ? 'rgba(245, 158, 11, 0.2)' : 'rgba(239, 68, 68, 0.1)'}`,
+                        marginBottom: idx < queueItems.length - 1 ? '0.5rem' : 0 
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flex: 1 }}>
+                          <i className={isResolved ? 'fa-solid fa-circle-check' : isInProgress ? 'fa-solid fa-gear fa-spin' : 'fa-solid fa-clock'} 
+                             style={{ color: isResolved ? '#10b981' : isInProgress ? '#f59e0b' : '#ef4444', fontSize: '0.9rem' }}></i>
+                          <span style={{ fontSize: '0.8rem', color: '#e2e8f0', fontWeight: 600 }}>{item.subject?.replace('AI Öneri Talebi: ', '')}</span>
+                        </div>
+                        <span style={{ 
+                          padding: '3px 10px', 
+                          borderRadius: '20px', 
+                          fontSize: '0.7rem', 
+                          fontWeight: 700,
+                          background: isResolved ? 'rgba(16, 185, 129, 0.2)' : isInProgress ? 'rgba(245, 158, 11, 0.2)' : 'rgba(239, 68, 68, 0.15)',
+                          color: isResolved ? '#10b981' : isInProgress ? '#f59e0b' : '#ef4444',
+                          whiteSpace: 'nowrap'
+                        }}>
+                          {isResolved ? '✓ Tamamlandı' : isInProgress ? '⏳ Ekibimiz İnceliyor' : '🕐 Yanıt Bekliyor'}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+
             
             {/* Ekibim (Team Managers) */}
             <div style={{ marginBottom: '2rem' }}>
@@ -1778,28 +1837,80 @@ export default function ClientTransparencyPageView({
                     </tr>
                   </thead>
                   <tbody>
-                    {currentData.tickets.map((ticket, idx) => (
-                      <tr key={idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.03)' }}>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#0ea5e9' }}>{ticket.id}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 600, color: '#f8fafc' }}>{ticket.subject}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: '#94a3b8' }}>{ticket.department}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: '#94a3b8' }}>{ticket.date}</td>
-                        <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', textAlign: 'right' }}>
-                          <span style={{ 
-                            padding: '4px 10px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 700,
-                            background: ticket.status === 'Müşteri Yanıtı Bekleniyor' ? 'rgba(239, 68, 68, 0.1)' : ticket.status === 'Yanıt Bekliyor' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)',
-                            color: ticket.status === 'Müşteri Yanıtı Bekleniyor' ? '#ef4444' : ticket.status === 'Yanıt Bekliyor' ? '#f59e0b' : '#10b981'
-                          }}>
-                            {ticket.status}
-                          </span>
-                        </td>
-                        <td style={{ padding: '0.9rem 0.5rem', textAlign: 'right' }}>
-                          <button type="button" onClick={() => setViewingTicket(ticket)} style={{ padding: '0.4rem 0.8rem', borderRadius: '8px', background: 'var(--primary)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }}>
-                            <i className="fa-solid fa-eye"></i> İncele
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {(() => {
+                      // Merge tickets from currentData + localStorage queue for full picture
+                      const reportTickets = (currentData.tickets || []).map(t => ({ ...t }));
+                      let queueTickets = [];
+                      try {
+                        const raw = localStorage.getItem('client_ticket_queue');
+                        if (raw) queueTickets = JSON.parse(raw);
+                      } catch(e) {}
+                      
+                      // Use queue status as source of truth (admin updates this)
+                      const queueMap = {};
+                      queueTickets.forEach(qt => { queueMap[qt.id] = qt; });
+                      
+                      // Merge: update report ticket statuses from queue, add queue-only tickets
+                      const mergedIds = new Set();
+                      const merged = reportTickets.map(t => {
+                        mergedIds.add(t.id);
+                        if (queueMap[t.id]) {
+                          return { ...t, status: queueMap[t.id].status }; // Admin status wins
+                        }
+                        return t;
+                      });
+                      // Add queue-only tickets
+                      queueTickets.forEach(qt => {
+                        if (!mergedIds.has(qt.id) && qt.brandKey === activeBrand) {
+                          merged.push(qt);
+                        }
+                      });
+                      
+                      if (merged.length === 0) {
+                        return (
+                          <tr>
+                            <td colSpan="6" style={{ padding: '2rem', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
+                              Henüz destek talebiniz bulunmuyor.
+                            </td>
+                          </tr>
+                        );
+                      }
+                      
+                      const getStatusStyle = (status) => {
+                        if (status === 'Çözüldü') return { bg: 'rgba(16, 185, 129, 0.15)', color: '#10b981', icon: 'fa-solid fa-check-circle', label: 'Çözüldü ✓' };
+                        if (status === 'İşlemde') return { bg: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', icon: 'fa-solid fa-spinner', label: 'İşlemde...' };
+                        if (status === 'Açık') return { bg: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', icon: 'fa-solid fa-clock', label: 'Yanıt Bekliyor' };
+                        // Legacy statuses
+                        if (status === 'Müşteri Yanıtı Bekleniyor') return { bg: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', icon: 'fa-solid fa-exclamation', label: status };
+                        if (status === 'Yanıt Bekliyor') return { bg: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', icon: 'fa-solid fa-clock', label: status };
+                        return { bg: 'rgba(16, 185, 129, 0.1)', color: '#10b981', icon: 'fa-solid fa-check', label: status };
+                      };
+                      
+                      return merged.map((ticket, idx) => {
+                        const ss = getStatusStyle(ticket.status);
+                        return (
+                          <tr key={ticket.id || idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.03)', background: ticket.status === 'Çözüldü' ? 'rgba(16, 185, 129, 0.03)' : ticket.status === 'İşlemde' ? 'rgba(245, 158, 11, 0.03)' : 'transparent' }}>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#0ea5e9' }}>{ticket.id}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 600, color: '#f8fafc' }}>{ticket.subject}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: '#94a3b8' }}>{ticket.department}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: '#94a3b8' }}>{ticket.date}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', textAlign: 'right' }}>
+                              <span style={{ 
+                                padding: '4px 12px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700,
+                                background: ss.bg, color: ss.color, display: 'inline-flex', alignItems: 'center', gap: '4px'
+                              }}>
+                                <i className={ss.icon} style={{ fontSize: '0.65rem' }}></i> {ss.label}
+                              </span>
+                            </td>
+                            <td style={{ padding: '0.9rem 0.5rem', textAlign: 'right' }}>
+                              <button type="button" onClick={() => setViewingTicket(ticket)} style={{ padding: '0.4rem 0.8rem', borderRadius: '8px', background: 'var(--primary)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }}>
+                                <i className="fa-solid fa-eye"></i> İncele
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      });
+                    })()}
                   </tbody>
                 </table>
               </div>
