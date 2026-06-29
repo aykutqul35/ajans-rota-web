@@ -3204,7 +3204,7 @@ function App() {
         handleNewsletterSubmit={handleNewsletterSubmit}
       />
       )}
-      {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && <WhatsAppAssistantWidget settingsData={settingsData} onSaveLead={simulateLeadLocally} logHit={logHit} />}
+      {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && <Suspense fallback={null}><WhatsAppAssistantWidget settingsData={settingsData} onSaveLead={simulateLeadLocally} logHit={logHit} /></Suspense>}
       {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && <SocialProofToast />}
       {/* Custom Global Popup */}
       <LeadPopup 
