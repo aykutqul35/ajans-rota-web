@@ -9,6 +9,45 @@ export default function ClientReportsTab({
   setIsAddClientModalOpen, handleSaveAll, isSaving,
   activeTab, setNewClientFormData, authToken, teamMembersData
 }) {
+  const [isGeneratingAi, setIsGeneratingAi] = React.useState(false);
+
+  const handleGenerateAiSummary = async () => {
+    if (!editingReportBrand) return;
+    const currentData = clientReports[editingReportBrand];
+    if (!currentData || !currentData.kpis) {
+      toast.error('KPI verisi bulunamadı.');
+      return;
+    }
+    
+    setIsGeneratingAi(true);
+    const toastId = toast.loading('Yapay zeka verileri analiz ediyor...');
+    
+    try {
+      const kpiString = currentData.kpis.map(k => `${k.label}: ${k.value} (${k.change})`).join(', ');
+      const topic = `Müşteri: ${currentData.name || editingReportBrand}. Güncel Performans Verileri: ${kpiString}. Lütfen Rota AI olarak (kendini tanıtma) direkt olarak gidişatı yorumlayan, sayısal ve profesyonel (en fazla 2-3 cümlelik) bir yönetici özeti ve stratejik tavsiye yaz.`;
+      
+      const response = await fetch('/api/ai-strategy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic })
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        const updated = { ...clientReports };
+        updated[editingReportBrand].aiSummary = data.content;
+        setClientReports(updated);
+        toast.success('Yapay zeka özeti başarıyla oluşturuldu!', { id: toastId });
+      } else {
+        toast.error('Hata: ' + data.message, { id: toastId });
+      }
+    } catch (err) {
+      toast.error('API Bağlantı Hatası: Yapay Zeka servisine ulaşılamıyor.', { id: toastId });
+    } finally {
+      setIsGeneratingAi(false);
+    }
+  };
+
   return (
             <div>
               <div className="admin-section-title">
@@ -360,8 +399,17 @@ export default function ClientReportsTab({
                       <span style={{ fontWeight: '800', fontSize: '0.9rem', color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <i className="fa-solid fa-robot" style={{ color: 'var(--primary)' }}></i> Yapay Zeka Yönetici Özeti
                       </span>
-                      <button className="btn btn-primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem' }} onClick={() => toast('Groq API ile KPI verileri okunup otomatik özet yazdırılıyor... (Demo)')}>
-                        <i className="fa-solid fa-wand-magic-sparkles"></i> Otomatik Yazdır
+                      <button 
+                        className="btn btn-primary" 
+                        style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem', opacity: isGeneratingAi ? 0.7 : 1 }} 
+                        onClick={handleGenerateAiSummary}
+                        disabled={isGeneratingAi}
+                      >
+                        {isGeneratingAi ? (
+                          <><i className="fa-solid fa-spinner fa-spin"></i> Analiz Ediliyor...</>
+                        ) : (
+                          <><i className="fa-solid fa-wand-magic-sparkles"></i> Otomatik Yazdır</>
+                        )}
                       </button>
                     </div>
                     <textarea 
