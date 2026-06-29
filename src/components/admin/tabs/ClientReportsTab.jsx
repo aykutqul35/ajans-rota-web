@@ -1606,88 +1606,192 @@ export default function ClientReportsTab({
                       <i className="fa-solid fa-plus"></i> Görev Ekle
                     </button>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    {(clientReports[editingReportBrand]?.nextMonthPlan || []).map((plan, idx) => (
-                      <div key={plan.id || idx} style={{ background: '#fff', border: '1px solid var(--glass-border)', borderRadius: '8px', padding: '1rem', position: 'relative', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                        <button type="button" onClick={() => {
-                          setClientReports(prev => {
-                            const updated = { ...prev };
-                            const brandData = { ...updated[editingReportBrand] };
-                            const newPlan = [...(brandData.nextMonthPlan || [])];
-                            newPlan.splice(idx, 1);
-                            brandData.nextMonthPlan = newPlan;
-                            updated[editingReportBrand] = brandData;
-                            return updated;
-                          });
-                        }} style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', border: 'none', background: 'none', cursor: 'pointer', color: '#ef4444' }}><i className="fa-solid fa-trash"></i></button>
-                        
-                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', paddingRight: '1.5rem' }}>
-                          <input type="text" value={plan.task || ''} onChange={e => {
-                            const val = e.target.value;
-                            setClientReports(prev => {
-                              const updated = { ...prev };
-                              const brandData = { ...updated[editingReportBrand] };
-                              const newPlan = [...(brandData.nextMonthPlan || [])];
-                              newPlan[idx] = { ...newPlan[idx], task: val };
-                              brandData.nextMonthPlan = newPlan;
-                              updated[editingReportBrand] = brandData;
-                              return updated;
-                            });
-                          }} placeholder="Görev Adı (örn: Yeni Kampanya Kurgusu)" style={{ flex: 2, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }} />
-                          
-                          <select value={plan.category || ''} onChange={e => {
-                            const val = e.target.value;
-                            setClientReports(prev => {
-                              const updated = { ...prev };
-                              const brandData = { ...updated[editingReportBrand] };
-                              const newPlan = [...(brandData.nextMonthPlan || [])];
-                              newPlan[idx] = { ...newPlan[idx], category: val };
-                              brandData.nextMonthPlan = newPlan;
-                              updated[editingReportBrand] = brandData;
-                              return updated;
-                            });
-                          }} style={{ flex: 1, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }}>
-                            <option value="">Kategori Seçin...</option>
-                            <option value="Ads">Google/Meta Ads</option>
-                            <option value="SEO">SEO</option>
-                            <option value="Sosyal Medya">Sosyal Medya</option>
-                            <option value="Yazılım">Yazılım</option>
-                            <option value="Tasarım">Tasarım & Kreatif</option>
-                            <option value="Genel">Genel Strateji</option>
-                          </select>
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    position: 'relative',
+                    marginTop: '0.5rem',
+                    paddingLeft: '0.5rem'
+                  }}>
+                    {/* Vertical Connecting Line */}
+                    <div style={{
+                      position: 'absolute',
+                      left: '27px',
+                      top: '15px',
+                      bottom: '15px',
+                      width: '2px',
+                      background: 'linear-gradient(180deg, #10b981 0%, rgba(16, 185, 129, 0.15) 100%)',
+                      zIndex: 1
+                    }}></div>
 
-                          <input type="date" value={plan.date || ''} onChange={e => {
-                            const val = e.target.value;
-                            setClientReports(prev => {
-                              const updated = { ...prev };
-                              const brandData = { ...updated[editingReportBrand] };
-                              const newPlan = [...(brandData.nextMonthPlan || [])];
-                              newPlan[idx] = { ...newPlan[idx], date: val };
-                              brandData.nextMonthPlan = newPlan;
-                              updated[editingReportBrand] = brandData;
-                              return updated;
-                            });
-                          }} style={{ flex: 1, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }} />
-                          
-                          <select value={plan.status || 'Bekliyor'} onChange={e => {
-                            const val = e.target.value;
-                            setClientReports(prev => {
-                              const updated = { ...prev };
-                              const brandData = { ...updated[editingReportBrand] };
-                              const newPlan = [...(brandData.nextMonthPlan || [])];
-                              newPlan[idx] = { ...newPlan[idx], status: val };
-                              brandData.nextMonthPlan = newPlan;
-                              updated[editingReportBrand] = brandData;
-                              return updated;
-                            });
-                          }} style={{ flex: 1, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }}>
-                            <option value="Bekliyor">Bekliyor</option>
-                            <option value="İşlemde">İşlemde</option>
-                            <option value="Planlandı">Planlandı</option>
-                          </select>
+                    {(clientReports[editingReportBrand]?.nextMonthPlan || []).map((plan, idx) => {
+                      let accentColor = '#94a3b8'; // Default Gray (Bekliyor)
+                      let iconClass = 'fa-regular fa-circle';
+
+                      if (plan.status === 'İşlemde') {
+                        accentColor = '#0ea5e9'; // Blue
+                        iconClass = 'fa-solid fa-spinner fa-spin';
+                      } else if (plan.status === 'Planlandı' || plan.status === 'Tamamlandı') {
+                        accentColor = '#10b981'; // Green
+                        iconClass = 'fa-solid fa-check';
+                      }
+
+                      return (
+                        <div key={plan.id || idx} style={{
+                          background: '#fff',
+                          border: '1px solid var(--glass-border)',
+                          borderRadius: '10px',
+                          padding: '1rem',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.6rem',
+                          position: 'relative',
+                          marginLeft: '2.5rem',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+                          zIndex: 2
+                        }}>
+                          {/* Node Bullet */}
+                          <div style={{
+                            position: 'absolute',
+                            left: '-2.5rem',
+                            top: '12px',
+                            width: '26px',
+                            height: '26px',
+                            borderRadius: '50%',
+                            background: '#fff',
+                            border: `2px solid ${accentColor}`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: accentColor,
+                            fontSize: '0.75rem',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                            zIndex: 3
+                          }}>
+                            <i className={iconClass}></i>
+                          </div>
+
+                          {/* Header (Title & Trash) */}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
+                            <input type="text" placeholder="Görev Adı (örn: Yeni Kampanya Kurgusu)" value={plan.task || ''} onChange={e => {
+                              const val = e.target.value;
+                              setClientReports(prev => {
+                                const updated = { ...prev };
+                                const brandData = { ...updated[editingReportBrand] };
+                                const newPlan = [...(brandData.nextMonthPlan || [])];
+                                newPlan[idx] = { ...newPlan[idx], task: val };
+                                brandData.nextMonthPlan = newPlan;
+                                updated[editingReportBrand] = brandData;
+                                return updated;
+                              });
+                            }} style={{
+                              flex: 1,
+                              padding: '0.35rem 0.5rem',
+                              borderRadius: '6px',
+                              border: '1px solid var(--glass-border)',
+                              fontSize: '0.85rem',
+                              fontWeight: 700,
+                              background: 'rgba(15, 23, 42, 0.01)',
+                              color: 'var(--text-light)',
+                              outline: 'none'
+                            }} />
+                            <button type="button" onClick={() => {
+                              if (window.confirm('Bu planı silmek istediğinizden emin misiniz?')) {
+                                setClientReports(prev => {
+                                  const updated = { ...prev };
+                                  const brandData = { ...updated[editingReportBrand] };
+                                  const newPlan = [...(brandData.nextMonthPlan || [])];
+                                  newPlan.splice(idx, 1);
+                                  brandData.nextMonthPlan = newPlan;
+                                  updated[editingReportBrand] = brandData;
+                                  return updated;
+                                });
+                              }
+                            }} style={{
+                              border: 'none',
+                              background: 'rgba(239, 68, 68, 0.08)',
+                              borderRadius: '6px',
+                              width: '26px',
+                              height: '26px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              cursor: 'pointer',
+                              color: '#ef4444',
+                              fontSize: '0.75rem',
+                              transition: 'all 0.2s'
+                            }} title="Görevi Sil">
+                              <i className="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+
+                          {/* Meta row: Category, Date, Status */}
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
+                            <div>
+                              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', display: 'block', marginBottom: '2px', fontWeight: 600 }}>Kategori</span>
+                              <select value={plan.category || ''} onChange={e => {
+                                const val = e.target.value;
+                                setClientReports(prev => {
+                                  const updated = { ...prev };
+                                  const brandData = { ...updated[editingReportBrand] };
+                                  const newPlan = [...(brandData.nextMonthPlan || [])];
+                                  newPlan[idx] = { ...newPlan[idx], category: val };
+                                  brandData.nextMonthPlan = newPlan;
+                                  updated[editingReportBrand] = brandData;
+                                  return updated;
+                                });
+                              }} style={{ width: '100%', padding: '0.3rem 0.45rem', borderRadius: '5px', border: '1px solid var(--glass-border)', fontSize: '0.72rem', background: '#fff', color: 'var(--text-light)', outline: 'none', cursor: 'pointer' }}>
+                                <option value="">Seçiniz...</option>
+                                <option value="Ads">Google/Meta Ads</option>
+                                <option value="SEO">SEO</option>
+                                <option value="Sosyal Medya">Sosyal Medya</option>
+                                <option value="Yazılım">Yazılım</option>
+                                <option value="Tasarım">Tasarım & Kreatif</option>
+                                <option value="Genel">Genel Strateji</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', display: 'block', marginBottom: '2px', fontWeight: 600 }}>Hedef Tarih</span>
+                              <input type="date" value={plan.date || ''} onChange={e => {
+                                const val = e.target.value;
+                                setClientReports(prev => {
+                                  const updated = { ...prev };
+                                  const brandData = { ...updated[editingReportBrand] };
+                                  const newPlan = [...(brandData.nextMonthPlan || [])];
+                                  newPlan[idx] = { ...newPlan[idx], date: val };
+                                  brandData.nextMonthPlan = newPlan;
+                                  updated[editingReportBrand] = brandData;
+                                  return updated;
+                                });
+                              }} style={{ width: '100%', padding: '0.3rem 0.45rem', borderRadius: '5px', border: '1px solid var(--glass-border)', fontSize: '0.72rem', background: '#fff', color: 'var(--text-light)', outline: 'none', cursor: 'pointer' }} />
+                            </div>
+
+                            <div>
+                              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', display: 'block', marginBottom: '2px', fontWeight: 600 }}>Durum</span>
+                              <select value={plan.status || 'Bekliyor'} onChange={e => {
+                                const val = e.target.value;
+                                setClientReports(prev => {
+                                  const updated = { ...prev };
+                                  const brandData = { ...updated[editingReportBrand] };
+                                  const newPlan = [...(brandData.nextMonthPlan || [])];
+                                  newPlan[idx] = { ...newPlan[idx], status: val };
+                                  brandData.nextMonthPlan = newPlan;
+                                  updated[editingReportBrand] = brandData;
+                                  return updated;
+                                });
+                              }} style={{ width: '100%', padding: '0.3rem 0.45rem', borderRadius: '5px', border: '1px solid var(--glass-border)', fontSize: '0.72rem', background: '#fff', color: 'var(--text-light)', outline: 'none', cursor: 'pointer' }}>
+                                <option value="Bekliyor">Bekliyor</option>
+                                <option value="İşlemde">İşlemde</option>
+                                <option value="Planlandı">Planlandı</option>
+                                <option value="Tamamlandı">Tamamlandı</option>
+                              </select>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
 
