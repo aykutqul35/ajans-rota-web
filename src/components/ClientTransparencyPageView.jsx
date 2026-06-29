@@ -17,6 +17,7 @@ export default function ClientTransparencyPageView({
   const [newTicketMessage, setNewTicketMessage] = useState('');
   const [isSubmittingTicket, setIsSubmittingTicket] = useState(false);
   const [ticketSuccess, setTicketSuccess] = useState(false);
+  const [isDeptDropdownOpen, setIsDeptDropdownOpen] = useState(false);
 
   // Login States
   const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('local_client_logged_in') === 'true');
@@ -2057,51 +2058,68 @@ export default function ClientTransparencyPageView({
                 <>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc', margin: 0 }}>Yeni Talep Oluştur</h3>
-                    <button onClick={() => setShowTicketModal(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.2rem' }}>
+                    <button type="button" onClick={() => setShowTicketModal(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.2rem' }}>
                       <i className="fa-solid fa-xmark"></i>
                     </button>
                   </div>
                   <form onSubmit={handleCreateTicket} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
-                  <label style={{ display: 'block', color: '#f8fafc', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>Departman</label>
-                  <select 
-                    value={newTicketDepartment}
-                    onChange={(e) => setNewTicketDepartment(e.target.value)}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', background: 'rgba(15, 23, 42, 0.5)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#f8fafc', outline: 'none' }}
-                  >
-                    <option value="Genel Destek">Genel Destek</option>
-                    <option value="Reklam & Bütçe">Reklam & Bütçe</option>
-                    <option value="Tasarım & Kreatif">Tasarım & Kreatif</option>
-                    <option value="Yazılım">Yazılım</option>
-                  </select>
+                  <label style={{ display: 'block', color: '#f8fafc', fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.6rem' }}>Departman</label>
+                  <div style={{ position: 'relative' }}>
+                    <div 
+                      onClick={() => setIsDeptDropdownOpen(!isDeptDropdownOpen)}
+                      style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '10px', background: 'rgba(15, 23, 42, 0.5)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#f8fafc', outline: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.9rem' }}
+                    >
+                      {newTicketDepartment}
+                      <i className={`fa-solid fa-chevron-${isDeptDropdownOpen ? 'up' : 'down'}`} style={{ fontSize: '0.8rem', color: '#94a3b8' }}></i>
+                    </div>
+                    {isDeptDropdownOpen && (
+                      <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px', background: '#c0c0c0', borderRadius: '8px', overflow: 'hidden', zIndex: 50, boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+                        {['Genel Destek', 'Reklam & Bütçe', 'Tasarım & Kreatif', 'Yazılım'].map((dept) => (
+                          <div 
+                            key={dept}
+                            onClick={() => { setNewTicketDepartment(dept); setIsDeptDropdownOpen(false); }}
+                            style={{ padding: '0.6rem 1rem', cursor: 'pointer', color: '#1a1a1a', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', transition: 'background 0.2s' }}
+                            onMouseEnter={(e) => e.target.style.background = 'rgba(0,0,0,0.1)'}
+                            onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                          >
+                            <span style={{ width: '16px', display: 'inline-block' }}>
+                              {newTicketDepartment === dept && <i className="fa-solid fa-check"></i>}
+                            </span>
+                            {dept}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', color: '#f8fafc', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>Konu</label>
+                  <label style={{ display: 'block', color: '#f8fafc', fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.6rem' }}>Konu</label>
                   <input 
                     type="text" 
                     required 
                     placeholder="Talebinizin kısa özeti..."
                     value={newTicketSubject}
                     onChange={(e) => setNewTicketSubject(e.target.value)}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', background: 'rgba(15, 23, 42, 0.5)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#f8fafc', outline: 'none' }}
+                    style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '10px', background: 'rgba(15, 23, 42, 0.5)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#f8fafc', outline: 'none', fontSize: '0.9rem' }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', color: '#f8fafc', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>Mesajınız</label>
+                  <label style={{ display: 'block', color: '#f8fafc', fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.6rem' }}>Mesajınız</label>
                   <textarea 
                     required 
                     rows="4" 
                     placeholder="Detaylı bilgi..."
                     value={newTicketMessage}
                     onChange={(e) => setNewTicketMessage(e.target.value)}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', background: 'rgba(15, 23, 42, 0.5)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#f8fafc', outline: 'none', resize: 'vertical' }}
+                    style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '10px', background: 'rgba(15, 23, 42, 0.5)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#f8fafc', outline: 'none', resize: 'vertical', fontSize: '0.9rem' }}
                   ></textarea>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
-                  <button type="button" onClick={() => setShowTicketModal(false)} style={{ padding: '0.75rem 1.5rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: '#f8fafc', cursor: 'pointer', fontWeight: 600 }}>
+                  <button type="button" onClick={() => setShowTicketModal(false)} style={{ padding: '0.75rem 1.5rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', background: '#1e293b', color: '#f8fafc', cursor: 'pointer', fontWeight: 600 }}>
                     İptal
                   </button>
-                  <button type="submit" disabled={isSubmittingTicket} style={{ padding: '0.75rem 1.5rem', borderRadius: '10px', border: 'none', background: 'var(--primary)', color: '#fff', cursor: 'pointer', fontWeight: 700, boxShadow: '0 4px 15px rgba(14, 165, 233, 0.3)' }}>
+                  <button type="submit" disabled={isSubmittingTicket} style={{ padding: '0.75rem 2rem', borderRadius: '10px', border: 'none', background: '#0ea5e9', color: '#fff', cursor: 'pointer', fontWeight: 700, boxShadow: '0 4px 15px rgba(14, 165, 233, 0.2)' }}>
                     {isSubmittingTicket ? 'Gönderiliyor...' : 'Gönder'}
                   </button>
                 </div>
