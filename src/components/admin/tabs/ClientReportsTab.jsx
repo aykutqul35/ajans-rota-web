@@ -798,7 +798,7 @@ export default function ClientReportsTab({
                           display: 'block',
                           marginBottom: '2px',
                           fontWeight: 600
-                        }}>Çalışma Detayları</span>
+                        }}>Çalışma Detayları (Mesaj Alanı)</span>
                               <textarea placeholder="Açıklama" rows="2" value={event.desc} onChange={e => {
                           const val = e.target.value;
                           setClientReports(prev => {

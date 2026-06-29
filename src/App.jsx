@@ -1254,7 +1254,40 @@ function App() {
           if (data.leads) setLeadsData(data.leads);
           if (data.clientReports) {
             // we will overwrite this with DB data right after
-            setClientReports(data.clientReports);
+            const reports = { ...data.clientReports };
+            // Ensure demo data is present if missing
+            if (reports.ecommerce) {
+              if (!reports.ecommerce.timeline || reports.ecommerce.timeline.length === 0) {
+                reports.ecommerce.timeline = [{
+                  date: "21 Haziran 2026", title: "Google Search Negatif Kelime Temizliği", desc: "\"ucuz zeytinyağı\", \"ücretsiz yağ\" gibi marka kalitesine uymayan 112 adet negatif kelime elendi. Bütçe verimliliği %9 artırıldı.", author: "Yiğit K. (SEO & Google Ads)"
+                }, {
+                  date: "18 Haziran 2026", title: "Meta Ads Urla Hasat Video Kreatif Testi", desc: "Urla bahçelerindeki hasat sürecini anlatan 2 yeni Reels dikey videosu yayına alındı. CTR ortalaması %1,2'den %1,85'e fırladı.", author: "Melis S. (Kreatif Direktör)"
+                }];
+              }
+              if (!reports.ecommerce.nextMonthPlan || reports.ecommerce.nextMonthPlan.length === 0) {
+                reports.ecommerce.nextMonthPlan = [
+                  { id: 1, task: "Google Ads PMax Kampanyası Optimizasyonu", status: "Bekliyor", date: "2026-07-05", category: "Ads" },
+                  { id: 2, task: "Yeni Ürün Lansmanı İçin Kreatif Hazırlığı", status: "İşlemde", date: "2026-07-10", category: "Tasarım" },
+                  { id: 3, task: "SEO Blog İçerik Planlaması", status: "Tamamlandı", date: "2026-06-25", category: "SEO" }
+                ];
+              }
+            }
+            if (reports.b2b) {
+              if (!reports.b2b.timeline || reports.b2b.timeline.length === 0) {
+                reports.b2b.timeline = [{
+                  date: "22 Haziran 2026", title: "LinkedIn B2B Kampanya Optimizasyonu", desc: "Lojistik sektörüne özel hedef kitle daraltması yapıldı. CPL maliyetleri %14 düşürüldü.", author: "Yiğit K. (SEO & Google Ads)"
+                }, {
+                  date: "19 Haziran 2026", title: "Yeni Antrepo Görselleri Yayına Alındı", desc: "Tesisin yeni yüksek çözünürlüklü fotoğrafları web sitesi ve Meta reklamlarına entegre edildi.", author: "Melis S. (Kreatif Direktör)"
+                }];
+              }
+              if (!reports.b2b.nextMonthPlan || reports.b2b.nextMonthPlan.length === 0) {
+                reports.b2b.nextMonthPlan = [
+                  { id: 4, task: "LinkedIn Lead Gen Kampanyası Bütçe Artırımı", status: "Bekliyor", date: "2026-07-08", category: "Ads" },
+                  { id: 5, task: "Lojistik Sektörü Rakip Analizi Raporu", status: "İşlemde", date: "2026-07-15", category: "Genel" }
+                ];
+              }
+            }
+            setClientReports(reports);
           }
         } catch (e) {
           console.error("Failed to parse localStorage db", e);
@@ -1301,6 +1334,13 @@ function App() {
                   }
                   if (prev[key]?.ai_requests?.length && !dbReports[key]?.ai_requests?.length) {
                     merged[key].ai_requests = prev[key].ai_requests;
+                  }
+                  // Keep local timeline and roadmap if DB doesn't have them
+                  if (prev[key]?.timeline?.length && (!dbReports[key]?.timeline || dbReports[key].timeline.length === 0)) {
+                    merged[key].timeline = prev[key].timeline;
+                  }
+                  if (prev[key]?.nextMonthPlan?.length && (!dbReports[key]?.nextMonthPlan || dbReports[key].nextMonthPlan.length === 0)) {
+                    merged[key].nextMonthPlan = prev[key].nextMonthPlan;
                   }
                 }
               });
