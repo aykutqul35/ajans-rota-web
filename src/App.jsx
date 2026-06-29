@@ -1264,6 +1264,7 @@ function App() {
     
     const loadClientsFromDB = async () => {
       if (!authToken) return; // Only fetch if we have an admin token
+      if (window._adminHasUnsavedChanges) return; // DON'T overwrite while admin has unsaved typing!
       if (window._adminLastWrite && Date.now() - window._adminLastWrite < 5000) return;
       
       try {

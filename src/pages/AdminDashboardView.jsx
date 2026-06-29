@@ -763,6 +763,7 @@ function AdminDashboardView({
   };
   const handleSaveAll = async () => {
     setIsSaving(true);
+    window._adminHasUnsavedChanges = false;
     window._adminLastWrite = Date.now();
     const dbPayload = {
       settings: settingsData,
@@ -1038,6 +1039,7 @@ function AdminDashboardView({
   const unreadLeadsCount = leadsData.filter(l => l.status === 'unread').length;
 
   const handleClientReportsUpdate = (updater) => {
+    window._adminHasUnsavedChanges = true;
     window._adminLastWrite = Date.now();
     setClientReports(updater);
   };

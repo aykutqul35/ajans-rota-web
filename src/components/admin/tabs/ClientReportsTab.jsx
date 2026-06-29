@@ -1511,16 +1511,28 @@ export default function ClientReportsTab({
                         
                         <select value={member.name || ''} onChange={e => {
                           const val = e.target.value;
+                          const agencyTeam = [
+                            { name: "Aykut Qul", role: "Ajans Başkanı", avatar: "https://i.pravatar.cc/150?u=aykut" },
+                            { name: "Ahmet Yılmaz", role: "Google Ads & SEO", avatar: "https://i.pravatar.cc/150?u=ahmet" },
+                            { name: "Ayşe Demir", role: "Meta Ads & Kreatif", avatar: "https://i.pravatar.cc/150?u=ayse" },
+                            { name: "Melis S.", role: "Müşteri Başarı Yöneticisi", avatar: "https://i.pravatar.cc/150?u=melis" },
+                            { name: "Selin Y.", role: "Sosyal Medya", avatar: "https://i.pravatar.cc/150?u=selin" },
+                            { name: "Büşra T.", role: "Proje Yöneticisi", avatar: "https://i.pravatar.cc/150?u=busra" },
+                            { name: "Kemal D.", role: "Yazılım Uzmanı", avatar: "https://i.pravatar.cc/150?u=kemal" }
+                          ];
+                          const found = agencyTeam.find(t => t.name === val) || { role: "", avatar: "https://i.pravatar.cc/150" };
+                          
                           setClientReports(prev => {
                             const updated = { ...prev };
                             const brandData = { ...updated[editingReportBrand] };
                             const newManagers = [...(brandData.teamManagers || [])];
-                            newManagers[idx] = { ...newManagers[idx], name: val };
+                            newManagers[idx] = { ...newManagers[idx], name: val, role: found.role, avatar: found.avatar };
                             brandData.teamManagers = newManagers;
                             updated[editingReportBrand] = brandData;
                             return updated;
                           });
                         }} style={{ flex: 1, padding: '0.35rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.75rem' }}>
+                          <option value="">İsim Seçin...</option>
                           <option value="Aykut Qul">Aykut Qul</option>
                           <option value="Ahmet Yılmaz">Ahmet Yılmaz</option>
                           <option value="Ayşe Demir">Ayşe Demir</option>
@@ -1596,7 +1608,7 @@ export default function ClientReportsTab({
                             });
                           }} placeholder="Görev Adı (örn: Yeni Kampanya Kurgusu)" style={{ flex: 2, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }} />
                           
-                          <input type="text" value={plan.category || ''} onChange={e => {
+                          <select value={plan.category || ''} onChange={e => {
                             const val = e.target.value;
                             setClientReports(prev => {
                               const updated = { ...prev };
@@ -1607,7 +1619,15 @@ export default function ClientReportsTab({
                               updated[editingReportBrand] = brandData;
                               return updated;
                             });
-                          }} placeholder="Kategori (örn: Ads, SEO)" style={{ flex: 1, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }} />
+                          }} style={{ flex: 1, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }}>
+                            <option value="">Kategori Seçin...</option>
+                            <option value="Ads">Google/Meta Ads</option>
+                            <option value="SEO">SEO</option>
+                            <option value="Sosyal Medya">Sosyal Medya</option>
+                            <option value="Yazılım">Yazılım</option>
+                            <option value="Tasarım">Tasarım & Kreatif</option>
+                            <option value="Genel">Genel Strateji</option>
+                          </select>
 
                           <input type="text" value={plan.date || ''} onChange={e => {
                             const val = e.target.value;
