@@ -101,9 +101,17 @@ function App() {
   const location = useLocation();
   const currentPath = location.pathname;
   const appState = useAppState(currentPath);
-const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntentPopup, settingsData, setSettingsData, servicesData, setServicesData, teamMembersData, setTeamMembersData, blogsData, setBlogsData, leadsData, setLeadsData, newsletterEmail, setNewsletterEmail, newsletterLoading, setNewsletterLoading, newsletterSubmitted, setNewsletterSubmitted, newsletterError, setNewsletterError, clientReports, setClientReports, authToken, setAuthToken, whyAgencySlide, setWhyAgencySlide, isScrolled, setIsScrolled, isMobileMenuOpen, setIsMobileMenuOpen, calculatorTab, setCalculatorTab, feeAdBudget, setFeeAdBudget, pricingModel, setPricingModel, targetRevenue, setTargetRevenue, selectedServices, setSelectedServices, googleSpend, setGoogleSpend, googleRoas, setGoogleRoas, metaSpend, setMetaSpend, metaRoas, setMetaRoas, ecomTraffic, setEcomTraffic, ecomAov, setEcomAov, ecomSpend, setEcomSpend, ecomRevenue, setEcomRevenue, b2bSpend, setB2bSpend, b2bLeads, setB2bLeads, b2bConversion, setB2bConversion, b2bLtv, setB2bLtv, budgetIndex, setBudgetIndex, reportFullName, setReportFullName, reportEmail, setReportEmail, reportWebsite, setReportWebsite, reportPhone, setReportPhone, proposalFullName, setProposalFullName, proposalEmail, setProposalEmail, proposalWebsite, setProposalWebsite, proposalPhone, setProposalPhone, isReportGenerated, setIsReportGenerated, reportLoading, setReportLoading, reportError, setReportError, isProposalGenerated, setIsProposalGenerated, proposalLoading, setProposalLoading, proposalError, setProposalError, ecomSector, setEcomSector, handleEcomSectorChange, b2bSector, setB2bSector, handleB2bSectorChange  } = appState;
+const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntentPopup, settingsData, setSettingsData, servicesData, setServicesData, teamMembersData, setTeamMembersData, blogsData, setBlogsData, leadsData, setLeadsData, newsletterEmail, setNewsletterEmail, newsletterLoading, setNewsletterLoading, newsletterSubmitted, setNewsletterSubmitted, newsletterError, setNewsletterError, clientReports, setClientReports, authToken, setAuthToken, whyAgencySlide, setWhyAgencySlide, isScrolled, setIsScrolled, isMobileMenuOpen, setIsMobileMenuOpen, calculatorTab, setCalculatorTab, feeAdBudget, setFeeAdBudget, pricingModel, setPricingModel, targetRevenue, setTargetRevenue, selectedServices, setSelectedServices, googleSpend, setGoogleSpend, googleRoas, setGoogleRoas, metaSpend, setMetaSpend, metaRoas, setMetaRoas, ecomTraffic, setEcomTraffic, ecomAov, setEcomAov, ecomSpend, setEcomSpend, ecomRevenue, setEcomRevenue, b2bSpend, setB2bSpend, b2bLeads, setB2bLeads, b2bConversion, setB2bConversion, b2bLtv, setB2bLtv, budgetIndex, setBudgetIndex, reportFullName, setReportFullName, reportEmail, setReportEmail, reportWebsite, setReportWebsite, reportPhone, setReportPhone, proposalFullName, setProposalFullName, proposalEmail, setProposalEmail, proposalWebsite, setProposalWebsite, proposalPhone, setProposalPhone, isReportGenerated, setIsReportGenerated, reportLoading, setReportLoading, reportError, setReportError, isProposalGenerated, setIsProposalGenerated, proposalLoading, setProposalLoading, proposalError, setProposalError, ecomSector, setEcomSector, handleEcomSectorChange, b2bSector, setB2bSector, handleB2bSectorChange, handleNavClick, handleServiceClick, testimonialsData, seoData, setTestimonialsData } = appState;
 
-const navigateTo = path => {
+  const isPageHidden = path => {
+    if (!settingsData) return false;
+    if (path === '/neden-izmir' && settingsData.hide_page_izmir) return true;
+    if (path === '/referanslar' && settingsData.hide_page_referanslar) return true;
+    if (path === '/iletisim' && settingsData.hide_page_iletisim) return true;
+    if (path === '/hakkimizda' && settingsData.hide_page_hakkimizda) return true;
+    if (path === '/hizmetler' && settingsData.hide_page_hizmetler) return true;
+    return false;
+  };const navigateTo = path => {
     if (isPageHidden(path)) {
       path = '/';
     }
@@ -896,8 +904,53 @@ const navigateTo = path => {
 
   // Testimonials filter state
   const [activeCategory, setActiveCategory] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [testimonialsData, setTestimonialsData] = useState(testimonials);
+  const [activeMobileDropdown, setActiveMobileDropdown] = useState(null);
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    const leadPayload = {
+      fullName: formData.fullName,
+      email: formData.email,
+      phone: formData.phone,
+      company: formData.company,
+      service: formData.service,
+      message: formData.message,
+      trafficSource: "Direct"
+    };
+    try {
+      const response = await fetch("https://hook.eu2.make.com/6cffp8njv69q7p8a0x6y7vif99r98m8f", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(leadPayload)
+      });
+      if (response.ok) {
+        setIsSubmitted(true);
+        setFormData({ fullName: "", email: "", phone: "", company: "", service: "", message: "" });
+        const storedLeads = JSON.parse(localStorage.getItem("rota_leads") || "[]");
+        const newLead = {
+          id: Date.now(),
+          name: leadPayload.fullName,
+          email: leadPayload.email,
+          phone: leadPayload.phone,
+          company: leadPayload.company || "-",
+          service: leadPayload.service || "-",
+          message: leadPayload.message || "-",
+          date: new Date().toISOString(),
+          status: "Yeni",
+          source: leadPayload.trafficSource
+        };
+        localStorage.setItem("rota_leads", JSON.stringify([newLead, ...storedLeads]));
+      }
+    } catch (err) {
+      console.error("Form error:", err);
+    }
+  };  const handleCalculatorNavClick = () => {
+    setCalculatorTab('b2b');
+    navigateTo('/');
+    setTimeout(() => {
+      const el = document.getElementById('calculator');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };  const [currentPage, setCurrentPage] = useState(1);
   const filteredTestimonials = activeCategory === 'all' ? testimonialsData : testimonialsData.filter(t => t.category === activeCategory);
   const itemsPerPage = 6;
   const totalPages = Math.ceil(filteredTestimonials.length / itemsPerPage);
@@ -1322,6 +1375,7 @@ const navigateTo = path => {
   const googleRevenue = googleSpend * googleRoas;
   const metaRevenue = metaSpend * metaRoas;
   const calcData = useCalculatorData(appState);
+  const { activePricingModel, discountPercent, isSocialSelected, smPackagePrice, finalAgencyFee } = calcData;
 
   // Merge calcData into a unified props object so it can be passed to AppRoutes and forms
   const fullAppState = { ...appState, ...calcData };

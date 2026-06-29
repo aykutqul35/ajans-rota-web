@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSeoData } from '../utils/helpers';
 import { initialSettingsData } from '../data/initialSettings';
-import { initialServicePagesData, initialTeamMembers, initialBlogPosts } from '../data/mockData';
+import { initialServicePagesData, initialTeamMembers, initialBlogPosts, testimonials } from '../data/mockData';
 
 export const useAppState = (currentPath) => {
 const navigate = useNavigate();
@@ -134,6 +134,7 @@ const [isLeadPopupOpen, setIsLeadPopupOpen] = useState(false);
   const [servicesData, setServicesData] = useState(initialServicePagesData);
   // Team Members state
   const [teamMembersData, setTeamMembersData] = useState(initialTeamMembers);
+  const [testimonialsData, setTestimonialsData] = useState(testimonials);
   // Blog Posts state
   const [blogsData, setBlogsData] = useState(initialBlogPosts);
   // Leads state
@@ -501,6 +502,7 @@ const [isLeadPopupOpen, setIsLeadPopupOpen] = useState(false);
     settingsData, setSettingsData,
     servicesData, setServicesData,
     teamMembersData, setTeamMembersData,
+    testimonialsData, setTestimonialsData,
     blogsData, setBlogsData,
     leadsData, setLeadsData,
     newsletterEmail, setNewsletterEmail,
@@ -545,6 +547,8 @@ const [isLeadPopupOpen, setIsLeadPopupOpen] = useState(false);
     proposalLoading, setProposalLoading,
     proposalError, setProposalError,
     ecomSector, setEcomSector, handleEcomSectorChange,
-    b2bSector, setB2bSector, handleB2bSectorChange
+    b2bSector, setB2bSector, handleB2bSectorChange,
+    seoData,
+    handleNavClick, handleServiceClick, navigate
   };
 };
