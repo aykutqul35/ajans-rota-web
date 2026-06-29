@@ -203,7 +203,23 @@ export default function TicketsTab({
                 </div>
                 
                 <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', background: 'var(--bg-light)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1rem' }}>
-                  {(viewingTicket.messages || [{ sender: 'client', text: viewingTicket.message || 'Bu talep için detaylı mesaj girilmemiş.', date: viewingTicket.date }]).map((msg, i) => (
+                  {(() => {
+                    // Try to get latest messages from queue (may have client replies)
+                    let msgs = viewingTicket.messages;
+                    try {
+                      const raw = localStorage.getItem('client_ticket_queue');
+                      if (raw) {
+                        const queueItem = JSON.parse(raw).find(t => t.id === viewingTicket.id);
+                        if (queueItem?.messages?.length) {
+                          msgs = queueItem.messages;
+                        }
+                      }
+                    } catch(e) {}
+                    if (!msgs || msgs.length === 0) {
+                      msgs = [{ sender: 'client', text: viewingTicket.message || 'Bu talep için detaylı mesaj girilmemiş.', date: viewingTicket.date }];
+                    }
+                    return msgs;
+                  })().map((msg, i) => (
                     <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: msg.sender === 'admin' ? 'flex-end' : 'flex-start' }}>
                       <div style={{ 
                         maxWidth: '80%', 

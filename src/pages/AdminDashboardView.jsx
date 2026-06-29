@@ -912,61 +912,83 @@ function AdminDashboardView({
     }
   };
   const handleAdminReplySubmit = (e) => {
-    e.preventDefault();
-    if (!adminReplyText.trim()) return;
+    if (e?.preventDefault) e.preventDefault();
+    if (!adminReplyText.trim() || !viewingTicket) return;
 
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    const replyMsg = {
+      sender: 'admin',
+      text: adminReplyText.trim(),
+      date: dateStr
+    };
+
+    // Update in clientReports if the ticket came from there
     const updatedClientReports = { ...clientReports };
-    const brandData = updatedClientReports[viewingTicket.brandKey];
-    const ticketIdx = brandData.tickets.findIndex(t => t.id === viewingTicket.id);
-    
-    if (ticketIdx > -1) {
-      const ticket = brandData.tickets[ticketIdx];
-      if (!ticket.messages) {
-        ticket.messages = [{ sender: 'client', text: ticket.message || 'Detaylı mesaj girilmemiş.', date: ticket.date }];
-      }
+    if (viewingTicket.brandKey && updatedClientReports[viewingTicket.brandKey]?.tickets) {
+      const brandData = updatedClientReports[viewingTicket.brandKey];
+      const ticketIdx = brandData.tickets.findIndex(t => t.id === viewingTicket.id);
       
-      const now = new Date();
-      ticket.messages.push({
-        sender: 'admin',
-        text: adminReplyText.trim(),
-        date: now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
-      });
-      
-      ticket.status = 'Müşteri Yanıtı Bekleniyor';
-      window._adminLastWrite = Date.now();
-      
-      setClientReports(updatedClientReports);
-      
-      // Save locally
-      const dbPayload = {
-        settings: settingsData,
-        servicePagesData: servicesData,
-        teamMembers: teamMembersData,
-        blogPosts: blogsData,
-        testimonials: testimonialsData,
-        leads: leadsData,
-        clientReports: updatedClientReports
-      };
-      localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
+      if (ticketIdx > -1) {
+        const ticket = brandData.tickets[ticketIdx];
+        if (!ticket.messages) {
+          ticket.messages = [{ sender: 'client', text: ticket.message || 'Detaylı mesaj girilmemiş.', date: ticket.date }];
+        }
+        ticket.messages.push(replyMsg);
+        ticket.status = 'İşlemde';
+        window._adminLastWrite = Date.now();
+        
+        setClientReports(updatedClientReports);
+        
+        // Save to ajans_rota_db
+        const dbPayload = {
+          settings: settingsData,
+          servicePagesData: servicesData,
+          teamMembers: teamMembersData,
+          blogPosts: blogsData,
+          testimonials: testimonialsData,
+          leads: leadsData,
+          clientReports: updatedClientReports
+        };
+        localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
 
-      // Specifically push the target brand to Neon DB
-      if (brandData.client_id) {
-        fetch('/api/clients/update', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authToken}`
-          },
-          body: JSON.stringify({ 
-            client_id: brandData.client_id,
-            report_data: brandData
-          })
-        }).catch(e => console.error("Admin ticket reply sync error", e));
+        // Push to Neon DB
+        if (brandData.client_id) {
+          fetch('/api/clients/update', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({ 
+              client_id: brandData.client_id,
+              report_data: brandData
+            })
+          }).catch(e => console.error("Admin ticket reply sync error", e));
+        }
+        
+        setViewingTicket({ ...ticket, brandKey: viewingTicket.brandKey });
       }
-      
-      setViewingTicket({ ...ticket, brandKey: viewingTicket.brandKey });
-      setAdminReplyText('');
     }
+
+    // Also sync to client_ticket_queue localStorage (for client panel to read)
+    try {
+      const raw = localStorage.getItem('client_ticket_queue');
+      if (raw) {
+        const queue = JSON.parse(raw);
+        const found = queue.find(t => t.id === viewingTicket.id);
+        if (found) {
+          if (!found.messages) {
+            found.messages = [{ sender: 'client', text: found.message || 'Detaylı mesaj girilmemiş.', date: found.date }];
+          }
+          found.messages.push(replyMsg);
+          found.status = 'İşlemde';
+          localStorage.setItem('client_ticket_queue', JSON.stringify(queue));
+        }
+      }
+    } catch(err) {}
+
+    setAdminReplyText('');
   };
   if (!authToken) {
     return <div className="admin-login-container">
