@@ -6,10 +6,7 @@ import { upload } from '@vercel/blob/client';
 export default function ClientReportsTab({
   clientReports, setClientReports,
   editingReportBrand, setEditingReportBrand,
-  setIsAddClientModalOpen, handleReportFieldChange,
-  handleReportNestedFieldChange, handleDeleteClient,
-  addReportArrayItem, removeReportArrayItem,
-  handleReportArrayFieldChange, handleSaveAll, isSaving,
+  setIsAddClientModalOpen, handleSaveAll, isSaving,
   activeTab, setNewClientFormData, authToken, teamMembersData
 }) {
   return (
@@ -1499,47 +1496,51 @@ export default function ClientReportsTab({
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.75rem' }}>
                     {(clientReports[editingReportBrand]?.teamManagers || []).map((member, idx) => (
-                      <div key={idx} style={{ background: '#fff', border: '1px solid var(--glass-border)', borderRadius: '8px', padding: '0.75rem', position: 'relative' }}>
+                      <div key={idx} style={{ background: '#fff', border: '1px solid var(--glass-border)', borderRadius: '8px', padding: '0.75rem', position: 'relative', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                         <button type="button" onClick={() => {
-                          const updated = { ...clientReports };
-                          updated[editingReportBrand].teamManagers.splice(idx, 1);
-                          setClientReports(updated);
-                        }} style={{ position: 'absolute', top: '0.2rem', right: '0.2rem', border: 'none', background: 'none', cursor: 'pointer', color: '#ef4444' }}><i className="fa-solid fa-xmark"></i></button>
+                          setClientReports(prev => {
+                            const updated = { ...prev };
+                            const brandData = { ...updated[editingReportBrand] };
+                            const newManagers = [...(brandData.teamManagers || [])];
+                            newManagers.splice(idx, 1);
+                            brandData.teamManagers = newManagers;
+                            updated[editingReportBrand] = brandData;
+                            return updated;
+                          });
+                        }} style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', border: 'none', background: 'none', cursor: 'pointer', color: '#ef4444' }}><i className="fa-solid fa-trash"></i></button>
                         
-                        <select 
-                          value={member.name}
-                          onChange={(e) => {
-                            const agencyTeam = [
-                              { name: "Aykut K.", role: "Ajans Başkanı", avatar: "https://i.pravatar.cc/150?u=aykut" },
-                              { name: "Yiğit K.", role: "Google Ads & SEO", avatar: "https://i.pravatar.cc/150?u=yigit" },
-                              { name: "Melis S.", role: "Meta Ads & Kreatif", avatar: "https://i.pravatar.cc/150?u=melis" },
-                              { name: "Selin Y.", role: "Müşteri Başarı Yöneticisi", avatar: "https://i.pravatar.cc/150?u=selin" },
-                              { name: "Büşra T.", role: "Sosyal Medya", avatar: "https://i.pravatar.cc/150?u=busra" },
-                              { name: "Kemal D.", role: "Yazılım Uzmanı", avatar: "https://i.pravatar.cc/150?u=kemal" }
-                            ];
-                            const selectedName = e.target.value;
-                            const found = agencyTeam.find(t => t.name === selectedName) || { role: "", avatar: "https://i.pravatar.cc/150" };
-                            
-                            const updated = { ...clientReports };
-                            updated[editingReportBrand].teamManagers[idx].name = selectedName;
-                            updated[editingReportBrand].teamManagers[idx].role = found.role;
-                            updated[editingReportBrand].teamManagers[idx].avatar = found.avatar;
-                            setClientReports(updated);
-                          }}
-                          style={{ width: '100%', marginBottom: '0.5rem', padding: '0.35rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-dark)' }}
-                        >
-                          <option value="Aykut K.">Aykut K.</option>
-                          <option value="Yiğit K.">Yiğit K.</option>
+                        <select value={member.name || ''} onChange={e => {
+                          const val = e.target.value;
+                          setClientReports(prev => {
+                            const updated = { ...prev };
+                            const brandData = { ...updated[editingReportBrand] };
+                            const newManagers = [...(brandData.teamManagers || [])];
+                            newManagers[idx] = { ...newManagers[idx], name: val };
+                            brandData.teamManagers = newManagers;
+                            updated[editingReportBrand] = brandData;
+                            return updated;
+                          });
+                        }} style={{ flex: 1, padding: '0.35rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.75rem' }}>
+                          <option value="Aykut Qul">Aykut Qul</option>
+                          <option value="Ahmet Yılmaz">Ahmet Yılmaz</option>
+                          <option value="Ayşe Demir">Ayşe Demir</option>
                           <option value="Melis S.">Melis S.</option>
                           <option value="Selin Y.">Selin Y.</option>
                           <option value="Büşra T.">Büşra T.</option>
                           <option value="Kemal D.">Kemal D.</option>
                         </select>
                         
-                        <input type="text" value={member.role} onChange={e => {
-                          const updated = { ...clientReports };
-                          updated[editingReportBrand].teamManagers[idx].role = e.target.value;
-                          setClientReports(updated);
+                        <input type="text" value={member.role || ''} onChange={e => {
+                          const val = e.target.value;
+                          setClientReports(prev => {
+                            const updated = { ...prev };
+                            const brandData = { ...updated[editingReportBrand] };
+                            const newManagers = [...(brandData.teamManagers || [])];
+                            newManagers[idx] = { ...newManagers[idx], role: val };
+                            brandData.teamManagers = newManagers;
+                            updated[editingReportBrand] = brandData;
+                            return updated;
+                          });
                         }} placeholder="Rol" style={{ width: '100%', padding: '0.35rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.75rem' }} />
                       </div>
                     ))}
@@ -1551,40 +1552,93 @@ export default function ClientReportsTab({
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                     <h4 style={{ fontSize: '1rem', color: 'var(--text-dark)' }}><i className="fa-solid fa-map" style={{ marginRight: '8px', color: '#10b981' }}></i> Gelecek Ay Planı (Roadmap)</h4>
                     <button type="button" className="btn btn-secondary" onClick={() => {
-                      const updated = { ...clientReports };
-                      if (!updated[editingReportBrand].nextMonthPlan) updated[editingReportBrand].nextMonthPlan = [];
-                      updated[editingReportBrand].nextMonthPlan.push({
-                        id: Math.floor(Math.random() * 10000), task: "Yeni Görev", status: "Bekliyor", date: "15 Ağustos", category: "Ads"
+                      setClientReports(prev => {
+                        const updated = { ...prev };
+                        const brandData = { ...updated[editingReportBrand] };
+                        const newPlan = [...(brandData.nextMonthPlan || [])];
+                        newPlan.push({
+                          id: Math.floor(Math.random() * 10000), task: "", status: "Bekliyor", date: "", category: "Ads"
+                        });
+                        brandData.nextMonthPlan = newPlan;
+                        updated[editingReportBrand] = brandData;
+                        return updated;
                       });
-                      setClientReports(updated);
                     }} style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}>
                       <i className="fa-solid fa-plus"></i> Görev Ekle
                     </button>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     {(clientReports[editingReportBrand]?.nextMonthPlan || []).map((plan, idx) => (
-                      <div key={idx} style={{ background: '#fff', border: '1px solid var(--glass-border)', borderRadius: '8px', padding: '0.75rem', position: 'relative', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <div key={plan.id || idx} style={{ background: '#fff', border: '1px solid var(--glass-border)', borderRadius: '8px', padding: '1rem', position: 'relative', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                         <button type="button" onClick={() => {
-                          const updated = { ...clientReports };
-                          updated[editingReportBrand].nextMonthPlan.splice(idx, 1);
-                          setClientReports(updated);
+                          setClientReports(prev => {
+                            const updated = { ...prev };
+                            const brandData = { ...updated[editingReportBrand] };
+                            const newPlan = [...(brandData.nextMonthPlan || [])];
+                            newPlan.splice(idx, 1);
+                            brandData.nextMonthPlan = newPlan;
+                            updated[editingReportBrand] = brandData;
+                            return updated;
+                          });
                         }} style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', border: 'none', background: 'none', cursor: 'pointer', color: '#ef4444' }}><i className="fa-solid fa-trash"></i></button>
                         
-                        <input type="text" value={plan.task} onChange={e => {
-                          const updated = { ...clientReports };
-                          updated[editingReportBrand].nextMonthPlan[idx].task = e.target.value;
-                          setClientReports(updated);
-                        }} placeholder="Görev Adı" style={{ flex: 2, padding: '0.35rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.75rem' }} />
-                        
-                        <select value={plan.status} onChange={e => {
-                          const updated = { ...clientReports };
-                          updated[editingReportBrand].nextMonthPlan[idx].status = e.target.value;
-                          setClientReports(updated);
-                        }} style={{ flex: 1, padding: '0.35rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.75rem' }}>
-                          <option value="Bekliyor">Bekliyor</option>
-                          <option value="İşlemde">İşlemde</option>
-                          <option value="Planlandı">Planlandı</option>
-                        </select>
+                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', paddingRight: '1.5rem' }}>
+                          <input type="text" value={plan.task || ''} onChange={e => {
+                            const val = e.target.value;
+                            setClientReports(prev => {
+                              const updated = { ...prev };
+                              const brandData = { ...updated[editingReportBrand] };
+                              const newPlan = [...(brandData.nextMonthPlan || [])];
+                              newPlan[idx] = { ...newPlan[idx], task: val };
+                              brandData.nextMonthPlan = newPlan;
+                              updated[editingReportBrand] = brandData;
+                              return updated;
+                            });
+                          }} placeholder="Görev Adı (örn: Yeni Kampanya Kurgusu)" style={{ flex: 2, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }} />
+                          
+                          <input type="text" value={plan.category || ''} onChange={e => {
+                            const val = e.target.value;
+                            setClientReports(prev => {
+                              const updated = { ...prev };
+                              const brandData = { ...updated[editingReportBrand] };
+                              const newPlan = [...(brandData.nextMonthPlan || [])];
+                              newPlan[idx] = { ...newPlan[idx], category: val };
+                              brandData.nextMonthPlan = newPlan;
+                              updated[editingReportBrand] = brandData;
+                              return updated;
+                            });
+                          }} placeholder="Kategori (örn: Ads, SEO)" style={{ flex: 1, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }} />
+
+                          <input type="text" value={plan.date || ''} onChange={e => {
+                            const val = e.target.value;
+                            setClientReports(prev => {
+                              const updated = { ...prev };
+                              const brandData = { ...updated[editingReportBrand] };
+                              const newPlan = [...(brandData.nextMonthPlan || [])];
+                              newPlan[idx] = { ...newPlan[idx], date: val };
+                              brandData.nextMonthPlan = newPlan;
+                              updated[editingReportBrand] = brandData;
+                              return updated;
+                            });
+                          }} placeholder="Tarih (örn: 15 Ağustos)" style={{ flex: 1, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }} />
+                          
+                          <select value={plan.status || 'Bekliyor'} onChange={e => {
+                            const val = e.target.value;
+                            setClientReports(prev => {
+                              const updated = { ...prev };
+                              const brandData = { ...updated[editingReportBrand] };
+                              const newPlan = [...(brandData.nextMonthPlan || [])];
+                              newPlan[idx] = { ...newPlan[idx], status: val };
+                              brandData.nextMonthPlan = newPlan;
+                              updated[editingReportBrand] = brandData;
+                              return updated;
+                            });
+                          }} style={{ flex: 1, padding: '0.45rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem' }}>
+                            <option value="Bekliyor">Bekliyor</option>
+                            <option value="İşlemde">İşlemde</option>
+                            <option value="Planlandı">Planlandı</option>
+                          </select>
+                        </div>
                       </div>
                     ))}
                   </div>
