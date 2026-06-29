@@ -1,0 +1,39 @@
+{
+  "jsxStart": 3384,
+  "jsxEnd": 3832,
+  "functionsToMove": [
+    "const getIconForLabel = label =>",
+    "const generateDynamicRoadmap = (type, params, improvements) =>",
+    "const parseProposalDetails = messageText =>",
+    "const handleDownloadProposalPDF = lead =>",
+    "const generateProposalPDF = lead =>",
+    "const handleSendProposalEmail = async lead =>",
+    "const getStatusLabel = status =>",
+    "const handleSaveCRM = (leadId, newStatus, newNotes, newReminderDate) =>",
+    "const handleDownloadPDF = lead =>",
+    "const generatePDF = lead =>",
+    "const renderSimulatorData = lead =>",
+    "const getSectorLabel = (t, s) =>",
+    "const renderLeadMessage = lead =>",
+    "const exportLeadsToCSV = dataToExport =>",
+    "const getLocalGuideFallback = (guideTitle, lead) =>",
+    "const handleGenerateGuidePDFWithAI = async lead =>",
+    "const handleDownloadGuidePDF = (lead, aiContent) =>",
+    "const generateGuidePDF = (lead, aiContent) =>",
+    "const handleSendGuideEmail = async lead =>"
+  ],
+  "statesToMove": [
+    "const [selectedLead, setSelectedLead] = useState(null);",
+    "const [crmStatus, setCrmStatus] = useState('yeni');",
+    "const [crmNotes, setCrmNotes] = useState('');",
+    "const [crmReminderDate, setCrmReminderDate] = useState('');",
+    "const [leadSearchText, setLeadSearchText] = useState('');",
+    "const [leadSourceFilter, setLeadSourceFilter] = useState('all');",
+    "const [leadServiceFilter, setLeadServiceFilter] = useState('all');",
+    "const [leadStatusFilter, setLeadStatusFilter] = useState('all');",
+    "const [aiGuideLoading, setAiGuideLoading] = useState(false);",
+    "const [aiGuideContents, setAiGuideContents] = useState({});",
+    "const [isSendingGuide, setIsSendingGuide] = useState(false);",
+    "const [isSendingProposal, setIsSendingProposal] = useState(false);"
+  ]
+}

@@ -4,7 +4,6 @@ import FadeIn from '../../FadeIn';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
 export default function AnalyticsTab({
-  analyticsData, isLoadingAnalytics, leadsData,
   getAggregatedStats, handleGenerateDemoStats, statsLoading,
   loadStats, handleResetStats, setDateFilter, dateFilter,
   customStartDate, setCustomStartDate, customEndDate, setCustomEndDate,

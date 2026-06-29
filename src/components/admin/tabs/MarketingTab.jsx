@@ -1,7 +1,6 @@
 import React from 'react';
 
 export default function MarketingTab({
-  scriptsData, handleScriptChange, handleSaveScripts, isSaving,
   handleSaveAll, settingsData, setSettingsData
 }) {
   return (

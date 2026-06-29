@@ -39,6 +39,12 @@ export default function ClientTransparencyPageView({
   const [viewingTicket, setViewingTicket] = useState(null);
   const [clientReplyText, setClientReplyText] = useState('');
 
+  // AI Simulator States
+  const [simSpendSlider, setSimSpendSlider] = useState(null);
+  const [aiInsightResult, setAiInsightResult] = useState('');
+  const [isGeneratingInsight, setIsGeneratingInsight] = useState(false);
+
+
   // Sync viewing ticket for realtime updates
   useEffect(() => {
     if (viewingTicket && clientReports && activeBrand) {
@@ -167,6 +173,38 @@ export default function ClientTransparencyPageView({
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  const handleGenerateAiInsight = async (actualSpend, simSpend, expectedRevenue, actualRevenue) => {
+    setIsGeneratingInsight(true);
+    setAiInsightResult('');
+    
+    try {
+      const response = await fetch('/api/blogs/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          topic: `Müşteri reklam bütçesini ${actualSpend} TL'den ${simSpend} TL'ye çıkarırsa, beklenen ciro ${actualRevenue} TL'den ${expectedRevenue} TL'ye çıkıyor. Ajans olarak müşteriye profesyonel, finansal ve ikna edici 1 paragraflık bir tavsiye yaz. Sayılarla konuş. Çok kısa olsun. (Grok AI Büyüme Simülasyonu)`
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('API Hatası');
+      }
+      
+      const data = await response.json();
+      if (data.success && data.content) {
+        setAiInsightResult(data.content);
+      } else {
+        setAiInsightResult('AI sunucusundan yanıt alınamadı. Lütfen daha sonra tekrar deneyin.');
+      }
+    } catch (err) {
+      console.error(err);
+      setAiInsightResult('Bağlantı hatası oluştu. Yapay zeka modülü şu an meşgul olabilir.');
+    } finally {
+      setIsGeneratingInsight(false);
+    }
+  };
 
   
   const handleAiActionRequest = async (insightText) => {
@@ -1032,6 +1070,9 @@ export default function ClientTransparencyPageView({
           <div className={`client-os-nav-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>
              <i className="fa-solid fa-chart-pie"></i> Genel Bakış & Grafikler
           </div>
+          <div className={`client-os-nav-item ${activeTab === 'ai_simulator' ? 'active' : ''}`} onClick={() => setActiveTab('ai_simulator')}>
+             <i className="fa-solid fa-brain" style={{ color: activeTab === 'ai_simulator' ? '#fff' : '#c084fc' }}></i> AI Büyüme Simülasyonu
+          </div>
           <div className={`client-os-nav-item ${activeTab === 'creatives' ? 'active' : ''}`} onClick={() => setActiveTab('creatives')}>
              <i className="fa-solid fa-paint-roller"></i> Kreatif Onayları
           </div>
@@ -1201,6 +1242,7 @@ export default function ClientTransparencyPageView({
         }}>
           {[
             { id: 'overview', label: 'Genel Bakış & Grafikler', icon: 'fa-solid fa-chart-pie' },
+            { id: 'ai_simulator', label: 'AI Büyüme Simülasyonu', icon: 'fa-solid fa-brain' },
             { id: 'creatives', label: 'Kreatif Onayları', icon: 'fa-solid fa-paint-roller' },
             { id: 'vault', label: 'Dosya Kasam', icon: 'fa-solid fa-vault' },
             { id: 'billing', label: 'Faturalar & Bütçe', icon: 'fa-solid fa-file-invoice-dollar' },
@@ -1604,6 +1646,182 @@ export default function ClientTransparencyPageView({
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* --- TAB: AI SIMULATOR (Yapay Zeka Büyüme Simülatörü) --- */}
+        {activeTab === 'ai_simulator' && (
+          <div className="tab-content-ai fade-in">
+            {(() => {
+              const actualSpend = currentData?.metrics?.adSpend?.current || 10000;
+              const actualRevenue = currentData?.metrics?.revenue?.current || 50000;
+              const actualConversions = currentData?.metrics?.conversions?.current || 50;
+              
+              const currentCAC = actualConversions > 0 ? actualSpend / actualConversions : 0;
+              const currentAOV = actualConversions > 0 ? actualRevenue / actualConversions : 0;
+              
+              const simSpend = simSpendSlider !== null ? simSpendSlider : actualSpend;
+              
+              // Diminishing returns formula: new_conv = actual_conv * (simSpend / actualSpend)^0.85
+              // If actualSpend is 0, default to linear to avoid Infinity.
+              const ratio = actualSpend > 0 ? (simSpend / actualSpend) : 1;
+              const projectedConversions = Math.round(actualConversions * Math.pow(ratio, 0.85));
+              const projectedRevenue = projectedConversions * currentAOV;
+              const projectedCAC = projectedConversions > 0 ? simSpend / projectedConversions : 0;
+              
+              return (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
+                  
+                  {/* Başlık ve Vizyon */}
+                  <div style={{ background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(139, 92, 246, 0.1))', padding: '2rem', borderRadius: '16px', border: '1px solid rgba(139, 92, 246, 0.2)' }}>
+                    <h2 style={{ fontSize: '1.4rem', color: '#f8fafc', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <i className="fa-solid fa-brain" style={{ color: '#c084fc' }}></i> Yapay Zeka Büyüme Simülatörü
+                    </h2>
+                    <p style={{ color: '#cbd5e1', fontSize: '0.95rem', lineHeight: '1.6', margin: 0 }}>
+                      Reklam bütçenizi hislere veya deneme-yanılma yöntemlerine göre değil, <strong>saf matematiğe ve veriye dayalı</strong> yönetin. Aşağıdaki çubuğu kaydırarak, algoritmalarımızın azalan verim kanunları (Diminishing Returns) ile hesapladığı gelecekteki dönüşüm maliyetlerini (CAC) ve potansiyel kârlılığı anında simüle edin.
+                    </p>
+                  </div>
+                  
+                  {/* Grid: Mevcut vs Simülasyon */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+                    
+                    {/* Mevcut Durum */}
+                    <div style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+                      <h3 style={{ color: '#94a3b8', fontSize: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <i className="fa-solid fa-chart-line"></i> Geçen Ayın Gerçekleşen Verileri
+                      </h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
+                          <span style={{ color: '#cbd5e1' }}>Aylık Bütçe:</span>
+                          <strong style={{ color: '#f8fafc' }}>{actualSpend.toLocaleString('tr-TR')} ₺</strong>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
+                          <span style={{ color: '#cbd5e1' }}>Elde Edilen Ciro:</span>
+                          <strong style={{ color: '#f8fafc' }}>{actualRevenue.toLocaleString('tr-TR')} ₺</strong>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
+                          <span style={{ color: '#cbd5e1' }}>Satış / Form Sayısı:</span>
+                          <strong style={{ color: '#f8fafc' }}>{actualConversions} İşlem</strong>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span style={{ color: '#cbd5e1' }}>Birim Maliyet (CAC):</span>
+                          <strong style={{ color: '#ef4444' }}>{Math.round(currentCAC).toLocaleString('tr-TR')} ₺</strong>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* AI Simülasyonu */}
+                    <div style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(14, 165, 233, 0.3)', boxShadow: '0 4px 25px rgba(14, 165, 233, 0.1)', position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ position: 'absolute', top: '-20px', right: '-20px', opacity: 0.05 }}>
+                        <i className="fa-solid fa-microchip" style={{ fontSize: '8rem', color: '#0ea5e9' }}></i>
+                      </div>
+                      
+                      <h3 style={{ color: '#0ea5e9', fontSize: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px', position: 'relative' }}>
+                        <i className="fa-solid fa-wand-magic-sparkles"></i> AI Projeksiyonu
+                      </h3>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', position: 'relative' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
+                          <span style={{ color: '#cbd5e1' }}>Yeni Simüle Bütçe:</span>
+                          <strong style={{ color: '#0ea5e9' }}>{simSpend.toLocaleString('tr-TR')} ₺</strong>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
+                          <span style={{ color: '#cbd5e1' }}>Beklenen Ciro:</span>
+                          <strong style={{ color: '#22c55e' }}>{Math.round(projectedRevenue).toLocaleString('tr-TR')} ₺</strong>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem' }}>
+                          <span style={{ color: '#cbd5e1' }}>Tahmini Satış:</span>
+                          <strong style={{ color: '#f8fafc' }}>{projectedConversions} İşlem</strong>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span style={{ color: '#cbd5e1' }}>Yeni Birim Maliyet (CAC):</span>
+                          <strong style={{ color: projectedCAC > currentCAC ? '#eab308' : '#22c55e' }}>
+                            {Math.round(projectedCAC).toLocaleString('tr-TR')} ₺
+                          </strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sürgü Kontrol Alanı */}
+                  <div style={{ background: '#1e293b', padding: '2rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                    <h4 style={{ color: '#f8fafc', marginBottom: '1.5rem', fontSize: '1.1rem' }}>Bütçe Optimizasyonunu Ayarlayın</h4>
+                    <input 
+                      type="range" 
+                      min={Math.round(actualSpend * 0.5)} 
+                      max={Math.round(actualSpend * 3)} 
+                      step={500} 
+                      value={simSpend}
+                      onChange={(e) => setSimSpendSlider(Number(e.target.value))}
+                      style={{ 
+                        width: '100%', 
+                        maxWidth: '600px', 
+                        accentColor: '#0ea5e9', 
+                        height: '6px', 
+                        background: '#334155', 
+                        borderRadius: '4px', 
+                        outline: 'none',
+                        cursor: 'pointer'
+                      }}
+                    />
+                    <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center', gap: '2rem', color: '#94a3b8', fontSize: '0.85rem' }}>
+                      <span>Min: {(actualSpend * 0.5).toLocaleString('tr-TR')} ₺</span>
+                      <span>Mevcut: {actualSpend.toLocaleString('tr-TR')} ₺</span>
+                      <span>Maks: {(actualSpend * 3).toLocaleString('tr-TR')} ₺</span>
+                    </div>
+                  </div>
+
+                  {/* Grok AI İçgörü Kutusu */}
+                  <div style={{ background: 'rgba(15, 23, 42, 0.4)', padding: '2rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    {aiInsightResult ? (
+                      <div style={{ width: '100%', maxWidth: '800px', padding: '1.5rem', background: 'rgba(139, 92, 246, 0.1)', borderLeft: '4px solid #c084fc', borderRadius: '8px' }}>
+                        <h4 style={{ color: '#c084fc', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <i className="fa-solid fa-robot"></i> Rota AI Strateji Yorumu
+                        </h4>
+                        <p style={{ color: '#e2e8f0', lineHeight: '1.6', fontSize: '0.95rem', margin: 0 }}>
+                          {aiInsightResult.replace(/<[^>]+>/g, '')}
+                        </p>
+                      </div>
+                    ) : (
+                      <>
+                        <i className="fa-solid fa-microchip" style={{ fontSize: '2.5rem', color: '#475569', marginBottom: '1rem' }}></i>
+                        <p style={{ color: '#94a3b8', marginBottom: '1.5rem', textAlign: 'center', maxWidth: '500px' }}>
+                          Yaptığınız bütçe değişikliğinin markanıza ve dönüşüm maliyetlerinize etkisini yapay zeka aracılığıyla analiz etmek için aşağıdaki butona tıklayın.
+                        </p>
+                      </>
+                    )}
+                    
+                    <button 
+                      onClick={() => handleGenerateAiInsight(actualSpend, simSpend, projectedRevenue, actualRevenue)}
+                      disabled={isGeneratingInsight}
+                      style={{ 
+                        padding: '0.85rem 2rem', 
+                        borderRadius: '12px', 
+                        border: 'none', 
+                        background: 'linear-gradient(135deg, #c084fc, #9333ea)', 
+                        color: '#fff', 
+                        fontWeight: 700, 
+                        fontSize: '1rem', 
+                        cursor: isGeneratingInsight ? 'not-allowed' : 'pointer',
+                        boxShadow: '0 4px 15px rgba(147, 51, 234, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        transition: 'all 0.2s',
+                        marginTop: aiInsightResult ? '1.5rem' : '0'
+                      }}
+                    >
+                      {isGeneratingInsight ? (
+                        <><i className="fa-solid fa-spinner fa-spin"></i> AI Analiz Ediyor...</>
+                      ) : (
+                        <><i className="fa-solid fa-wand-magic-sparkles"></i> Grok ile Strateji Çıkar</>
+                      )}
+                    </button>
+                  </div>
+
+                </div>
+              );
+            })()}
           </div>
         )}
 
