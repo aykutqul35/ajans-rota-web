@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import { slugify } from '../../utils/helpers';
 
 export default function Footer({
   settingsData,
