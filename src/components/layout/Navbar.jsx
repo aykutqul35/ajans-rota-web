@@ -18,7 +18,7 @@ export default function Navbar({
   return (
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''} ${location.pathname.startsWith('/dijital-ajans/') ? 'dark-hero' : ''}`}>
       <div className="nav-container container">
-        <a href="#" className="logo" onClick={e => {
+        <a href="/" className="logo" onClick={e => {
             e.preventDefault();
             handleNavClick('home');
           }}>
@@ -35,12 +35,12 @@ export default function Navbar({
         </a>
         
         <ul className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
-          <li className="nav-link"><a href="#" onClick={e => {
+          <li className="nav-link"><a href="/" onClick={e => {
             e.preventDefault();
             handleNavClick('home');
           }}><i className="fa-solid fa-house nav-icon"></i>Ana Sayfa</a></li>
           <li className={`nav-link dropdown ${activeMobileDropdown === 'services' ? 'active' : ''}`}>
-            <a href="#" onClick={e => {
+            <a href="javascript:void(0)" onClick={e => {
             e.preventDefault();
             setActiveMobileDropdown(activeMobileDropdown === 'services' ? null : 'services');
           }} className="dropdown-toggle">
@@ -55,7 +55,7 @@ export default function Navbar({
                 if (key === 'social') iconClass = 'fa-solid fa-share-nodes';
                 if (key === 'ecommerce') iconClass = 'fa-solid fa-cart-shopping';
                 return <li key={key}>
-                      <a href="#" onClick={e => {
+                      <a href={`/dijital-ajans/${slugify(key)}`} onClick={e => {
                     e.preventDefault();
                     handleServiceClick(key);
                   }}>
@@ -66,7 +66,7 @@ export default function Navbar({
               </ul>
             </li>
             <li className={`nav-link dropdown ${activeMobileDropdown === 'corporate' ? 'active' : ''}`}>
-              <a href="#" className="dropdown-toggle" onClick={e => {
+              <a href="javascript:void(0)" className="dropdown-toggle" onClick={e => {
               e.preventDefault();
               if (window.innerWidth <= 768) {
                 setActiveMobileDropdown(activeMobileDropdown === 'corporate' ? null : 'corporate');
@@ -102,7 +102,7 @@ export default function Navbar({
               </ul>
             </li>
             <li className={`nav-link dropdown ${activeMobileDropdown === 'calculators' ? 'active' : ''}`}>
-              <a href="#" className="dropdown-toggle" onClick={e => {
+              <a href="javascript:void(0)" className="dropdown-toggle" onClick={e => {
               e.preventDefault();
               if (window.innerWidth <= 768) {
                 setActiveMobileDropdown(activeMobileDropdown === 'calculators' ? null : 'calculators');
@@ -113,22 +113,22 @@ export default function Navbar({
                 <span><i className="fa-solid fa-calculator nav-icon"></i>Hesaplayıcılar</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
               </a>
               <ul className={`dropdown-menu ${activeMobileDropdown === 'calculators' ? 'mobile-active' : ''}`}>
-                <li><a href="#" onClick={e => {
+                <li><a href="javascript:void(0)" onClick={e => {
                   e.preventDefault();
                   handleCalculatorNavClick('fee');
                 }}><i className="fa-solid fa-file-invoice-dollar nav-icon"></i>Ajans hizmet planlayıcısı</a></li>
-                <li><a href="#" onClick={e => {
+                <li><a href="javascript:void(0)" onClick={e => {
                   e.preventDefault();
                   handleCalculatorNavClick('roas_ecommerce');
                 }}><i className="fa-solid fa-cart-shopping nav-icon"></i>E-Ticaret Büyüme Simülatörü</a></li>
-                <li><a href="#" onClick={e => {
+                <li><a href="javascript:void(0)" onClick={e => {
                   e.preventDefault();
                   handleCalculatorNavClick('roas_b2b');
                 }}><i className="fa-solid fa-phone-volume nav-icon"></i>B2B / Hizmet Simülatörü</a></li>
               </ul>
             </li>
             <li className={`nav-link dropdown ${activeMobileDropdown === 'tools' ? 'active' : ''}`}>
-              <a href="#" className="dropdown-toggle" onClick={e => {
+              <a href="javascript:void(0)" className="dropdown-toggle" onClick={e => {
               e.preventDefault();
               if (window.innerWidth <= 768) {
                 setActiveMobileDropdown(activeMobileDropdown === 'tools' ? null : 'tools');
@@ -164,7 +164,7 @@ export default function Navbar({
               </ul>
             </li>
 
-            {!settingsData.hide_page_iletisim && <li className="nav-link"><a href="#contact" onClick={e => {
+            {!settingsData.hide_page_iletisim && <li className="nav-link"><a href="/iletisim" onClick={e => {
               e.preventDefault();
               handleNavClick('contact');
             }}><i className="fa-solid fa-envelope nav-icon"></i>İletişim</a></li>}
@@ -179,7 +179,7 @@ export default function Navbar({
               <i className="fa-solid fa-lock" style={{ marginRight: '6px' }}></i>
               Müşteri Girişi
             </a>
-            <a href="#contact" className="btn btn-secondary" onClick={e => {
+            <a href="/iletisim" className="btn btn-secondary" onClick={e => {
               e.preventDefault();
               handleNavClick('contact');
             }}>Teklif Al</a>

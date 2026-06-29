@@ -30,7 +30,7 @@ export default function Footer({
                 <p>Markanızın dijital dünyada yeni zirvelere ulaşması ve rotanızı veriye dayalı stratejilerle çizmek için hazır mısınız?</p>
               </div>
               <div className="footer-cta-action">
-                <a href="#contact" className="btn btn-primary btn-glow" onClick={e => {
+                <a href="/iletisim" className="btn btn-primary btn-glow" onClick={e => {
               e.preventDefault();
               handleNavClick('contact');
             }}>
@@ -47,7 +47,7 @@ export default function Footer({
         <div className="footer-main-row">
           {/* Brand Block */}
           <div className="footer-brand-section">
-            <a href="#" className="logo" onClick={e => {
+            <a href="/" className="logo" onClick={e => {
             e.preventDefault();
             handleNavClick('home');
           }}>
@@ -92,7 +92,7 @@ export default function Footer({
               <h4>Hizmetlerimiz</h4>
               <ul className="footer-links">
                 {Object.keys(servicesData).map(key => <li key={key}>
-                    <a href="#" onClick={e => {
+                    <a href={`/dijital-ajans/${slugify(key)}`} onClick={e => {
                   e.preventDefault();
                   handleServiceClick(key);
                 }}>
@@ -106,7 +106,7 @@ export default function Footer({
             <div className="footer-col">
               <h4>Kurumsal</h4>
               <ul className="footer-links">
-                <li><a href="#" onClick={e => {
+                <li><a href="javascript:void(0)" onClick={e => {
                   e.preventDefault();
                   handleNavClick('home');
                 }}><span className="link-bullet"></span><span>Ana Sayfa</span></a></li>
@@ -118,11 +118,11 @@ export default function Footer({
                   e.preventDefault();
                   navigateTo('/ekiplerimiz');
                 }}><span className="link-bullet"></span><span>Ekiplerimiz</span></a></li>}
-                {!settingsData.hide_page_referanslar && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_referanslar && <li><a href="javascript:void(0)" onClick={e => {
                   e.preventDefault();
                   handleNavClick('testimonials');
                 }}><span className="link-bullet"></span><span>Referanslarımız</span></a></li>}
-                {!settingsData.hide_page_izmir && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_izmir && <li><a href="javascript:void(0)" onClick={e => {
                   e.preventDefault();
                   handleNavClick('izmir');
                 }}><span className="link-bullet"></span><span>Neden İzmir?</span></a></li>}
@@ -130,7 +130,7 @@ export default function Footer({
                   e.preventDefault();
                   navigateTo('/blog');
                 }}><span className="link-bullet"></span><span>Rehber & Blog</span></a></li>}
-                {!settingsData.hide_page_iletisim && <li><a href="#" onClick={e => {
+                {!settingsData.hide_page_iletisim && <li><a href="javascript:void(0)" onClick={e => {
                   e.preventDefault();
                   handleNavClick('contact');
                 }}><span className="link-bullet"></span><span>İletişime Geçin</span></a></li>}
@@ -164,7 +164,7 @@ export default function Footer({
                   e.preventDefault();
                   navigateTo('/akademi');
                 }}><span className="link-bullet"></span><span>Rota Akademi</span></a></li>}
-                <li><a href="#" onClick={e => {
+                <li><a href="javascript:void(0)" onClick={e => {
                   e.preventDefault();
                   handleNavClick('calculator');
                 }}><span className="link-bullet"></span><span>Büyüme Simülatörü</span></a></li>
@@ -499,7 +499,7 @@ export default function Footer({
             })()}
             </div>
             <div className="contact-card-action">
-              <a href="#contact" onClick={e => {
+              <a href="/iletisim" onClick={e => {
               e.preventDefault();
               handleNavClick('contact');
             }} className="contact-card-link">

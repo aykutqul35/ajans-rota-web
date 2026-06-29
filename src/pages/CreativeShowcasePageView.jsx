@@ -394,7 +394,7 @@ function CreativeShowcasePageView({
                 color: '#202124'
               }}>Sponsorlu</strong> · https://www.{activeBrand}.com
                 </span>
-                <a href="#" style={{
+                <a href="javascript:void(0)" style={{
               fontSize: '1rem',
               color: '#1a0dab',
               fontWeight: '500',

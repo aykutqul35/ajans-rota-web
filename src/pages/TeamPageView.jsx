@@ -171,10 +171,10 @@ function TeamPageView({
                 
                 {/* Social Links placeholder */}
                 <div className="team-social-links">
-                  <a href="#" className="team-social-icon">
+                  <a href="javascript:void(0)" className="team-social-icon">
                     <i className="fa-brands fa-linkedin"></i>
                   </a>
-                  <a href="#" className="team-social-icon">
+                  <a href="javascript:void(0)" className="team-social-icon">
                     <i className="fa-solid fa-envelope"></i>
                   </a>
                 </div>
