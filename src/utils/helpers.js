@@ -54,10 +54,10 @@ export const detectTrafficSource = () => {
 
 export const getSmartGreeting = () => {
     const hour = new Date().getHours();
-    if (hour >= 0 && hour < 6) return { top: "Siz Dinlenirken Bile Büyüyen", highlight: "Otomatize Satış Kanalları" };
-    if (hour >= 6 && hour < 12) return { top: "Güne Momentumla Başlayın", highlight: "Ölçeklenebilir Büyüme Mimarisi" };
-    if (hour >= 12 && hour < 18) return { top: "Sektöre Liderlik Edin", highlight: "Dönüşüm Odaklı Ajans" };
-    return { top: "Günü Hedefin Üzerinde Kapatın", highlight: "Yapay Zeka Destekli Büyüme" };
+    if (hour >= 0 && hour < 6) return { top: "İnsanlar Uyur, Sistem Uyumaz.", highlight: "7/24 Otonom Optimizasyon" };
+    if (hour >= 6 && hour < 12) return { top: "Duygusal Kararlar Yok.", highlight: "Sadece Saf Veri." };
+    if (hour >= 12 && hour < 18) return { top: "Rakiplerinizi Geride Bırakan", highlight: "Yapay Zeka Destekli Büyüme" };
+    return { top: "Durdurulamaz Bir Algoritma", highlight: "Otonom Satış Gücü" };
   };
 
 export const getSeoData = path => {

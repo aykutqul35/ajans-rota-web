@@ -416,7 +416,7 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
       if (window._adminLastWrite && Date.now() - window._adminLastWrite < 5000) return;
       
       try {
-        const res = await fetch('/api/clients', {
+        const res = await fetch('/api/admin/clients', {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         if (res.status === 401) {
@@ -427,43 +427,22 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
         if (res.ok) {
           const result = await res.json();
           if (result.success && result.data) {
-            const dbReports = {};
             result.data.forEach(client => {
-              const data = client.report_data || {};
-              const key = data._key || (client.brand_name.toLowerCase().includes('e-ticaret') ? 'ecommerce' : 'b2b');
-              dbReports[key] = {
-                ...data,
-                client_id: client.id, // Store DB ID for updates
-                username: client.username,
-                brandName: client.brand_name
-              };
-            });
-            // Merge: preserve locally-created tickets/ai_requests that DB doesn't have yet
-            setClientReports(prev => {
-              const merged = {...prev, ...dbReports};
-              // For each brand, keep local tickets/ai_requests if DB didn't have them
-              Object.keys(prev).forEach(key => {
-                if (merged[key]) {
-                  if (prev[key]?.tickets?.length && !dbReports[key]?.tickets?.length) {
-                    merged[key].tickets = prev[key].tickets;
-                  }
-                  if (prev[key]?.ai_requests?.length && !dbReports[key]?.ai_requests?.length) {
-                    merged[key].ai_requests = prev[key].ai_requests;
-                  }
-                  // Keep local timeline and roadmap if DB doesn't have them
-                  if (prev[key]?.timeline?.length && (!dbReports[key]?.timeline || dbReports[key].timeline.length === 0)) {
-                    merged[key].timeline = prev[key].timeline;
-                  }
-                  if (prev[key]?.nextMonthPlan?.length && (!dbReports[key]?.nextMonthPlan || dbReports[key].nextMonthPlan.length === 0)) {
-                    merged[key].nextMonthPlan = prev[key].nextMonthPlan;
-                  }
-                  // Keep local creatives if DB doesn't have them
-                  if (prev[key]?.creatives?.length && (!dbReports[key]?.creatives || dbReports[key].creatives.length === 0)) {
-                    merged[key].creatives = prev[key].creatives;
-                  }
-                }
+              const data = client.reportData || {};
+              const key = data._key || (client.email === 'ege@ajansrota.com' ? 'ecommerce' : (client.email === 'b2b@ajansrota.com' ? 'b2b' : (client.clerkId || client.id)));
+              
+              setClientReports(prev => {
+                const merged = { ...prev };
+                merged[key] = {
+                  ...(merged[key] || {}), // Keep default UI structure (kpis, timeline etc)
+                  ...data, // Overwrite with actual DB data if exists
+                  client_id: client.id, 
+                  clerkId: client.clerkId,
+                  username: client.email,
+                  brandName: client.brandName
+                };
+                return merged;
               });
-              return merged;
             });
           }
         }
@@ -1384,7 +1363,7 @@ const renderReportForm = () => <ReportForm {...fullAppState} handleGenerateRepor
   const renderContactForm = () => <ContactForm formData={formData} setFormData={setFormData} isSubmitted={isSubmitted} handleContactSubmit={handleContactSubmit} />;
   const renderWebDesignForm = (isCombined = false) => <WebDesignForm {...fullAppState} isCombined={isCombined} handleWebDesignSubmit={handleWebDesignSubmit} webDesignType={webDesignType} setWebDesignType={setWebDesignType} webDesignSubmitted={webDesignSubmitted} setWebDesignSubmitted={setWebDesignSubmitted} />;
 
-  const isSecurePanel = currentPath.startsWith('/rota-management-vault-x9') || currentPath.startsWith('/portal-girisi-x9') || currentPath.startsWith('/client-portal-secure');
+  const isSecurePanel = currentPath.startsWith('/rota-management-vault-x9') || currentPath.startsWith('/portal-girisi-x9') || currentPath.startsWith('/client-portal-secure') || currentPath.startsWith('/musteri');
   const isAdminRoute = currentPath.startsWith('/rota-management-vault-x9');
 
   return <>
@@ -1438,8 +1417,8 @@ const renderReportForm = () => <ReportForm {...fullAppState} handleGenerateRepor
         handleNewsletterSubmit={handleNewsletterSubmit}
       />
       )}
-      {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && <Suspense fallback={null}><WhatsAppAssistantWidget settingsData={settingsData} onSaveLead={simulateLeadLocally} logHit={logHit} /></Suspense>}
-      {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && <SocialProofToast />}
+      {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && currentPath !== '/musteri' && <Suspense fallback={null}><WhatsAppAssistantWidget settingsData={settingsData} onSaveLead={simulateLeadLocally} logHit={logHit} /></Suspense>}
+      {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && currentPath !== '/musteri' && <SocialProofToast />}
       {/* Custom Global Popup */}
       <LeadPopup 
         isOpen={isLeadPopupOpen} 

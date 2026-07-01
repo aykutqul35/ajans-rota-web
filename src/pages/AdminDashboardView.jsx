@@ -75,6 +75,48 @@ function AdminDashboardView({
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  // Fetch real clients from database on mount
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const res = await fetch('/api/admin/clients');
+        const json = await res.json();
+        if (json.success && json.data) {
+          const dbReports = {};
+          json.data.forEach(client => {
+            // Create a brand key from the email or brandName for the UI mapping
+            // In the admin UI we use keys like 'ecommerce', 'b2b'. If it's a new client, we just use their ID.
+            const brandKey = client.clerkId || client.id;
+            dbReports[brandKey] = {
+              ...client.reportData,
+              brandName: client.brandName,
+              client_id: client.id,
+              clerkId: client.clerkId,
+              email: client.email
+            };
+          });
+          
+          setClientReports(prev => {
+            // Merge database clients with the default mock clients (so the UI doesn't look empty initially)
+            const merged = { ...prev };
+            // Overwrite mock data if it exists, or add new
+            Object.keys(dbReports).forEach(key => {
+               // We try to map them back to ecommerce/b2b if they match, else use the raw key
+               let targetKey = key;
+               if (dbReports[key].email === 'ege@ajansrota.com') targetKey = 'ecommerce';
+               if (dbReports[key].email === 'b2b@ajansrota.com') targetKey = 'b2b';
+               merged[targetKey] = { ...merged[targetKey], ...dbReports[key] };
+            });
+            return merged;
+          });
+        }
+      } catch (err) {
+        console.error("Failed to fetch clients from Neon DB:", err);
+      }
+    };
+    fetchClients();
+  }, []);
+
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -779,19 +821,22 @@ function AdminDashboardView({
     // Save current client report to Neon DB
     if (clientReports[editingReportBrand] && clientReports[editingReportBrand].client_id) {
       try {
-        await fetch('/api/clients/update', {
+        await fetch('/api/admin/clients/' + clientReports[editingReportBrand].client_id, {
           method: 'PUT',
           headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${authToken}`
           },
           body: JSON.stringify({ 
-            client_id: clientReports[editingReportBrand].client_id, 
-            report_data: clientReports[editingReportBrand] 
+            brandName: clientReports[editingReportBrand].brandName,
+            email: clientReports[editingReportBrand].email || 'no-email@ajansrota.com',
+            reportData: clientReports[editingReportBrand] 
           })
         });
+        toast.success("Müşteri verileri Neon veritabanına başarıyla kaydedildi!");
       } catch (err) {
         console.error('Neon DB Client Save Error:', err);
+        toast.error("Neon DB'ye kaydedilirken bir hata oluştu.");
       }
     }
 

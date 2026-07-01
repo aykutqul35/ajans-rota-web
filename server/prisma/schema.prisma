@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  brandName String
+  email     String   @unique
+  reportData Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  reports   Report[]
+}
+
+model Report {
+  id              String   @id @default(cuid())
+  clientId        String
+  client          Client   @relation(fields: [clientId], references: [id])
+  platform        String   // "google" or "meta"
+  spend           Float    @default(0)
+  revenue         Float    @default(0)
+  clicks          Int      @default(0)
+  conversions     Int      @default(0)
+  impressionShare Float    @default(0)
+  month           String   // e.g., "Haziran 2026"
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

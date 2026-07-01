@@ -126,8 +126,26 @@ export default function ClientReportsTab({
                 </button>
 
                 {/* Delete Client Button */}
-                {editingReportBrand !== 'ecommerce' && editingReportBrand !== 'b2b' && <button type="button" onClick={() => {
+                {editingReportBrand !== 'ecommerce' && editingReportBrand !== 'b2b' && <button type="button" onClick={async () => {
               if (!confirm(`${clientReports[editingReportBrand]?.brandName || editingReportBrand} müşterisini tamamen silmek istediğinize emin misiniz?`)) return;
+              
+              const clientId = clientReports[editingReportBrand]?.client_id;
+              if (clientId) {
+                const toastId = toast.loading("Veritabanından siliniyor...");
+                try {
+                  const res = await fetch('/api/admin/clients/' + clientId, { method: 'DELETE' });
+                  if (res.ok) {
+                    toast.success("Müşteri veritabanından silindi!", { id: toastId });
+                  } else {
+                    toast.error("Silme başarısız oldu.", { id: toastId });
+                    return;
+                  }
+                } catch (e) {
+                  toast.error("Sunucu bağlantı hatası.", { id: toastId });
+                  return;
+                }
+              }
+
               const updated = {
                 ...clientReports
               };
@@ -455,7 +473,7 @@ export default function ClientReportsTab({
                   flexDirection: 'column',
                   gap: '0.75rem'
                 }}>
-                      {clientReports[editingReportBrand]?.kpis.map((kpi, idx) => <div key={idx} style={{
+                      {clientReports[editingReportBrand]?.kpis?.map((kpi, idx) => <div key={idx} style={{
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr',
                     gap: '0.75rem',
@@ -583,7 +601,7 @@ export default function ClientReportsTab({
                     zIndex: 1
                   }}></div>
 
-                      {clientReports[editingReportBrand]?.timeline.map((event, idx) => {
+                      {clientReports[editingReportBrand]?.timeline?.map((event, idx) => {
                     const isBot = event.author?.toLowerCase().includes('bot') || event.author?.toLowerCase().includes('make.com');
                     const isSEO = event.title?.toLowerCase().includes('seo') || event.desc?.toLowerCase().includes('seo');
                     const isAds = event.title?.toLowerCase().includes('ads') || event.title?.toLowerCase().includes('reklam');
@@ -1042,7 +1060,7 @@ export default function ClientReportsTab({
                 flexDirection: 'column',
                 gap: '0.75rem'
               }}>
-                    {clientReports[editingReportBrand]?.googleAds.map((camp, idx) => <div key={idx} style={{
+                    {clientReports[editingReportBrand]?.googleAds?.map((camp, idx) => <div key={idx} style={{
                   background: '#fff',
                   border: '1px solid var(--glass-border)',
                   borderRadius: '8px',
@@ -1253,7 +1271,7 @@ export default function ClientReportsTab({
                 flexDirection: 'column',
                 gap: '0.75rem'
               }}>
-                    {clientReports[editingReportBrand]?.metaAds.map((camp, idx) => <div key={idx} style={{
+                    {clientReports[editingReportBrand]?.metaAds?.map((camp, idx) => <div key={idx} style={{
                   background: '#fff',
                   border: '1px solid var(--glass-border)',
                   borderRadius: '8px',

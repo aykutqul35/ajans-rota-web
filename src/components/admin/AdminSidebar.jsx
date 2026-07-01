@@ -97,6 +97,25 @@ export default function AdminSidebar({ activeTab, setActiveTab, unreadLeadsCount
           animation: 'pulse 2s infinite', minWidth: '22px', textAlign: 'center'
         }}>{openTicketCount}</span>}
       </button>
+
+      {/* Cyber AI Widget */}
+      <div style={{ marginTop: 'auto', paddingTop: '2rem' }}>
+        <div style={{ padding: '1rem', background: '#020617', borderRadius: '12px', border: '1px solid rgba(14, 165, 233, 0.2)', boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)' }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'monospace', marginBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span>TELEMETRY</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div className="pulse-glow" style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--cyber-green)' }}></div>
+              <span style={{ color: 'var(--cyber-green)' }}>ACTIVE</span>
+            </div>
+          </div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--cyber-blue)', fontFamily: 'monospace', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div><span style={{ color: 'var(--text-muted)' }}>Mem:</span> 42% / 1024MB</div>
+            <div><span style={{ color: 'var(--text-muted)' }}>CPU:</span> 12% / 8 Cores</div>
+            <div style={{ marginTop: '0.25rem', color: 'var(--cyber-purple)', borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '0.25rem' }}>Bidding API: IDLE</div>
+            <div style={{ color: 'var(--cyber-blue)' }}>Sync Engine: SYNCING...</div>
+          </div>
+        </div>
+      </div>
     </aside>
   );
 }

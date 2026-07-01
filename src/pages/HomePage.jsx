@@ -2,8 +2,6 @@ import { motion } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
 import { lazy, Suspense, useState, useEffect, useRef, useCallback } from 'react';
-import AILiveTerminal from '../components/AILiveTerminal';
-import AIAuditForm from '../components/AIAuditForm';
 const RoasSimulatorWidget = lazy(() => import('../components/RoasSimulatorWidget'));
 
 // Counter-up animation component for hero stats
@@ -233,13 +231,11 @@ export default function HomePage(props) {
               <a href="#contact" className="btn btn-secondary">Ücretsiz AI Analizi Al</a>
             </div>
             
-            <AILiveTerminal />
-
             <div className="hero-stats">
               {[
-                { num: "12.4M+", label: "Günlük Otonom Karar" },
-                { num: "0.2ms", label: "Algoritma Tepki Süresi" },
-                { num: "%100", label: "Veri Odaklı Yönetim" },
+                { num: "150+", label: "Mutlu Müşteri" },
+                { num: "%340", label: "Ort. ROI Artışı" },
+                { num: "25M+", label: "Yönetilen Bütçe (₺)" },
               ].map((stat, i) => (
                 <CountUpStat key={i} value={stat.num} label={stat.label} delay={i * 200} />
               ))}
@@ -2608,15 +2604,21 @@ export default function HomePage(props) {
         </div>
       </section>
 
-      <section id="contact" className="contact-section" style={{ background: 'var(--bg-deep)', borderTop: '1px solid var(--glass-border-hover)' }}>
+      <section id="contact" className="contact-section">
         <div className="container">
-          <div className="section-header" style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <span className="section-tag" style={{ color: 'var(--cyber-blue)', background: 'var(--primary-glow)', borderColor: 'var(--cyber-blue)' }}>Sisteme Bağlanın</span>
-            <h2 className="section-title">Otonom Analizi Başlatın</h2>
-            <p className="section-desc">Markanızın potansiyelini 10 saniye içinde simüle edin.</p>
+          <div className="section-header">
+            <span className="section-tag">Bize Ulaşın</span>
+            <h2 className="section-title">Ücretsiz Dijital Analiz İsteyin</h2>
+            <p className="section-desc">Markanızın potansiyelini ortaya çıkarmak için formu doldurun, uzman ekibimiz sizinle iletişime geçsin.</p>
           </div>
-          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <AIAuditForm />
+          <div className="contact-grid">
+            <FadeIn direction="up">
+              {renderContactForm ? renderContactForm(false, "Sizi Arayalım") : (
+                <div style={{ textAlign: 'center', padding: '2rem', background: 'var(--bg-card)', borderRadius: '12px' }}>
+                  İletişim formu yükleniyor...
+                </div>
+              )}
+            </FadeIn>
           </div>
         </div>
       </section>

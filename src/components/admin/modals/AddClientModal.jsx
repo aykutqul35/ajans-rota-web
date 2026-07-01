@@ -45,7 +45,7 @@ export default function AddClientModal({
           </button>
         </div>
         
-        <form onSubmit={(e) => {
+        <form onSubmit={async (e) => {
           e.preventDefault();
           const { code, name, username, password, industry, logoUrl } = newClientFormData;
           if (!code || !name || !username || !password) {
@@ -62,8 +62,7 @@ export default function AddClientModal({
             return;
           }
           
-          const updated = { ...clientReports };
-          updated[cleanCode] = {
+          const newReportData = {
             username: username,
             password: password,
             brandName: name,
@@ -83,11 +82,37 @@ export default function AddClientModal({
             seo: [{ keyword: "anahtar kelime", rank: "1. Sıra", volume: "100", monthlyClicks: "0", trend: "stable" }],
             timeline: [{ date: new Date().toLocaleDateString('tr-TR'), title: "Müşteri Hesabı Oluşturuldu", desc: "Ajans şeffaf performans raporlama hesabı başarıyla aktif edildi.", author: "Sistem" }]
           };
-          setClientReports(updated);
-          setEditingReportBrand(cleanCode);
-          setIsAddClientModalOpen(false);
-          setNewClientFormData({ code: '', name: '', username: '', password: '', industry: '', logoUrl: '' });
-          toast.success("Müşteri başarıyla oluşturuldu!");
+
+          const loadingToast = toast.loading("Veritabanına ekleniyor...");
+          try {
+            const response = await fetch('/api/admin/clients', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                clerkId: cleanCode, // We use the code as clerkId for local auth
+                brandName: name,
+                email: username,
+                reportData: newReportData
+              })
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+              const updated = { ...clientReports };
+              newReportData.client_id = data.data.id;
+              newReportData.clerkId = data.data.clerkId;
+              updated[cleanCode] = newReportData;
+              setClientReports(updated);
+              setEditingReportBrand(cleanCode);
+              setIsAddClientModalOpen(false);
+              setNewClientFormData({ code: '', name: '', username: '', password: '', industry: '', logoUrl: '' });
+              toast.success("Müşteri veritabanına başarıyla eklendi!", { id: loadingToast });
+            } else {
+              toast.error("Ekleme başarısız: " + data.error, { id: loadingToast });
+            }
+          } catch (err) {
+            toast.error("Sunucu bağlantı hatası!", { id: loadingToast });
+          }
         }}>
           <div className="lead-modal-body" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', maxHeight: '60vh', overflowY: 'auto' }}>
             

@@ -1,6 +1,7 @@
 import toast from 'react-hot-toast';
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { SignedIn, SignedOut, SignIn, UserButton, useUser } from '@clerk/clerk-react';
 
 export default function ClientTransparencyPageView({
   clientReports,
@@ -8,6 +9,7 @@ export default function ClientTransparencyPageView({
   onBack,
   onContactClick
 }) {
+  const { isSignedIn, user } = useUser();
   const [activeBrand, setActiveBrand] = useState(() => localStorage.getItem('local_client_brand') || 'ecommerce'); // ecommerce, b2b
   const [dateRange, setDateRange] = useState('30days'); // 7days, 30days, thismonth
   const [animTrigger, setAnimTrigger] = useState(false);
@@ -59,103 +61,54 @@ export default function ClientTransparencyPageView({
     }
   }, [clientReports]);
 
-  // Client Polling for Real-Time updates
+  // Fetch Real Client Data from API
   useEffect(() => {
-    let intervalId = null;
-    
-    if (isLoggedIn) {
-      intervalId = setInterval(async () => {
-        const token = localStorage.getItem('client_token');
-        if (token) {
-          try {
-            const res = await fetch('/api/clients/auth', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ token_login: true, token })
-            });
-            if (res.status === 401) {
-              clearInterval(intervalId);
-              console.error("Client token invalid or expired. Stopping polling.");
-              return;
-            }
-            if (res.ok) {
-              const data = await res.json();
-              if (data.success && data.data) {
-                const serverData = data.data.report_data || {};
-                const key = serverData._key || (data.data.brand_name.toLowerCase().includes('e-ticaret') ? 'ecommerce' : 'b2b');
-                
-                // Only update if data actually changed to prevent re-renders
-                if (window._clientLastWrite && Date.now() - window._clientLastWrite < 5000) return;
-                
-                if (setClientReports && typeof setClientReports === 'function') {
-                  setClientReports(prev => {
-                    const prevBrand = prev?.[key];
-                    if (JSON.stringify(prevBrand) !== JSON.stringify(serverData)) {
-                       return {
-                         ...prev,
-                         [key]: {
-                           ...serverData,
-                           client_id: data.data.id,
-                           username: data.data.username,
-                           brandName: data.data.brand_name
-                         }
-                       };
-                    }
-                    return prev;
-                  });
-                }
-              }
-            }
-          } catch(e) {}
-        }
-      }, 5000);
-    }
-    
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [isLoggedIn]);
-
-  // Auto-login client if token exists
-  useEffect(() => {
-    const token = localStorage.getItem('client_token');
-    if (token && !isLoggedIn) {
-      const verifyToken = async () => {
+    if (isSignedIn && user?.id) {
+      const fetchClientData = async () => {
         try {
-          const res = await fetch('/api/clients/auth', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token_login: true, token })
+          const res = await fetch('/api/client/me', {
+            headers: {
+              'x-clerk-id': user.id
+            }
           });
-          
-          if (res.ok) {
-            const data = await res.json();
-            if (data.success && data.data) {
-              const serverData = data.data.report_data || {};
-              const key = serverData._key || (data.data.brand_name.toLowerCase().includes('e-ticaret') ? 'ecommerce' : 'b2b');
-              
-              const updatedReports = { ...clientReports };
-              updatedReports[key] = {
-                ...serverData,
-                client_id: data.data.id,
-                username: data.data.username,
-                brandName: data.data.brand_name
-              };
-              
-              if (setClientReports) setClientReports(updatedReports);
-              setActiveBrand(key);
-              setIsLoggedIn(true);
+          const data = await res.json();
+          if (data.success && data.data) {
+            // Map the API response back to the format the frontend expects, merging with defaults
+            const mappedData = {
+              ...(activeBrand === 'ecommerce' ? defaultEcommerceData : defaultB2bData),
+              brandName: data.data.brandName,
+              username: data.data.brandName,
+              client_id: data.data.id,
+              industry: "E-Ticaret", // Demo placeholder
+              status: "Aktif Yönetim",
+              budget: "Aylık 25,000₺ - 50,000₺",
+              kpis: [
+                { label: 'Toplam Harcama', value: (data.data.reports[0]?.spend || 0) + ' ₺', change: '+15%', icon: "fa-solid fa-wallet", color: "var(--primary)" },
+                { label: 'Toplam Ciro', value: (data.data.reports[0]?.revenue || 0) + ' ₺', change: '+25%', icon: "fa-solid fa-turkish-lira-sign", color: "var(--secondary)" },
+                { label: 'ROAS', value: ((data.data.reports[0]?.revenue / data.data.reports[0]?.spend) || 0).toFixed(2) + 'x', change: '+5%', icon: "fa-solid fa-arrow-trend-up", color: "#16a34a" }
+              ],
+              rawReports: data.data.reports
+            };
+            
+            if (setClientReports) {
+               setClientReports(prev => ({
+                 ...prev,
+                 [activeBrand]: { ...prev?.[activeBrand], ...mappedData }
+               }));
             }
           }
         } catch (e) {
-          console.error("Auto login failed", e);
+          console.error("Failed to fetch client data", e);
         }
       };
-      // We need a server endpoint that supports token_login.
-      // Wait, api/clients/auth.js doesn't support token_login.
-      // I will update auth.js to support it.
+      
+      fetchClientData();
+      
+      // Optional: Set up an interval to poll if needed, or rely on webhooks
+      const interval = setInterval(fetchClientData, 10000);
+      return () => clearInterval(interval);
     }
-  }, []);
+  }, [isSignedIn, user?.id, activeBrand, setClientReports]);
 
   useEffect(() => {
     const handleStorageChange = (e) => {
@@ -185,7 +138,10 @@ export default function ClientTransparencyPageView({
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          topic: `Müşteri Google Ads bütçesini ${actualSpend.google} TL'den ${simSpend.google} TL'ye (Beklenen Ciro: ${Math.round(expectedRevenue.google)} TL), Meta Ads bütçesini ${actualSpend.meta} TL'den ${simSpend.meta} TL'ye (Beklenen Ciro: ${Math.round(expectedRevenue.meta)} TL) çekiyor. Hangi platform daha karlı? Ajans olarak müşteriye profesyonel, veri odaklı ve yönlendirici 1 paragraflık net bir karar tavsiyesi yaz. Çok kısa olsun, her iki platformu sayılarla kıyaslayarak birine yönlendir. (Rota AI Karşılaştırmalı Büyüme Simülasyonu)`
+          actualSpend,
+          simSpend,
+          expectedRevenue,
+          actualRevenue
         })
       });
 
@@ -714,9 +670,10 @@ export default function ClientTransparencyPageView({
 
   const isEcommerceBrand = activeBrand === 'ecommerce' || currentData.industry?.toLowerCase().includes('e-ticaret') || currentData.industry?.toLowerCase().includes('gıda') || currentData.industry?.toLowerCase().includes('ecom');
 
-  // Login view if not authenticated
-  if (!isLoggedIn) {
-    return (
+  // Render Views
+  return (
+    <>
+      <SignedOut>
       <div className="client-dashboard-page-wrapper" style={{ 
         minHeight: '100vh', 
         paddingTop: '120px', 
@@ -834,138 +791,17 @@ export default function ClientTransparencyPageView({
               </div>
             )}
 
-            <form onSubmit={handleLogin} style={{ textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div className="admin-form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#f8fafc', marginBottom: '0.4rem', display: 'block' }}>Kullanıcı Adı</label>
-                <div style={{ position: 'relative' }}>
-                  <i className="fa-solid fa-user" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '0.85rem' }}></i>
-                  <input
-                    type="text"
-                    required
-                    placeholder="kullanıcı adı"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem 0.75rem 2.25rem',
-                      borderRadius: '12px',
-                      border: '1px solid rgba(15, 23, 42, 0.15)',
-                      background: '#1e293b',
-                      fontSize: '0.85rem',
-                      color: '#f8fafc',
-                      outline: 'none',
-                      boxShadow: 'none',
-                      transition: 'border-color 0.2s, box-shadow 0.2s'
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="admin-form-group">
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#f8fafc', marginBottom: '0.4rem', display: 'block' }}>Şifre</label>
-                <div style={{ position: 'relative' }}>
-                  <i className="fa-solid fa-key" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '0.85rem' }}></i>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    required
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.75rem 2.5rem 0.75rem 2.25rem',
-                      borderRadius: '12px',
-                      border: '1px solid rgba(15, 23, 42, 0.15)',
-                      background: '#1e293b',
-                      fontSize: '0.85rem',
-                      color: '#f8fafc',
-                      outline: 'none',
-                      boxShadow: 'none',
-                      transition: 'border-color 0.2s, box-shadow 0.2s'
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    style={{
-                      position: 'absolute',
-                      right: '12px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      background: 'none',
-                      border: 'none',
-                      color: '#64748b',
-                      cursor: 'pointer',
-                      fontSize: '0.9rem',
-                      padding: 0
-                    }}
-                  >
-                    <i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i>
-                  </button>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="btn btn-primary"
-                style={{
-                  width: '100%',
-                  padding: '0.8rem',
-                  borderRadius: '12px',
-                  fontWeight: '700',
-                  fontSize: '0.9rem',
-                  marginTop: '0.5rem',
-                  background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
-                  border: 'none',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 15px rgba(99, 102, 241, 0.2)',
-                  transition: 'all 0.2s ease',
-                  height: 'auto'
-                }}
-              >
-                {isLoggingIn ? 'Giriş Yapılıyor...' : 'Giriş Yap'} <i className="fa-solid fa-arrow-right-to-bracket" style={{ marginLeft: '6px' }}></i>
-              </button>
-            </form>
-
-            {/* Help / Demo Accounts Card */}
-            {showDemoInfo && (
-              <div style={{
-                marginTop: '2rem',
-                padding: '1rem',
-                borderRadius: '14px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid rgba(255, 255, 255, 0.05)',
-                textAlign: 'left'
-              }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#f8fafc', display: 'block', marginBottom: '0.5rem' }}>
-                  <i className="fa-solid fa-circle-info" style={{ color: 'var(--primary)', marginRight: '4px' }}></i> Test Giriş Bilgileri (Demo Modu)
-                </span>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', color: '#94a3b8' }}>
-                    <span>E-Ticaret Müşterisi:</span>
-                    <code style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(15,23,42,0.06)' }}>
-                      {rawEcommerce.username || 'ege'} / {rawEcommerce.password || 'ege123'}
-                    </code>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', color: '#94a3b8' }}>
-                    <span>B2B Müşterisi:</span>
-                    <code style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(15,23,42,0.06)' }}>
-                      {rawB2b.username || 'liman'} / {rawB2b.password || 'liman123'}
-                    </code>
-                  </div>
-                </div>
-              </div>
-            )}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+              <SignIn routing="hash" fallbackRedirectUrl="/musteri" />
+            </div>
 
           </div>
         </div>
       </div>
-    );
-  }
+      </SignedOut>
 
-  // Dashboard view if authenticated
-  return (
+      {/* Dashboard view if authenticated */}
+      <SignedIn>
     <div className="client-os-wrapper">
        <style>{`
           .client-os-wrapper {
@@ -1162,40 +998,10 @@ export default function ClientTransparencyPageView({
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--primary-glow)', padding: '6px 12px', borderRadius: '8px', border: '1px solid rgba(99, 102, 241, 0.15)' }}>
               <i className="fa-solid fa-circle-check" style={{ color: 'var(--primary)', fontSize: '0.8rem' }}></i>
               <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#f8fafc' }}>
-                {currentData.brandName || (activeBrand === 'ecommerce' ? 'E-Ticaret Müşterisi' : 'B2B Müşterisi')} Oturumu Aktif
+                Oturum Aktif
               </span>
             </div>
-            <button 
-              onClick={handleLogout}
-              className="btn btn-secondary"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '0.5rem 1rem',
-                borderRadius: '8px',
-                fontSize: '0.78rem',
-                fontWeight: '700',
-                cursor: 'pointer',
-                border: '1px solid rgba(239, 68, 68, 0.2)',
-                background: 'rgba(239, 68, 68, 0.03)',
-                color: '#ef4444',
-                transition: 'all 0.2s',
-                height: 'auto',
-                width: 'auto'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#ef4444';
-                e.currentTarget.style.color = '#fff';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.03)';
-                e.currentTarget.style.color = '#ef4444';
-              }}
-            >
-              <i className="fa-solid fa-arrow-right-from-bracket"></i>
-              Güvenli Çıkış
-            </button>
+            <UserButton afterSignOutUrl="/" />
           </div>
 
           {/* Date Picker & Brand Info */}
@@ -2343,5 +2149,7 @@ export default function ClientTransparencyPageView({
       </div>
     </div>
     </div>
+    </SignedIn>
+    </>
   );
 }

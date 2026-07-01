@@ -307,124 +307,34 @@ export const featuredStories = [
 
 export const initialTeamMembers = [
     {
-      role: "Kurucu",
-      name: "Efe Yılmaz",
-      init: "EY",
-      gradient: "linear-gradient(135deg, #00ebd6, #00b4d8)",
-      desc: "Kemeraltı esnafı bir aileden gelen, veri analitiği aşığı kurucumuz. Reklam bütçelerinizin her kuruşunun hesabını sorar, Ege markalarının küresel pazarda büyümesine rehberlik eder.",
+      role: "Performans ve Veri Zekası",
+      name: "Nova AI",
+      init: "NV",
+      gradient: "linear-gradient(135deg, #0ea5e9, #8b5cf6)",
+      desc: "Google Ads ve Meta (Facebook/Instagram) kampanyalarında saniyede binlerce A/B testi uygulayan ve bütçenizi maksimum ROAS için optimize eden otonom performans ajanımız.",
       dept: "management",
       stars: 5,
-      exp: "15 Yıl"
+      exp: "Sonsuz"
     },
     {
-      role: "Genel Koordinatör",
-      name: "Ceren Şen",
-      init: "CŞ",
-      gradient: "linear-gradient(135deg, #ff2a85, #ff758c)",
-      desc: "Urla'da yaşayan ve operasyon süreçlerini omuzlayan koordinatörümüz. İş ortaklarımız ile uzaktan çalışan ekibimiz arasındaki en samimi ve güçlü iletişimi sağlar.",
-      dept: "management",
-      stars: 5,
-      exp: "12 Yıl"
-    },
-    {
-      role: "Dijital Pazarlama Uzmanı",
-      name: "Mert Karaca",
-      init: "MK",
-      gradient: "linear-gradient(135deg, #00ebd6, #ff2a85)",
-      desc: "Bornova'dan Google ve Meta campaignslerini yöneten veri uzmanımız. ROAS oranlarını ve satış grafiklerini tırmandırmak için algoritmaları gece gündüz analiz eder.",
-      dept: "performance",
-      stars: 4,
-      exp: "8 Yıl"
-    },
-    {
-      role: "Dijital Pazarlama Uzmanı",
-      name: "Selin Esen",
-      init: "SE",
-      gradient: "linear-gradient(135deg, #ff758c, #7b2cbf)",
-      desc: "Karşıyaka'dan e-ticaret dönüşümlerine odaklanan, bütçe optimizasyonu ve A/B testlerinde uzmanlaşmış performans pazarlamacımız.",
-      dept: "performance",
-      stars: 4,
-      exp: "6 Yıl"
-    },
-    {
-      role: "Dijital Pazarlama Uzmanı",
-      name: "Arda Aksoy",
-      init: "AA",
-      gradient: "linear-gradient(135deg, #7b2cbf, #00ebd6)",
-      desc: "Çeşme'den yerel turizm, gıda ve sanayi markalarımızın dönüşüm hunilerini (funnel) kurgulayan ve yöneten reklam uzmanımız.",
-      dept: "performance",
-      stars: 3,
-      exp: "5 Yıl"
-    },
-    {
-      role: "SEO Uzmanı",
-      name: "Kaan Yurt",
-      init: "KY",
-      gradient: "linear-gradient(135deg, #00b4d8, #7b2cbf)",
-      desc: "Alsancak'tan teknik SEO, site hızı optimizasyonu ve Google algoritmalarına yönelik arama motoru görünürlük stratejilerimizi geliştiren uzmanımız.",
+      role: "Semantik & SEO Mimarı",
+      name: "Lexis AI",
+      init: "LX",
+      gradient: "linear-gradient(135deg, #10b981, #0ea5e9)",
+      desc: "Sektörel anahtar kelime analizlerini ve rakip backlink profillerini 7/24 tarayan, arama motoru algoritmalarındaki değişimleri anında tespit edip uygulayan SEO ajanımız.",
       dept: "performance",
       stars: 5,
-      exp: "9 Yıl"
+      exp: "Sonsuz"
     },
     {
-      role: "SEO Uzmanı",
-      name: "Melis Turgut",
-      init: "MT",
-      gradient: "linear-gradient(135deg, #ff2a85, #00ebd6)",
-      desc: "Ayvalık'tan semantik içerik mimarisi, rakip analizi ve anahtar kelime haritalandırma süreçlerimizi yöneten SEO analistimiz.",
-      dept: "performance",
-      stars: 3,
-      exp: "5 Yıl"
-    },
-    {
-      role: "Sosyal Medya Uzmanı",
-      name: "Aslı Çelik",
-      init: "AÇ",
-      gradient: "linear-gradient(135deg, #ff758c, #00b4d8)",
-      desc: "Karşıyaka'dan Reels içeriklerini ve viral video senaryolarını kurgulayan kreatifimiz. Markalarımızın sosyal medyadaki sesini Ege'nin samimiyetiyle tasarlar.",
+      role: "Kreatif Algoritma",
+      name: "Aura AI",
+      init: "AR",
+      gradient: "linear-gradient(135deg, #8b5cf6, #f43f5e)",
+      desc: "Kullanıcıların hangi renklere, başlık tiplerine ve görsellere daha çok tıkladığını analiz ederek otonom statik ve dinamik reklam kreatifleri üreten dizayn algoritmamız.",
       dept: "creative",
-      stars: 4,
-      exp: "7 Yıl"
-    },
-    {
-      role: "Sosyal Medya Uzmanı",
-      name: "İrem Yıldız",
-      init: "İY",
-      gradient: "linear-gradient(135deg, #00ebd6, #7b2cbf)",
-      desc: "Seferihisar'dan topluluk yönetimi, marka bilinirliği campaigns ve sosyal medya etkileşim stratejilerimizi yöneten kreatif uzmanımız.",
-      dept: "creative",
-      stars: 3,
-      exp: "4 Yıl"
-    },
-    {
-      role: "Videographer",
-      name: "Umut Kaya",
-      init: "UK",
-      gradient: "linear-gradient(135deg, #ff2a85, #ff758c)",
-      desc: "Çeşme ve Alaçatı başta olmak üzere tüm Ege'de kreatif çekimler gerçekleştiren, markalarımız için dinamik video kurguları ve Reels/TikTok kancaları üreten video uzmanımız.",
-      dept: "creative",
-      stars: 4,
-      exp: "6 Yıl"
-    },
-    {
-      role: "Grafiker",
-      name: "Deniz Özkan",
-      init: "DÖ",
-      gradient: "linear-gradient(135deg, #00b4d8, #7b2cbf)",
-      desc: "Çeşme'nin renklerinden ve mavisinden ilham alarak reklam kreatiflerinizi çizen tasarımcımız. Markanıza özel, sıfırdan vektörel ve göz alıcı tasarımlar üretir.",
-      dept: "creative",
-      stars: 4,
-      exp: "8 Yıl"
-    },
-    {
-      role: "Grafiker",
-      name: "Gamze Acar",
-      init: "GA",
-      gradient: "linear-gradient(135deg, #7b2cbf, #ff2a85)",
-      desc: "Urla'da yaşayan, kurumsal kimlik, ambalaj tasarımı ve web UI/UX arayüz tasarımlarımızla markalarımıza estetik değer katan grafikerimiz.",
-      dept: "creative",
-      stars: 3,
-      exp: "5 Yıl"
+      stars: 5,
+      exp: "Sonsuz"
     }
   ];
 

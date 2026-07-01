@@ -97,18 +97,18 @@ function TeamPageView({
   };
   const departments = {
     management: {
-      title: "Yönetim & Koordinasyon",
-      desc: "Ajansımızın stratejik rotasını çizen ve operasyon süreçlerini yöneten lider kadromuz.",
+      title: "Performans Optimizasyonu",
+      desc: "Reklam yatırımlarınızı yönlendiren otonom algoritmalar.",
       members: teamMembers.filter(m => m.dept === "management")
     },
     performance: {
-      title: "Performans Pazarlama & SEO",
-      desc: "Google & Meta reklam bütçelerinizi optimize eden, arama motoru görünürlüğünüzü tırmandıran veri uzmanlarımız.",
+      title: "Semantik Analiz",
+      desc: "Görünürlüğünüzü tırmandıran yapay zeka ajanları.",
       members: teamMembers.filter(m => m.dept === "performance")
     },
     creative: {
-      title: "Sosyal Medya & Kreatif Tasarım",
-      desc: "Markanızın görsel dünyasını, Reels video kurgularını ve sosyal medya sesini tasarlayan yaratıcı ekibimiz.",
+      title: "Otonom Kreatif Tasarım",
+      desc: "Verilere dayalı görsel üreten jeneratif algoritmalar.",
       members: teamMembers.filter(m => m.dept === "creative")
     }
   };
@@ -119,15 +119,15 @@ function TeamPageView({
           <i className="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön
         </button>
         <div className="breadcrumb">
-          <span>Ana Sayfa</span> &rarr; <span className="active">Ekiplerimiz</span>
+          <span>Ana Sayfa</span> &rarr; <span className="active">Otonom Ajanlarımız</span>
         </div>
       </div>
 
       {/* Hero Header */}
       <div className="izmir-hero-header">
-        <h1 className="izmir-hero-title">Ajans Rota'nın Kurucusundan Uzmanına <br /><span>Ege'den Uzaktan Çalışan 360° Dijital Kadrosu</span></h1>
+        <h1 className="izmir-hero-title">İnsan Hatalarından Arındırılmış <br /><span style={{ color: 'var(--cyber-blue)' }}>7/24 Otonom Zeka</span></h1>
         <p className="izmir-hero-desc">
-          Ege'nin samimi ruhunu, yenilikçi uzaktan çalışma kültürüyle birleştiren ve markanıza özel dijital rotayı çizen proaktif kadromuzla tanışın.
+          Uyku, yorgunluk ve duygusal kararlar yok. Markanızın büyüme rotasını milisaniyeler içinde çizen otonom ajanlarımızla tanışın.
         </p>
       </div>
 
