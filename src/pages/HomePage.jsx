@@ -988,7 +988,7 @@ export default function HomePage(props) {
                           <h4 style={{ fontSize: '1rem', color: 'var(--text-main)', fontWeight: '700', margin: 0 }}>Ücretsiz Ön Analiz Talep Edin</h4>
                           <div style={{ height: '1px', flex: 1, background: 'rgba(0,0,0,0.05)' }}></div>
                         </div>
-                        {renderContactForm()}
+                        {renderContactForm(true)}
                       </div>
                     </div>
                   ) : <>

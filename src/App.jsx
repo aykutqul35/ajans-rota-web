@@ -1373,7 +1373,7 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
   const fullAppState = { ...appState, ...calcData, commitment, setCommitment, reportingPackage, setReportingPackage, smPackage, setSmPackage, webDesignType, setWebDesignType, webDesignFullName, setWebDesignFullName, webDesignEmail, setWebDesignEmail, webDesignPhone, setWebDesignPhone, webDesignMessage, setWebDesignMessage, webDesignLoading, setWebDesignLoading, webDesignSubmitted, setWebDesignSubmitted, formData, setFormData, isSubmitted, setIsSubmitted, handleWebDesignSubmit, handleContactSubmit, activeMobileDropdown, setActiveMobileDropdown };
 
 const renderReportForm = () => <ReportForm {...fullAppState} handleGenerateReport={handleGenerateReport} />;
-  const renderContactForm = () => <ContactForm formData={formData} setFormData={setFormData} isSubmitted={isSubmitted} handleContactSubmit={handleContactSubmit} servicesData={servicesData} />;
+  const renderContactForm = (hideService = false) => <ContactForm formData={formData} setFormData={setFormData} isSubmitted={isSubmitted} handleContactSubmit={handleContactSubmit} servicesData={servicesData} hideService={hideService} />;
   const renderWebDesignForm = (isCombined = false) => <WebDesignForm {...fullAppState} isCombined={isCombined} handleWebDesignSubmit={handleWebDesignSubmit} webDesignType={webDesignType} setWebDesignType={setWebDesignType} webDesignSubmitted={webDesignSubmitted} setWebDesignSubmitted={setWebDesignSubmitted} />;
 
   const isSecurePanel = currentPath.startsWith('/rota-management-vault-x9') || currentPath.startsWith('/portal-girisi-x9') || currentPath.startsWith('/client-portal-secure') || currentPath.startsWith('/musteri');

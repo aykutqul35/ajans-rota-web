@@ -39,19 +39,21 @@ export default function ContactForm(props) {
           </div>
         </div>
 
-        <div className="form-group-row">
-          <div className="form-group">
+        <div className={props.hideService ? "form-group" : "form-group-row"}>
+          <div className="form-group" style={{ width: '100%' }}>
             <label htmlFor="company">Şirket Adı / Web Sitesi</label>
             <input type="text" id="company" name="company" value={formData.company} onChange={handleInputChange} placeholder="sirketadi.com" className="form-input" />
           </div>
-          <div className="form-group">
-            <label htmlFor="service">İhtiyacınız Olan Hizmet</label>
-            <select id="service" name="service" value={formData.service} onChange={handleInputChange} className="form-input form-select">
-              {Object.keys(servicesData || {}).map(key => <option key={key} value={(servicesData || {})[key]?.title}>
-                  {(servicesData || {})[key]?.title}
-                </option>)}
-            </select>
-          </div>
+          {!props.hideService && (
+            <div className="form-group" style={{ width: '100%' }}>
+              <label htmlFor="service">İhtiyacınız Olan Hizmet</label>
+              <select id="service" name="service" value={formData.service} onChange={handleInputChange} className="form-input form-select">
+                {Object.keys(servicesData || {}).map(key => <option key={key} value={(servicesData || {})[key]?.title}>
+                    {(servicesData || {})[key]?.title}
+                  </option>)}
+              </select>
+            </div>
+          )}
         </div>
 
         <div className="form-group">
