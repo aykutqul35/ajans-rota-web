@@ -488,7 +488,7 @@ export default function LeadDetailModal({
         <!-- Footer -->
         <div style="margin-top: 45px; border-top: 1px solid #e2e8f0; padding-top: 8px; text-align: center; font-size: 7.5px; color: #94a3b8; page-break-inside: avoid;">
           Bu teklif belgesi Ajans Rota dijital performans yönetim ekibi tarafından otomatik oluşturulmuştur. Fiyatlar KDV hariçtir.<br>
-          <strong>www.ajansrota.com | hello@ajansrota.com | +90 544 584 45 43</strong>
+          <strong>www.ajansrota.com | {settingsData?.email || 'hello@ajansrota.com'} | {settingsData?.phone || '+90 544 584 45 43'}</strong>
         </div>
 
       </div>
@@ -533,10 +533,10 @@ export default function LeadDetailModal({
     const emailSubject = encodeURIComponent(`Ajans Rota - Kurumsal Hizmet Teklifi (${lead.company || lead.fullName})`);
     let emailBody = '';
     if (isWebDesign) {
-      emailBody = `Sayın ${lead.fullName},\n\n` + `Markanız için yaptığınız Web Tasarım Projesi talebine istinaden hazırladığımız kurumsal hizmet teklifimiz e-postamıza eklenmiştir.\n\n` + `Proje Detayları:\n` + `- Proje Türü: ${lead.company}\n` + `- Talebiniz: ${lead.message || '-'}\n\n` + `Detayları ve süreci görüşmek için en kısa sürede sizinle iletişime geçeceğiz.\n\n` + `Saygılarımızla,\n` + `Ajans Rota Performans Departmanı\n` + `www.ajansrota.com | hello@ajansrota.com`;
+      emailBody = `Sayın ${lead.fullName},\n\n` + `Markanız için yaptığınız Web Tasarım Projesi talebine istinaden hazırladığımız kurumsal hizmet teklifimiz e-postamıza eklenmiştir.\n\n` + `Proje Detayları:\n` + `- Proje Türü: ${lead.company}\n` + `- Talebiniz: ${lead.message || '-'}\n\n` + `Detayları ve süreci görüşmek için en kısa sürede sizinle iletişime geçeceğiz.\n\n` + `Saygılarımızla,\n` + `Ajans Rota Performans Departmanı\n` + `www.ajansrota.com | ${settingsData?.email || 'hello@ajansrota.com'}`;
     } else {
       const parsed = parseProposalDetails(lead.message);
-      emailBody = `Sayın ${lead.fullName},\n\n` + `Ajans Rota Hizmet Bedeli Planlayıcısı üzerinden yaptığınız talebe istinaden hazırladığımız fiyat teklifi ve detaylar aşağıda bilgilerinize sunulmuştur.\n\n` + `Teklif Detayları:\n` + `- Seçilen Hizmetler: ${parsed.services}\n` + `- Çalışma Modeli: ${parsed.pricingModel}\n` + `- Taahhüt Süresi: ${parsed.term}\n` + `- Raporlama Paketi: ${parsed.reporting}\n` + `- Aylık Reklam Bütçesi: ${parsed.adBudget}\n` + `- Aylık Ajans Ücreti: ${parsed.fee} (KDV Hariç)\n\n` + `Resmi antetli teklif belgeniz ekte sunulmuştur. İş birliğimizi başlatmak ve kampanya kurulumlarına geçmek için bu e-postayı onaylayabilirsiniz.\n\n` + `Saygılarımızla,\n` + `Ajans Rota Performans Departmanı\n` + `www.ajansrota.com | hello@ajansrota.com`;
+      emailBody = `Sayın ${lead.fullName},\n\n` + `Ajans Rota Hizmet Bedeli Planlayıcısı üzerinden yaptığınız talebe istinaden hazırladığımız fiyat teklifi ve detaylar aşağıda bilgilerinize sunulmuştur.\n\n` + `Teklif Detayları:\n` + `- Seçilen Hizmetler: ${parsed.services}\n` + `- Çalışma Modeli: ${parsed.pricingModel}\n` + `- Taahhüt Süresi: ${parsed.term}\n` + `- Raporlama Paketi: ${parsed.reporting}\n` + `- Aylık Reklam Bütçesi: ${parsed.adBudget}\n` + `- Aylık Ajans Ücreti: ${parsed.fee} (KDV Hariç)\n\n` + `Resmi antetli teklif belgeniz ekte sunulmuştur. İş birliğimizi başlatmak ve kampanya kurulumlarına geçmek için bu e-postayı onaylayabilirsiniz.\n\n` + `Saygılarımızla,\n` + `Ajans Rota Performans Departmanı\n` + `www.ajansrota.com | ${settingsData?.email || 'hello@ajansrota.com'}`;
     }
     const mailtoUrl = `mailto:${lead.email}?subject=${emailSubject}&body=${encodeURIComponent(emailBody)}`;
     setTimeout(() => {
@@ -960,7 +960,7 @@ export default function LeadDetailModal({
         <!-- Footer Page 2 -->
         <div style="margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 8px; text-align: center; font-size: 7.5px; color: #94a3b8; page-break-inside: avoid;">
           Ajans Rota Büyüme Simülatörü analizi sonucudur. Bu rapor bilgilendirme amaçlı olup kesin ticari taahhüt içermez.<br>
-          <strong>www.ajansrota.com | info@ajansrota.com | +90 (232) 123 45 67</strong>
+          <strong>www.ajansrota.com | {settingsData?.email || 'info@ajansrota.com'} | {settingsData?.phone || '+90 (232) 123 45 67'}</strong>
         </div>
       </div>
     `;
@@ -1974,7 +1974,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
         <!-- Footer -->
         <div style="margin-top: 35px; border-top: 1px solid #e2e8f0; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 8px; color: #94a3b8;">
           <span>© ${new Date().getFullYear()} Ajans Rota Büyüme Akademisi. Tüm Hakları Saklıdır.</span>
-          <span>www.ajansrota.com | iletisim@ajansrota.com</span>
+          <span>www.ajansrota.com | {settingsData?.email || 'iletisim@ajansrota.com'}</span>
         </div>
       </div>
     `;
@@ -2501,7 +2501,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
           
           {/* Hidden PDF Template */}
           <div style={{ display: 'none' }}>
-            <AiSeoPdfTemplate ref={pdfRef} lead={selectedLead} />
+            <AiSeoPdfTemplate ref={pdfRef} lead={selectedLead} settingsData={settingsData} />
           </div>
         </div>
   );

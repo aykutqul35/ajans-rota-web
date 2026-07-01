@@ -2,7 +2,7 @@ import React from 'react';
 
 // This component is only used for generating the PDF.
 // It receives a `lead` object which contains the user's information and website URL.
-const AiSeoPdfTemplate = React.forwardRef(({ lead }, ref) => {
+const AiSeoPdfTemplate = React.forwardRef(({ lead, settingsData }, ref) => {
   if (!lead) return null;
 
   // Generate some deterministic mock data based on the website name length
@@ -16,6 +16,9 @@ const AiSeoPdfTemplate = React.forwardRef(({ lead }, ref) => {
   const generatedDate = new Date().toLocaleDateString('tr-TR', {
     year: 'numeric', month: 'long', day: 'numeric'
   });
+
+  const phone = settingsData?.phone || '';
+  const email = settingsData?.email || '';
 
   return (
     <div ref={ref} style={{ padding: '40px', fontFamily: 'Arial, sans-serif', color: '#333', background: '#fff', width: '800px' }}>
@@ -170,7 +173,7 @@ const AiSeoPdfTemplate = React.forwardRef(({ lead }, ref) => {
           Bu rapor otomatik bir ön analizdir. Uzman ekibimizle birlikte kapsamlı bir dijital strateji oluşturmak ve rakiplerinizin önüne geçmek için bizimle iletişime geçin.
         </p>
         <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
-          📞 0 (850) 123 45 67 &nbsp;|&nbsp; ✉️ merhaba@ajansrota.com
+          📞 {phone} &nbsp;|&nbsp; ✉️ {email}
         </div>
       </div>
 
