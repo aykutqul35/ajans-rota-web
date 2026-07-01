@@ -1130,8 +1130,7 @@ function AdminDashboardView({
               handleViewLead={handleViewLead}
               handleDeleteLead={handleDeleteLead}
               servicesData={servicesData}
-
-
+              settingsData={settingsData}
             />
           )}
 

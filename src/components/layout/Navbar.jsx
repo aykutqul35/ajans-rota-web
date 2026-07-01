@@ -48,7 +48,7 @@ export default function Navbar({
                 <span><i className="fa-solid fa-briefcase nav-icon"></i>Hizmetlerimiz</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
               </a>
               <ul className={`dropdown-menu ${activeMobileDropdown === 'services' ? 'mobile-active' : ''}`}>
-                {Object.keys(servicesData).map(key => {
+                {Object.keys(servicesData || {}).map(key => {
                 let iconClass = 'fa-solid fa-chevron-right';
                 if (key === 'google') iconClass = 'fa-brands fa-google';
                 if (key === 'meta') iconClass = 'fa-brands fa-facebook';
@@ -64,6 +64,20 @@ export default function Navbar({
                       </a>
                     </li>;
               })}
+              </ul>
+            </li>
+            <li className={`nav-link dropdown ${activeMobileDropdown === 'sectors' ? 'active' : ''}`}>
+              <a href="javascript:void(0)" onClick={e => {
+                e.preventDefault();
+                setActiveMobileDropdown(activeMobileDropdown === 'sectors' ? null : 'sectors');
+              }} className="dropdown-toggle">
+                <span><i className="fa-solid fa-chart-pie nav-icon"></i>Sektörler</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
+              </a>
+              <ul className={`dropdown-menu ${activeMobileDropdown === 'sectors' ? 'mobile-active' : ''}`}>
+                <li><a href="/sektorler/saglik-turizmi" onClick={e => { e.preventDefault(); navigateTo('/sektorler/saglik-turizmi'); }}><i className="fa-solid fa-user-doctor nav-icon"></i>Sağlık Turizmi</a></li>
+                <li><a href="/sektorler/gayrimenkul-insaat" onClick={e => { e.preventDefault(); navigateTo('/sektorler/gayrimenkul-insaat'); }}><i className="fa-solid fa-building-shield nav-icon"></i>Gayrimenkul & İnşaat</a></li>
+                <li><a href="/sektorler/b2b-ihracat" onClick={e => { e.preventDefault(); navigateTo('/sektorler/b2b-ihracat'); }}><i className="fa-solid fa-industry nav-icon"></i>B2B & İhracat</a></li>
+                <li><a href="/sektorler/turizm-otelcilik" onClick={e => { e.preventDefault(); navigateTo('/sektorler/turizm-otelcilik'); }}><i className="fa-solid fa-umbrella-beach nav-icon"></i>Turizm & Otelcilik</a></li>
               </ul>
             </li>
             <li className={`nav-link dropdown ${activeMobileDropdown === 'corporate' ? 'active' : ''}`}>

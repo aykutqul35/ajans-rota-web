@@ -47,8 +47,8 @@ export default function ContactForm(props) {
           <div className="form-group">
             <label htmlFor="service">İhtiyacınız Olan Hizmet</label>
             <select id="service" name="service" value={formData.service} onChange={handleInputChange} className="form-input form-select">
-              {Object.keys(servicesData).map(key => <option key={key} value={servicesData[key].title}>
-                  {servicesData[key].title}
+              {Object.keys(servicesData || {}).map(key => <option key={key} value={(servicesData || {})[key]?.title}>
+                  {(servicesData || {})[key]?.title}
                 </option>)}
             </select>
           </div>
