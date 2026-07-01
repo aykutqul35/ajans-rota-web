@@ -877,7 +877,7 @@ export default function LeadsTab({
                       </thead>
                       <tbody>
                         {filteredLeads.map(lead => <tr key={lead.id} className={lead.status === 'unread' ? 'unread' : ''}>
-                            <td className="hide-on-mobile">{lead.created_at ? lead.created_at.substring(0, 16) : 'Bilinmiyor'}</td>
+                            <td className="hide-on-mobile">{(lead.date || lead.created_at) ? (lead.date || lead.created_at).substring(0, 16).replace('T', ' ') : 'Bilinmiyor'}</td>
                             <td>
                               <div><strong>{lead.fullName}</strong></div>
                               <div style={{
