@@ -183,6 +183,14 @@ export default function Navbar({
           </ul>
 
           <div className="nav-actions">
+            <a href="/client-portal-secure" className="btn btn-secondary" style={{ background: 'transparent', color: 'var(--text-dark)', border: '1px solid var(--glass-border)' }} onClick={e => {
+                  e.preventDefault();
+                  navigateTo('/client-portal-secure');
+              setIsMobileMenuOpen(false);
+            }}>
+              <i className="fa-solid fa-lock" style={{ marginRight: '6px' }}></i>
+              Müşteri Girişi
+            </a>
 
             <a href="/iletisim" className="btn btn-secondary" onClick={e => {
               e.preventDefault();
