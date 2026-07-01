@@ -888,6 +888,7 @@ export default function HomePage(props) {
 
                 {/* Fee Results Display */}
                 <div className="calculator-results">
+                  {isOnlyDesignSelected ? renderWebDesignForm(false) : isOnlySeoSelected ? (
                     <div style={{ 
                       background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
                       borderRadius: '24px',
@@ -990,6 +991,7 @@ export default function HomePage(props) {
                         {renderContactForm()}
                       </div>
                     </div>
+                  ) : <>
                       <div className="result-card highlight">
                         <div className="result-lbl">Tahmini Aylık Ajans Ücreti</div>
                         <div className="result-val">{finalAgencyFee.toLocaleString('tr-TR')} ₺</div>
