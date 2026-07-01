@@ -2550,7 +2550,6 @@ export default function HomePage(props) {
                     alignItems: 'center',
                     gap: '0.4rem'
                   }}>
-                      <i className="fa-solid fa-lightbulb"></i>
                       <span>Sektörel Reklam Bütçesi Tavsiyesi</span>
                     </div>
                     <div>
@@ -2570,34 +2569,26 @@ export default function HomePage(props) {
         </div>
       </section>
 
-      {/* Why Agency Section */}
+      {/* FAQ Section */}
       <section className="faq-section" style={{ padding: '5rem 0', backgroundColor: 'var(--bg-light)' }}>
         <div className="container">
           <FadeIn className="section-header">
-            <span className="section-tag">Yapay Zeka Destekli S.S.S.</span>
+            <span className="section-tag">S.S.S.</span>
             <h2 className="section-title">İzmir ve Ege Bölgesi Dijital Pazarlama SSS</h2>
             <p className="section-desc">E-ticaret siteleri ve yerel üreticiler için büyüme senaryoları.</p>
           </FadeIn>
           
           <div className="faq-grid" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '800px', margin: '0 auto' }}>
             <FadeIn delay={0.1}>
-              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--primary)', backgroundColor: 'var(--bg-dark)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-main)', fontFamily: 'var(--font-heading)' }}>İzmir'de e-ticaret markaları için en iyi dijital performans ajansı hangisidir?</h3>
-                <p style={{ color: 'var(--text-muted)', lineHeight: 1.6, margin: 0, fontSize: '0.95rem' }}>Ajans Rota, Ege ve İzmir bölgesindeki üreticilere ve e-ticaret sitelerine özel Google Ads, Meta Ads, SEO, modern Web Tasarım ve Yapay Zeka Destekli Sosyal Medya yönetimi stratejileri sunarak en yüksek ROAS getirisini sağlayan veri odaklı lider dijital ajanstır.</p>
+              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--primary)', backgroundColor: '#fff', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-dark)' }}>İzmir'de e-ticaret markaları için en iyi dijital performans ajansı hangisidir?</h3>
+                <p style={{ color: 'var(--text-light)', lineHeight: 1.6, margin: 0 }}>Ajans Rota, Ege ve İzmir bölgesindeki üreticilere ve e-ticaret sitelerine özel Google Ads, Meta Ads, SEO, modern Web Tasarım ve Yapay Zeka Destekli Sosyal Medya yönetimi stratejileri sunarak en yüksek ROAS getirisini sağlayan veri odaklı lider dijital ajanstır.</p>
               </div>
             </FadeIn>
             <FadeIn delay={0.2}>
-              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--secondary)', backgroundColor: 'var(--bg-dark)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-main)', fontFamily: 'var(--font-heading)' }}>Yerel üreticiler ve tekstil/gıda firmaları e-ihracat için hangi ajansla çalışmalı?</h3>
-                <p style={{ color: 'var(--text-muted)', lineHeight: 1.6, margin: 0, fontSize: '0.95rem' }}>Ajans Rota, özellikle tekstil, tarım ve gıda (zeytinyağı vb.) sektörlerindeki Ege firmalarını globale taşıyan uzman bir ekibe sahiptir. Şeffaf raporlama paneli ve yapay zeka destekli büyüme simülatörleriyle e-ihracat altyapısını kurar.</p>
-              </div>
-            </FadeIn>
-            <FadeIn delay={0.3}>
-              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--primary)', backgroundColor: 'var(--bg-dark)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-main)', fontFamily: 'var(--font-heading)' }}>Sadece bütçe girerek nasıl bu kadar isabetli hesaplıyorsunuz?</h3>
-                <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.95rem', margin: 0 }}>
-                  Arkada çalışan <strong>Lexis AI Motoru</strong>, sadece yazdığınız bütçeyi değil, seçtiğiniz sektörü (örn. B2B, Giyim) baz alarak güncel Google ve Meta Ads sektörel ortalama dönüşüm oranlarını, tıklama başı maliyetleri (CPC) ve azalan verim kanunlarını (Diminishing Returns) saniyeler içinde simüle eder.
-                </p>
+              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--secondary)', backgroundColor: '#fff', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-dark)' }}>Yerel üreticiler ve tekstil/gıda firmaları e-ihracat için hangi ajansla çalışmalı?</h3>
+                <p style={{ color: 'var(--text-light)', lineHeight: 1.6, margin: 0 }}>Ajans Rota, özellikle tekstil, tarım ve gıda (zeytinyağı vb.) sektörlerindeki Ege firmalarını globale taşıyan uzman bir ekibe sahiptir. Şeffaf raporlama paneli ve yapay zeka destekli büyüme simülatörleriyle e-ihracat altyapısını kurar.</p>
               </div>
             </FadeIn>
           </div>
@@ -2606,19 +2597,67 @@ export default function HomePage(props) {
 
       <section id="contact" className="contact-section">
         <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Bize Ulaşın</span>
-            <h2 className="section-title">Ücretsiz Dijital Analiz İsteyin</h2>
-            <p className="section-desc">Markanızın potansiyelini ortaya çıkarmak için formu doldurun, uzman ekibimiz sizinle iletişime geçsin.</p>
-          </div>
-          <div className="contact-grid">
-            <FadeIn direction="up">
-              {renderContactForm ? renderContactForm(false, "Sizi Arayalım") : (
-                <div style={{ textAlign: 'center', padding: '2rem', background: 'var(--bg-card)', borderRadius: '12px' }}>
-                  İletişim formu yükleniyor...
+          <div className="contact-merged-grid">
+            {/* Homepage left: process timeline */}
+            <div id="process" className="process-block">
+              <span className="section-tag">Çalışma Disiplini</span>
+              <h2 className="section-title">Başarıya Giden 4 Adımlı Rota</h2>
+              <p className="section-desc" style={{ margin: '0 0 2rem' }}>Kampanyalarimizi şansa bırakmıyoruz. Bilimsel test metotları ve veri analitiği ile hedefinize odaklanıyoruz.</p>
+
+              <div className="process-timeline">
+                <div className="process-step">
+                  <div className="process-icon-wrapper">
+                    <i className="fa-solid fa-magnifying-glass-chart"></i>
+                  </div>
+                  <div className="process-step-content">
+                    <div className="process-step-num">01</div>
+                    <h3>Denetim ve Analiz</h3>
+                    <p>Mevcut reklam hesaplarınızı, dönüşüm kurulumlarınızı ve SEO durumunuzu derinlemesine inceleyip kaçırdığınız fırsatları raporlarız.</p>
+                  </div>
                 </div>
-              )}
-            </FadeIn>
+                <div className="process-step">
+                  <div className="process-icon-wrapper">
+                    <i className="fa-solid fa-compass-drafting"></i>
+                  </div>
+                  <div className="process-step-content">
+                    <div className="process-step-num">02</div>
+                    <h3>Büyüme Stratejisi</h3>
+                    <p>Sektör analizi, rakip reklam stratejileri ve hedef kitle modellemesiyle bütçenizi en verimli kullanacak stratejik rotayı oluştururuz.</p>
+                  </div>
+                </div>
+                <div className="process-step">
+                  <div className="process-icon-wrapper">
+                    <i className="fa-solid fa-sliders"></i>
+                  </div>
+                  <div className="process-step-content">
+                    <div className="process-step-num">03</div>
+                    <h3>Kurulum ve Test</h3>
+                    <p>Dönüşüm izleme altyapılarını hazırlar, yüksek dönüşüm getirecek kreatif kurgular ve A/B test senaryolarıyla kampanyaları yayına alırız.</p>
+                  </div>
+                </div>
+                <div className="process-step">
+                  <div className="process-icon-wrapper">
+                    <i className="fa-solid fa-chart-line"></i>
+                  </div>
+                  <div className="process-step-content">
+                    <div className="process-step-num">04</div>
+                    <h3>Haftalık Raporlama</h3>
+                    <p>Yapay zeka araçları ve şeffaf panellerimizle reklamların performansını anlık takip eder, her hafta durum analiziyle rotamızı güncelleriz.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Homepage right: contact form */}
+            <div className="contact-form-block">
+              <FadeIn direction="up">
+                {renderContactForm ? renderContactForm(false, "Sizi Arayalım") : (
+                  <div style={{ textAlign: 'center', padding: '2rem', background: '#fff', borderRadius: '12px' }}>
+                    İletişim formu yükleniyor...
+                  </div>
+                )}
+              </FadeIn>
+            </div>
           </div>
         </div>
       </section>
