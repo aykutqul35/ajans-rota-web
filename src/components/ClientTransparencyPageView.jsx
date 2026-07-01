@@ -1,7 +1,7 @@
 import toast from 'react-hot-toast';
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { SignedIn, SignedOut, SignIn, UserButton, useUser } from '@clerk/clerk-react';
+
 
 export default function ClientTransparencyPageView({
   clientReports,
@@ -9,7 +9,7 @@ export default function ClientTransparencyPageView({
   onBack,
   onContactClick
 }) {
-  const { isSignedIn, user } = useUser();
+  const isSignedIn = false; const user = null;
   const [activeBrand, setActiveBrand] = useState(() => localStorage.getItem('local_client_brand') || 'ecommerce'); // ecommerce, b2b
   const [dateRange, setDateRange] = useState('30days'); // 7days, 30days, thismonth
   const [animTrigger, setAnimTrigger] = useState(false);
@@ -673,7 +673,7 @@ export default function ClientTransparencyPageView({
   // Render Views
   return (
     <>
-      <SignedOut>
+      {!isLoggedIn && (
       <div className="client-dashboard-page-wrapper" style={{ 
         minHeight: '100vh', 
         paddingTop: '120px', 
@@ -798,10 +798,10 @@ export default function ClientTransparencyPageView({
           </div>
         </div>
       </div>
-      </SignedOut>
+      )}
 
       {/* Dashboard view if authenticated */}
-      <SignedIn>
+      {isLoggedIn && (
     <div className="client-os-wrapper">
        <style>{`
           .client-os-wrapper {
@@ -2149,7 +2149,7 @@ export default function ClientTransparencyPageView({
       </div>
     </div>
     </div>
-    </SignedIn>
+    )}
     </>
   );
 }
