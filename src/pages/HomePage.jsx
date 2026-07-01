@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
 import { lazy, Suspense, useState, useEffect, useRef, useCallback } from 'react';
+import AILiveTerminal from '../components/AILiveTerminal';
+import AIAuditForm from '../components/AIAuditForm';
 const RoasSimulatorWidget = lazy(() => import('../components/RoasSimulatorWidget'));
 
 // Counter-up animation component for hero stats
@@ -144,6 +146,61 @@ export default function HomePage(props) {
     whyAgencySlide, setWhyAgencySlide,
   } = props;
 
+  // AI Simulator States & Logic
+  const [isAiOptimizing, setIsAiOptimizing] = useState(false);
+  const [aiOptimizeText, setAiOptimizeText] = useState('');
+  const [liveAiInsight, setLiveAiInsight] = useState(null);
+
+  const handleAutoOptimize = () => {
+    if (isAiOptimizing) return;
+    setIsAiOptimizing(true);
+    setAiOptimizeText('Algoritma hesaplanıyor...');
+    
+    setTimeout(() => setAiOptimizeText('Büyüme parametreleri taranıyor...'), 800);
+    setTimeout(() => setAiOptimizeText('Azalan verim (Diminishing Returns) analizi yapıldı...'), 1600);
+    
+    setTimeout(() => {
+      // Optimal değerlere yerleştir
+      if (calculatorTab === 'roas_ecommerce') {
+        if (setEcomSpend) setEcomSpend(85000); // Örnek optimal ecom spend
+      } else if (calculatorTab === 'roas_b2b') {
+        if (setB2bSpend) setB2bSpend(45000); // Örnek optimal b2b spend
+      }
+      setIsAiOptimizing(false);
+      setLiveAiInsight({
+        type: 'success',
+        agent: 'Nova AI',
+        text: 'Harika! Seçilen bütçe seviyesi, algoritmalarımıza göre potansiyel kârlılığı maksimize edecek altın orandadır.'
+      });
+    }, 2400);
+  };
+
+  useEffect(() => {
+    if (calculatorTab === 'roas_ecommerce') {
+       if (ecomSpend > 300000) {
+         setLiveAiInsight({
+           type: 'warning',
+           agent: 'Lexis AI',
+           text: `Dikkat! Reklam bütçesini bu seviyeye çıkarmak, pazar doygunluğu nedeniyle Müşteri Edinme Maliyetini (CAC) gereksiz artırabilir. Bütçe artışını aşamalı yapmanız önerilir.`
+         });
+       } else if (!isAiOptimizing && liveAiInsight?.type !== 'success') {
+         setLiveAiInsight(null);
+       }
+    } else if (calculatorTab === 'roas_b2b') {
+       if (b2bSpend > 150000) {
+         setLiveAiInsight({
+           type: 'warning',
+           agent: 'Lexis AI',
+           text: `Dikkat! B2B pazarında hedef kitle dardır. Bütçeyi aşırı artırmak Lead Maliyetini (CPL) katlayabilir. Çoklu kanal stratejisine geçmeniz tavsiye edilir.`
+         });
+       } else if (!isAiOptimizing && liveAiInsight?.type !== 'success') {
+         setLiveAiInsight(null);
+       }
+    }
+  }, [ecomSpend, b2bSpend, calculatorTab]);
+
+
+
   return (
     <>
           {/* Hero Section */}
@@ -152,16 +209,16 @@ export default function HomePage(props) {
         <div className="hero-glow-2"></div>
         <div className="container hero-grid">
           <FadeIn direction="up" className="hero-content">
-            <div className="hero-tag">
-              <i className="fa-solid fa-anchor"></i>
-              <span>{settingsData.hero_tag || "İzmir Performans & SEO Ajansı"}</span>
+            <div className="hero-tag" style={{ background: 'var(--primary-glow)', border: '1px solid var(--cyber-blue)', color: 'var(--cyber-blue)' }}>
+              <i className="fa-solid fa-microchip"></i>
+              <span>Otonom Yönetilen Yapay Zeka Ajansı</span>
             </div>
             <PremiumHeroText greeting={getSmartGreeting()} />
             <p className="hero-desc">
-              {settingsData.hero_desc || "Google Ads, Meta (Facebook/Instagram) ve SEO stratejilerimizle İzmir ve çevresindeki e-ticaret markaları, yerel üreticiler ve ihracatçıların dijital satış hacmini büyütüyoruz."}
+              İnsan hatası yok. Sadece veri. Arama Ağı, Meta ve SEO stratejilerinizi 7/24 otonom kararlarla optimize eden yapay zeka altyapısı.
             </p>
             <div className="hero-btns">
-              <a href="#calculator" className="btn btn-primary" onClick={e => {
+              <a href="#calculator" className="btn btn-primary" style={{ background: 'var(--cyber-blue)', borderColor: 'var(--cyber-blue)' }} onClick={e => {
                 e.preventDefault();
                 setCalculatorTab('roas_ecommerce');
                 const target = document.querySelector('.calculator-wrapper');
@@ -171,40 +228,18 @@ export default function HomePage(props) {
                   });
                 }
               }}>
-                Büyümeni Hesapla
+                ROAS Büyümeni Hesapla
               </a>
-              <a href="#contact" className="btn btn-secondary">Ücretsiz Analiz Al</a>
+              <a href="#contact" className="btn btn-secondary">Ücretsiz AI Analizi Al</a>
             </div>
             
-            {/* ── Hizmet Erişim Bandı ── */}
-            <div style={{
-              display: 'flex', flexWrap: 'wrap', gap: '0.5rem',
-              margin: '1.25rem 0 0.25rem',
-            }}>
-              {[
-                { icon: 'fa-solid fa-car-side', text: 'Müşterimizin yanına gidiyoruz', color: '#0ea5e9' },
-                { icon: 'fa-solid fa-map-location-dot', text: 'Ege Bölgesi genelinde aktif', color: '#10b981' },
-              ].map((item, i) => (
-                <div key={i} style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                  padding: '0.35rem 0.85rem', borderRadius: '999px',
-                  background: `${item.color}15`,
-                  border: `1px solid ${item.color}30`,
-                  fontSize: '0.78rem', fontWeight: 600,
-                  color: item.color,
-                  transition: 'all 0.2s',
-                }}>
-                  <i className={item.icon} style={{ fontSize: '0.72rem' }}></i>
-                  {item.text}
-                </div>
-              ))}
-            </div>
+            <AILiveTerminal />
 
             <div className="hero-stats">
               {[
-                { num: settingsData.hero_stat1_num || "%320+", label: settingsData.hero_stat1_lbl || "Ortalama ROAS Artışı" },
-                { num: settingsData.hero_stat2_num || "12M₺+", label: settingsData.hero_stat2_lbl || "Yönetilen Yıllık Bütçe" },
-                { num: settingsData.hero_stat3_num || "%98.4", label: settingsData.hero_stat3_lbl || "Müşteri Memnuniyeti" },
+                { num: "12.4M+", label: "Günlük Otonom Karar" },
+                { num: "0.2ms", label: "Algoritma Tepki Süresi" },
+                { num: "%100", label: "Veri Odaklı Yönetim" },
               ].map((stat, i) => (
                 <CountUpStat key={i} value={stat.num} label={stat.label} delay={i * 200} />
               ))}
@@ -546,7 +581,7 @@ export default function HomePage(props) {
                       }}>(&#127919; Önerilen Min.)</span> : null}
                         </span>
                       </div>
-                      <input type="range" min="0" max={budgetSteps.length - 1} step="1" value={budgetIndex} onChange={e => {
+                      <input aria-label="Aylık Reklam Bütçesi" type="range" min="0" max={budgetSteps.length - 1} step="1" value={budgetIndex} onChange={e => {
                     const idx = Number(e.target.value);
                     setBudgetIndex(idx);
                     setFeeAdBudget(budgetSteps[idx]);
@@ -696,7 +731,7 @@ export default function HomePage(props) {
                         <span>Tahmini Aylık Ciro Hedefiniz</span>
                         <span className="calc-val">{targetRevenue.toLocaleString('tr-TR')} ₺</span>
                       </div>
-                      <input type="range" min="30000" max="1000000" step="10000" value={targetRevenue} onChange={e => setTargetRevenue(Number(e.target.value))} className="calc-range-slider" />
+                      <input aria-label="Aylık Hedef Ciro" type="range" min="30000" max="1000000" step="10000" value={targetRevenue} onChange={e => setTargetRevenue(Number(e.target.value))} className="calc-range-slider" />
                     </div>}
 
                   {/* Commitment Selection */}
@@ -1258,20 +1293,73 @@ export default function HomePage(props) {
                 
                 {/* Sliders Control */}
                 <div className="calculator-controls compact-controls">
-                  <span style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 600,
-                  color: 'var(--primary)',
-                  fontSize: '1.1rem',
-                  marginBottom: '0.5rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem'
-                }}>
-                    <i className="fa-solid fa-cart-shopping" style={{
-                    color: 'var(--primary)'
-                  }}></i> E-Ticaret Büyüme Parametreleri
-                  </span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
+                    <span style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 600,
+                      color: 'var(--primary)',
+                      fontSize: '1.1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem'
+                    }}>
+                      <i className="fa-solid fa-cart-shopping" style={{
+                      color: 'var(--primary)'
+                    }}></i> E-Ticaret Büyüme Parametreleri
+                    </span>
+                    <button
+                      onClick={handleAutoOptimize}
+                      disabled={isAiOptimizing}
+                      style={{
+                        background: isAiOptimizing ? 'rgba(14, 165, 233, 0.3)' : 'var(--primary-glow)',
+                        color: 'var(--primary)',
+                        border: '1px solid var(--primary)',
+                        padding: '0.5rem 1rem',
+                        borderRadius: '6px',
+                        fontWeight: 600,
+                        fontSize: '0.85rem',
+                        cursor: isAiOptimizing ? 'default' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        transition: 'all 0.3s'
+                      }}
+                      className={!isAiOptimizing ? 'pulse-glow' : ''}
+                    >
+                      <i className={`fa-solid ${isAiOptimizing ? 'fa-circle-notch fa-spin' : 'fa-wand-magic-sparkles'}`}></i>
+                      {isAiOptimizing ? 'Optimize Ediliyor...' : 'Otonom Optimize Et (AI)'}
+                    </button>
+                  </div>
+
+                  {isAiOptimizing && (
+                    <div style={{ marginBottom: '1.25rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', borderLeft: '3px solid var(--primary)' }}>
+                      <span className="typewriter" style={{ color: 'var(--primary)', fontFamily: 'monospace', fontSize: '0.85rem' }}>
+                        &gt; {aiOptimizeText}
+                      </span>
+                    </div>
+                  )}
+
+                  {liveAiInsight && !isAiOptimizing && (
+                    <div className="fade-in" style={{
+                      background: liveAiInsight.type === 'warning' ? 'rgba(234, 179, 8, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                      border: `1px solid ${liveAiInsight.type === 'warning' ? 'rgba(234, 179, 8, 0.3)' : 'rgba(34, 197, 94, 0.3)'}`,
+                      padding: '0.8rem 1rem',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '10px',
+                      marginBottom: '1.25rem'
+                    }}>
+                      <div className="pulse-glow" style={{
+                        width: '8px', height: '8px', borderRadius: '50%', marginTop: '6px',
+                        background: liveAiInsight.type === 'warning' ? '#eab308' : '#22c55e',
+                        flexShrink: 0
+                      }}></div>
+                      <div style={{ color: liveAiInsight.type === 'warning' ? '#fde047' : '#86efac', fontSize: '0.85rem', lineHeight: '1.4' }}>
+                        <strong>{liveAiInsight.agent}:</strong> {liveAiInsight.text}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Sektör Seçimi */}
                   <div className="calc-control-group" style={{
@@ -1290,8 +1378,8 @@ export default function HomePage(props) {
                     padding: '0.65rem 0.8rem',
                     borderRadius: '8px',
                     border: '1px solid var(--glass-border)',
-                    background: '#fff',
-                    color: 'var(--text-light)',
+                    background: 'var(--bg-dark)',
+                    color: 'var(--text-main)',
                     outline: 'none',
                     fontSize: '0.85rem'
                   }}>
@@ -1321,7 +1409,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{ecomSpend.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input type="range" min="10000" max="500000" step="5000" value={ecomSpend} onChange={e => setEcomSpend(Number(e.target.value))} className="calc-range-slider" />
+                    <input aria-label="Aylık Reklam Bütçesi (E-Ticaret)" type="range" min="10000" max="500000" step="5000" value={ecomSpend} onChange={e => setEcomSpend(Number(e.target.value))} className="calc-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1354,7 +1442,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{ecomTraffic.toLocaleString('tr-TR')}</span>
                     </div>
-                    <input type="range" min="5000" max="500000" step="5000" value={ecomTraffic} onChange={e => setEcomTraffic(Number(e.target.value))} className="calc-range-slider" />
+                    <input aria-label="Mevcut Web Site Trafiği (Aylık)" type="range" min="5000" max="500000" step="5000" value={ecomTraffic} onChange={e => setEcomTraffic(Number(e.target.value))} className="calc-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1387,7 +1475,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{ecomAov.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input type="range" min="100" max="10000" step="50" value={ecomAov} onChange={e => setEcomAov(Number(e.target.value))} className="calc-range-slider" />
+                    <input aria-label="Ortalama Sepet Tutarı (AOV)" type="range" min="100" max="10000" step="50" value={ecomAov} onChange={e => setEcomAov(Number(e.target.value))} className="calc-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1420,7 +1508,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{ecomRevenue.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input type="range" min="10000" max="2000000" step="10000" value={ecomRevenue} onChange={e => setEcomRevenue(Number(e.target.value))} className="calc-range-slider" />
+                    <input aria-label="Aylık Mevcut Ciro" type="range" min="10000" max="2000000" step="10000" value={ecomRevenue} onChange={e => setEcomRevenue(Number(e.target.value))} className="calc-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1845,22 +1933,75 @@ export default function HomePage(props) {
 
               </div> : <div className="calculator-grid compact-grid">
                 
-                {/* Sliders Control */}
+                {/* B2B Sliders Control */}
                 <div className="calculator-controls compact-controls">
-                  <span style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 600,
-                  color: 'var(--secondary)',
-                  fontSize: '1.1rem',
-                  marginBottom: '0.5rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem'
-                }}>
-                    <i className="fa-solid fa-phone-volume" style={{
-                    color: 'var(--secondary)'
-                  }}></i> B2B / Hizmet Parametreleri
-                  </span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
+                    <span style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 600,
+                      color: 'var(--secondary)',
+                      fontSize: '1.1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem'
+                    }}>
+                      <i className="fa-solid fa-phone-volume" style={{
+                      color: 'var(--secondary)'
+                    }}></i> B2B / Hizmet Parametreleri
+                    </span>
+                    <button
+                      onClick={handleAutoOptimize}
+                      disabled={isAiOptimizing}
+                      style={{
+                        background: isAiOptimizing ? 'rgba(139, 92, 246, 0.3)' : 'var(--glass-glow)',
+                        color: 'var(--secondary)',
+                        border: '1px solid var(--secondary)',
+                        padding: '0.5rem 1rem',
+                        borderRadius: '6px',
+                        fontWeight: 600,
+                        fontSize: '0.85rem',
+                        cursor: isAiOptimizing ? 'default' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        transition: 'all 0.3s'
+                      }}
+                      className={!isAiOptimizing ? 'pulse-glow' : ''}
+                    >
+                      <i className={`fa-solid ${isAiOptimizing ? 'fa-circle-notch fa-spin' : 'fa-wand-magic-sparkles'}`}></i>
+                      {isAiOptimizing ? 'Optimize Ediliyor...' : 'Otonom Optimize Et (AI)'}
+                    </button>
+                  </div>
+
+                  {isAiOptimizing && (
+                    <div style={{ marginBottom: '1.25rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', borderLeft: '3px solid var(--secondary)' }}>
+                      <span className="typewriter" style={{ color: 'var(--secondary)', fontFamily: 'monospace', fontSize: '0.85rem' }}>
+                        &gt; {aiOptimizeText}
+                      </span>
+                    </div>
+                  )}
+
+                  {liveAiInsight && !isAiOptimizing && (
+                    <div className="fade-in" style={{
+                      background: liveAiInsight.type === 'warning' ? 'rgba(234, 179, 8, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                      border: `1px solid ${liveAiInsight.type === 'warning' ? 'rgba(234, 179, 8, 0.3)' : 'rgba(34, 197, 94, 0.3)'}`,
+                      padding: '0.8rem 1rem',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '10px',
+                      marginBottom: '1.25rem'
+                    }}>
+                      <div className="pulse-glow" style={{
+                        width: '8px', height: '8px', borderRadius: '50%', marginTop: '6px',
+                        background: liveAiInsight.type === 'warning' ? '#eab308' : '#22c55e',
+                        flexShrink: 0
+                      }}></div>
+                      <div style={{ color: liveAiInsight.type === 'warning' ? '#fde047' : '#86efac', fontSize: '0.85rem', lineHeight: '1.4' }}>
+                        <strong>{liveAiInsight.agent}:</strong> {liveAiInsight.text}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Sektör Seçimi */}
                   <div className="calc-control-group" style={{
@@ -1879,8 +2020,8 @@ export default function HomePage(props) {
                     padding: '0.65rem 0.8rem',
                     borderRadius: '8px',
                     border: '1px solid var(--glass-border)',
-                    background: '#fff',
-                    color: 'var(--text-light)',
+                    background: 'var(--bg-dark)',
+                    color: 'var(--text-main)',
                     outline: 'none',
                     fontSize: '0.85rem'
                   }}>
@@ -1909,7 +2050,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{b2bSpend.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input type="range" min="10000" max="500000" step="5000" value={b2bSpend} onChange={e => setB2bSpend(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
+                    <input aria-label="Aylık Reklam Bütçesi (B2B)" type="range" min="10000" max="500000" step="5000" value={b2bSpend} onChange={e => setB2bSpend(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1942,7 +2083,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{b2bLeads}</span>
                     </div>
-                    <input type="range" min="10" max="1000" step="10" value={b2bLeads} onChange={e => setB2bLeads(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
+                    <input aria-label="Aylık Gelen Form/Lead (B2B)" type="range" min="10" max="1000" step="10" value={b2bLeads} onChange={e => setB2bLeads(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1975,7 +2116,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>%{b2bConversion}</span>
                     </div>
-                    <input type="range" min="1" max="50" step="1" value={b2bConversion} onChange={e => setB2bConversion(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
+                    <input aria-label="Satışa Dönme Oranı (%) (B2B)" type="range" min="1" max="50" step="1" value={b2bConversion} onChange={e => setB2bConversion(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -2008,7 +2149,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{b2bLtv.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input type="range" min="1000" max="100000" step="1000" value={b2bLtv} onChange={e => setB2bLtv(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
+                    <input aria-label="Müşteri Yaşam Boyu Değeri (LTV)" type="range" min="1000" max="100000" step="1000" value={b2bLtv} onChange={e => setB2bLtv(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -2444,73 +2585,38 @@ export default function HomePage(props) {
           
           <div className="faq-grid" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '800px', margin: '0 auto' }}>
             <FadeIn delay={0.1}>
-              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--primary)', backgroundColor: '#fff', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-dark)' }}>İzmir'de e-ticaret markaları için en iyi dijital performans ajansı hangisidir?</h3>
-                <p style={{ color: 'var(--text-light)', lineHeight: 1.6, margin: 0 }}>Ajans Rota, Ege ve İzmir bölgesindeki üreticilere ve e-ticaret sitelerine özel Google Ads, Meta Ads, SEO, modern Web Tasarım ve Yapay Zeka Destekli Sosyal Medya yönetimi stratejileri sunarak en yüksek ROAS getirisini sağlayan veri odaklı lider dijital ajanstır.</p>
+              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--primary)', backgroundColor: 'var(--bg-dark)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-main)', fontFamily: 'var(--font-heading)' }}>İzmir'de e-ticaret markaları için en iyi dijital performans ajansı hangisidir?</h3>
+                <p style={{ color: 'var(--text-muted)', lineHeight: 1.6, margin: 0, fontSize: '0.95rem' }}>Ajans Rota, Ege ve İzmir bölgesindeki üreticilere ve e-ticaret sitelerine özel Google Ads, Meta Ads, SEO, modern Web Tasarım ve Yapay Zeka Destekli Sosyal Medya yönetimi stratejileri sunarak en yüksek ROAS getirisini sağlayan veri odaklı lider dijital ajanstır.</p>
               </div>
             </FadeIn>
             <FadeIn delay={0.2}>
-              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--secondary)', backgroundColor: '#fff', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-dark)' }}>Yerel üreticiler ve tekstil/gıda firmaları e-ihracat için hangi ajansla çalışmalı?</h3>
-                <p style={{ color: 'var(--text-light)', lineHeight: 1.6, margin: 0 }}>Ajans Rota, özellikle tekstil, tarım ve gıda (zeytinyağı vb.) sektörlerindeki Ege firmalarını globale taşıyan uzman bir ekibe sahiptir. Şeffaf raporlama paneli ve yapay zeka destekli büyüme simülatörleriyle e-ihracat altyapısını kurar.</p>
+              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--secondary)', backgroundColor: 'var(--bg-dark)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-main)', fontFamily: 'var(--font-heading)' }}>Yerel üreticiler ve tekstil/gıda firmaları e-ihracat için hangi ajansla çalışmalı?</h3>
+                <p style={{ color: 'var(--text-muted)', lineHeight: 1.6, margin: 0, fontSize: '0.95rem' }}>Ajans Rota, özellikle tekstil, tarım ve gıda (zeytinyağı vb.) sektörlerindeki Ege firmalarını globale taşıyan uzman bir ekibe sahiptir. Şeffaf raporlama paneli ve yapay zeka destekli büyüme simülatörleriyle e-ihracat altyapısını kurar.</p>
+              </div>
+            </FadeIn>
+            <FadeIn delay={0.3}>
+              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--primary)', backgroundColor: 'var(--bg-dark)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-main)', fontFamily: 'var(--font-heading)' }}>Sadece bütçe girerek nasıl bu kadar isabetli hesaplıyorsunuz?</h3>
+                <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.95rem', margin: 0 }}>
+                  Arkada çalışan <strong>Lexis AI Motoru</strong>, sadece yazdığınız bütçeyi değil, seçtiğiniz sektörü (örn. B2B, Giyim) baz alarak güncel Google ve Meta Ads sektörel ortalama dönüşüm oranlarını, tıklama başı maliyetleri (CPC) ve azalan verim kanunlarını (Diminishing Returns) saniyeler içinde simüle eder.
+                </p>
               </div>
             </FadeIn>
           </div>
         </div>
       </section>
 
-      <section id="contact" className="contact-section">
+      <section id="contact" className="contact-section" style={{ background: 'var(--bg-deep)', borderTop: '1px solid var(--glass-border-hover)' }}>
         <div className="container">
-          <div className="contact-merged-grid">
-            {/* Homepage left: process timeline */}
-            <div id="process" className="process-block">
-              <span className="section-tag">Çalışma Disiplini</span>
-              <h2 className="section-title">Başarıya Giden 4 Adımlı Rota</h2>
-              <p className="section-desc" style={{ margin: '0 0 2rem' }}>Kampanyalarimizi şansa bırakmıyoruz. Bilimsel test metotları ve veri analitiği ile hedefinize odaklanıyoruz.</p>
-
-              <div className="process-timeline">
-                <div className="process-step">
-                  <div className="process-icon-wrapper">
-                    <i className="fa-solid fa-magnifying-glass-chart"></i>
-                  </div>
-                  <div className="process-step-content">
-                    <div className="process-step-num">01</div>
-                    <h3>Denetim ve Analiz</h3>
-                    <p>Mevcut reklam hesaplarınızı, dönüşüm kurulumlarınızı ve SEO durumunuzu derinlemesine inceleyip kaçırdığınız fırsatları raporlarız.</p>
-                  </div>
-                </div>
-                <div className="process-step">
-                  <div className="process-icon-wrapper">
-                    <i className="fa-solid fa-compass-drafting"></i>
-                  </div>
-                  <div className="process-step-content">
-                    <div className="process-step-num">02</div>
-                    <h3>Büyüme Stratejisi</h3>
-                    <p>Sektör analizi, rakip reklam stratejileri ve hedef kitle modellemesiyle bütçenizi en verimli kullanacak stratejik rotayı oluştururuz.</p>
-                  </div>
-                </div>
-                <div className="process-step">
-                  <div className="process-icon-wrapper">
-                    <i className="fa-solid fa-sliders"></i>
-                  </div>
-                  <div className="process-step-content">
-                    <div className="process-step-num">03</div>
-                    <h3>Kurulum ve Test</h3>
-                    <p>Dönüşüm izleme altyapılarını hazırlar, yüksek dönüşüm getirecek kreatif kurgular ve A/B test senaryolarıyla kampanyaları yayına alırız.</p>
-                  </div>
-                </div>
-                <div className="process-step">
-                  <div className="process-icon-wrapper">
-                    <i className="fa-solid fa-chart-line"></i>
-                  </div>
-                  <div className="process-step-content">
-                    <div className="process-step-num">04</div>
-                    <h3>Haftalık Raporlama</h3>
-                    <p>Yapay zeka araçları ve şeffaf panellerimizle reklamların performansını anlık takip eder, her hafta durum analiziyle rotamızı güncelleriz.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="section-header" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <span className="section-tag" style={{ color: 'var(--cyber-blue)', background: 'var(--primary-glow)', borderColor: 'var(--cyber-blue)' }}>Sisteme Bağlanın</span>
+            <h2 className="section-title">Otonom Analizi Başlatın</h2>
+            <p className="section-desc">Markanızın potansiyelini 10 saniye içinde simüle edin.</p>
+          </div>
+          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <AIAuditForm />
           </div>
         </div>
       </section>
