@@ -157,10 +157,7 @@ export default function Footer({
                   e.preventDefault();
                   navigateTo('/kreatif-vitrin');
                 }}><span className="link-bullet"></span><span>Reklam Vitrini</span></a></li>}
-                {!settingsData.hide_page_seffaf && <li><a href="/client-portal-secure" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/client-portal-secure');
-                }}><span className="link-bullet"></span><span>Müşteri Raporlama</span></a></li>}
+
                 {!settingsData.hide_page_akademi && <li><a href="/akademi" onClick={e => {
                   e.preventDefault();
                   navigateTo('/akademi');

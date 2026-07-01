@@ -168,10 +168,7 @@ export default function Navbar({
                   e.preventDefault();
                   navigateTo('/kreatif-vitrin');
                 }}><i className="fa-solid fa-wand-magic-sparkles nav-icon"></i>Kreatif Reklam Vitrini</a></li>}
-                {!settingsData.hide_page_seffaf && <li><a href="/client-portal-secure" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/client-portal-secure');
-                }}><i className="fa-solid fa-chart-pie nav-icon"></i>Müşteri Raporlama Paneli</a></li>}
+
                 {!settingsData.hide_page_akademi && <li><a href="/akademi" onClick={e => {
                   e.preventDefault();
                   navigateTo('/akademi');
@@ -186,14 +183,7 @@ export default function Navbar({
           </ul>
 
           <div className="nav-actions">
-            <a href="/client-portal-secure" className="btn btn-secondary" style={{ background: 'transparent', color: 'var(--text-dark)', border: '1px solid var(--glass-border)' }} onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/client-portal-secure');
-              setIsMobileMenuOpen(false);
-            }}>
-              <i className="fa-solid fa-lock" style={{ marginRight: '6px' }}></i>
-              Müşteri Girişi
-            </a>
+
             <a href="/iletisim" className="btn btn-secondary" onClick={e => {
               e.preventDefault();
               handleNavClick('contact');
