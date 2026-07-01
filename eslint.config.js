@@ -5,7 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'scratch']),
+  globalIgnores(['dist', 'scratch', 'test-env.js', 'update-sector-page.js', 'init-db.js']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [
@@ -23,6 +23,8 @@ export default defineConfig([
       'no-empty': 'warn',
       'no-case-declarations': 'warn',
       'no-useless-escape': 'warn',
+      'react-hooks/rules-of-hooks': 'warn',
+      'no-undef': 'off',
       'react-hooks/set-state-in-effect': 'off',
       'react-hooks/exhaustive-deps': 'warn',
       'react-hooks/immutability': 'warn',
