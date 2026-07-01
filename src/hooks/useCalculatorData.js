@@ -1,6 +1,23 @@
 export const useCalculatorData = (appState) => {
-  const { googleSpend, metaSpend, googleRevenue, metaRevenue, ecomAov, ecomRevenue, ecomTraffic, ecomSpend, b2bLeads, b2bConversion, b2bLtv, b2bSpend, selectedServices, smPackage, settingsData, servicesData, feeAdBudget, pricingModel, commitment, reportingPackage, targetRevenue } = appState;
+  const { selectedServices, smPackage, settingsData, servicesData, pricingModel, reportingPackage } = appState;
   
+  // Ensure all numeric inputs are actually numbers to prevent string concatenation issues (e.g., "100" + "200" = "100200")
+  const googleSpend = Number(appState.googleSpend) || 0;
+  const metaSpend = Number(appState.metaSpend) || 0;
+  const googleRevenue = Number(appState.googleRevenue) || 0;
+  const metaRevenue = Number(appState.metaRevenue) || 0;
+  const ecomAov = Number(appState.ecomAov) || 0;
+  const ecomRevenue = Number(appState.ecomRevenue) || 0;
+  const ecomTraffic = Number(appState.ecomTraffic) || 0;
+  const ecomSpend = Number(appState.ecomSpend) || 0;
+  const b2bLeads = Number(appState.b2bLeads) || 0;
+  const b2bConversion = Number(appState.b2bConversion) || 0;
+  const b2bLtv = Number(appState.b2bLtv) || 0;
+  const b2bSpend = Number(appState.b2bSpend) || 0;
+  const feeAdBudget = Number(appState.feeAdBudget) || 0;
+  const commitment = Number(appState.commitment) || 0;
+  const targetRevenue = Number(appState.targetRevenue) || 0;
+
   const totalAdBudget = googleSpend + metaSpend;
   const totalRevenue = googleRevenue + metaRevenue;
   const overallRoas = totalAdBudget > 0 ? (totalRevenue / totalAdBudget).toFixed(1) : 0;

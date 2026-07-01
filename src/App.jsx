@@ -192,6 +192,9 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
     } catch (e) {
       console.error("Local storage stats logging failed:", e);
     }
+    
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') return;
+
     fetch('/api.php?action=log_hit', {
       method: 'POST',
       headers: {
@@ -220,6 +223,7 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
     const sendDuration = () => {
       const elapsedSeconds = Math.round((Date.now() - startTime) / 1000);
       if (elapsedSeconds > 1 && elapsedSeconds < 3600) {
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') return;
         const payload = JSON.stringify({
           path: activePath,
           action: 'duration',
@@ -304,55 +308,6 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
 
   // Fetch dynamic data on mount & auth token changes
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const headers = {};
-        if (authToken) {
-          headers['Authorization'] = `Bearer ${authToken}`;
-        }
-        const response = await fetch('/api.php?action=get', {
-          headers
-        });
-        if (response.ok) {
-          const text = await response.text();
-          let data;
-          try {
-            data = JSON.parse(text);
-          } catch (e) {
-            loadFromLocalStorage();
-            return;
-          }
-          if (data.settings) setSettingsData(prev => ({
-            ...prev,
-            ...data.settings
-          }));
-          if (data.servicePagesData) setServicesData(data.servicePagesData);
-          if (data.teamMembers) setTeamMembersData(data.teamMembers);
-          if (data.blogPosts) setBlogsData(data.blogPosts);
-          if (data.testimonials) setTestimonialsData(data.testimonials);
-          if (data.clientReports) setClientReports(data.clientReports);
-        } else {
-          loadFromLocalStorage();
-        }
-
-        // --- NEW: Fetch leads exclusively from Neon DB ---
-        try {
-          const leadsRes = await fetch('/api/php-handler?action=get_leads', { headers });
-          if (leadsRes.ok) {
-            const leadsDataApi = await leadsRes.json();
-            if (leadsDataApi.success && leadsDataApi.leads) {
-              setLeadsData(leadsDataApi.leads);
-            }
-          }
-        } catch (dbErr) {
-          console.error("Failed to fetch leads from Neon DB:", dbErr);
-        }
-        // -------------------------------------------------
-      } catch (error) {
-        console.error("Failed to fetch dynamic data from API, using defaults:", error);
-        loadFromLocalStorage();
-      }
-    };
     const loadFromLocalStorage = () => {
       const localDb = localStorage.getItem('ajans_rota_db');
       if (localDb) {
@@ -407,6 +362,60 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
         } catch (e) {
           console.error("Failed to parse localStorage db", e);
         }
+      }
+    };
+
+    const fetchData = async () => {
+      try {
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          loadFromLocalStorage();
+          return;
+        }
+        const headers = {};
+        if (authToken) {
+          headers['Authorization'] = `Bearer ${authToken}`;
+        }
+        const response = await fetch('/api.php?action=get', {
+          headers
+        });
+        if (response.ok) {
+          const text = await response.text();
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            loadFromLocalStorage();
+            return;
+          }
+          if (data.settings) setSettingsData(prev => ({
+            ...prev,
+            ...data.settings
+          }));
+          if (data.servicePagesData) setServicesData(data.servicePagesData);
+          if (data.teamMembers) setTeamMembersData(data.teamMembers);
+          if (data.blogPosts) setBlogsData(data.blogPosts);
+          if (data.testimonials) setTestimonialsData(data.testimonials);
+          if (data.clientReports) setClientReports(data.clientReports);
+        } else {
+          loadFromLocalStorage();
+        }
+
+        // --- NEW: Fetch leads exclusively from Neon DB ---
+        try {
+          const leadsRes = await fetch('/api/php-handler?action=get_leads', { headers });
+          if (leadsRes.ok) {
+            const leadsDataApi = await leadsRes.json();
+            if (leadsDataApi.success && leadsDataApi.leads) {
+              setLeadsData(leadsDataApi.leads);
+            }
+          }
+        } catch (dbErr) {
+          console.error("Failed to fetch leads from Neon DB:", dbErr);
+        }
+        // -------------------------------------------------
+      } catch (error) {
+        console.error("Failed to fetch dynamic data from API, using defaults:", error);
+        loadFromLocalStorage();
       }
     };
     
@@ -849,7 +858,7 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
       const updated = {
         ...prev
       };
-      Object.keys(servicesData).forEach(key => {
+      Object.keys(servicesData || {}).forEach(key => {
         if (updated[key] === undefined) {
           updated[key] = key === 'google' || key === 'meta';
         }
@@ -1356,7 +1365,8 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
   // ROI calculations (Google Ads & Meta Ads Integration)
   const googleRevenue = googleSpend * googleRoas;
   const metaRevenue = metaSpend * metaRoas;
-  const calcData = useCalculatorData(appState);
+  const combinedStateForCalc = { ...appState, commitment, reportingPackage, smPackage, googleRevenue, metaRevenue };
+  const calcData = useCalculatorData(combinedStateForCalc);
   const { activePricingModel, discountPercent, isSocialSelected, smPackagePrice, finalAgencyFee } = calcData;
 
   // Merge calcData into a unified props object so it can be passed to AppRoutes and forms
