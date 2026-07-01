@@ -888,16 +888,108 @@ export default function HomePage(props) {
 
                 {/* Fee Results Display */}
                 <div className="calculator-results">
-                  {isOnlyDesignSelected ? renderWebDesignForm(false) : isOnlySeoSelected ? (
-                    <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
-                      <i className="fa-solid fa-magnifying-glass-chart" style={{ fontSize: '3rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
-                      <h3 style={{ color: 'var(--text-main)', fontSize: '1.25rem', marginBottom: '0.5rem', fontFamily: 'var(--font-heading)' }}>Özel Fiyatlandırma</h3>
-                      <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: '1.5' }}>
-                        Arama Motoru Optimizasyonu (SEO) projenizin ihtiyaçları, mevcut durum analizi ve sektörel rekabete göre özel olarak fiyatlandırılır. Lütfen teklif almak için bizimle iletişime geçin.
-                      </p>
-                      {renderContactForm()}
+                    <div style={{ 
+                      background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
+                      borderRadius: '24px',
+                      padding: '2.5rem',
+                      boxShadow: '0 20px 40px rgba(0,0,0,0.06)',
+                      border: '1px solid rgba(0,0,0,0.05)',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}>
+                      <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: '4px',
+                        background: 'linear-gradient(90deg, var(--primary), #8A2BE2)'
+                      }}></div>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                        <div style={{
+                          width: '80px',
+                          height: '80px',
+                          borderRadius: '24px',
+                          background: 'rgba(0, 114, 255, 0.08)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginBottom: '1.5rem',
+                          position: 'relative',
+                          boxShadow: 'inset 0 0 0 1px rgba(0, 114, 255, 0.1)'
+                        }}>
+                          <i className="fa-solid fa-ranking-star" style={{ fontSize: '2.5rem', color: 'var(--primary)' }}></i>
+                          <div style={{
+                            position: 'absolute',
+                            top: '-5px',
+                            right: '-5px',
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '50%',
+                            background: '#00C853',
+                            border: '4px solid #fff',
+                            boxShadow: '0 4px 8px rgba(0,200,83,0.3)'
+                          }}></div>
+                        </div>
+                        
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', background: 'rgba(0, 114, 255, 0.1)', padding: '6px 16px', borderRadius: '30px' }}>
+                          <i className="fa-solid fa-gem" style={{ color: 'var(--primary)', fontSize: '0.85rem' }}></i>
+                          <span style={{ color: 'var(--primary)', fontSize: '0.85rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Özel Projelendirme</span>
+                        </div>
+                        
+                        <h3 style={{ color: 'var(--text-main)', fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1rem 0', fontFamily: 'var(--font-heading)', lineHeight: '1.2' }}>Kapsamlı SEO & Büyüme Stratejisi</h3>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', margin: 0, lineHeight: '1.6', maxWidth: '400px' }}>
+                          SEO projeleri; mevcut altyapınız, sektörel rekabet hacmi ve büyüme hedeflerinize göre veriye dayalı olarak özel fiyatlandırılır.
+                        </p>
+                      </div>
+
+                      <div style={{ 
+                        background: '#ffffff', 
+                        borderRadius: '20px', 
+                        padding: '1.5rem', 
+                        marginBottom: '2.5rem',
+                        border: '1px solid rgba(0,0,0,0.06)',
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.02)'
+                      }}>
+                        <h4 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1.25rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>Analiz Kapsamımız</h4>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', background: '#f8f9fa', borderRadius: '12px' }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0, 200, 83, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <i className="fa-solid fa-code" style={{ color: '#00C853', fontSize: '0.85rem' }}></i>
+                            </div>
+                            <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Teknik Altyapı</span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', background: '#f8f9fa', borderRadius: '12px' }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0, 200, 83, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <i className="fa-solid fa-chess-knight" style={{ color: '#00C853', fontSize: '0.85rem' }}></i>
+                            </div>
+                            <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Rekabet Analizi</span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', background: '#f8f9fa', borderRadius: '12px' }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0, 200, 83, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <i className="fa-solid fa-magnifying-glass-chart" style={{ color: '#00C853', fontSize: '0.85rem' }}></i>
+                            </div>
+                            <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Kelime Fırsatları</span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', background: '#f8f9fa', borderRadius: '12px' }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0, 200, 83, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <i className="fa-solid fa-arrow-trend-up" style={{ color: '#00C853', fontSize: '0.85rem' }}></i>
+                            </div>
+                            <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Büyüme Planı</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ position: 'relative' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                          <div style={{ height: '1px', flex: 1, background: 'rgba(0,0,0,0.05)' }}></div>
+                          <h4 style={{ fontSize: '1rem', color: 'var(--text-main)', fontWeight: '700', margin: 0 }}>Ücretsiz Ön Analiz Talep Edin</h4>
+                          <div style={{ height: '1px', flex: 1, background: 'rgba(0,0,0,0.05)' }}></div>
+                        </div>
+                        {renderContactForm()}
+                      </div>
                     </div>
-                  ) : <>
                       <div className="result-card highlight">
                         <div className="result-lbl">Tahmini Aylık Ajans Ücreti</div>
                         <div className="result-val">{finalAgencyFee.toLocaleString('tr-TR')} ₺</div>
