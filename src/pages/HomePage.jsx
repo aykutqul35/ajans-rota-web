@@ -733,7 +733,7 @@ export default function HomePage(props) {
 
 
                   {/* Commitment Selection */}
-                  {!isOnlyDesignSelected && !isOnlySeoSelected && <div className="calc-control-group" style={{
+                  {!isOnlyDesignSelected && <div className="calc-control-group" style={{
                   marginTop: '0.25rem'
                 }}>
                       <span style={{
