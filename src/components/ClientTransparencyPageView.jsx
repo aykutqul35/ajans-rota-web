@@ -994,15 +994,32 @@ export default function ClientTransparencyPageView({
           marginBottom: '2rem'
         }}>
           {/* Active Session Info & Logout */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--primary-glow)', padding: '6px 12px', borderRadius: '8px', border: '1px solid rgba(99, 102, 241, 0.15)' }}>
-              <i className="fa-solid fa-circle-check" style={{ color: 'var(--primary)', fontSize: '0.8rem' }}></i>
-              <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#f8fafc' }}>
-                Oturum Aktif
-              </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--primary-glow)', padding: '6px 12px', borderRadius: '8px', border: '1px solid rgba(99, 102, 241, 0.15)' }}>
+                <i className="fa-solid fa-circle-check" style={{ color: 'var(--primary)', fontSize: '0.8rem' }}></i>
+                <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#f8fafc' }}>
+                  Oturum Aktif
+                </span>
+              </div>
+              <button 
+                onClick={handleLogout}
+                style={{
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  color: '#ef4444',
+                  border: '1px solid rgba(239, 68, 68, 0.2)',
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  fontSize: '0.8rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <i className="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+              </button>
             </div>
-            <UserButton afterSignOutUrl="/" />
-          </div>
 
           {/* Date Picker & Brand Info */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginLeft: 'auto', flexWrap: 'wrap' }}>
