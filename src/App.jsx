@@ -428,7 +428,10 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
           const result = await res.json();
           if (result.success && result.data) {
             result.data.forEach(client => {
-              const data = client.reportData || {};
+              let data = client.reportData || {};
+              if (typeof data === 'string') {
+                try { data = JSON.parse(data); } catch(e) { data = {}; }
+              }
               const key = data._key || (client.email === 'ege@ajansrota.com' ? 'ecommerce' : (client.email === 'b2b@ajansrota.com' ? 'b2b' : (client.clerkId || client.id)));
               
               setClientReports(prev => {
@@ -1360,7 +1363,7 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
   const fullAppState = { ...appState, ...calcData, commitment, setCommitment, reportingPackage, setReportingPackage, smPackage, setSmPackage, webDesignType, setWebDesignType, webDesignFullName, setWebDesignFullName, webDesignEmail, setWebDesignEmail, webDesignPhone, setWebDesignPhone, webDesignMessage, setWebDesignMessage, webDesignLoading, setWebDesignLoading, webDesignSubmitted, setWebDesignSubmitted, formData, setFormData, isSubmitted, setIsSubmitted, handleWebDesignSubmit, handleContactSubmit, activeMobileDropdown, setActiveMobileDropdown };
 
 const renderReportForm = () => <ReportForm {...fullAppState} handleGenerateReport={handleGenerateReport} />;
-  const renderContactForm = () => <ContactForm formData={formData} setFormData={setFormData} isSubmitted={isSubmitted} handleContactSubmit={handleContactSubmit} />;
+  const renderContactForm = () => <ContactForm formData={formData} setFormData={setFormData} isSubmitted={isSubmitted} handleContactSubmit={handleContactSubmit} servicesData={servicesData} />;
   const renderWebDesignForm = (isCombined = false) => <WebDesignForm {...fullAppState} isCombined={isCombined} handleWebDesignSubmit={handleWebDesignSubmit} webDesignType={webDesignType} setWebDesignType={setWebDesignType} webDesignSubmitted={webDesignSubmitted} setWebDesignSubmitted={setWebDesignSubmitted} />;
 
   const isSecurePanel = currentPath.startsWith('/rota-management-vault-x9') || currentPath.startsWith('/portal-girisi-x9') || currentPath.startsWith('/client-portal-secure') || currentPath.startsWith('/musteri');
