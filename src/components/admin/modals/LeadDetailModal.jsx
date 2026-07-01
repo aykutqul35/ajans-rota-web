@@ -2094,7 +2094,7 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                 </div>}
               <div className="lead-info-item">
                 <strong>Tarih</strong>
-                <p>{selectedLead.created_at || 'Bilinmiyor'}</p>
+                <p>{(selectedLead.date || selectedLead.created_at) ? (selectedLead.date || selectedLead.created_at).substring(0, 16).replace('T', ' ') : 'Bilinmiyor'}</p>
               </div>
 
               {/* CRM LITE SECTION */}
