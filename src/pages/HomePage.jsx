@@ -130,7 +130,7 @@ export default function HomePage(props) {
     baselineB2bCustomers, baselineB2bRevenue, baselineB2bCpl, baselineB2bCac, baselineB2bRoi,
     rotaB2bLeads, rotaB2bConversion, rotaB2bCustomers, rotaB2bRevenue,
     rotaB2bCpl, rotaB2bCacFinal, rotaB2bRoi, rotaB2bRevenueIncrease,
-    isSocialSelected, selectedCount, isOnlyDesignSelected, isOnlySocialSelected,
+    isSocialSelected, selectedCount, isOnlyDesignSelected, isOnlySocialSelected, isOnlySeoSelected,
     bundleDiscountPercent, bundleDiscountAmount,
     activePricingModel, calculatedAgencyFee,
     discountPercent, discountAmount, finalAgencyFee,
@@ -560,7 +560,7 @@ export default function HomePage(props) {
                   </div>
 
                   {/* Monthly Ad Spend Slider — sosyal medya tek seçiliyse gizle */}
-                  {!isOnlyDesignSelected && !isOnlySocialSelected && <div className="calc-control-group">
+                  {!isOnlyDesignSelected && !isOnlySocialSelected && !isOnlySeoSelected && <div className="calc-control-group">
                       <div className="calc-label-row">
                         <span>Aylık Reklam Bütceniz</span>
                         <span className="calc-val">
@@ -722,7 +722,7 @@ export default function HomePage(props) {
                   })()}
 
                   {/* Target Revenue Slider — SM seçiliyse gizle */}
-                  {!isOnlyDesignSelected && !isSocialSelected && <div className="calc-control-group">
+                  {!isOnlyDesignSelected && !isSocialSelected && !isOnlySeoSelected && <div className="calc-control-group">
                       <div className="calc-label-row">
                         <span>Tahmini Aylık Ciro Hedefiniz</span>
                         <span className="calc-val">{targetRevenue.toLocaleString('tr-TR')} ₺</span>
@@ -730,8 +730,10 @@ export default function HomePage(props) {
                       <input aria-label="Aylık Hedef Ciro" type="range" min="30000" max="1000000" step="10000" value={targetRevenue} onChange={e => setTargetRevenue(Number(e.target.value))} className="calc-range-slider" />
                     </div>}
 
+
+
                   {/* Commitment Selection */}
-                  {!isOnlyDesignSelected && <div className="calc-control-group" style={{
+                  {!isOnlyDesignSelected && !isOnlySeoSelected && <div className="calc-control-group" style={{
                   marginTop: '0.25rem'
                 }}>
                       <span style={{
@@ -831,7 +833,7 @@ export default function HomePage(props) {
                     </div>}
 
                   {/* Pricing Model Radio — SM seçiliyse gizle */}
-                  {!isOnlyDesignSelected && !isSocialSelected && <div className="calc-control-group" style={{
+                  {!isOnlyDesignSelected && !isSocialSelected && !isOnlySeoSelected && <div className="calc-control-group" style={{
                   marginTop: '0.25rem'
                 }}>
                       <span style={{
@@ -886,7 +888,16 @@ export default function HomePage(props) {
 
                 {/* Fee Results Display */}
                 <div className="calculator-results">
-                  {isOnlyDesignSelected ? renderWebDesignForm(false) : <>
+                  {isOnlyDesignSelected ? renderWebDesignForm(false) : isOnlySeoSelected ? (
+                    <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+                      <i className="fa-solid fa-magnifying-glass-chart" style={{ fontSize: '3rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
+                      <h3 style={{ color: 'var(--text-main)', fontSize: '1.25rem', marginBottom: '0.5rem', fontFamily: 'var(--font-heading)' }}>Özel Fiyatlandırma</h3>
+                      <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: '1.5' }}>
+                        Arama Motoru Optimizasyonu (SEO) projenizin ihtiyaçları, mevcut durum analizi ve sektörel rekabete göre özel olarak fiyatlandırılır. Lütfen teklif almak için bizimle iletişime geçin.
+                      </p>
+                      {renderContactForm()}
+                    </div>
+                  ) : <>
                       <div className="result-card highlight">
                         <div className="result-lbl">Tahmini Aylık Ajans Ücreti</div>
                         <div className="result-val">{finalAgencyFee.toLocaleString('tr-TR')} ₺</div>

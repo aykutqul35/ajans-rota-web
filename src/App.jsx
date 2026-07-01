@@ -1367,7 +1367,7 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
   const metaRevenue = metaSpend * metaRoas;
   const combinedStateForCalc = { ...appState, commitment, reportingPackage, smPackage, googleRevenue, metaRevenue };
   const calcData = useCalculatorData(combinedStateForCalc);
-  const { activePricingModel, discountPercent, isSocialSelected, smPackagePrice, finalAgencyFee } = calcData;
+  const { activePricingModel, discountPercent, isSocialSelected, isOnlySeoSelected, smPackagePrice, finalAgencyFee } = calcData;
 
   // Merge calcData into a unified props object so it can be passed to AppRoutes and forms
   const fullAppState = { ...appState, ...calcData, commitment, setCommitment, reportingPackage, setReportingPackage, smPackage, setSmPackage, webDesignType, setWebDesignType, webDesignFullName, setWebDesignFullName, webDesignEmail, setWebDesignEmail, webDesignPhone, setWebDesignPhone, webDesignMessage, setWebDesignMessage, webDesignLoading, setWebDesignLoading, webDesignSubmitted, setWebDesignSubmitted, formData, setFormData, isSubmitted, setIsSubmitted, handleWebDesignSubmit, handleContactSubmit, activeMobileDropdown, setActiveMobileDropdown };

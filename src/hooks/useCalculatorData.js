@@ -64,6 +64,8 @@ export const useCalculatorData = (appState) => {
   // SM tek seçili mi? (slider ve çalışma modeli gizleme için)
   const isOnlySocialSelected = isSocialSelected && selectedCount === 1;
 
+  const isOnlySeoSelected = selectedServices.seo && selectedCount === 1;
+
   // Sosyal Medya paket fiyatı (settingsData'dan okunur)
   const smPackagePrice = isSocialSelected
     ? smPackage === 'baslangic'
@@ -195,6 +197,7 @@ export const useCalculatorData = (appState) => {
     isSocialSelected,
     selectedCount,
     isOnlySocialSelected,
+    isOnlySeoSelected,
     smPackagePrice,
     rawBaseRetainer,
     isOnlyDesignSelected,
