@@ -71,7 +71,7 @@ const AiSeoPdfTemplate = React.forwardRef(({ lead }, ref) => {
       </div>
 
       {/* Analysis Details */}
-      <div style={{ marginBottom: '40px' }}>
+      <div style={{ marginBottom: '40px', pageBreakInside: 'avoid' }}>
         <h3 style={{ fontSize: '20px', color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px', marginBottom: '20px' }}>Teknik Analiz Detayları</h3>
         
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
@@ -123,19 +123,48 @@ const AiSeoPdfTemplate = React.forwardRef(({ lead }, ref) => {
           </tbody>
         </table>
       </div>
+      
+      {/* Spacer to encourage page break if needed before recommendations */}
+      <div style={{ height: '20px' }}></div>
 
       {/* AI Recommendations */}
-      <div style={{ marginBottom: '40px' }}>
+      <div style={{ marginBottom: '40px', pageBreakInside: 'avoid' }}>
         <h3 style={{ fontSize: '20px', color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px', marginBottom: '20px' }}>Yapay Zeka (AI) Odaklı Büyüme Tavsiyeleri</h3>
-        <ul style={{ paddingLeft: '20px', color: '#475569', fontSize: '15px', lineHeight: '1.6' }}>
-          <li style={{ marginBottom: '10px' }}>Sitenizdeki teknik hatalar (H1 başlık eksiklikleri, yavaş yüklenen görseller vb.) düzeltilirse Google arama sonuçlarında (SERP) daha hızlı index alabilirsiniz.</li>
-          <li style={{ marginBottom: '10px' }}>Sektörünüzle ilgili "uzun kuyruklu" (long-tail) anahtar kelimelere yönelik bir içerik (blog) stratejisi oluşturmalısınız.</li>
-          <li style={{ marginBottom: '10px' }}>Eğer dijital reklamlar kullanıyorsanız, mevcut SEO altyapınızı güçlendirmek, tıklama başı maliyetlerinizi (TBM) dolaylı olarak düşürecektir.</li>
-        </ul>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          
+          <div style={{ background: '#f8fafc', borderLeft: '4px solid #0ea5e9', padding: '15px', borderRadius: '4px' }}>
+            <h4 style={{ margin: '0 0 8px 0', color: '#0369a1', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              1. Teknik SEO ve Tarama Bütçesi Optimizasyonu
+            </h4>
+            <p style={{ margin: 0, color: '#475569', fontSize: '14px', lineHeight: '1.6' }}>
+              Web sitenizin Google botları tarafından daha verimli taranabilmesi için robots.txt ve XML sitemap yapılandırmalarının elden geçirilmesi gerekmektedir. Özellikle {score > 75 ? 'mevcut iyi hızınızı koruyarak' : 'görsel optimizasyonları ve cache yapılandırmaları ile hızınızı artırarak'} taranabilirlik oranınızı (crawl budget) maksimize edebilir, yeni içeriklerinizin saniyeler içinde Google dizinine eklenmesini sağlayabilirsiniz.
+            </p>
+          </div>
+
+          <div style={{ background: '#f8fafc', borderLeft: '4px solid #8b5cf6', padding: '15px', borderRadius: '4px' }}>
+            <h4 style={{ margin: '0 0 8px 0', color: '#6d28d9', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              2. Sektörel Semantik İçerik Mimarisi (Entity SEO)
+            </h4>
+            <p style={{ margin: 0, color: '#475569', fontSize: '14px', lineHeight: '1.6' }}>
+              Rakiplerinizin gerisinde kalmamak için geleneksel anahtar kelime doldurma taktikleri yerine, bağlamsal <strong>(Entity Tabanlı)</strong> SEO stratejisine geçiş yapılmalıdır. Hedef kitlenizin arama niyetine (Search Intent) uygun, "uzun kuyruklu" (long-tail) soruları yanıtlayan otorite blog içerikleri ve SSS (Sıkça Sorulan Sorular) şemaları eklenmelidir. Bu sayede organik arama hacminizde kalıcı büyüme sağlanır.
+            </p>
+          </div>
+
+          <div style={{ background: '#f8fafc', borderLeft: '4px solid #10b981', padding: '15px', borderRadius: '4px' }}>
+            <h4 style={{ margin: '0 0 8px 0', color: '#047857', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              3. Otorite İnşası ve UX/UI Geliştirmeleri
+            </h4>
+            <p style={{ margin: 0, color: '#475569', fontSize: '14px', lineHeight: '1.6' }}>
+              Sayfa içi (On-Page) iyileştirmelere ek olarak, sitenizin dönüşüm oranlarını artırmak (CRO) için kullanıcı deneyimini (UX) kurgulayan ısı haritası analizleri önerilir. Tıklama başı maliyetleri (TBM) düşürmek ve marka otoritenizi artırmak için yüksek kaliteli sitelerden alınacak PR ve Backlink çalışmaları, algoritmik dalgalanmalarda sitenizi koruyacak bir zırh görevi görecektir.
+            </p>
+          </div>
+
+        </div>
       </div>
 
       {/* Footer / CTA */}
-      <div style={{ background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)', color: '#fff', padding: '25px', borderRadius: '12px', textAlign: 'center' }}>
+      <div style={{ background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)', color: '#fff', padding: '25px', borderRadius: '12px', textAlign: 'center', pageBreakInside: 'avoid' }}>
         <h3 style={{ margin: '0 0 10px 0', fontSize: '20px' }}>Daha Fazla Büyüme İçin Hazır Mısınız?</h3>
         <p style={{ margin: '0 0 15px 0', fontSize: '14px', opacity: 0.9 }}>
           Bu rapor otomatik bir ön analizdir. Uzman ekibimizle birlikte kapsamlı bir dijital strateji oluşturmak ve rakiplerinizin önüne geçmek için bizimle iletişime geçin.
