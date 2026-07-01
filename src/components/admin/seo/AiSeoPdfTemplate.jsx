@@ -6,7 +6,7 @@ const AiSeoPdfTemplate = React.forwardRef(({ lead, settingsData }, ref) => {
   if (!lead) return null;
 
   // Generate some deterministic mock data based on the website name length
-  const domain = lead.website || lead.message?.match(/https?:\/\/[^\s]+/)?.[0] || 'Web Siteniz';
+  const domain = lead.website || lead.company || lead.message?.match(/https?:\/\/[^\s]+/)?.[0] || 'Web Siteniz';
   const cleanDomain = domain.replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0];
   const seed = cleanDomain.length || 5;
 
