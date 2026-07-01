@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
+import html2pdf from 'html2pdf.js';
+import AiSeoPdfTemplate from '../seo/AiSeoPdfTemplate';
 
 export default function LeadDetailModal({
   selectedLead, setSelectedLead,
@@ -13,6 +15,8 @@ export default function LeadDetailModal({
   const [aiGuideContents, setAiGuideContents] = useState({});
   const [isSendingGuide, setIsSendingGuide] = useState(false);
   const [isSendingProposal, setIsSendingProposal] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const pdfRef = useRef();
   
     useEffect(() => {
     if (selectedLead) {
@@ -21,6 +25,33 @@ export default function LeadDetailModal({
       setCrmReminderDate(selectedLead.reminderDate || '');
     }
   }, [selectedLead]);
+
+  const generateSeoPdf = async () => {
+    if (!pdfRef.current) return;
+    setIsGeneratingPdf(true);
+    const toastId = toast.loading('Yapay zeka SEO raporu oluşturuluyor, lütfen bekleyin...');
+    
+    try {
+      const opt = {
+        margin: 0,
+        filename: `${selectedLead.fullName || 'Musteri'}_SEO_Raporu.pdf`.replace(/\s+/g, '_'),
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      // Ensure component is fully rendered before generating
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      await html2pdf().from(pdfRef.current).set(opt).save();
+      toast.success('SEO Raporu başarıyla PDF olarak indirildi!', { id: toastId });
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      toast.error('PDF oluşturulurken bir hata oluştu.', { id: toastId });
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
 
     const getIconForLabel = label => {
     const l = label.toLowerCase();
@@ -2343,7 +2374,25 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
               </div>
             </div>
              <div className="lead-modal-footer lead-modal-footer-responsive">
-              {selectedLead.simulatorData ? <button className="btn btn-primary" onClick={() => handleDownloadPDF(selectedLead)} style={{
+              {((selectedLead.service && selectedLead.service.toLowerCase().includes('seo')) || (selectedLead.trafficSource && selectedLead.trafficSource.toLowerCase().includes('seo')) || (selectedLead.message && selectedLead.message.toLowerCase().includes('seo skoru'))) ? (
+                <button className="btn btn-primary" onClick={generateSeoPdf} disabled={isGeneratingPdf} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  border: 'none',
+                  padding: '0.6rem 1.2rem',
+                  fontSize: '0.85rem',
+                  fontWeight: '600',
+                  borderRadius: '8px'
+                }}>
+                  {isGeneratingPdf ? (
+                    <><i className="fa-solid fa-spinner fa-spin"></i> PDF Hazırlanıyor...</>
+                  ) : (
+                    <><i className="fa-solid fa-wand-magic-sparkles"></i> AI SEO Raporu Üret (PDF)</>
+                  )}
+                </button>
+              ) : selectedLead.simulatorData ? <button className="btn btn-primary" onClick={() => handleDownloadPDF(selectedLead)} style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.4rem',
@@ -2448,6 +2497,11 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                 </div> : <div></div>}
               <button className="btn btn-secondary" onClick={() => setSelectedLead(null)}>Kapat</button>
             </div>
+          </div>
+          
+          {/* Hidden PDF Template */}
+          <div style={{ display: 'none' }}>
+            <AiSeoPdfTemplate ref={pdfRef} lead={selectedLead} />
           </div>
         </div>
   );
