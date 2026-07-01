@@ -2647,17 +2647,6 @@ export default function HomePage(props) {
                 </div>
               </div>
             </div>
-            
-            {/* Homepage right: contact form */}
-            <div className="contact-form-block">
-              <FadeIn direction="up">
-                {renderContactForm ? renderContactForm(false, "Sizi Arayalım") : (
-                  <div style={{ textAlign: 'center', padding: '2rem', background: '#fff', borderRadius: '12px' }}>
-                    İletişim formu yükleniyor...
-                  </div>
-                )}
-              </FadeIn>
-            </div>
           </div>
         </div>
       </section>
