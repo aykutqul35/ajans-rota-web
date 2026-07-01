@@ -216,7 +216,7 @@ export default function HomePage(props) {
               İnsan hatası yok. Sadece veri. Arama Ağı, Meta ve SEO stratejilerinizi 7/24 otonom kararlarla optimize eden yapay zeka altyapısı.
             </p>
             <div className="hero-btns">
-              <a href="#calculator" className="btn btn-primary" style={{ background: 'var(--cyber-blue)', borderColor: 'var(--cyber-blue)' }} onClick={e => {
+              <a href="#calculator" className="btn btn-primary" style={{ background: 'var(--cyber-blue)', borderColor: 'var(--cyber-blue)', color: '#020617', fontWeight: '800', fontSize: '1.1rem', padding: '12px 24px', boxShadow: '0 0 20px rgba(14, 165, 233, 0.4)' }} onClick={e => {
                 e.preventDefault();
                 setCalculatorTab('roas_ecommerce');
                 const target = document.querySelector('.calculator-wrapper');
