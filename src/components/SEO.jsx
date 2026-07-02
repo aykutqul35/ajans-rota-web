@@ -1,4 +1,3 @@
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 const AGENCY_NAME = 'Ajans Rota';

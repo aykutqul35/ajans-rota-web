@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import html2pdf from 'html2pdf.js';
 import AiSeoPdfTemplate from '../seo/AiSeoPdfTemplate';

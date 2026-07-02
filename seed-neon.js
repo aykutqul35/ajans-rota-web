@@ -1,7 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
 // Simple dotenv parser
 const envPath = path.resolve('.env');

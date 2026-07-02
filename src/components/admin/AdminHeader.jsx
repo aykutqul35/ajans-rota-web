@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default function AdminHeader({ handleSaveAll, isSaving, handleLogoutClick }) {
   return (

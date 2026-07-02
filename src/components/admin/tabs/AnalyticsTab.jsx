@@ -1,7 +1,3 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import FadeIn from '../../FadeIn';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
 export default function AnalyticsTab({
   getAggregatedStats, handleGenerateDemoStats, statsLoading,

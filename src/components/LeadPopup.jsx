@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function LeadPopup({ isOpen, onClose, isExitIntent = false }) {

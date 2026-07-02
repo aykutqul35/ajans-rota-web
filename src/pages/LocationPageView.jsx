@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { getLocationBySlug, getDistrictsByProvince, getProvinces } from '../data/locationData';
+import { getLocationBySlug, getDistrictsByProvince } from '../data/locationData';
 
 // ─── LocalBusiness JSON-LD Schema ───────────────────────────────────────────
 const LocationSchema = ({ location }) => {

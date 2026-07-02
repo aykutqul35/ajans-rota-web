@@ -1,9 +1,3 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { budgetSteps, initialServicePagesData, featuredStories, initialTeamMembers, initialBlogPosts, categories, whyAgencyData, testimonials } from '../data/mockData';
-import FadeIn from '../components/FadeIn';
-import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
-import ClientTransparencyPageView from '../components/ClientTransparencyPageView';
 
 export default // Dynamic Legal Pages View Component (Privacy, Terms, KVKK, Cookies)
 function LegalPageView({

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import toast from 'react-hot-toast';
+import { useState } from 'react';
 
 export default function SettingsTab({
   settingsData, setSettingsData, handleSaveAll, isSaving, authToken,

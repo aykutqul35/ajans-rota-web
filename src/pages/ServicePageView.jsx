@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { budgetSteps, initialServicePagesData, featuredStories, initialTeamMembers, initialBlogPosts, categories, whyAgencyData, testimonials } from '../data/mockData';
-import FadeIn from '../components/FadeIn';
-import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
-import ClientTransparencyPageView from '../components/ClientTransparencyPageView';
+import { initialServicePagesData } from '../data/mockData';
 
 // Detailed service pages data
 

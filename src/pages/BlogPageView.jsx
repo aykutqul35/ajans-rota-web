@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { budgetSteps, initialServicePagesData, featuredStories, initialTeamMembers, initialBlogPosts, categories, whyAgencyData, testimonials } from '../data/mockData';
-import FadeIn from '../components/FadeIn';
-import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
+import { initialBlogPosts, categories } from '../data/mockData';
 import toast from 'react-hot-toast';
 
 const slugify = text => {

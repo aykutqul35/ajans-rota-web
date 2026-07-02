@@ -1,5 +1,4 @@
-import { Toaster } from 'react-hot-toast';
-import { slugify, getCategoryLabel, getCategoryIcon, detectTrafficSource, getSmartGreeting, getSeoData, getAgencyStatus } from './utils/helpers';
+import { detectTrafficSource, getAgencyStatus } from './utils/helpers';
 import { useAppState } from './hooks/useAppState';
 import { useCalculatorData } from './hooks/useCalculatorData';
 import AppRoutes from './routes/AppRoutes';
@@ -7,12 +6,9 @@ import ReportForm from './components/forms/ReportForm';
 import ContactForm from './components/forms/ContactForm';
 import WebDesignForm from './components/forms/WebDesignForm';
 
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import SEO from './components/SEO';
 import SkeletonLoader from './components/SkeletonLoader';
-import FadeIn from './components/FadeIn';
-import StaggerContainer, { StaggerItem } from './components/StaggerContainer';
 const ClientTransparencyPageView = lazy(() => import('./components/ClientTransparencyPageView'));
 const ServicePageView = lazy(() => import('./pages/ServicePageView'));
 const IzmirPageView = lazy(() => import('./pages/IzmirPageView'));
@@ -32,19 +28,15 @@ const BlogPageView = lazy(() => import('./pages/BlogPageView'));
 const AdminDashboardView = lazy(() => import('./pages/AdminDashboardView'));
 const Login = lazy(() => import('./pages/admin/Login'));
 const LocationPageView = lazy(() => import('./pages/LocationPageView'));
-import ProtectedRoute from './components/ProtectedRoute';
-import LeadPopup from './components/LeadPopup';
-import SocialProofToast from './components/SocialProofToast';
+const LeadPopup = lazy(() => import('./components/LeadPopup'));
+const SocialProofToast = lazy(() => import('./components/SocialProofToast'));
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
-import CookieConsent from './components/CookieConsent';
+const CookieConsent = lazy(() => import('./components/CookieConsent'));
 import ScrollToTop from './components/ScrollToTop';
-import HomePage from './pages/HomePage';
-import NotFoundPage from './pages/NotFoundPage';
 
 
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { budgetSteps, initialServicePagesData, featuredStories, initialTeamMembers, initialBlogPosts, categories, whyAgencyData, testimonials } from './data/mockData';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Detailed service pages data
 
@@ -988,9 +980,9 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
     if (isDuplicate) return;
     const simulatedLead = {
       ...leadPayload,
-      // eslint-disable-next-line
+       
       id: 'sim_' + Date.now(),
-      // eslint-disable-next-line
+       
       created_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
       status: 'unread'
     };
@@ -1431,19 +1423,21 @@ const renderReportForm = () => <ReportForm {...fullAppState} handleGenerateRepor
       />
       )}
       {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && currentPath !== '/musteri' && <Suspense fallback={null}><WhatsAppAssistantWidget settingsData={settingsData} onSaveLead={simulateLeadLocally} logHit={logHit} /></Suspense>}
-      {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && currentPath !== '/musteri' && <SocialProofToast />}
+      {currentPath !== '/rota-management-vault-x9' && currentPath !== '/client-portal-secure' && currentPath !== '/musteri' && <Suspense fallback={null}><SocialProofToast /></Suspense>}
       {/* Custom Global Popup */}
-      <LeadPopup 
-        isOpen={isLeadPopupOpen} 
-        isExitIntent={isExitIntentPopup}
-        onClose={() => {
-          setIsLeadPopupOpen(false);
-          // Wait a bit before resetting so animation finishes cleanly
-          setTimeout(() => setIsExitIntentPopup(false), 300);
-        }} 
-      />
+      <Suspense fallback={null}>
+        <LeadPopup 
+          isOpen={isLeadPopupOpen} 
+          isExitIntent={isExitIntentPopup}
+          onClose={() => {
+            setIsLeadPopupOpen(false);
+            // Wait a bit before resetting so animation finishes cleanly
+            setTimeout(() => setIsExitIntentPopup(false), 300);
+          }} 
+        />
+      </Suspense>
       {!isSecurePanel && <ScrollToTop />}
-      {!isSecurePanel && <CookieConsent onNavigateToPolicy={() => navigateTo('/cerez-politikasi')} />}
+      {!isSecurePanel && <Suspense fallback={null}><CookieConsent onNavigateToPolicy={() => navigateTo('/cerez-politikasi')} /></Suspense>}
     </>;
 }
 export default App;

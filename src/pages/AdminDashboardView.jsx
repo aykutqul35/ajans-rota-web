@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 
 // Lazy-loaded tabs (only loaded when the user switches to that tab)
 const LeadsTab = lazy(() => import('../components/admin/tabs/LeadsTab'));
@@ -21,13 +21,6 @@ const EditItemModal = lazy(() => import('../components/admin/modals/EditItemModa
 
 import AdminHeader from '../components/admin/AdminHeader';
 import AdminSidebar from '../components/admin/AdminSidebar';
-import { useNavigate } from 'react-router-dom';
-import { upload } from '@vercel/blob/client';
-import { motion } from 'framer-motion';
-import { budgetSteps, initialServicePagesData, featuredStories, initialTeamMembers, initialBlogPosts, categories, whyAgencyData, testimonials } from '../data/mockData';
-import FadeIn from '../components/FadeIn';
-import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
-import ClientTransparencyPageView from '../components/ClientTransparencyPageView';
 
 export default // Admin Dashboard View Component
 function AdminDashboardView({

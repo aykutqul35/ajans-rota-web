@@ -130,7 +130,7 @@ export default function HomePage(props) {
     baselineB2bCustomers, baselineB2bRevenue, baselineB2bCpl, baselineB2bCac, baselineB2bRoi,
     rotaB2bLeads, rotaB2bConversion, rotaB2bCustomers, rotaB2bRevenue,
     rotaB2bCpl, rotaB2bCacFinal, rotaB2bRoi, rotaB2bRevenueIncrease,
-    isSocialSelected, selectedCount, isOnlyDesignSelected, isOnlySocialSelected, isOnlySeoSelected,
+    isSocialSelected, selectedCount, isOnlyDesignSelected, isOnlySocialSelected,
     bundleDiscountPercent, bundleDiscountAmount,
     activePricingModel, calculatedAgencyFee,
     discountPercent, discountAmount, finalAgencyFee,
@@ -216,7 +216,7 @@ export default function HomePage(props) {
               İnsan hatası yok. Sadece veri. Arama Ağı, Meta ve SEO stratejilerinizi 7/24 otonom kararlarla optimize eden yapay zeka altyapısı.
             </p>
             <div className="hero-btns">
-              <a href="#calculator" className="btn btn-primary" style={{ background: 'var(--cyber-blue)', borderColor: 'var(--cyber-blue)', color: '#020617', fontWeight: '800', fontSize: '1.1rem', padding: '12px 24px', boxShadow: '0 0 20px rgba(14, 165, 233, 0.4)' }} onClick={e => {
+              <a href="#calculator" className="btn btn-primary" style={{ background: 'var(--cyber-blue)', borderColor: 'var(--cyber-blue)' }} onClick={e => {
                 e.preventDefault();
                 setCalculatorTab('roas_ecommerce');
                 const target = document.querySelector('.calculator-wrapper');
@@ -560,7 +560,7 @@ export default function HomePage(props) {
                   </div>
 
                   {/* Monthly Ad Spend Slider — sosyal medya tek seçiliyse gizle */}
-                  {!isOnlyDesignSelected && !isOnlySocialSelected && !isOnlySeoSelected && <div className="calc-control-group">
+                  {!isOnlyDesignSelected && !isOnlySocialSelected && <div className="calc-control-group">
                       <div className="calc-label-row">
                         <span>Aylık Reklam Bütceniz</span>
                         <span className="calc-val">
@@ -722,15 +722,13 @@ export default function HomePage(props) {
                   })()}
 
                   {/* Target Revenue Slider — SM seçiliyse gizle */}
-                  {!isOnlyDesignSelected && !isSocialSelected && !isOnlySeoSelected && <div className="calc-control-group">
+                  {!isOnlyDesignSelected && !isSocialSelected && <div className="calc-control-group">
                       <div className="calc-label-row">
                         <span>Tahmini Aylık Ciro Hedefiniz</span>
                         <span className="calc-val">{targetRevenue.toLocaleString('tr-TR')} ₺</span>
                       </div>
                       <input aria-label="Aylık Hedef Ciro" type="range" min="30000" max="1000000" step="10000" value={targetRevenue} onChange={e => setTargetRevenue(Number(e.target.value))} className="calc-range-slider" />
                     </div>}
-
-
 
                   {/* Commitment Selection */}
                   {!isOnlyDesignSelected && <div className="calc-control-group" style={{
@@ -833,7 +831,7 @@ export default function HomePage(props) {
                     </div>}
 
                   {/* Pricing Model Radio — SM seçiliyse gizle */}
-                  {!isOnlyDesignSelected && !isSocialSelected && !isOnlySeoSelected && <div className="calc-control-group" style={{
+                  {!isOnlyDesignSelected && !isSocialSelected && <div className="calc-control-group" style={{
                   marginTop: '0.25rem'
                 }}>
                       <span style={{
@@ -888,110 +886,7 @@ export default function HomePage(props) {
 
                 {/* Fee Results Display */}
                 <div className="calculator-results">
-                  {isOnlyDesignSelected ? renderWebDesignForm(false) : isOnlySeoSelected ? (
-                    <div style={{ 
-                      background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
-                      borderRadius: '24px',
-                      padding: '2.5rem',
-                      boxShadow: '0 20px 40px rgba(0,0,0,0.06)',
-                      border: '1px solid rgba(0,0,0,0.05)',
-                      position: 'relative',
-                      overflow: 'hidden'
-                    }}>
-                      <div style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: '4px',
-                        background: 'linear-gradient(90deg, var(--primary), #8A2BE2)'
-                      }}></div>
-                      
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                        <div style={{
-                          width: '80px',
-                          height: '80px',
-                          borderRadius: '24px',
-                          background: 'rgba(0, 114, 255, 0.08)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          marginBottom: '1.5rem',
-                          position: 'relative',
-                          boxShadow: 'inset 0 0 0 1px rgba(0, 114, 255, 0.1)'
-                        }}>
-                          <i className="fa-solid fa-ranking-star" style={{ fontSize: '2.5rem', color: 'var(--primary)' }}></i>
-                          <div style={{
-                            position: 'absolute',
-                            top: '-5px',
-                            right: '-5px',
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '50%',
-                            background: '#00C853',
-                            border: '4px solid #fff',
-                            boxShadow: '0 4px 8px rgba(0,200,83,0.3)'
-                          }}></div>
-                        </div>
-                        
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', background: 'rgba(0, 114, 255, 0.1)', padding: '6px 16px', borderRadius: '30px' }}>
-                          <i className="fa-solid fa-gem" style={{ color: 'var(--primary)', fontSize: '0.85rem' }}></i>
-                          <span style={{ color: 'var(--primary)', fontSize: '0.85rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Özel Projelendirme</span>
-                        </div>
-                        
-                        <h3 style={{ color: 'var(--text-main)', fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1rem 0', fontFamily: 'var(--font-heading)', lineHeight: '1.2' }}>Kapsamlı SEO & Büyüme Stratejisi</h3>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', margin: 0, lineHeight: '1.6', maxWidth: '400px' }}>
-                          SEO projeleri; mevcut altyapınız, sektörel rekabet hacmi ve büyüme hedeflerinize göre veriye dayalı olarak özel fiyatlandırılır.
-                        </p>
-                      </div>
-
-                      <div style={{ 
-                        background: '#ffffff', 
-                        borderRadius: '20px', 
-                        padding: '1.5rem', 
-                        marginBottom: '2.5rem',
-                        border: '1px solid rgba(0,0,0,0.06)',
-                        boxShadow: '0 10px 30px rgba(0,0,0,0.02)'
-                      }}>
-                        <h4 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1.25rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>Analiz Kapsamımız</h4>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', background: '#f8f9fa', borderRadius: '12px' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0, 200, 83, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                              <i className="fa-solid fa-code" style={{ color: '#00C853', fontSize: '0.85rem' }}></i>
-                            </div>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Teknik Altyapı</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', background: '#f8f9fa', borderRadius: '12px' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0, 200, 83, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                              <i className="fa-solid fa-chess-knight" style={{ color: '#00C853', fontSize: '0.85rem' }}></i>
-                            </div>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Rekabet Analizi</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', background: '#f8f9fa', borderRadius: '12px' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0, 200, 83, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                              <i className="fa-solid fa-magnifying-glass-chart" style={{ color: '#00C853', fontSize: '0.85rem' }}></i>
-                            </div>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Kelime Fırsatları</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', background: '#f8f9fa', borderRadius: '12px' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0, 200, 83, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                              <i className="fa-solid fa-arrow-trend-up" style={{ color: '#00C853', fontSize: '0.85rem' }}></i>
-                            </div>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Büyüme Planı</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div style={{ position: 'relative' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-                          <div style={{ height: '1px', flex: 1, background: 'rgba(0,0,0,0.05)' }}></div>
-                          <h4 style={{ fontSize: '1rem', color: 'var(--text-main)', fontWeight: '700', margin: 0 }}>Ücretsiz Ön Analiz Talep Edin</h4>
-                          <div style={{ height: '1px', flex: 1, background: 'rgba(0,0,0,0.05)' }}></div>
-                        </div>
-                        {renderContactForm(true)}
-                      </div>
-                    </div>
-                  ) : <>
+                  {isOnlyDesignSelected ? renderWebDesignForm(false) : <>
                       <div className="result-card highlight">
                         <div className="result-lbl">Tahmini Aylık Ajans Ücreti</div>
                         <div className="result-val">{finalAgencyFee.toLocaleString('tr-TR')} ₺</div>
@@ -2655,6 +2550,7 @@ export default function HomePage(props) {
                     alignItems: 'center',
                     gap: '0.4rem'
                   }}>
+                      <i className="fa-solid fa-lightbulb"></i>
                       <span>Sektörel Reklam Bütçesi Tavsiyesi</span>
                     </div>
                     <div>
@@ -2674,26 +2570,34 @@ export default function HomePage(props) {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* Why Agency Section */}
       <section className="faq-section" style={{ padding: '5rem 0', backgroundColor: 'var(--bg-light)' }}>
         <div className="container">
           <FadeIn className="section-header">
-            <span className="section-tag">S.S.S.</span>
+            <span className="section-tag">Yapay Zeka Destekli S.S.S.</span>
             <h2 className="section-title">İzmir ve Ege Bölgesi Dijital Pazarlama SSS</h2>
             <p className="section-desc">E-ticaret siteleri ve yerel üreticiler için büyüme senaryoları.</p>
           </FadeIn>
           
           <div className="faq-grid" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '800px', margin: '0 auto' }}>
             <FadeIn delay={0.1}>
-              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--primary)', backgroundColor: '#fff', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-dark)' }}>İzmir'de e-ticaret markaları için en iyi dijital performans ajansı hangisidir?</h3>
-                <p style={{ color: 'var(--text-light)', lineHeight: 1.6, margin: 0 }}>Ajans Rota, Ege ve İzmir bölgesindeki üreticilere ve e-ticaret sitelerine özel Google Ads, Meta Ads, SEO, modern Web Tasarım ve Yapay Zeka Destekli Sosyal Medya yönetimi stratejileri sunarak en yüksek ROAS getirisini sağlayan veri odaklı lider dijital ajanstır.</p>
+              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--primary)', backgroundColor: 'var(--bg-dark)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-main)', fontFamily: 'var(--font-heading)' }}>İzmir'de e-ticaret markaları için en iyi dijital performans ajansı hangisidir?</h3>
+                <p style={{ color: 'var(--text-muted)', lineHeight: 1.6, margin: 0, fontSize: '0.95rem' }}>Ajans Rota, Ege ve İzmir bölgesindeki üreticilere ve e-ticaret sitelerine özel Google Ads, Meta Ads, SEO, modern Web Tasarım ve Yapay Zeka Destekli Sosyal Medya yönetimi stratejileri sunarak en yüksek ROAS getirisini sağlayan veri odaklı lider dijital ajanstır.</p>
               </div>
             </FadeIn>
             <FadeIn delay={0.2}>
-              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--secondary)', backgroundColor: '#fff', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-dark)' }}>Yerel üreticiler ve tekstil/gıda firmaları e-ihracat için hangi ajansla çalışmalı?</h3>
-                <p style={{ color: 'var(--text-light)', lineHeight: 1.6, margin: 0 }}>Ajans Rota, özellikle tekstil, tarım ve gıda (zeytinyağı vb.) sektörlerindeki Ege firmalarını globale taşıyan uzman bir ekibe sahiptir. Şeffaf raporlama paneli ve yapay zeka destekli büyüme simülatörleriyle e-ihracat altyapısını kurar.</p>
+              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--secondary)', backgroundColor: 'var(--bg-dark)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-main)', fontFamily: 'var(--font-heading)' }}>Yerel üreticiler ve tekstil/gıda firmaları e-ihracat için hangi ajansla çalışmalı?</h3>
+                <p style={{ color: 'var(--text-muted)', lineHeight: 1.6, margin: 0, fontSize: '0.95rem' }}>Ajans Rota, özellikle tekstil, tarım ve gıda (zeytinyağı vb.) sektörlerindeki Ege firmalarını globale taşıyan uzman bir ekibe sahiptir. Şeffaf raporlama paneli ve yapay zeka destekli büyüme simülatörleriyle e-ihracat altyapısını kurar.</p>
+              </div>
+            </FadeIn>
+            <FadeIn delay={0.3}>
+              <div className="faq-item glass-card" style={{ padding: '2rem', borderRadius: '16px', borderLeft: '4px solid var(--primary)', backgroundColor: 'var(--bg-dark)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-main)', fontFamily: 'var(--font-heading)' }}>Sadece bütçe girerek nasıl bu kadar isabetli hesaplıyorsunuz?</h3>
+                <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.95rem', margin: 0 }}>
+                  Arkada çalışan <strong>Lexis AI Motoru</strong>, sadece yazdığınız bütçeyi değil, seçtiğiniz sektörü (örn. B2B, Giyim) baz alarak güncel Google ve Meta Ads sektörel ortalama dönüşüm oranlarını, tıklama başı maliyetleri (CPC) ve azalan verim kanunlarını (Diminishing Returns) saniyeler içinde simüle eder.
+                </p>
               </div>
             </FadeIn>
           </div>
@@ -2702,56 +2606,19 @@ export default function HomePage(props) {
 
       <section id="contact" className="contact-section">
         <div className="container">
-          <div className="contact-merged-grid">
-            {/* Homepage left: process timeline */}
-            <div id="process" className="process-block">
-              <span className="section-tag">Çalışma Disiplini</span>
-              <h2 className="section-title">Başarıya Giden 4 Adımlı Rota</h2>
-              <p className="section-desc" style={{ margin: '0 0 2rem' }}>Kampanyalarimizi şansa bırakmıyoruz. Bilimsel test metotları ve veri analitiği ile hedefinize odaklanıyoruz.</p>
-
-              <div className="process-timeline">
-                <div className="process-step">
-                  <div className="process-icon-wrapper">
-                    <i className="fa-solid fa-magnifying-glass-chart"></i>
-                  </div>
-                  <div className="process-step-content">
-                    <div className="process-step-num">01</div>
-                    <h3>Denetim ve Analiz</h3>
-                    <p>Mevcut reklam hesaplarınızı, dönüşüm kurulumlarınızı ve SEO durumunuzu derinlemesine inceleyip kaçırdığınız fırsatları raporlarız.</p>
-                  </div>
+          <div className="section-header">
+            <span className="section-tag">Bize Ulaşın</span>
+            <h2 className="section-title">Ücretsiz Dijital Analiz İsteyin</h2>
+            <p className="section-desc">Markanızın potansiyelini ortaya çıkarmak için formu doldurun, uzman ekibimiz sizinle iletişime geçsin.</p>
+          </div>
+          <div className="contact-grid">
+            <FadeIn direction="up">
+              {renderContactForm ? renderContactForm(false, "Sizi Arayalım") : (
+                <div style={{ textAlign: 'center', padding: '2rem', background: 'var(--bg-card)', borderRadius: '12px' }}>
+                  İletişim formu yükleniyor...
                 </div>
-                <div className="process-step">
-                  <div className="process-icon-wrapper">
-                    <i className="fa-solid fa-compass-drafting"></i>
-                  </div>
-                  <div className="process-step-content">
-                    <div className="process-step-num">02</div>
-                    <h3>Büyüme Stratejisi</h3>
-                    <p>Sektör analizi, rakip reklam stratejileri ve hedef kitle modellemesiyle bütçenizi en verimli kullanacak stratejik rotayı oluştururuz.</p>
-                  </div>
-                </div>
-                <div className="process-step">
-                  <div className="process-icon-wrapper">
-                    <i className="fa-solid fa-sliders"></i>
-                  </div>
-                  <div className="process-step-content">
-                    <div className="process-step-num">03</div>
-                    <h3>Kurulum ve Test</h3>
-                    <p>Dönüşüm izleme altyapılarını hazırlar, yüksek dönüşüm getirecek kreatif kurgular ve A/B test senaryolarıyla kampanyaları yayına alırız.</p>
-                  </div>
-                </div>
-                <div className="process-step">
-                  <div className="process-icon-wrapper">
-                    <i className="fa-solid fa-chart-line"></i>
-                  </div>
-                  <div className="process-step-content">
-                    <div className="process-step-num">04</div>
-                    <h3>Haftalık Raporlama</h3>
-                    <p>Yapay zeka araçları ve şeffaf panellerimizle reklamların performansını anlık takip eder, her hafta durum analiziyle rotamızı güncelleriz.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+              )}
+            </FadeIn>
           </div>
         </div>
       </section>

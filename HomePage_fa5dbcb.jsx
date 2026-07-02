@@ -130,7 +130,7 @@ export default function HomePage(props) {
     baselineB2bCustomers, baselineB2bRevenue, baselineB2bCpl, baselineB2bCac, baselineB2bRoi,
     rotaB2bLeads, rotaB2bConversion, rotaB2bCustomers, rotaB2bRevenue,
     rotaB2bCpl, rotaB2bCacFinal, rotaB2bRoi, rotaB2bRevenueIncrease,
-    isSocialSelected, selectedCount, isOnlyDesignSelected, isOnlySocialSelected, isOnlySeoSelected,
+    isSocialSelected, selectedCount, isOnlyDesignSelected, isOnlySocialSelected,
     bundleDiscountPercent, bundleDiscountAmount,
     activePricingModel, calculatedAgencyFee,
     discountPercent, discountAmount, finalAgencyFee,
@@ -144,61 +144,6 @@ export default function HomePage(props) {
     whyAgencySlide, setWhyAgencySlide,
   } = props;
 
-  // AI Simulator States & Logic
-  const [isAiOptimizing, setIsAiOptimizing] = useState(false);
-  const [aiOptimizeText, setAiOptimizeText] = useState('');
-  const [liveAiInsight, setLiveAiInsight] = useState(null);
-
-  const handleAutoOptimize = () => {
-    if (isAiOptimizing) return;
-    setIsAiOptimizing(true);
-    setAiOptimizeText('Algoritma hesaplanıyor...');
-    
-    setTimeout(() => setAiOptimizeText('Büyüme parametreleri taranıyor...'), 800);
-    setTimeout(() => setAiOptimizeText('Azalan verim (Diminishing Returns) analizi yapıldı...'), 1600);
-    
-    setTimeout(() => {
-      // Optimal değerlere yerleştir
-      if (calculatorTab === 'roas_ecommerce') {
-        if (setEcomSpend) setEcomSpend(85000); // Örnek optimal ecom spend
-      } else if (calculatorTab === 'roas_b2b') {
-        if (setB2bSpend) setB2bSpend(45000); // Örnek optimal b2b spend
-      }
-      setIsAiOptimizing(false);
-      setLiveAiInsight({
-        type: 'success',
-        agent: 'Nova AI',
-        text: 'Harika! Seçilen bütçe seviyesi, algoritmalarımıza göre potansiyel kârlılığı maksimize edecek altın orandadır.'
-      });
-    }, 2400);
-  };
-
-  useEffect(() => {
-    if (calculatorTab === 'roas_ecommerce') {
-       if (ecomSpend > 300000) {
-         setLiveAiInsight({
-           type: 'warning',
-           agent: 'Lexis AI',
-           text: `Dikkat! Reklam bütçesini bu seviyeye çıkarmak, pazar doygunluğu nedeniyle Müşteri Edinme Maliyetini (CAC) gereksiz artırabilir. Bütçe artışını aşamalı yapmanız önerilir.`
-         });
-       } else if (!isAiOptimizing && liveAiInsight?.type !== 'success') {
-         setLiveAiInsight(null);
-       }
-    } else if (calculatorTab === 'roas_b2b') {
-       if (b2bSpend > 150000) {
-         setLiveAiInsight({
-           type: 'warning',
-           agent: 'Lexis AI',
-           text: `Dikkat! B2B pazarında hedef kitle dardır. Bütçeyi aşırı artırmak Lead Maliyetini (CPL) katlayabilir. Çoklu kanal stratejisine geçmeniz tavsiye edilir.`
-         });
-       } else if (!isAiOptimizing && liveAiInsight?.type !== 'success') {
-         setLiveAiInsight(null);
-       }
-    }
-  }, [ecomSpend, b2bSpend, calculatorTab]);
-
-
-
   return (
     <>
           {/* Hero Section */}
@@ -207,16 +152,16 @@ export default function HomePage(props) {
         <div className="hero-glow-2"></div>
         <div className="container hero-grid">
           <FadeIn direction="up" className="hero-content">
-            <div className="hero-tag" style={{ background: 'var(--primary-glow)', border: '1px solid var(--cyber-blue)', color: 'var(--cyber-blue)' }}>
-              <i className="fa-solid fa-microchip"></i>
-              <span>Otonom Yönetilen Yapay Zeka Ajansı</span>
+            <div className="hero-tag">
+              <i className="fa-solid fa-anchor"></i>
+              <span>{settingsData.hero_tag || "İzmir Performans & SEO Ajansı"}</span>
             </div>
             <PremiumHeroText greeting={getSmartGreeting()} />
             <p className="hero-desc">
-              İnsan hatası yok. Sadece veri. Arama Ağı, Meta ve SEO stratejilerinizi 7/24 otonom kararlarla optimize eden yapay zeka altyapısı.
+              {settingsData.hero_desc || "Google Ads, Meta (Facebook/Instagram) ve SEO stratejilerimizle İzmir ve çevresindeki e-ticaret markaları, yerel üreticiler ve ihracatçıların dijital satış hacmini büyütüyoruz."}
             </p>
             <div className="hero-btns">
-              <a href="#calculator" className="btn btn-primary" style={{ background: 'var(--cyber-blue)', borderColor: 'var(--cyber-blue)', color: '#020617', fontWeight: '800', fontSize: '1.1rem', padding: '12px 24px', boxShadow: '0 0 20px rgba(14, 165, 233, 0.4)' }} onClick={e => {
+              <a href="#calculator" className="btn btn-primary" onClick={e => {
                 e.preventDefault();
                 setCalculatorTab('roas_ecommerce');
                 const target = document.querySelector('.calculator-wrapper');
@@ -226,16 +171,40 @@ export default function HomePage(props) {
                   });
                 }
               }}>
-                ROAS Büyümeni Hesapla
+                Büyümeni Hesapla
               </a>
-              <a href="#contact" className="btn btn-secondary">Ücretsiz AI Analizi Al</a>
+              <a href="#contact" className="btn btn-secondary">Ücretsiz Analiz Al</a>
             </div>
             
+            {/* ── Hizmet Erişim Bandı ── */}
+            <div style={{
+              display: 'flex', flexWrap: 'wrap', gap: '0.5rem',
+              margin: '1.25rem 0 0.25rem',
+            }}>
+              {[
+                { icon: 'fa-solid fa-car-side', text: 'Müşterimizin yanına gidiyoruz', color: '#0ea5e9' },
+                { icon: 'fa-solid fa-map-location-dot', text: 'Ege Bölgesi genelinde aktif', color: '#10b981' },
+              ].map((item, i) => (
+                <div key={i} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                  padding: '0.35rem 0.85rem', borderRadius: '999px',
+                  background: `${item.color}15`,
+                  border: `1px solid ${item.color}30`,
+                  fontSize: '0.78rem', fontWeight: 600,
+                  color: item.color,
+                  transition: 'all 0.2s',
+                }}>
+                  <i className={item.icon} style={{ fontSize: '0.72rem' }}></i>
+                  {item.text}
+                </div>
+              ))}
+            </div>
+
             <div className="hero-stats">
               {[
-                { num: "150+", label: "Mutlu Müşteri" },
-                { num: "%340", label: "Ort. ROI Artışı" },
-                { num: "25M+", label: "Yönetilen Bütçe (₺)" },
+                { num: settingsData.hero_stat1_num || "%320+", label: settingsData.hero_stat1_lbl || "Ortalama ROAS Artışı" },
+                { num: settingsData.hero_stat2_num || "12M₺+", label: settingsData.hero_stat2_lbl || "Yönetilen Yıllık Bütçe" },
+                { num: settingsData.hero_stat3_num || "%98.4", label: settingsData.hero_stat3_lbl || "Müşteri Memnuniyeti" },
               ].map((stat, i) => (
                 <CountUpStat key={i} value={stat.num} label={stat.label} delay={i * 200} />
               ))}
@@ -560,7 +529,7 @@ export default function HomePage(props) {
                   </div>
 
                   {/* Monthly Ad Spend Slider — sosyal medya tek seçiliyse gizle */}
-                  {!isOnlyDesignSelected && !isOnlySocialSelected && !isOnlySeoSelected && <div className="calc-control-group">
+                  {!isOnlyDesignSelected && !isOnlySocialSelected && <div className="calc-control-group">
                       <div className="calc-label-row">
                         <span>Aylık Reklam Bütceniz</span>
                         <span className="calc-val">
@@ -577,7 +546,7 @@ export default function HomePage(props) {
                       }}>(&#127919; Önerilen Min.)</span> : null}
                         </span>
                       </div>
-                      <input aria-label="Aylık Reklam Bütçesi" type="range" min="0" max={budgetSteps.length - 1} step="1" value={budgetIndex} onChange={e => {
+                      <input type="range" min="0" max={budgetSteps.length - 1} step="1" value={budgetIndex} onChange={e => {
                     const idx = Number(e.target.value);
                     setBudgetIndex(idx);
                     setFeeAdBudget(budgetSteps[idx]);
@@ -722,15 +691,13 @@ export default function HomePage(props) {
                   })()}
 
                   {/* Target Revenue Slider — SM seçiliyse gizle */}
-                  {!isOnlyDesignSelected && !isSocialSelected && !isOnlySeoSelected && <div className="calc-control-group">
+                  {!isOnlyDesignSelected && !isSocialSelected && <div className="calc-control-group">
                       <div className="calc-label-row">
                         <span>Tahmini Aylık Ciro Hedefiniz</span>
                         <span className="calc-val">{targetRevenue.toLocaleString('tr-TR')} ₺</span>
                       </div>
-                      <input aria-label="Aylık Hedef Ciro" type="range" min="30000" max="1000000" step="10000" value={targetRevenue} onChange={e => setTargetRevenue(Number(e.target.value))} className="calc-range-slider" />
+                      <input type="range" min="30000" max="1000000" step="10000" value={targetRevenue} onChange={e => setTargetRevenue(Number(e.target.value))} className="calc-range-slider" />
                     </div>}
-
-
 
                   {/* Commitment Selection */}
                   {!isOnlyDesignSelected && <div className="calc-control-group" style={{
@@ -833,7 +800,7 @@ export default function HomePage(props) {
                     </div>}
 
                   {/* Pricing Model Radio — SM seçiliyse gizle */}
-                  {!isOnlyDesignSelected && !isSocialSelected && !isOnlySeoSelected && <div className="calc-control-group" style={{
+                  {!isOnlyDesignSelected && !isSocialSelected && <div className="calc-control-group" style={{
                   marginTop: '0.25rem'
                 }}>
                       <span style={{
@@ -888,110 +855,7 @@ export default function HomePage(props) {
 
                 {/* Fee Results Display */}
                 <div className="calculator-results">
-                  {isOnlyDesignSelected ? renderWebDesignForm(false) : isOnlySeoSelected ? (
-                    <div style={{ 
-                      background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
-                      borderRadius: '24px',
-                      padding: '2.5rem',
-                      boxShadow: '0 20px 40px rgba(0,0,0,0.06)',
-                      border: '1px solid rgba(0,0,0,0.05)',
-                      position: 'relative',
-                      overflow: 'hidden'
-                    }}>
-                      <div style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: '4px',
-                        background: 'linear-gradient(90deg, var(--primary), #8A2BE2)'
-                      }}></div>
-                      
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                        <div style={{
-                          width: '80px',
-                          height: '80px',
-                          borderRadius: '24px',
-                          background: 'rgba(0, 114, 255, 0.08)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          marginBottom: '1.5rem',
-                          position: 'relative',
-                          boxShadow: 'inset 0 0 0 1px rgba(0, 114, 255, 0.1)'
-                        }}>
-                          <i className="fa-solid fa-ranking-star" style={{ fontSize: '2.5rem', color: 'var(--primary)' }}></i>
-                          <div style={{
-                            position: 'absolute',
-                            top: '-5px',
-                            right: '-5px',
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '50%',
-                            background: '#00C853',
-                            border: '4px solid #fff',
-                            boxShadow: '0 4px 8px rgba(0,200,83,0.3)'
-                          }}></div>
-                        </div>
-                        
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', background: 'rgba(0, 114, 255, 0.1)', padding: '6px 16px', borderRadius: '30px' }}>
-                          <i className="fa-solid fa-gem" style={{ color: 'var(--primary)', fontSize: '0.85rem' }}></i>
-                          <span style={{ color: 'var(--primary)', fontSize: '0.85rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Özel Projelendirme</span>
-                        </div>
-                        
-                        <h3 style={{ color: 'var(--text-main)', fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1rem 0', fontFamily: 'var(--font-heading)', lineHeight: '1.2' }}>Kapsamlı SEO & Büyüme Stratejisi</h3>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', margin: 0, lineHeight: '1.6', maxWidth: '400px' }}>
-                          SEO projeleri; mevcut altyapınız, sektörel rekabet hacmi ve büyüme hedeflerinize göre veriye dayalı olarak özel fiyatlandırılır.
-                        </p>
-                      </div>
-
-                      <div style={{ 
-                        background: '#ffffff', 
-                        borderRadius: '20px', 
-                        padding: '1.5rem', 
-                        marginBottom: '2.5rem',
-                        border: '1px solid rgba(0,0,0,0.06)',
-                        boxShadow: '0 10px 30px rgba(0,0,0,0.02)'
-                      }}>
-                        <h4 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1.25rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>Analiz Kapsamımız</h4>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', background: '#f8f9fa', borderRadius: '12px' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0, 200, 83, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                              <i className="fa-solid fa-code" style={{ color: '#00C853', fontSize: '0.85rem' }}></i>
-                            </div>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Teknik Altyapı</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', background: '#f8f9fa', borderRadius: '12px' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0, 200, 83, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                              <i className="fa-solid fa-chess-knight" style={{ color: '#00C853', fontSize: '0.85rem' }}></i>
-                            </div>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Rekabet Analizi</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', background: '#f8f9fa', borderRadius: '12px' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0, 200, 83, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                              <i className="fa-solid fa-magnifying-glass-chart" style={{ color: '#00C853', fontSize: '0.85rem' }}></i>
-                            </div>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Kelime Fırsatları</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', background: '#f8f9fa', borderRadius: '12px' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0, 200, 83, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                              <i className="fa-solid fa-arrow-trend-up" style={{ color: '#00C853', fontSize: '0.85rem' }}></i>
-                            </div>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '600' }}>Büyüme Planı</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div style={{ position: 'relative' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-                          <div style={{ height: '1px', flex: 1, background: 'rgba(0,0,0,0.05)' }}></div>
-                          <h4 style={{ fontSize: '1rem', color: 'var(--text-main)', fontWeight: '700', margin: 0 }}>Ücretsiz Ön Analiz Talep Edin</h4>
-                          <div style={{ height: '1px', flex: 1, background: 'rgba(0,0,0,0.05)' }}></div>
-                        </div>
-                        {renderContactForm(true)}
-                      </div>
-                    </div>
-                  ) : <>
+                  {isOnlyDesignSelected ? renderWebDesignForm(false) : <>
                       <div className="result-card highlight">
                         <div className="result-lbl">Tahmini Aylık Ajans Ücreti</div>
                         <div className="result-val">{finalAgencyFee.toLocaleString('tr-TR')} ₺</div>
@@ -1394,73 +1258,20 @@ export default function HomePage(props) {
                 
                 {/* Sliders Control */}
                 <div className="calculator-controls compact-controls">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
-                    <span style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontWeight: 600,
-                      color: 'var(--primary)',
-                      fontSize: '1.1rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem'
-                    }}>
-                      <i className="fa-solid fa-cart-shopping" style={{
-                      color: 'var(--primary)'
-                    }}></i> E-Ticaret Büyüme Parametreleri
-                    </span>
-                    <button
-                      onClick={handleAutoOptimize}
-                      disabled={isAiOptimizing}
-                      style={{
-                        background: isAiOptimizing ? 'rgba(14, 165, 233, 0.3)' : 'var(--primary-glow)',
-                        color: 'var(--primary)',
-                        border: '1px solid var(--primary)',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '6px',
-                        fontWeight: 600,
-                        fontSize: '0.85rem',
-                        cursor: isAiOptimizing ? 'default' : 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        transition: 'all 0.3s'
-                      }}
-                      className={!isAiOptimizing ? 'pulse-glow' : ''}
-                    >
-                      <i className={`fa-solid ${isAiOptimizing ? 'fa-circle-notch fa-spin' : 'fa-wand-magic-sparkles'}`}></i>
-                      {isAiOptimizing ? 'Optimize Ediliyor...' : 'Otonom Optimize Et (AI)'}
-                    </button>
-                  </div>
-
-                  {isAiOptimizing && (
-                    <div style={{ marginBottom: '1.25rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', borderLeft: '3px solid var(--primary)' }}>
-                      <span className="typewriter" style={{ color: 'var(--primary)', fontFamily: 'monospace', fontSize: '0.85rem' }}>
-                        &gt; {aiOptimizeText}
-                      </span>
-                    </div>
-                  )}
-
-                  {liveAiInsight && !isAiOptimizing && (
-                    <div className="fade-in" style={{
-                      background: liveAiInsight.type === 'warning' ? 'rgba(234, 179, 8, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                      border: `1px solid ${liveAiInsight.type === 'warning' ? 'rgba(234, 179, 8, 0.3)' : 'rgba(34, 197, 94, 0.3)'}`,
-                      padding: '0.8rem 1rem',
-                      borderRadius: '8px',
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '10px',
-                      marginBottom: '1.25rem'
-                    }}>
-                      <div className="pulse-glow" style={{
-                        width: '8px', height: '8px', borderRadius: '50%', marginTop: '6px',
-                        background: liveAiInsight.type === 'warning' ? '#eab308' : '#22c55e',
-                        flexShrink: 0
-                      }}></div>
-                      <div style={{ color: liveAiInsight.type === 'warning' ? '#fde047' : '#86efac', fontSize: '0.85rem', lineHeight: '1.4' }}>
-                        <strong>{liveAiInsight.agent}:</strong> {liveAiInsight.text}
-                      </div>
-                    </div>
-                  )}
+                  <span style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 600,
+                  color: 'var(--primary)',
+                  fontSize: '1.1rem',
+                  marginBottom: '0.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}>
+                    <i className="fa-solid fa-cart-shopping" style={{
+                    color: 'var(--primary)'
+                  }}></i> E-Ticaret Büyüme Parametreleri
+                  </span>
 
                   {/* Sektör Seçimi */}
                   <div className="calc-control-group" style={{
@@ -1479,8 +1290,8 @@ export default function HomePage(props) {
                     padding: '0.65rem 0.8rem',
                     borderRadius: '8px',
                     border: '1px solid var(--glass-border)',
-                    background: 'var(--bg-dark)',
-                    color: 'var(--text-main)',
+                    background: '#fff',
+                    color: 'var(--text-light)',
                     outline: 'none',
                     fontSize: '0.85rem'
                   }}>
@@ -1510,7 +1321,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{ecomSpend.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input aria-label="Aylık Reklam Bütçesi (E-Ticaret)" type="range" min="10000" max="500000" step="5000" value={ecomSpend} onChange={e => setEcomSpend(Number(e.target.value))} className="calc-range-slider" />
+                    <input type="range" min="10000" max="500000" step="5000" value={ecomSpend} onChange={e => setEcomSpend(Number(e.target.value))} className="calc-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1543,7 +1354,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{ecomTraffic.toLocaleString('tr-TR')}</span>
                     </div>
-                    <input aria-label="Mevcut Web Site Trafiği (Aylık)" type="range" min="5000" max="500000" step="5000" value={ecomTraffic} onChange={e => setEcomTraffic(Number(e.target.value))} className="calc-range-slider" />
+                    <input type="range" min="5000" max="500000" step="5000" value={ecomTraffic} onChange={e => setEcomTraffic(Number(e.target.value))} className="calc-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1576,7 +1387,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{ecomAov.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input aria-label="Ortalama Sepet Tutarı (AOV)" type="range" min="100" max="10000" step="50" value={ecomAov} onChange={e => setEcomAov(Number(e.target.value))} className="calc-range-slider" />
+                    <input type="range" min="100" max="10000" step="50" value={ecomAov} onChange={e => setEcomAov(Number(e.target.value))} className="calc-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1609,7 +1420,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{ecomRevenue.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input aria-label="Aylık Mevcut Ciro" type="range" min="10000" max="2000000" step="10000" value={ecomRevenue} onChange={e => setEcomRevenue(Number(e.target.value))} className="calc-range-slider" />
+                    <input type="range" min="10000" max="2000000" step="10000" value={ecomRevenue} onChange={e => setEcomRevenue(Number(e.target.value))} className="calc-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -2034,75 +1845,22 @@ export default function HomePage(props) {
 
               </div> : <div className="calculator-grid compact-grid">
                 
-                {/* B2B Sliders Control */}
+                {/* Sliders Control */}
                 <div className="calculator-controls compact-controls">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
-                    <span style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontWeight: 600,
-                      color: 'var(--secondary)',
-                      fontSize: '1.1rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem'
-                    }}>
-                      <i className="fa-solid fa-phone-volume" style={{
-                      color: 'var(--secondary)'
-                    }}></i> B2B / Hizmet Parametreleri
-                    </span>
-                    <button
-                      onClick={handleAutoOptimize}
-                      disabled={isAiOptimizing}
-                      style={{
-                        background: isAiOptimizing ? 'rgba(139, 92, 246, 0.3)' : 'var(--glass-glow)',
-                        color: 'var(--secondary)',
-                        border: '1px solid var(--secondary)',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '6px',
-                        fontWeight: 600,
-                        fontSize: '0.85rem',
-                        cursor: isAiOptimizing ? 'default' : 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        transition: 'all 0.3s'
-                      }}
-                      className={!isAiOptimizing ? 'pulse-glow' : ''}
-                    >
-                      <i className={`fa-solid ${isAiOptimizing ? 'fa-circle-notch fa-spin' : 'fa-wand-magic-sparkles'}`}></i>
-                      {isAiOptimizing ? 'Optimize Ediliyor...' : 'Otonom Optimize Et (AI)'}
-                    </button>
-                  </div>
-
-                  {isAiOptimizing && (
-                    <div style={{ marginBottom: '1.25rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', borderLeft: '3px solid var(--secondary)' }}>
-                      <span className="typewriter" style={{ color: 'var(--secondary)', fontFamily: 'monospace', fontSize: '0.85rem' }}>
-                        &gt; {aiOptimizeText}
-                      </span>
-                    </div>
-                  )}
-
-                  {liveAiInsight && !isAiOptimizing && (
-                    <div className="fade-in" style={{
-                      background: liveAiInsight.type === 'warning' ? 'rgba(234, 179, 8, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                      border: `1px solid ${liveAiInsight.type === 'warning' ? 'rgba(234, 179, 8, 0.3)' : 'rgba(34, 197, 94, 0.3)'}`,
-                      padding: '0.8rem 1rem',
-                      borderRadius: '8px',
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '10px',
-                      marginBottom: '1.25rem'
-                    }}>
-                      <div className="pulse-glow" style={{
-                        width: '8px', height: '8px', borderRadius: '50%', marginTop: '6px',
-                        background: liveAiInsight.type === 'warning' ? '#eab308' : '#22c55e',
-                        flexShrink: 0
-                      }}></div>
-                      <div style={{ color: liveAiInsight.type === 'warning' ? '#fde047' : '#86efac', fontSize: '0.85rem', lineHeight: '1.4' }}>
-                        <strong>{liveAiInsight.agent}:</strong> {liveAiInsight.text}
-                      </div>
-                    </div>
-                  )}
+                  <span style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 600,
+                  color: 'var(--secondary)',
+                  fontSize: '1.1rem',
+                  marginBottom: '0.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}>
+                    <i className="fa-solid fa-phone-volume" style={{
+                    color: 'var(--secondary)'
+                  }}></i> B2B / Hizmet Parametreleri
+                  </span>
 
                   {/* Sektör Seçimi */}
                   <div className="calc-control-group" style={{
@@ -2121,8 +1879,8 @@ export default function HomePage(props) {
                     padding: '0.65rem 0.8rem',
                     borderRadius: '8px',
                     border: '1px solid var(--glass-border)',
-                    background: 'var(--bg-dark)',
-                    color: 'var(--text-main)',
+                    background: '#fff',
+                    color: 'var(--text-light)',
                     outline: 'none',
                     fontSize: '0.85rem'
                   }}>
@@ -2151,7 +1909,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{b2bSpend.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input aria-label="Aylık Reklam Bütçesi (B2B)" type="range" min="10000" max="500000" step="5000" value={b2bSpend} onChange={e => setB2bSpend(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
+                    <input type="range" min="10000" max="500000" step="5000" value={b2bSpend} onChange={e => setB2bSpend(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -2184,7 +1942,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{b2bLeads}</span>
                     </div>
-                    <input aria-label="Aylık Gelen Form/Lead (B2B)" type="range" min="10" max="1000" step="10" value={b2bLeads} onChange={e => setB2bLeads(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
+                    <input type="range" min="10" max="1000" step="10" value={b2bLeads} onChange={e => setB2bLeads(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -2217,7 +1975,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>%{b2bConversion}</span>
                     </div>
-                    <input aria-label="Satışa Dönme Oranı (%) (B2B)" type="range" min="1" max="50" step="1" value={b2bConversion} onChange={e => setB2bConversion(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
+                    <input type="range" min="1" max="50" step="1" value={b2bConversion} onChange={e => setB2bConversion(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -2250,7 +2008,7 @@ export default function HomePage(props) {
                       fontSize: '1.05rem'
                     }}>{b2bLtv.toLocaleString('tr-TR')} ₺</span>
                     </div>
-                    <input aria-label="Müşteri Yaşam Boyu Değeri (LTV)" type="range" min="1000" max="100000" step="1000" value={b2bLtv} onChange={e => setB2bLtv(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
+                    <input type="range" min="1000" max="100000" step="1000" value={b2bLtv} onChange={e => setB2bLtv(Number(e.target.value))} className="calc-range-slider b2b-range-slider" />
                     <div className="slider-labels" style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -2655,6 +2413,7 @@ export default function HomePage(props) {
                     alignItems: 'center',
                     gap: '0.4rem'
                   }}>
+                      <i className="fa-solid fa-lightbulb"></i>
                       <span>Sektörel Reklam Bütçesi Tavsiyesi</span>
                     </div>
                     <div>
@@ -2674,11 +2433,11 @@ export default function HomePage(props) {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* Why Agency Section */}
       <section className="faq-section" style={{ padding: '5rem 0', backgroundColor: 'var(--bg-light)' }}>
         <div className="container">
           <FadeIn className="section-header">
-            <span className="section-tag">S.S.S.</span>
+            <span className="section-tag">Yapay Zeka Destekli S.S.S.</span>
             <h2 className="section-title">İzmir ve Ege Bölgesi Dijital Pazarlama SSS</h2>
             <p className="section-desc">E-ticaret siteleri ve yerel üreticiler için büyüme senaryoları.</p>
           </FadeIn>

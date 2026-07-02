@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function AdminSidebar({ activeTab, setActiveTab, unreadLeadsCount, clientReports }) {
   const [openTicketCount, setOpenTicketCount] = useState(0);

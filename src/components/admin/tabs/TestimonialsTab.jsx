@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function TestimonialsTab({
   testimonialsData, setTestimonialsData, handleSaveAll, isSaving, settingsData, setSettingsData, openEditModal, handleDeleteItem

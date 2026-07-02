@@ -1,9 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { budgetSteps, initialServicePagesData, featuredStories, initialTeamMembers, initialBlogPosts, categories, whyAgencyData, testimonials } from '../data/mockData';
-import FadeIn from '../components/FadeIn';
-import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
-import ClientTransparencyPageView from '../components/ClientTransparencyPageView';
+import { useState, useEffect } from 'react';
+import { initialTeamMembers } from '../data/mockData';
 
 export default // Dedicated Team Page View Component
 
