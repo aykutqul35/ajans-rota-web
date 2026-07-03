@@ -1,3 +1,4 @@
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
 export default function AnalyticsTab({
   getAggregatedStats, handleGenerateDemoStats, statsLoading,
@@ -420,51 +421,22 @@ export default function AnalyticsTab({
                     padding: '3rem 1rem',
                     color: 'var(--text-muted)',
                     fontSize: '0.85rem'
-                  }}>Veri bulunmuyor.</div> : <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem'
-                  }}>
-                            {data.pages.slice(0, 10).map((page, idx) => {
-                      const maxViews = data.pages[0].views || 1;
-                      const pct = Math.round(page.views / maxViews * 100);
-                      return <div key={page.path}>
-                                  <div style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          fontSize: '0.8rem',
-                          marginBottom: '0.3rem',
-                          fontWeight: 500
-                        }}>
-                                    <span style={{
-                            color: 'var(--text-light)',
-                            fontFamily: 'monospace'
-                          }}>
-                                      {page.path === '/' ? '/' : page.path}
-                                    </span>
-                                    <span style={{
-                            color: 'var(--text-muted)'
-                          }}>
-                                      <strong>{page.views}</strong> gösterim ({formatTime(page.avgDuration)})
-                                    </span>
-                                  </div>
-                                  <div style={{
-                          height: '8px',
-                          background: 'rgba(15, 23, 42, 0.03)',
-                          borderRadius: '4px',
-                          overflow: 'hidden',
-                          border: '1px solid var(--glass-border)'
-                        }}>
-                                    <div style={{
-                            width: `${pct}%`,
-                            height: '100%',
-                            background: 'linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%)',
-                            borderRadius: '4px',
-                            transition: 'width 0.4s ease'
-                          }}></div>
-                                  </div>
-                                </div>;
-                    })}
+                  }}>Veri bulunmuyor.</div> : <div style={{ height: '300px', width: '100%', marginTop: '1rem' }}>
+                            <ResponsiveContainer width="100%" height="100%">
+                              <BarChart data={data.pages.slice(0, 10)} layout="vertical" margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--glass-border)" />
+                                <XAxis type="number" hide />
+                                <YAxis dataKey="path" type="category" width={120} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} tickFormatter={(tick) => tick === '/' ? '/' : tick} />
+                                <RechartsTooltip cursor={{ fill: 'rgba(15, 23, 42, 0.03)' }} formatter={(value) => [value, 'Gösterim']} contentStyle={{ borderRadius: '8px', border: '1px solid var(--glass-border)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }} />
+                                <defs>
+                                  <linearGradient id="colorView" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0%" stopColor="var(--primary)" stopOpacity={1}/>
+                                    <stop offset="100%" stopColor="var(--secondary)" stopOpacity={1}/>
+                                  </linearGradient>
+                                </defs>
+                                <Bar dataKey="views" fill="url(#colorView)" radius={[0, 4, 4, 0]} barSize={16} />
+                              </BarChart>
+                            </ResponsiveContainer>
                           </div>}
                       </div>
 
@@ -492,58 +464,29 @@ export default function AnalyticsTab({
                     padding: '3rem 1rem',
                     color: 'var(--text-muted)',
                     fontSize: '0.85rem'
-                  }}>Veri bulunmuyor.</div> : <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem'
-                  }}>
-                            {data.referrers.map(ref => {
-                      const maxSessions = data.referrers[0].count || 1;
-                      const pct = Math.round(ref.count / maxSessions * 100);
-                      const totalSessionCount = data.totalSessions || 1;
-                      const sharePct = Math.round(ref.count / totalSessionCount * 100);
-
-                      // Select colored bar based on traffic source name
-                      let barColor = 'var(--primary)';
-                      if (ref.name.includes('Meta')) barColor = 'var(--secondary)';
-                      if (ref.name.includes('Organik')) barColor = '#16a34a';
-                      if (ref.name.includes('Direct')) barColor = '#64748b';
-                      if (ref.name.includes('Sosyal')) barColor = '#d946ef';
-                      return <div key={ref.name}>
-                                  <div style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          fontSize: '0.8rem',
-                          marginBottom: '0.3rem',
-                          fontWeight: 500
-                        }}>
-                                    <span style={{
-                            color: 'var(--text-light)',
-                            fontWeight: '600'
-                          }}>{ref.name}</span>
-                                    <span style={{
-                            color: 'var(--text-muted)'
-                          }}>
-                                      <strong>{ref.count}</strong> ziyaretçi (%{sharePct})
-                                    </span>
-                                  </div>
-                                  <div style={{
-                          height: '8px',
-                          background: 'rgba(15, 23, 42, 0.03)',
-                          borderRadius: '4px',
-                          overflow: 'hidden',
-                          border: '1px solid var(--glass-border)'
-                        }}>
-                                    <div style={{
-                            width: `${pct}%`,
-                            height: '100%',
-                            backgroundColor: barColor,
-                            borderRadius: '4px',
-                            transition: 'width 0.4s ease'
-                          }}></div>
-                                  </div>
-                                </div>;
-                    })}
+                  }}>Veri bulunmuyor.</div> : <div style={{ height: '300px', width: '100%', marginTop: '1rem' }}>
+                            <ResponsiveContainer width="100%" height="100%">
+                              <PieChart>
+                                <Pie
+                                  data={data.referrers}
+                                  cx="50%"
+                                  cy="45%"
+                                  innerRadius={70}
+                                  outerRadius={100}
+                                  paddingAngle={5}
+                                  dataKey="count"
+                                  nameKey="name"
+                                  stroke="none"
+                                >
+                                  {data.referrers.map((entry, index) => {
+                                    const COLORS = ['#00ebd6', '#00b4d8', '#16a34a', '#64748b', '#d946ef', '#f59e0b'];
+                                    return <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />;
+                                  })}
+                                </Pie>
+                                <RechartsTooltip formatter={(value) => [value, 'Ziyaretçi']} contentStyle={{ borderRadius: '8px', border: '1px solid var(--glass-border)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }} />
+                                <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: '12px', color: 'var(--text-muted)' }}/>
+                              </PieChart>
+                            </ResponsiveContainer>
                           </div>}
                       </div>
 
