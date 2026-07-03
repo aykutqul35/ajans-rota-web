@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
+import SEO from '../components/SEO';
 import { initialServicePagesData } from '../data/mockData';
 
 // Detailed service pages data
@@ -287,12 +287,13 @@ export default function ServicePageView({
   } : null;
 
   return <div className="service-page-view container">
-      {/* FAQ Schema JSON-LD */}
-      {faqSchema && (
-        <Helmet>
-          <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
-        </Helmet>
-      )}
+      {/* SEO & FAQ Schema JSON-LD */}
+      <SEO 
+        title={`${data.title} | Ajans Rota`} 
+        description={data.tagline} 
+        canonicalPath={`/hizmetlerimiz/${slug}`}
+        schema={faqSchema}
+      />
 
       {/* Back to Home & Breadcrumb */}
       <div className="service-page-nav">

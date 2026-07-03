@@ -16,6 +16,13 @@ function buildSchema({ siteUrl, phone, email }) {
     priceRange: '₺₺₺',
     currenciesAccepted: 'TRY',
     paymentAccepted: 'Banka Transferi, Kredi Kartı',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '45',
+      bestRating: '5',
+      worstRating: '1'
+    },
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Kordon Caddesi',
@@ -172,9 +179,15 @@ export default function SEO({
 
       {/* ── Sayfa özel schema (opsiyonel) ── */}
       {schema && (
-        <script type="application/ld+json">
-          {JSON.stringify(schema)}
-        </script>
+        Array.isArray(schema) ? schema.map((sch, index) => (
+          <script key={`schema-${index}`} type="application/ld+json">
+            {JSON.stringify(sch)}
+          </script>
+        )) : (
+          <script type="application/ld+json">
+            {JSON.stringify(schema)}
+          </script>
+        )
       )}
     </Helmet>
   );
