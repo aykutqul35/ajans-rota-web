@@ -179,6 +179,59 @@ export default function EditItemModal({
     }, 50);
   };
 
+  const handleSuggestKeywords = async (e) => {
+    e.preventDefault();
+    setAiLoading(true);
+    setAiError('');
+    
+    const currentCategory = modalFormData.category || 'google';
+    let categoryName = currentCategory;
+    switch(currentCategory) {
+      case 'google': categoryName = 'Google Ads / Reklam'; break;
+      case 'meta': categoryName = 'Meta Ads (Facebook/Instagram)'; break;
+      case 'seo': categoryName = 'SEO & İçerik Pazarlaması'; break;
+      case 'social': categoryName = 'Sosyal Medya Yönetimi'; break;
+      case 'ecommerce': categoryName = 'E-Ticaret'; break;
+      case 'design': categoryName = 'Web Tasarım / UX'; break;
+      default: categoryName = 'Dijital Pazarlama';
+    }
+
+    if (settingsData.gemini_api_key) {
+      try {
+        const prompt = `Dijital pazarlama ajansı blogu için "${categoryName}" kategorisinde en çok aranan, SEO değeri yüksek ve uzun kuyruklu (long-tail) 5 adet anahtar kelime veya konu başlığı öner. Lütfen kelimeleri virgülle ayırarak (Örn: seo uyumlu makale, e-ticaret sepet terk etme) ver. Başlık, numara veya açıklama ekleme; sadece virgülle ayrılmış kelime listesi ver.`;
+        
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${settingsData.gemini_api_key}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        
+        const resData = await response.json();
+        if (resData.candidates && resData.candidates[0]?.content?.parts[0]?.text) {
+          const suggestedKeywords = resData.candidates[0].content.parts[0].text.trim().replace(/\n/g, '').replace(/,\s*$/, '');
+          setAiKeywords(suggestedKeywords);
+        } else {
+           throw new Error('API yanıtı anlaşılamadı.');
+        }
+      } catch (err) {
+        setAiError('Kelime önerisi alınırken hata: ' + err.message);
+      }
+    } else {
+      // Local fallback suggestions
+      let fallbackKeywords = '';
+      if (currentCategory === 'google') fallbackKeywords = 'google ads dönüşüm izleme, tıklama başı maliyet düşürme, roas artırma';
+      else if (currentCategory === 'meta') fallbackKeywords = 'facebook piksel, instagram reklam algoritması, advantage+ kampanyaları';
+      else if (currentCategory === 'seo') fallbackKeywords = 'semantik seo, teknik seo, long-tail anahtar kelime';
+      else if (currentCategory === 'social') fallbackKeywords = 'instagram etkileşim artırma, reels izlenme, sosyal medya stratejisi';
+      else if (currentCategory === 'ecommerce') fallbackKeywords = 'e-ticaret sepet terk etme, CRO artırma, shopify seo';
+      else if (currentCategory === 'design') fallbackKeywords = 'kullanıcı deneyimi optimizasyonu, hızlı web tasarım, mobil uyumlu site';
+      else fallbackKeywords = 'dijital pazarlama taktikleri, marka bilinirliği';
+      
+      setAiKeywords(fallbackKeywords);
+    }
+    setAiLoading(false);
+  };
+
   const handleGenerateAIBlog = async e => {
     e.preventDefault();
     if (!aiKeywords.trim()) {
@@ -291,7 +344,8 @@ Anahtar kelimeler: ${aiKeywords}
 <p>E-ticaret trafiğinin %90'ı mobilden gelmektedir. Sitenizin mobil hızını artırın, butonların parmak dostu boyutlarda olduğundan ve filtreleme sisteminin pürüzsüz çalıştığından emin olun.</p>`;
       } else {
         const firstKw = aiKeywords.split(',')[0].trim();
-        title = `${firstKw.toUpperCase()} Odaklı Dijital Pazarlama ve Büyüme Rehberi`;
+        const formattedKw = firstKw.toLocaleLowerCase('tr-TR').split(' ').map(word => word.charAt(0).toLocaleUpperCase('tr-TR') + word.slice(1)).join(' ');
+        title = `${formattedKw} Odaklı Dijital Pazarlama ve Büyüme Rehberi`;
         excerpt = `${aiKeywords} odaklı iş modelleri için veriye dayalı reklam, SEO ve sosyal medya stratejileriyle dijitalde öne çıkma rehberi.`;
         content = `<h3>1. Hedef Kitle Analizi ve Segmentasyon</h3>
 <p>${aiKeywords} alanında pazarlamaya başlamadan önce ideal müşteri profilinizi (persona) belirleyin ve onların dijitaldeki ilgi alanlarına göre doğru mecra tercihi yapın.</p>
@@ -668,12 +722,26 @@ Anahtar kelimeler: ${aiKeywords}
                       color: 'var(--text-light)',
                       outline: 'none'
                     }} />
+                            <button type="button" onClick={handleSuggestKeywords} disabled={aiLoading} className="btn" style={{
+                      padding: '0.5rem 1rem',
+                      fontSize: '0.8rem',
+                      borderRadius: '6px',
+                      backgroundColor: 'rgba(2, 132, 199, 0.1)',
+                      color: 'var(--primary)',
+                      border: '1px solid rgba(2, 132, 199, 0.2)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      cursor: 'pointer'
+                    }}>
+                              <i className="fa-solid fa-lightbulb"></i> Öneri Al
+                            </button>
                             <button type="button" onClick={handleGenerateAIBlog} disabled={aiLoading} className="btn btn-primary" style={{
                       padding: '0.5rem 1rem',
                       fontSize: '0.8rem',
                       borderRadius: '6px'
                     }}>
-                              {aiLoading ? 'Taslak Üretiliyor...' : 'Yazı Üret'}
+                              {aiLoading ? 'İşlem Sürüyor...' : 'Yazı Üret'}
                             </button>
                           </div>
                           {aiError && <div style={{
