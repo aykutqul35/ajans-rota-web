@@ -251,7 +251,7 @@ Anahtar kelimeler: ${aiKeywords}
 {
   "title": "makale başlığı",
   "excerpt": "makale kısa özeti",
-  "content": "h3 ve p ve strong etiketleriyle zenginleştirilmiş en az 300 kelimelik makale gövde HTML içeriği"
+  "content": "h3, p, ul, li ve strong etiketleriyle zenginleştirilmiş, konunun derinliğine göre 800 ile 1500 kelime arasında değişen detaylı makale gövde HTML içeriği"
 }`;
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${settingsData.gemini_api_key}`, {
           method: 'POST',
