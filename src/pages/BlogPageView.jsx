@@ -56,12 +56,12 @@ const injectHeadingIds = (content) => {
 
 // Auto internal linking dictionary
 const internalLinks = {
-  'SEO': '/hizmetlerimiz',
-  'Google Ads': '/hizmetlerimiz',
-  'Meta Reklam': '/hizmetlerimiz',
-  'Web Tasarım': '/hizmetlerimiz',
-  'E-Ticaret': '/hizmetlerimiz',
-  'Sosyal Medya': '/hizmetlerimiz'
+  'SEO': '/hizmetlerimiz/arama-motoru-optimizasyonu-seo',
+  'Google Ads': '/hizmetlerimiz/google-ads-danismanligi',
+  'Meta Reklam': '/hizmetlerimiz/meta-reklam-yonetimi',
+  'Web Tasarım': '/hizmetlerimiz/donusum-odakli-web-tasarim',
+  'E-Ticaret': '/hizmetlerimiz/e-ticaret-ve-pazaryeri-yonetimi',
+  'Sosyal Medya': '/hizmetlerimiz/sosyal-medya-yonetimi'
 };
 
 const autoInternalLink = (content) => {
