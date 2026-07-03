@@ -112,6 +112,15 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
     setActiveMobileDropdown(null);
   };
 
+  // ── Analytics Sayfa Geçişi Takibi (SPA Support) ──
+  useEffect(() => {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'page_view', {
+        page_path: location.pathname + location.search
+      });
+    }
+  }, [location]);
+
   // Inject marketing and tracking tags dynamically based on settingsData
   useEffect(() => {
     // 1. Google Site Verification
