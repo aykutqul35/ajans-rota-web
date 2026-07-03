@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { initialBlogPosts, categories } from '../data/mockData';
 import toast from 'react-hot-toast';
+import SEO from '../components/SEO';
 
 const slugify = text => {
   if (!text) return "";
@@ -51,6 +52,38 @@ const injectHeadingIds = (content) => {
     const id = slugify(cleanText);
     return `<h${level}${attrs} id="${id}">${text}</h${level}>`;
   });
+};
+
+// Auto internal linking dictionary
+const internalLinks = {
+  'SEO': '/hizmetlerimiz',
+  'Google Ads': '/hizmetlerimiz',
+  'Meta Reklam': '/hizmetlerimiz',
+  'Web Tasarım': '/hizmetlerimiz',
+  'E-Ticaret': '/hizmetlerimiz',
+  'Sosyal Medya': '/hizmetlerimiz'
+};
+
+const autoInternalLink = (content) => {
+  if (!content) return content;
+  let linkedContent = content;
+  
+  Object.keys(internalLinks).forEach(keyword => {
+    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(<[^>]+>)|\\b(${escapedKeyword})\\b`, 'gi');
+    
+    let replaced = false;
+    linkedContent = linkedContent.replace(regex, (match, tag, kw) => {
+      if (tag) return tag;
+      if (kw && !replaced) {
+        replaced = true;
+        return `<a href="${internalLinks[keyword]}" style="color: var(--primary); text-decoration: underline; font-weight: 600;" title="${keyword} Alanı">${kw}</a>`;
+      }
+      return match;
+    });
+  });
+  
+  return linkedContent;
 };
 
 // Scroll Progress Bar Component
@@ -203,11 +236,47 @@ export default function BlogPageView({
 
     const hasHTML = /<\/?[a-z][\s\S]*>/i.test(selectedPost.content);
     const headings = hasHTML ? extractHeadings(selectedPost.content) : [];
-    const processedContent = hasHTML ? injectHeadingIds(selectedPost.content) : selectedPost.content;
+    
+    let processedContent = selectedPost.content;
+    if (hasHTML) {
+      processedContent = injectHeadingIds(processedContent);
+      processedContent = autoInternalLink(processedContent);
+    }
+    
     const readingTime = getReadingTime(selectedPost.content);
+
+    const articleSchema = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `https://ajansrota.com/blog/${slugify(selectedPost.title)}`
+      },
+      "headline": selectedPost.title,
+      "description": selectedPost.excerpt,
+      "author": {
+        "@type": "Person",
+        "name": selectedPost.author
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Ajans Rota",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://ajansrota.com/logo.png"
+        }
+      },
+      "datePublished": new Date().toISOString().split('T')[0]
+    };
 
     return (
       <>
+        <SEO 
+          title={`${selectedPost.title} | Ajans Rota Blog`}
+          description={selectedPost.excerpt}
+          canonicalPath={`/blog/${slugify(selectedPost.title)}`}
+          schema={articleSchema}
+        />
         <ScrollProgressBar />
         <div className="blog-page-view container">
           <div className="service-page-nav">
