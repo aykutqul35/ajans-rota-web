@@ -1,5 +1,6 @@
 import { useState } from 'react';
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 export default function EditItemModal({
   editingItem, setEditingItem, editingType, setEditingType,
   modalFormData, setModalFormData,
@@ -12,7 +13,17 @@ export default function EditItemModal({
   const [aiError, setAiError] = useState('');
   const [blogEditTab, setBlogEditTab] = useState('edit');
 
-    const openEditModal = (type, item) => {
+  const quillModules = {
+    toolbar: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{'list': 'ordered'}, {'list': 'bullet'}],
+      ['link', 'image', 'video'],
+      ['clean']
+    ],
+  };
+
+  const openEditModal = (type, item) => {
     setEditingType(type);
     setEditingItem(item);
     if (type === 'blog') {
@@ -857,209 +868,16 @@ Anahtar kelimeler: ${aiKeywords}
                     }}>HTML etiketlerini kullanabilirsiniz</span>
                           </label>
                           
-                          {/* Formatting Toolbar */}
-                          <div style={{
-                    display: 'flex',
-                    gap: '2px',
-                    flexWrap: 'wrap',
-                    padding: '4px',
-                    background: '#f8fafc',
-                    border: '1px solid var(--glass-border)',
-                    borderBottom: 'none',
-                    borderTopLeftRadius: '6px',
-                    borderTopRightRadius: '6px'
-                  }}>
-                            <button type="button" onClick={() => insertHTMLTag('bold')} title="Kalın (Strong)" style={{
-                      width: '28px',
-                      height: '28px',
-                      border: 'none',
-                      background: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                              <i className="fa-solid fa-bold" style={{
-                        fontSize: '0.8rem',
-                        color: 'var(--text-light)'
-                      }}></i>
-                            </button>
-                            <button type="button" onClick={() => insertHTMLTag('italic')} title="İtalik (Em)" style={{
-                      width: '28px',
-                      height: '28px',
-                      border: 'none',
-                      background: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                              <i className="fa-solid fa-italic" style={{
-                        fontSize: '0.8rem',
-                        color: 'var(--text-light)'
-                      }}></i>
-                            </button>
-                            <button type="button" onClick={() => insertHTMLTag('h2')} title="H2 Başlık" style={{
-                      width: '28px',
-                      height: '28px',
-                      border: 'none',
-                      background: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '0.8rem',
-                      fontWeight: 'bold',
-                      color: 'var(--text-light)'
-                    }}>
-                              H2
-                            </button>
-                            <button type="button" onClick={() => insertHTMLTag('h3')} title="H3 Başlık" style={{
-                      width: '28px',
-                      height: '28px',
-                      border: 'none',
-                      background: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '0.8rem',
-                      fontWeight: 'bold',
-                      color: 'var(--text-light)'
-                    }}>
-                              H3
-                            </button>
-                            <button type="button" onClick={() => insertHTMLTag('p')} title="Paragraf" style={{
-                      width: '28px',
-                      height: '28px',
-                      border: 'none',
-                      background: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                              <i className="fa-solid fa-paragraph" style={{
-                        fontSize: '0.8rem',
-                        color: 'var(--text-light)'
-                      }}></i>
-                            </button>
-                            <button type="button" onClick={() => insertHTMLTag('link')} title="Bağlantı (Link)" style={{
-                      width: '28px',
-                      height: '28px',
-                      border: 'none',
-                      background: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                              <i className="fa-solid fa-link" style={{
-                        fontSize: '0.8rem',
-                        color: 'var(--text-light)'
-                      }}></i>
-                            </button>
-                            <button type="button" onClick={() => insertHTMLTag('quote')} title="Alıntı (Blockquote)" style={{
-                      width: '28px',
-                      height: '28px',
-                      border: 'none',
-                      background: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                              <i className="fa-solid fa-quote-left" style={{
-                        fontSize: '0.8rem',
-                        color: 'var(--text-light)'
-                      }}></i>
-                            </button>
-                            <button type="button" onClick={() => insertHTMLTag('ul')} title="Sırasız Liste" style={{
-                      width: '28px',
-                      height: '28px',
-                      border: 'none',
-                      background: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                              <i className="fa-solid fa-list-ul" style={{
-                        fontSize: '0.8rem',
-                        color: 'var(--text-light)'
-                      }}></i>
-                            </button>
-                            <button type="button" onClick={() => insertHTMLTag('li')} title="Liste Elemanı (li)" style={{
-                      width: '28px',
-                      height: '28px',
-                      border: 'none',
-                      background: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '0.75rem',
-                      fontWeight: 'bold',
-                      color: 'var(--text-light)'
-                    }}>
-                              LI
-                            </button>
-                            <button type="button" onClick={() => insertHTMLTag('img')} title="Görsel (Image)" style={{
-                      width: '28px',
-                      height: '28px',
-                      border: 'none',
-                      background: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                              <i className="fa-solid fa-image" style={{
-                        fontSize: '0.8rem',
-                        color: 'var(--text-light)'
-                      }}></i>
-                            </button>
-                            <button type="button" onClick={() => insertHTMLTag('table')} title="Tablo (Table)" style={{
-                      width: '28px',
-                      height: '28px',
-                      border: 'none',
-                      background: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                              <i className="fa-solid fa-table" style={{
-                        fontSize: '0.8rem',
-                        color: 'var(--text-light)'
-                      }}></i>
-                            </button>
+                          {/* Rich Text Editor (WYSIWYG) */}
+                          <div style={{ background: '#fff', borderRadius: '6px', border: '1px solid var(--glass-border)' }}>
+                            <ReactQuill 
+                              theme="snow"
+                              value={modalFormData.content || ''}
+                              onChange={(content) => handleModalFieldChange('content', content)}
+                              modules={quillModules}
+                              style={{ height: '350px', paddingBottom: '42px' }}
+                            />
                           </div>
-
-                          <textarea id="blog-content-textarea" required rows="12" value={modalFormData.content || ''} onChange={e => handleModalFieldChange('content', e.target.value)} style={{
-                    width: '100%',
-                    padding: '0.65rem',
-                    borderBottomLeftRadius: '6px',
-                    borderBottomRightRadius: '6px',
-                    borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0,
-                    border: '1px solid var(--glass-border)',
-                    fontFamily: 'monospace',
-                    fontSize: '0.85rem',
-                    lineHeight: '1.5',
-                    outline: 'none'
-                  }}></textarea>
                         </div>
                       </> : (/* Live Preview Tab rendering */
               <div className="blog-live-preview" style={{
