@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import SkeletonLoader from '../components/SkeletonLoader';
 import { getSmartGreeting } from '../utils/helpers';
 import { budgetSteps, whyAgencyData } from '../data/mockData';
@@ -47,6 +47,7 @@ export default function AppRoutes(props) {
             <Route path="/ekiplerimiz" element={<TeamPageView onBack={() => navigate('/')} onNavToContact={() => navigate('/iletisim')} teamMembers={teamMembersData} onSaveLead={simulateLeadLocally} testimonialsData={testimonialsData} />} />
             <Route path="/blog" element={<BlogPageView onBack={() => navigate('/')} onNavToContact={() => navigate('/iletisim')} blogPosts={blogsData} initialSlug={null} />} />
             <Route path="/blog/:slug" element={<BlogPageView onBack={() => navigate('/')} onNavToContact={() => navigate('/iletisim')} blogPosts={blogsData} />} />
+            <Route path="/hizmetlerimiz" element={<Navigate to="/" replace />} />
             <Route path="/hizmetlerimiz/:slug" element={<ServicePageView onBack={() => navigate('/')} onNavToContact={() => navigate('/iletisim')} budgetSteps={budgetSteps} servicesData={servicesData} testimonialsData={testimonialsData} />} />
             <Route path="/sektorler/:slug" element={<Suspense fallback={<SkeletonLoader />}><SectorPageView onNavToContact={() => navigate('/iletisim')} /></Suspense>} />
             <Route path="/dijital-ajans/:slug" element={<Suspense fallback={<SkeletonLoader />}><LocationPageView /></Suspense>} />
