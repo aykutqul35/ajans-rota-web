@@ -806,6 +806,7 @@ function AdminDashboardView({
       servicePagesData: servicesData,
       teamMembers: teamMembersData,
       blogPosts: blogsData,
+      academyCourses: academyCoursesData,
       testimonials: testimonialsData,
       leads: leadsData,
       clientReports: clientReports
