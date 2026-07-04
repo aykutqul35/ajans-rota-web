@@ -226,7 +226,7 @@ export default function AkademiPageView({
               </span>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <span style={{ fontSize: '1.5rem', color: '#ffffff', fontWeight: '800' }}>{course.price}</span>
+              <span style={{ fontSize: '1.5rem', color: '#1e293b', fontWeight: '800' }}>{course.price}</span>
               <span style={{ fontSize: '0.75rem', color: '#64748b', display: 'block' }}>+KDV</span>
             </div>
           </div>
