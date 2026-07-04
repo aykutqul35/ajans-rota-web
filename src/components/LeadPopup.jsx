@@ -1,8 +1,44 @@
 import toast from 'react-hot-toast';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function LeadPopup({ isOpen, onClose, isExitIntent = false }) {
+export default function LeadPopup({ isOpen, onClose, isExitIntent = false, onSaveLead }) {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    company: '',
+    email: '',
+    phone: '',
+    service: '',
+    message: ''
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (typeof window !== 'undefined') {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'generate_lead',
+        service_category: formData.service || 'Genel',
+        user_email: formData.email
+      });
+    }
+    
+    if (typeof onSaveLead === 'function') {
+      onSaveLead({
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        company: formData.company,
+        service: 'Popup: ' + formData.service,
+        message: formData.message,
+        trafficSource: isExitIntent ? 'Exit Intent Popup' : 'Genel Popup'
+      });
+    }
+    
+    toast.success('Talebiniz başarıyla alındı! Ekibimiz en kısa sürede iletişime geçecektir.');
+    onClose();
+  };
+
   // ESC tuşu ile kapatma
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -128,13 +164,13 @@ export default function LeadPopup({ isOpen, onClose, isExitIntent = false }) {
               background: 'var(--bg-dark)',
               overflowY: 'auto'
             }}>
-              <form onSubmit={(e) => { e.preventDefault(); toast.success('Talebiniz başarıyla alındı! Ekibimiz en kısa sürede iletişime geçecektir.'); onClose(); }} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 
                 {/* Modern Input Group 1 */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                   <div className="modern-input-wrapper" style={{ position: 'relative' }}>
                     <i className="fa-regular fa-user" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}></i>
-                    <input type="text" placeholder="Adınız Soyadınız" required style={{
+                    <input type="text" value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} placeholder="Adınız Soyadınız" required style={{
                       width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'var(--bg-deep)',
                       border: '1px solid var(--glass-border)', borderRadius: '12px', color: 'var(--text-main)',
                       fontSize: '0.95rem', transition: 'all 0.3s ease', outline: 'none'
@@ -145,7 +181,7 @@ export default function LeadPopup({ isOpen, onClose, isExitIntent = false }) {
                   </div>
                   <div className="modern-input-wrapper" style={{ position: 'relative' }}>
                     <i className="fa-regular fa-building" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}></i>
-                    <input type="text" placeholder="Marka / Şirket Adı" required style={{
+                    <input type="text" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} placeholder="Marka / Şirket Adı" required style={{
                       width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'var(--bg-deep)',
                       border: '1px solid var(--glass-border)', borderRadius: '12px', color: 'var(--text-main)',
                       fontSize: '0.95rem', transition: 'all 0.3s ease', outline: 'none'
@@ -160,7 +196,7 @@ export default function LeadPopup({ isOpen, onClose, isExitIntent = false }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                   <div className="modern-input-wrapper" style={{ position: 'relative' }}>
                     <i className="fa-regular fa-envelope" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}></i>
-                    <input type="email" placeholder="Kurumsal E-Posta" required style={{
+                    <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} placeholder="Kurumsal E-Posta" required style={{
                       width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'var(--bg-deep)',
                       border: '1px solid var(--glass-border)', borderRadius: '12px', color: 'var(--text-main)',
                       fontSize: '0.95rem', transition: 'all 0.3s ease', outline: 'none'
@@ -171,7 +207,7 @@ export default function LeadPopup({ isOpen, onClose, isExitIntent = false }) {
                   </div>
                   <div className="modern-input-wrapper" style={{ position: 'relative' }}>
                     <i className="fa-solid fa-phone" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}></i>
-                    <input type="tel" placeholder="Telefon Numarası" required style={{
+                    <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="Telefon Numarası" required style={{
                       width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'var(--bg-deep)',
                       border: '1px solid var(--glass-border)', borderRadius: '12px', color: 'var(--text-main)',
                       fontSize: '0.95rem', transition: 'all 0.3s ease', outline: 'none'
@@ -185,7 +221,7 @@ export default function LeadPopup({ isOpen, onClose, isExitIntent = false }) {
                 {/* Service Select */}
                 <div className="modern-input-wrapper" style={{ position: 'relative' }}>
                   <i className="fa-solid fa-layer-group" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}></i>
-                  <select required defaultValue="" style={{
+                  <select required value={formData.service} onChange={e => setFormData({...formData, service: e.target.value})} style={{
                     width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'var(--bg-deep)',
                     border: '1px solid var(--glass-border)', borderRadius: '12px', color: 'var(--text-main)',
                     fontSize: '0.95rem', transition: 'all 0.3s ease', outline: 'none', appearance: 'none', cursor: 'pointer'
@@ -206,7 +242,7 @@ export default function LeadPopup({ isOpen, onClose, isExitIntent = false }) {
                 {/* Textarea */}
                 <div className="modern-input-wrapper" style={{ position: 'relative' }}>
                   <i className="fa-solid fa-pen-clip" style={{ position: 'absolute', left: '1rem', top: '1.25rem', color: 'var(--text-muted)' }}></i>
-                  <textarea placeholder="Mevcut durumunuz, temel hedefleriniz ve aylık pazarlama bütçeniz hakkında kısaca bilgi verebilir misiniz?" rows="4" required style={{
+                  <textarea value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} placeholder="Mevcut durumunuz, temel hedefleriniz ve aylık pazarlama bütçeniz hakkında kısaca bilgi verebilir misiniz?" rows="4" required style={{
                     width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'var(--bg-deep)',
                     border: '1px solid var(--glass-border)', borderRadius: '12px', color: 'var(--text-main)',
                     fontSize: '0.95rem', transition: 'all 0.3s ease', outline: 'none', resize: 'none', fontFamily: 'inherit'

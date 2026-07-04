@@ -122,6 +122,17 @@ export default function AkademiPageView({
         logHit('akademi', hitType);
       }
       
+      // GTM DataLayer Push for Academy Registration
+      if (typeof window !== 'undefined') {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: isCourse ? 'academy_registration' : 'download_guide',
+          course_name: targetItem.title,
+          user_email: formData.email,
+          user_phone: formData.phone
+        });
+      }
+      
       setIsSubmitting(false);
       setIsSuccess(true);
       

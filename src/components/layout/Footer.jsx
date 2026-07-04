@@ -464,12 +464,20 @@ export default function Footer({
             </div>
             <div className="contact-card-content">
               <p><strong>Telefon:</strong> <a href={`tel:${settingsData.phone}`} style={{
-                color: 'inherit',
-                textDecoration: 'none'
+                color: 'var(--text-light)', textDecoration: 'none', transition: 'color 0.2s ease', position: 'relative', zIndex: 2
+              }} onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dataLayer = window.dataLayer || [];
+                  window.dataLayer.push({ event: 'phone_click' });
+                }
               }}>{settingsData.phone}</a></p>
               <p><strong>E-Posta:</strong> <a href={`mailto:${settingsData.email}`} style={{
-                color: 'inherit',
-                textDecoration: 'none'
+                color: 'var(--text-light)', textDecoration: 'none', transition: 'color 0.2s ease', position: 'relative', zIndex: 2
+              }} onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dataLayer = window.dataLayer || [];
+                  window.dataLayer.push({ event: 'email_click' });
+                }
               }}>{settingsData.email}</a></p>
             </div>
             <div className="contact-card-action">

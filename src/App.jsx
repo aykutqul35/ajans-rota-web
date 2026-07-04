@@ -1440,6 +1440,7 @@ const renderReportForm = () => <ReportForm {...fullAppState} handleGenerateRepor
         <LeadPopup 
           isOpen={isLeadPopupOpen} 
           isExitIntent={isExitIntentPopup}
+          onSaveLead={simulateLeadLocally}
           onClose={() => {
             setIsLeadPopupOpen(false);
             // Wait a bit before resetting so animation finishes cleanly

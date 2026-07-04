@@ -207,7 +207,15 @@ export default function WhatsAppAssistantWidget({
             </div>
             <a href={getWhatsAppLink()} target="_blank" rel="noreferrer" style={{
               color: '#fff', fontSize: '1.2rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: 0.9
-            }} title="Gerçek WhatsApp'a Geç">
+            }} title="Gerçek WhatsApp'a Geç" onClick={() => {
+              if (typeof window !== 'undefined') {
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({
+                  event: 'whatsapp_click',
+                  agent_name: 'AI Bot'
+                });
+              }
+            }}>
               <i className="fa-brands fa-whatsapp"></i>
             </a>
           </div>
