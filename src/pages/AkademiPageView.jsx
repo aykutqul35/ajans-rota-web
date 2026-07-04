@@ -324,9 +324,9 @@ export default function AkademiPageView({
           onClick={() => setActiveTab('courses')}
           style={{
             padding: '0.75rem 1.5rem',
-            background: activeTab === 'courses' ? 'rgba(255,255,255,0.1)' : 'transparent',
-            border: activeTab === 'courses' ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent',
-            color: activeTab === 'courses' ? '#fff' : '#94a3b8',
+            background: activeTab === 'courses' ? 'var(--primary)' : 'rgba(0,0,0,0.05)',
+            border: activeTab === 'courses' ? '1px solid var(--primary)' : '1px solid transparent',
+            color: activeTab === 'courses' ? '#ffffff' : '#475569',
             borderRadius: '30px',
             fontSize: '0.9rem',
             fontWeight: '600',
@@ -341,9 +341,9 @@ export default function AkademiPageView({
           onClick={() => setActiveTab('free_resources')}
           style={{
             padding: '0.75rem 1.5rem',
-            background: activeTab === 'free_resources' ? 'rgba(255,255,255,0.1)' : 'transparent',
-            border: activeTab === 'free_resources' ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent',
-            color: activeTab === 'free_resources' ? '#fff' : '#94a3b8',
+            background: activeTab === 'free_resources' ? 'var(--primary)' : 'rgba(0,0,0,0.05)',
+            border: activeTab === 'free_resources' ? '1px solid var(--primary)' : '1px solid transparent',
+            color: activeTab === 'free_resources' ? '#ffffff' : '#475569',
             borderRadius: '30px',
             fontSize: '0.9rem',
             fontWeight: '600',
