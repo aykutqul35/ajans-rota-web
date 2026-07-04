@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSeoData } from '../utils/helpers';
 import { initialSettingsData } from '../data/initialSettings';
-import { initialServicePagesData, initialTeamMembers, initialBlogPosts, testimonials } from '../data/mockData';
+import { initialServicePagesData, initialTeamMembers, initialBlogPosts, testimonials, initialAcademyCourses } from '../data/mockData';
 
 export const useAppState = (currentPath) => {
 const navigate = useNavigate();
@@ -137,6 +137,8 @@ const [isLeadPopupOpen, setIsLeadPopupOpen] = useState(false);
   const [testimonialsData, setTestimonialsData] = useState(testimonials);
   // Blog Posts state
   const [blogsData, setBlogsData] = useState(initialBlogPosts);
+  // Academy Courses state
+  const [academyCoursesData, setAcademyCoursesData] = useState(initialAcademyCourses);
   // Leads state
   const [leadsData, setLeadsData] = useState([]);
   // Newsletter subscription states
@@ -504,6 +506,7 @@ const [isLeadPopupOpen, setIsLeadPopupOpen] = useState(false);
     teamMembersData, setTeamMembersData,
     testimonialsData, setTestimonialsData,
     blogsData, setBlogsData,
+    academyCoursesData, setAcademyCoursesData,
     leadsData, setLeadsData,
     newsletterEmail, setNewsletterEmail,
     newsletterLoading, setNewsletterLoading,

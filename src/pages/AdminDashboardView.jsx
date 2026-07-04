@@ -12,6 +12,7 @@ const LandingTab = lazy(() => import('../components/admin/tabs/LandingTab'));
 const SettingsTab = lazy(() => import('../components/admin/tabs/SettingsTab'));
 const MarketingTab = lazy(() => import('../components/admin/tabs/MarketingTab'));
 const AnalyticsTab = lazy(() => import('../components/admin/tabs/AnalyticsTab'));
+const AcademyTab = lazy(() => import('../components/admin/tabs/AcademyTab'));
 const ClientReportsTab = lazy(() => import('../components/admin/tabs/ClientReportsTab'));
 
 // Lazy-loaded modals (only loaded when opened)
@@ -32,6 +33,8 @@ function AdminDashboardView({
   setTeamMembersData,
   blogsData,
   setBlogsData,
+  academyCoursesData,
+  setAcademyCoursesData,
   testimonialsData,
   setTestimonialsData,
   leadsData,
@@ -1062,6 +1065,17 @@ function AdminDashboardView({
             setCustomEndDate={setCustomEndDate}
             statsError={statsError}
           />
+        )}
+
+          {/* TAB: ACADEMY */}
+        {activeTab === 'academy' && (
+          <Suspense fallback={<div style={{padding:'2rem',textAlign:'center'}}>Yükleniyor...</div>}>
+            <AcademyTab 
+              academyCoursesData={academyCoursesData} 
+              setAcademyCoursesData={setAcademyCoursesData}
+              onSave={handleSaveAll} 
+            />
+          </Suspense>
         )}
 
           {/* TAB: MARKETING */}

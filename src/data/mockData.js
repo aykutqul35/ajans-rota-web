@@ -1132,3 +1132,78 @@ export const testimonials = [
     }
   ]
 
+
+export const initialAcademyCourses = [
+  {
+    id: 'beginner',
+    title: "Dijital Pazarlamaya Giriş",
+    level: "Başlangıç Seviyesi",
+    price: "₺4.500",
+    icon: "fa-solid fa-seedling",
+    color: "#10b981", 
+    duration: "4 Hafta / 16 Saat",
+    targetAudience: "Sıfırdan dijital pazarlamaya adım atmak isteyenler ve yeni girişimciler.",
+    features: [
+      "Meta & Google Ads Arayüz Eğitimi",
+      "Sosyal Medya Yönetimi Temelleri",
+      "Kampanya Kurgulama Mantığı",
+      "Temel Hedef Kitle Belirleme",
+      "Eğitmen Destekli Soru-Cevap Grubu"
+    ],
+    syllabus: [
+      { week: "Hafta 1", title: "Dijital Ekosisteme Giriş & Sosyal Medya Temelleri" },
+      { week: "Hafta 2", title: "Meta Business Manager Kurulumu ve Arayüz" },
+      { week: "Hafta 3", title: "Google Ads Arama Ağı (Search) Kampanyaları" },
+      { week: "Hafta 4", title: "İlk Reklamımızı Çıkıyoruz & Raporlama" }
+    ]
+  },
+  {
+    id: 'intermediate',
+    title: "Growth & E-Ticaret Dönüşüm",
+    level: "Orta Seviye",
+    price: "₺8.900",
+    icon: "fa-solid fa-rocket",
+    color: "var(--primary)", 
+    duration: "6 Hafta / 30 Saat",
+    targetAudience: "Temel reklam bilgisine sahip, satışlarını katlamak isteyen işletme sahipleri ve uzman adayları.",
+    popular: true,
+    features: [
+      "İleri Düzey Meta & Google Ads Stratejileri",
+      "Yeniden Pazarlama (Retargeting) Kurguları",
+      "Dönüşüm Oranı Optimizasyonu (CRO)",
+      "A/B Testleri ve Bütçe Yönetimi",
+      "Sertifika & 1 Ay Birebir Mentörlük"
+    ],
+    syllabus: [
+      { week: "Hafta 1-2", title: "İleri Düzey Meta (DPA, Lookalike, Custom Audiences)" },
+      { week: "Hafta 3", title: "Google Performance Max (PMax) ve Shopping" },
+      { week: "Hafta 4", title: "CRO: E-Ticarette Dönüşüm Artırma Taktikleri" },
+      { week: "Hafta 5", title: "Dinamik Yeniden Pazarlama Hunileri" },
+      { week: "Hafta 6", title: "Bütçe Ölçekleme (Scaling) ve ROAS Optimizasyonu" }
+    ]
+  },
+  {
+    id: 'master',
+    title: "Ajans Eksperliği & Global Pazarlar",
+    level: "Master Seviye",
+    price: "₺18.500",
+    icon: "fa-solid fa-crown",
+    color: "#f59e0b", 
+    duration: "8 Hafta / 40 Saat",
+    targetAudience: "Kendi dijital ajansını kurmak isteyenler, global e-ihracat hedefleri olan vizyonerler.",
+    features: [
+      "Uluslararası E-İhracat (Amazon, Etsy, Shopify)",
+      "Gelişmiş Veri Analitiği (GA4 & GTM Kurulumları)",
+      "Sunucu Taraflı (Server-Side) Takip & CAPI",
+      "Müşteri İlişkileri (Retention) Yönetimi",
+      "Ömür Boyu Erişim & Ajans Kurulum Danışmanlığı"
+    ],
+    syllabus: [
+      { week: "Hafta 1-2", title: "GTM ve GA4 ile İleri Düzey Veri Mimarisi" },
+      { week: "Hafta 3", title: "Server-Side Tracking ve Conversion API" },
+      { week: "Hafta 4-5", title: "E-İhracat: Yurt Dışı Pazar Yerleri & Global Reklam" },
+      { week: "Hafta 6", title: "Müşteri Yaşam Boyu Değeri (LTV) ve Retention" },
+      { week: "Hafta 7-8", title: "Ajans Süreçleri, Satış Kapama ve Kurumsallaşma" }
+    ]
+  }
+];

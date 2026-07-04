@@ -4,7 +4,8 @@ import toast from 'react-hot-toast';
 export default function AkademiPageView({
   onBack,
   onSaveLead,
-  logHit
+  logHit,
+  academyCoursesData
 }) {
   const [selectedGuide, setSelectedGuide] = useState(null); // For free PDF download
   const [selectedCourse, setSelectedCourse] = useState(null); // For paid course enrollment
@@ -24,80 +25,7 @@ export default function AkademiPageView({
   // -----------------------------------------------------
   // DATA ARRAYS
   // -----------------------------------------------------
-  const masterclassCourses = [
-    {
-      id: 'beginner',
-      title: "Dijital Pazarlamaya Giriş",
-      level: "Başlangıç Seviyesi",
-      price: "₺4.500",
-      icon: "fa-solid fa-seedling",
-      color: "#10b981", // Emerald
-      duration: "4 Hafta / 16 Saat",
-      targetAudience: "Sıfırdan dijital pazarlamaya adım atmak isteyenler ve yeni girişimciler.",
-      features: [
-        "Meta & Google Ads Arayüz Eğitimi",
-        "Sosyal Medya Yönetimi Temelleri",
-        "Kampanya Kurgulama Mantığı",
-        "Temel Hedef Kitle Belirleme",
-        "Eğitmen Destekli Soru-Cevap Grubu"
-      ],
-      syllabus: [
-        { week: "Hafta 1", title: "Dijital Ekosisteme Giriş & Sosyal Medya Temelleri" },
-        { week: "Hafta 2", title: "Meta Business Manager Kurulumu ve Arayüz" },
-        { week: "Hafta 3", title: "Google Ads Arama Ağı (Search) Kampanyaları" },
-        { week: "Hafta 4", title: "İlk Reklamımızı Çıkıyoruz & Raporlama" }
-      ]
-    },
-    {
-      id: 'intermediate',
-      title: "Growth & E-Ticaret Dönüşüm",
-      level: "Orta Seviye",
-      price: "₺8.900",
-      icon: "fa-solid fa-rocket",
-      color: "var(--primary)", // Brand blue
-      duration: "6 Hafta / 30 Saat",
-      targetAudience: "Temel reklam bilgisine sahip, satışlarını katlamak isteyen işletme sahipleri ve uzman adayları.",
-      popular: true,
-      features: [
-        "İleri Düzey Meta & Google Ads Stratejileri",
-        "Yeniden Pazarlama (Retargeting) Kurguları",
-        "Dönüşüm Oranı Optimizasyonu (CRO)",
-        "A/B Testleri ve Bütçe Yönetimi",
-        "Sertifika & 1 Ay Birebir Mentörlük"
-      ],
-      syllabus: [
-        { week: "Hafta 1-2", title: "İleri Düzey Meta (DPA, Lookalike, Custom Audiences)" },
-        { week: "Hafta 3", title: "Google Performance Max (PMax) ve Shopping" },
-        { week: "Hafta 4", title: "CRO: E-Ticarette Dönüşüm Artırma Taktikleri" },
-        { week: "Hafta 5", title: "Dinamik Yeniden Pazarlama Hunileri" },
-        { week: "Hafta 6", title: "Bütçe Ölçekleme (Scaling) ve ROAS Optimizasyonu" }
-      ]
-    },
-    {
-      id: 'master',
-      title: "Ajans Eksperliği & Global Pazarlar",
-      level: "Master Seviye",
-      price: "₺18.500",
-      icon: "fa-solid fa-crown",
-      color: "#f59e0b", // Amber/Gold
-      duration: "8 Hafta / 40 Saat",
-      targetAudience: "Kendi dijital ajansını kurmak isteyenler, global e-ihracat hedefleri olan vizyonerler.",
-      features: [
-        "Uluslararası E-İhracat (Amazon, Etsy, Shopify)",
-        "Gelişmiş Veri Analitiği (GA4 & GTM Kurulumları)",
-        "Sunucu Taraflı (Server-Side) Takip & CAPI",
-        "Müşteri İlişkileri (Retention) Yönetimi",
-        "Ömür Boyu Erişim & Ajans Kurulum Danışmanlığı"
-      ],
-      syllabus: [
-        { week: "Hafta 1-2", title: "GTM ve GA4 ile İleri Düzey Veri Mimarisi" },
-        { week: "Hafta 3", title: "Server-Side Tracking ve Conversion API" },
-        { week: "Hafta 4-5", title: "E-İhracat: Yurt Dışı Pazar Yerleri & Global Reklam" },
-        { week: "Hafta 6", title: "Müşteri Yaşam Boyu Değeri (LTV) ve Retention" },
-        { week: "Hafta 7-8", title: "Ajans Süreçleri, Satış Kapama ve Kurumsallaşma" }
-      ]
-    }
-  ];
+
 
   const freeGuides = [
     {
@@ -220,7 +148,7 @@ export default function AkademiPageView({
       maxWidth: '1200px',
       margin: '0 auto 4rem auto'
     }}>
-      {masterclassCourses.map((course, idx) => (
+      {(academyCoursesData || []).map((course, idx) => (
         <div key={course.id} className="glass-card" style={{
           position: 'relative',
           padding: '2.5rem 2rem',
@@ -281,8 +209,8 @@ export default function AkademiPageView({
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {course.features.map((feature, i) => (
                 <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', fontSize: '0.85rem', color: '#cbd5e1' }}>
-                  <i className="fa-solid fa-check" style={{ color: course.color, marginTop: '3px' }}></i>
-                  <span>{feature}</span>
+                  <i className="fa-solid fa-check" style={{ color: course.color, marginTop: '4px' }}></i>
+                  <span style={{ color: '#e2e8f0' }}>{feature}</span>
                 </li>
               ))}
             </ul>
@@ -467,37 +395,37 @@ export default function AkademiPageView({
 
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div style={{position: 'relative'}}>
-                    <i className="fa-regular fa-user" style={{position: 'absolute', top: '12px', left: '12px', color: '#64748b', fontSize: '0.9rem'}}></i>
+                    <i className="fa-regular fa-user" style={{position: 'absolute', top: '15px', left: '16px', color: '#94a3b8', fontSize: '1rem'}}></i>
                     <input type="text" required placeholder="Adınız Soyadınız *" value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} style={{
-                      width: '100%', padding: '0.65rem 0.8rem 0.65rem 2.2rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: '#f8fafc', fontSize: '0.85rem'
+                      width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(15,23,42,0.6)', color: '#f8fafc', fontSize: '0.95rem', transition: 'border-color 0.3s'
                     }} />
                   </div>
                   
                   <div style={{position: 'relative'}}>
-                    <i className="fa-regular fa-envelope" style={{position: 'absolute', top: '12px', left: '12px', color: '#64748b', fontSize: '0.9rem'}}></i>
+                    <i className="fa-regular fa-envelope" style={{position: 'absolute', top: '15px', left: '16px', color: '#94a3b8', fontSize: '1rem'}}></i>
                     <input type="email" required placeholder="E-posta Adresiniz *" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} style={{
-                      width: '100%', padding: '0.65rem 0.8rem 0.65rem 2.2rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: '#f8fafc', fontSize: '0.85rem'
+                      width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(15,23,42,0.6)', color: '#f8fafc', fontSize: '0.95rem', transition: 'border-color 0.3s'
                     }} />
                   </div>
                   
                   <div style={{position: 'relative'}}>
-                    <i className="fa-solid fa-mobile-screen-button" style={{position: 'absolute', top: '12px', left: '12px', color: '#64748b', fontSize: '0.9rem'}}></i>
+                    <i className="fa-solid fa-mobile-screen-button" style={{position: 'absolute', top: '15px', left: '16px', color: '#94a3b8', fontSize: '1rem'}}></i>
                     <input type="tel" required placeholder="Telefon Numaranız *" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} style={{
-                      width: '100%', padding: '0.65rem 0.8rem 0.65rem 2.2rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: '#f8fafc', fontSize: '0.85rem'
+                      width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(15,23,42,0.6)', color: '#f8fafc', fontSize: '0.95rem', transition: 'border-color 0.3s'
                     }} />
                   </div>
                   
                   <div style={{position: 'relative'}}>
-                    <i className="fa-regular fa-building" style={{position: 'absolute', top: '12px', left: '12px', color: '#64748b', fontSize: '0.9rem'}}></i>
+                    <i className="fa-regular fa-building" style={{position: 'absolute', top: '15px', left: '16px', color: '#94a3b8', fontSize: '1rem'}}></i>
                     <input type="text" placeholder="Firma / Marka Adınız (Opsiyonel)" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} style={{
-                      width: '100%', padding: '0.65rem 0.8rem 0.65rem 2.2rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: '#f8fafc', fontSize: '0.85rem'
+                      width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(15,23,42,0.6)', color: '#f8fafc', fontSize: '0.95rem', transition: 'border-color 0.3s'
                     }} />
                   </div>
 
-                  {errorMsg && <div style={{ color: '#ef4444', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}><i className="fa-solid fa-circle-exclamation"></i> {errorMsg}</div>}
+                  {errorMsg && <div style={{ color: '#ef4444', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}><i className="fa-solid fa-circle-exclamation"></i> {errorMsg}</div>}
                   
                   <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{
-                    borderRadius: '8px', padding: '0.8rem', fontSize: '0.9rem', fontWeight: '700', marginTop: '0.5rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px'
+                    borderRadius: '12px', padding: '1rem', fontSize: '1rem', fontWeight: '700', marginTop: '0.5rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', background: 'linear-gradient(135deg, var(--primary), var(--secondary))', border: 'none', boxShadow: '0 10px 25px rgba(99, 102, 241, 0.4)'
                   }}>
                     {isSubmitting ? (
                       <><i className="fa-solid fa-circle-notch fa-spin"></i> İşleniyor...</>
@@ -516,7 +444,7 @@ export default function AkademiPageView({
                 <h4 style={{ color: '#f8fafc', fontSize: '1.25rem', marginBottom: '0.75rem', fontWeight: '800' }}>
                   Talebiniz Başarıyla Alındı!
                 </h4>
-                <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '2rem', lineHeight: '1.6' }}>
+                <p style={{ fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '2rem', lineHeight: '1.6' }}>
                   {selectedCourse 
                     ? `Teşekkürler! ${selectedCourse.title} sınıfı kayıt işlemleri ve detaylı müfredat bilgisi için eğitim danışmanlarımız size en kısa sürede dönüş yapacaktır.`
                     : `Tebrikler! ${selectedGuide.title} rehberiniz hazırlanarak e-posta adresinize ve telefonunuza link olarak iletilecektir.`

@@ -59,6 +59,9 @@ export default function AdminSidebar({ activeTab, setActiveTab, unreadLeadsCount
       <button className={`admin-nav-btn ${activeTab === 'testimonials' ? 'active' : ''}`} onClick={() => setActiveTab('testimonials')}>
         <i className="fa-solid fa-quote-left"></i> Yorumlar (Referanslar)
       </button>
+      <button className={`admin-nav-btn ${activeTab === 'academy' ? 'active' : ''}`} onClick={() => setActiveTab('academy')}>
+        <i className="fa-solid fa-graduation-cap"></i> Akademi Eğitimleri
+      </button>
       <button className={`admin-nav-btn ${activeTab === 'team' ? 'active' : ''}`} onClick={() => setActiveTab('team')}>
         <i className="fa-solid fa-users"></i> Ekibimiz
       </button>

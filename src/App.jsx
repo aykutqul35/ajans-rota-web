@@ -321,6 +321,7 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
           if (data.servicePagesData) setServicesData(data.servicePagesData);
           if (data.teamMembers) setTeamMembersData(data.teamMembers);
           if (data.blogPosts) setBlogsData(data.blogPosts);
+          if (data.academyCourses) setAcademyCoursesData(data.academyCourses);
           if (data.testimonials) setTestimonialsData(data.testimonials);
           if (data.leads) setLeadsData(data.leads);
           if (data.clientReports) {
@@ -736,9 +737,9 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
       description = "Ajans Rota şeffaf raporlama paneli. E-ticaret ve B2B markalarımız için yürüttüğümüz Google/Meta kampanya verilerini ve ajans aktivite günlüğünü canlı inceleyin.";
       keywords = "şeffaf raporlama paneli, ajans paneli demosu, google ads raporu, meta ads raporu, ajans iş defteri";
     } else if (currentPath === '/akademi') {
-      title = "Büyüme Akademi ve Kılavuzlar | Ajans Rota";
-      description = "E-İhracat, turizm pazarlaması ve e-ticaret CRO konularında hazırladığımız ücretsiz premium PDF kaynakları indirin ve işinizi büyütün.";
-      keywords = "rota akademi, ücretsiz e-kitap indir, e-ihracat rehberi, turizm dijital pazarlama";
+      title = "Dijital Pazarlama ve E-Ticaret Eğitimleri (Masterclass) | Ajans Rota";
+      description = "Rota Akademi'de Meta Ads, Google Ads, E-İhracat ve CRO uzmanlık eğitimleriyle işinizi büyütün. Başlangıç, Orta ve Master seviye sınıflara hemen katılın.";
+      keywords = "dijital pazarlama eğitimi, e-ticaret eğitimi, meta ads kursu, seo eğitimi, rota akademi";
     }
 
     document.title = title;
@@ -1001,6 +1002,7 @@ const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntent
       servicePagesData: servicesData,
       teamMembers: teamMembersData,
       blogPosts: blogsData,
+      academyCourses: academyCoursesData,
       testimonials: testimonialsData,
       leads: data.leads
     }));
