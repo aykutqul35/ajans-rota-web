@@ -1,6 +1,7 @@
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { io } from 'socket.io-client';
 
 
 export default function ClientTransparencyPageView({
@@ -36,6 +37,35 @@ export default function ClientTransparencyPageView({
   const [billingLoading, setBillingLoading] = useState(false);
   
   // V2 Dashboard States
+  const [backendTickets, setBackendTickets] = useState([]);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      const fetchTickets = async () => {
+        try {
+          const res = await fetch('/api/client/tickets', {
+            headers: { 'x-clerk-id': user?.id || 'demo' }
+          });
+          const data = await res.json();
+          if (data.success) {
+            setBackendTickets(data.data);
+          }
+        } catch (err) {}
+      };
+      fetchTickets();
+
+      const newSocket = io();
+      setSocket(newSocket);
+
+      newSocket.on('new_ticket', fetchTickets);
+      newSocket.on('new_message', fetchTickets);
+      newSocket.on('ticket_updated', fetchTickets);
+
+      return () => newSocket.disconnect();
+    }
+  }, [isLoggedIn, user?.id]);
+
   const [activeTab, setActiveTab] = useState('overview');
   const [showTicketModal, setShowTicketModal] = useState(false);
   const [viewingTicket, setViewingTicket] = useState(null);
@@ -50,7 +80,13 @@ export default function ClientTransparencyPageView({
 
   // Sync viewing ticket for realtime updates
   useEffect(() => {
-    if (viewingTicket && clientReports && activeBrand) {
+    if (viewingTicket && backendTickets.length > 0) {
+      const updated = backendTickets.find(t => t.id === viewingTicket.id);
+      if (updated && JSON.stringify(updated.messages) !== JSON.stringify(viewingTicket.messages)) {
+        setViewingTicket({ ...updated });
+      }
+    }
+    if (false) {
       const brandData = clientReports[activeBrand];
       if (brandData && brandData.tickets) {
         const updated = brandData.tickets.find(t => t.id === viewingTicket.id);
@@ -167,77 +203,16 @@ export default function ClientTransparencyPageView({
   const handleAiActionRequest = async (insightText) => {
     setAiRequestLoading(true);
     try {
-      const updated = { ...clientReports };
-      if (!updated[activeBrand]) return;
-      const now = new Date();
-      const dateStr = now.toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' });
-      const requestId = Date.now();
-      
-      // Add to ai_requests (client panel display)
-      if (!updated[activeBrand].ai_requests) updated[activeBrand].ai_requests = [];
-      updated[activeBrand].ai_requests.push({
-        id: requestId,
-        date: dateStr,
-        insight: insightText,
-        status: 'pending'
-      });
-      
-      // Add to tickets (admin panel TicketsTab)
-      if (!updated[activeBrand].tickets) updated[activeBrand].tickets = [];
-      updated[activeBrand].tickets.push({
-        id: requestId,
-        date: dateStr,
-        subject: `AI Öneri Talebi: ${insightText}`,
-        message: `Müşteri, yapay zeka önerisi doğrultusunda "${insightText}" talebinde bulundu.`,
-        department: 'Yapay Zeka Önerileri',
-        status: 'Açık',
-        priority: 'medium',
-        source: 'ai-recommendation'
-      });
-      
-      setClientReports(updated);
-      
-      // Persist to localStorage (create entry if it doesn't exist)
-      try {
-        const localDbStr = localStorage.getItem('ajans_rota_db');
-        const dbPayload = localDbStr ? JSON.parse(localDbStr) : {};
-        dbPayload.clientReports = updated;
-        localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
-      } catch(e) {
-        console.error('Failed to save to localStorage', e);
-      }
-      
-      // Also save to dedicated ticket queue (guaranteed to work for admin panel)
-      try {
-        const existingQueue = JSON.parse(localStorage.getItem('client_ticket_queue') || '[]');
-        existingQueue.push({
-          id: requestId,
-          date: dateStr,
-          brandKey: activeBrand,
-          brandName: updated[activeBrand]?.brandName || activeBrand,
-          subject: `AI Öneri Talebi: ${insightText}`,
-          message: `Müşteri, yapay zeka önerisi doğrultusunda "${insightText}" talebinde bulundu.`,
+      await fetch('/api/tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          clerkId: user?.id || 'demo',
+          subject: `AI Öneri Talebi: ${insightText.substring(0, 30)}...`,
           department: 'Yapay Zeka Önerileri',
-          status: 'Açık',
-          priority: 'medium',
-          source: 'ai-recommendation'
-        });
-        localStorage.setItem('client_ticket_queue', JSON.stringify(existingQueue));
-      } catch(e) {}
-      
-      if (updated[activeBrand].client_id) {
-        await fetch('/api/clients/update', {
-          method: 'PUT',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('client_token')}`
-          },
-          body: JSON.stringify({ 
-            client_id: updated[activeBrand].client_id, 
-            report_data: updated[activeBrand]
-          })
-        });
-      }
+          text: `Müşteri, yapay zeka önerisi doğrultusunda "\${insightText}" talebinde bulundu.`
+        })
+      });
       setAiRequestSuccess(true);
       setTimeout(() => setAiRequestSuccess(false), 3000);
     } catch (err) {
@@ -417,137 +392,31 @@ export default function ClientTransparencyPageView({
     if (e?.preventDefault) e.preventDefault();
     if (!clientReplyText.trim() || !viewingTicket) return;
 
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-    const replyMsg = {
-      sender: 'client',
-      text: clientReplyText.trim(),
-      date: dateStr
-    };
-
-    // Update in clientReports state
-    const updatedClientReports = { ...clientReports };
-    const brandData = updatedClientReports[activeBrand];
-    if (brandData?.tickets) {
-      const ticketIdx = brandData.tickets.findIndex(t => t.id === viewingTicket.id);
-      if (ticketIdx > -1) {
-        const ticket = brandData.tickets[ticketIdx];
-        if (!ticket.messages) {
-          ticket.messages = [{ sender: 'client', text: ticket.message || 'Detaylı mesaj girilmemiş.', date: ticket.date }];
-        }
-        ticket.messages.push(replyMsg);
-        ticket.status = 'Yanıt Bekliyor';
-        if (setClientReports) setClientReports(updatedClientReports);
-        
-        // Save to ajans_rota_db
-        try {
-          const localDbStr = localStorage.getItem('ajans_rota_db');
-          const dbPayload = localDbStr ? JSON.parse(localDbStr) : {};
-          dbPayload.clientReports = updatedClientReports;
-          localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
-        } catch(e) {}
-
-        // Push to Neon DB
-        const token = localStorage.getItem('client_token');
-        if (token && brandData.client_id) {
-          fetch('/api/clients/update', {
-            method: 'PUT',
-            headers: { 
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({ client_id: brandData.client_id, report_data: brandData })
-          }).catch(e => console.error("Ticket reply sync error:", e));
-        }
-
-        setViewingTicket({ ...ticket });
-      }
-    }
-
-    // CRITICAL: Also sync to client_ticket_queue (shared channel with admin)
     try {
-      const raw = localStorage.getItem('client_ticket_queue');
-      if (raw) {
-        const queue = JSON.parse(raw);
-        const found = queue.find(t => t.id === viewingTicket.id);
-        if (found) {
-          if (!found.messages) {
-            found.messages = [{ sender: 'client', text: found.message || 'Detaylı mesaj girilmemiş.', date: found.date }];
-          }
-          found.messages.push(replyMsg);
-          found.status = 'Yanıt Bekliyor';
-          localStorage.setItem('client_ticket_queue', JSON.stringify(queue));
-        }
-      }
-    } catch(err) {}
-
-    setClientReplyText('');
+      await fetch(`/api/tickets/${viewingTicket.id}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sender: 'client', text: clientReplyText.trim() })
+      });
+      setClientReplyText('');
+    } catch(e) {}
   };
 
   const handleCreateTicket = async (e) => {
     e.preventDefault();
     setIsSubmittingTicket(true);
     
-    const newTicket = {
-      id: "T-" + Math.floor(1000 + Math.random() * 9000),
-      subject: newTicketSubject,
-      department: newTicketDepartment,
-      message: newTicketMessage,
-      status: "Açık",
-      date: new Date().toLocaleDateString('tr-TR') + " " + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
-    };
-
     try {
-      const currentReports = { ...clientReports };
-      const brandData = { ...currentReports[activeBrand] };
-      
-      if (!brandData.tickets) brandData.tickets = [];
-      brandData.tickets = [newTicket, ...brandData.tickets];
-      
-      currentReports[activeBrand] = brandData;
-      
-      window._clientLastWrite = Date.now();
-      // Update global React state
-      if (setClientReports) setClientReports(currentReports);
-      
-      // Trigger cross-tab sync
-      localStorage.setItem('clientReports', JSON.stringify(currentReports));
-      
-      // Persist to main database so it survives refresh
-      try {
-        const localDbStr = localStorage.getItem('ajans_rota_db');
-        if(localDbStr){
-           const dbPayload = JSON.parse(localDbStr);
-           dbPayload.clientReports = currentReports;
-           localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
-        } else {
-           localStorage.setItem('ajans_rota_db', JSON.stringify({ clientReports: currentReports }));
-        }
-      } catch(e) {}
-      
-      // SYNC TO NEON DB SERVER
-      const token = localStorage.getItem('client_token');
-      if (token && brandData.client_id) {
-         fetch('/api/clients/update', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-            body: JSON.stringify({ client_id: brandData.client_id, report_data: brandData })
-         }).catch(e => console.error("Ticket sync error:", e));
-      }
-      
-      // CRITICAL: Also write to shared ticket queue for admin panel
-      try {
-        const existingQueue = JSON.parse(localStorage.getItem('client_ticket_queue') || '[]');
-        existingQueue.push({
-          ...newTicket,
-          brandKey: activeBrand,
-          brandName: brandData.brandName || activeBrand,
-          messages: [{ sender: 'client', text: newTicket.message, date: newTicket.date }],
-          source: 'client-ticket'
-        });
-        localStorage.setItem('client_ticket_queue', JSON.stringify(existingQueue));
-      } catch(e) {}
-      
+      await fetch('/api/tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          clerkId: user?.id || 'demo',
+          subject: newTicketSubject,
+          department: newTicketDepartment,
+          text: newTicketMessage
+        })
+      });
       setNewTicketSubject('');
       setNewTicketMessage('');
       setTicketSuccess(true);
@@ -1945,14 +1814,14 @@ export default function ClientTransparencyPageView({
                         return { bg: 'rgba(16, 185, 129, 0.1)', color: '#10b981', icon: 'fa-solid fa-check', label: status };
                       };
                       
-                      return merged.map((ticket, idx) => {
+                      return backendTickets.map((ticket, idx) => {
                         const ss = getStatusStyle(ticket.status);
                         return (
                           <tr key={ticket.id || idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.03)', background: ticket.status === 'Çözüldü' ? 'rgba(16, 185, 129, 0.03)' : ticket.status === 'İşlemde' ? 'rgba(245, 158, 11, 0.03)' : 'transparent' }}>
                             <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#0ea5e9' }}>{ticket.id}</td>
                             <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 600, color: '#f8fafc' }}>{ticket.subject}</td>
                             <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: '#94a3b8' }}>{ticket.department}</td>
-                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: '#94a3b8' }}>{ticket.date}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: '#94a3b8' }}>{ticket.createdAt ? new Date(ticket.createdAt).toLocaleString('tr-TR') : ticket.date}</td>
                             <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', textAlign: 'right' }}>
                               <span style={{ 
                                 padding: '4px 12px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700,

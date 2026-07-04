@@ -1,57 +1,36 @@
 import { useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
 
 export default function AdminSidebar({ activeTab, setActiveTab, unreadLeadsCount, clientReports }) {
   const [openTicketCount, setOpenTicketCount] = useState(0);
 
-  // Count open tickets from clientReports + localStorage queue
+  // Fetch initial ticket count and listen for updates
   useEffect(() => {
-    let count = 0;
-    if (clientReports) {
-      Object.values(clientReports).forEach(brand => {
-        (brand.tickets || []).forEach(t => {
-          if (t.status === 'Açık') count++;
-        });
-      });
-    }
-    try {
-      const raw = localStorage.getItem('client_ticket_queue');
-      if (raw) {
-        const queue = JSON.parse(raw);
-        const reportIds = new Set();
-        if (clientReports) {
-          Object.values(clientReports).forEach(brand => {
-            (brand.tickets || []).forEach(t => reportIds.add(t.id));
-          });
-        }
-        queue.forEach(t => {
-          if (!reportIds.has(t.id) && t.status === 'Açık') count++;
-        });
-      }
-    } catch(e) {}
-    setOpenTicketCount(count);
-  }, [clientReports]);
-
-  // Poll localStorage every 3 seconds for real-time badge
-  useEffect(() => {
-    const interval = setInterval(() => {
+    const fetchTickets = async () => {
       try {
-        const raw = localStorage.getItem('client_ticket_queue');
-        if (raw) {
-          const queue = JSON.parse(raw);
-          const reportIds = new Set();
-          if (clientReports) {
-            Object.values(clientReports).forEach(brand => {
-              (brand.tickets || []).forEach(t => reportIds.add(t.id));
-            });
-          }
-          const fromReports = clientReports ? Object.values(clientReports).reduce((sum, brand) => sum + (brand.tickets || []).filter(t => t.status === 'Açık').length, 0) : 0;
-          const uniqueQueueOpen = queue.filter(t => !reportIds.has(t.id) && t.status === 'Açık').length;
-          setOpenTicketCount(fromReports + uniqueQueueOpen);
+        const res = await fetch('/api/tickets');
+        const data = await res.json();
+        if (data.success) {
+          const count = data.data.filter(t => t.status === 'Açık').length;
+          setOpenTicketCount(count);
         }
-      } catch(e) {}
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [clientReports]);
+      } catch (err) {}
+    };
+    fetchTickets();
+
+    const socket = io();
+    socket.on('new_ticket', (ticket) => {
+      if (ticket.status === 'Açık') {
+        setOpenTicketCount(prev => prev + 1);
+      }
+    });
+    socket.on('ticket_updated', (ticket) => {
+      // Re-fetch to be safe on status change
+      fetchTickets();
+    });
+
+    return () => socket.disconnect();
+  }, []);
 
   return (
     <aside className="admin-sidebar">

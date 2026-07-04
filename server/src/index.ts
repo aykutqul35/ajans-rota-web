@@ -2,12 +2,21 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
 dotenv.config();
 
 const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 3000;
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"]
+  }
+});
 
 app.use(cors());
 app.use(express.json());
@@ -181,7 +190,109 @@ app.post('/api/ai-strategy', (req, res) => {
     res.json({ success: true, content: insight });
   }, 1200);
 });
+});
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
+// TICKETS API
+app.get('/api/tickets', async (req, res) => {
+  try {
+    const tickets = await prisma.ticket.findMany({
+      include: { messages: true, client: true },
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json({ success: true, data: tickets });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/api/client/tickets', async (req, res) => {
+  try {
+    const clerkId = req.headers['x-clerk-id'] as string;
+    let client = null;
+    if (clerkId) {
+      client = await prisma.client.findUnique({ where: { clerkId } });
+    }
+    if (!client) {
+      // Demo fallback
+      client = await prisma.client.findFirst();
+    }
+    if (!client) return res.status(404).json({ error: 'Client not found' });
+    
+    const tickets = await prisma.ticket.findMany({
+      where: { clientId: client.id },
+      include: { messages: true, client: true },
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json({ success: true, data: tickets });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/tickets', async (req, res) => {
+  try {
+    const { clerkId, subject, department, text } = req.body;
+    let client = await prisma.client.findUnique({ where: { clerkId } });
+    if (!client) {
+      // In a real app we'd error, but for demo we can mock it
+      client = await prisma.client.findFirst();
+    }
+    
+    const ticket = await prisma.ticket.create({
+      data: {
+        clientId: client!.id,
+        subject,
+        department,
+        messages: {
+          create: { sender: 'client', text }
+        }
+      },
+      include: { messages: true, client: true }
+    });
+    io.emit('new_ticket', ticket);
+    res.json({ success: true, data: ticket });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/tickets/:id/messages', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { sender, text } = req.body;
+    const message = await prisma.message.create({
+      data: { ticketId: id, sender, text }
+    });
+    io.emit('new_message', { ticketId: id, message });
+    res.json({ success: true, data: message });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.put('/api/tickets/:id/status', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const ticket = await prisma.ticket.update({
+      where: { id },
+      data: { status }
+    });
+    io.emit('ticket_updated', ticket);
+    res.json({ success: true, data: ticket });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+io.on('connection', (socket) => {
+  console.log('User connected to WebSockets:', socket.id);
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
+});
+
+httpServer.listen(PORT, () => {
+  console.log(`🚀 Server with WebSockets is running on port ${PORT}`);
 });

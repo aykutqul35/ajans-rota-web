@@ -1,110 +1,100 @@
 import { useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
 
-export default function TicketsTab({
-  clientReports, setClientReports, viewingTicket, setViewingTicket, adminReplyText, setAdminReplyText, handleAdminReplySubmit
-}) {
+export default function TicketsTab() {
   const [allTickets, setAllTickets] = useState([]);
+  const [viewingTicket, setViewingTicket] = useState(null);
+  const [adminReplyText, setAdminReplyText] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [socket, setSocket] = useState(null);
 
-  // Merge tickets from clientReports + localStorage queue
   useEffect(() => {
-    const ticketsFromReports = Object.entries(clientReports).flatMap(([brandKey, brandData]) => {
-      return (brandData.tickets || []).map((ticket, idx) => ({ ...ticket, brandKey, brandName: brandData.brandName || brandKey, idx, _source: 'reports' }));
-    });
-
-    // Read from dedicated localStorage queue
-    let queueTickets = [];
-    try {
-      const raw = localStorage.getItem('client_ticket_queue');
-      if (raw) {
-        queueTickets = JSON.parse(raw).map((t, idx) => ({ ...t, _source: 'queue', idx }));
-      }
-    } catch(e) {}
-
-    // Merge by ID (avoid duplicates)
-    const existingIds = new Set(ticketsFromReports.map(t => t.id));
-    const uniqueQueueTickets = queueTickets.filter(t => !existingIds.has(t.id));
-    
-    const merged = [...ticketsFromReports, ...uniqueQueueTickets].sort((a, b) => {
-      if (a.status === 'Açık' && b.status !== 'Açık') return -1;
-      if (b.status === 'Açık' && a.status !== 'Açık') return 1;
-      return (b.id || 0) - (a.id || 0);
-    });
-
-    setAllTickets(merged);
-  }, [clientReports]);
-
-  // Also poll localStorage every 3 seconds to catch new tickets in real time
-  useEffect(() => {
-    const interval = setInterval(() => {
+    // Fetch initial tickets
+    const fetchTickets = async () => {
       try {
-        const raw = localStorage.getItem('client_ticket_queue');
-        if (raw) {
-          const queue = JSON.parse(raw);
-          if (queue.length > 0) {
-            setAllTickets(prev => {
-              const existingIds = new Set(prev.map(t => t.id));
-              const newTickets = queue.filter(t => !existingIds.has(t.id)).map(t => ({ ...t, _source: 'queue' }));
-              if (newTickets.length > 0) {
-                return [...newTickets, ...prev];
-              }
-              return prev;
-            });
-          }
+        const res = await fetch('/api/tickets');
+        const data = await res.json();
+        if (data.success) {
+          setAllTickets(data.data);
         }
-      } catch(e) {}
-    }, 3000);
-    return () => clearInterval(interval);
+      } catch (err) {
+        console.error("Error fetching tickets", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTickets();
+
+    // Connect WebSocket
+    const newSocket = io();
+    setSocket(newSocket);
+
+    newSocket.on('new_ticket', (ticket) => {
+      setAllTickets(prev => [ticket, ...prev]);
+    });
+
+    newSocket.on('new_message', ({ ticketId, message }) => {
+      setAllTickets(prev => prev.map(t => {
+        if (t.id === ticketId) {
+          const updatedMessages = t.messages ? [...t.messages, message] : [message];
+          return { ...t, messages: updatedMessages, status: 'İşlemde' };
+        }
+        return t;
+      }));
+      setViewingTicket(prev => {
+        if (prev && prev.id === ticketId) {
+          const updatedMessages = prev.messages ? [...prev.messages, message] : [message];
+          return { ...prev, messages: updatedMessages, status: 'İşlemde' };
+        }
+        return prev;
+      });
+    });
+
+    newSocket.on('ticket_updated', (updatedTicket) => {
+      setAllTickets(prev => prev.map(t => t.id === updatedTicket.id ? { ...t, status: updatedTicket.status } : t));
+      setViewingTicket(prev => prev?.id === updatedTicket.id ? { ...prev, status: updatedTicket.status } : prev);
+    });
+
+    return () => newSocket.disconnect();
   }, []);
 
-  const handleStatusChange = (ticket, newStatus) => {
-    if (ticket._source === 'reports' && ticket.brandKey) {
-      const updated = { ...clientReports };
-      if (updated[ticket.brandKey]?.tickets?.[ticket.idx]) {
-        updated[ticket.brandKey].tickets[ticket.idx].status = newStatus;
-        setClientReports(updated);
-      }
-    }
-    // Also update in queue
+  const handleStatusChange = async (ticket, newStatus) => {
     try {
-      const raw = localStorage.getItem('client_ticket_queue');
-      if (raw) {
-        const queue = JSON.parse(raw);
-        const found = queue.find(t => t.id === ticket.id);
-        if (found) {
-          found.status = newStatus;
-          localStorage.setItem('client_ticket_queue', JSON.stringify(queue));
-        }
-      }
-    } catch(e) {}
-    setAllTickets(prev => prev.map(t => t.id === ticket.id ? { ...t, status: newStatus } : t));
+      await fetch(`/api/tickets/${ticket.id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+    } catch(err) {
+      console.error(err);
+    }
   };
 
-  const handleDelete = (ticket) => {
-    if (!confirm('Bu talebi tamamen silmek istediğinize emin misiniz?')) return;
-    if (ticket._source === 'reports' && ticket.brandKey) {
-      const updated = { ...clientReports };
-      if (updated[ticket.brandKey]?.tickets) {
-        updated[ticket.brandKey].tickets.splice(ticket.idx, 1);
-        setClientReports(updated);
-      }
-    }
+  const handleAdminReplySubmit = async () => {
+    if (!adminReplyText.trim() || !viewingTicket) return;
     try {
-      const raw = localStorage.getItem('client_ticket_queue');
-      if (raw) {
-        const queue = JSON.parse(raw).filter(t => t.id !== ticket.id);
-        localStorage.setItem('client_ticket_queue', JSON.stringify(queue));
-      }
-    } catch(e) {}
-    setAllTickets(prev => prev.filter(t => t.id !== ticket.id));
+      await fetch(`/api/tickets/${viewingTicket.id}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sender: 'admin', text: adminReplyText.trim() })
+      });
+      // also update ticket status to "İşlemde"
+      await handleStatusChange(viewingTicket, 'İşlemde');
+      setAdminReplyText('');
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const openCount = allTickets.filter(t => t.status === 'Açık').length;
 
+  if (loading) return <div>Yükleniyor...</div>;
+
   return (
     <>
-          <div className="admin-section fade-in">
-            {!viewingTicket ? (
-            <>
+      <div className="admin-section fade-in">
+        {!viewingTicket ? (
+          <>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
               <h2 style={{ fontSize: '1.5rem', color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 Müşteri Destek Talepleri
@@ -139,13 +129,17 @@ export default function TicketsTab({
                   </tr>
                 </thead>
                 <tbody>
-                  {allTickets.map((ticket, globalIdx) => (
+                  {allTickets.map((ticket, globalIdx) => {
+                    const brandName = ticket.client?.brandName || ticket.brandName || "Bilinmiyor";
+                    const dateStr = ticket.createdAt ? new Date(ticket.createdAt).toLocaleString('tr-TR') : ticket.date;
+                    
+                    return (
                     <tr key={ticket.id || globalIdx} style={{ borderBottom: '1px solid var(--glass-border)', background: ticket.status === 'Açık' ? 'rgba(239, 68, 68, 0.02)' : 'transparent' }}>
-                      <td style={{ padding: '1rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-dark)' }}>{ticket.brandName}</td>
+                      <td style={{ padding: '1rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-dark)' }}>{brandName}</td>
                       <td style={{ padding: '1rem', fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 700 }}>{ticket.id}</td>
                       <td style={{ padding: '1rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>{ticket.department}</td>
                       <td style={{ padding: '1rem', fontSize: '0.85rem', color: 'var(--text-dark)', fontWeight: 600 }}>{ticket.subject}</td>
-                      <td style={{ padding: '1rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>{ticket.date}</td>
+                      <td style={{ padding: '1rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>{dateStr}</td>
                       <td style={{ padding: '1rem', fontSize: '0.85rem', textAlign: 'right' }}>
                         <button type="button" onClick={() => setViewingTicket(ticket)} style={{ marginRight: '10px', padding: '0.4rem 0.8rem', borderRadius: '8px', background: 'var(--primary)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }}>
                           <i className="fa-solid fa-eye"></i> İncele
@@ -173,12 +167,9 @@ export default function TicketsTab({
                           <option value="İşlemde">İşlemde</option>
                           <option value="Çözüldü">Çözüldü</option>
                         </select>
-                        <button type="button" onClick={() => handleDelete(ticket)} style={{ marginLeft: '10px', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}>
-                          <i className="fa-solid fa-trash"></i>
-                        </button>
                       </td>
                     </tr>
-                  ))}
+                  )})}
                   {allTickets.length === 0 && (
                     <tr>
                       <td colSpan="6" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>Henüz hiçbir müşteriden destek talebi gelmedi.</td>
@@ -187,78 +178,63 @@ export default function TicketsTab({
                 </tbody>
               </table>
             </div>
-            </>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', height: '600px', background: '#fff', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <button onClick={() => setViewingTicket(null)} style={{ background: 'var(--bg-light)', border: 'none', color: 'var(--text-dark)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
-                      <i className="fa-solid fa-arrow-left"></i> Geri Dön
-                    </button>
-                    <div>
-                      <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-dark)' }}>{viewingTicket.id} - {viewingTicket.brandName}</h3>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{viewingTicket.subject} | {viewingTicket.department}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', background: 'var(--bg-light)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1rem' }}>
-                  {(() => {
-                    // Try to get latest messages from queue (may have client replies)
-                    let msgs = viewingTicket.messages;
-                    try {
-                      const raw = localStorage.getItem('client_ticket_queue');
-                      if (raw) {
-                        const queueItem = JSON.parse(raw).find(t => t.id === viewingTicket.id);
-                        if (queueItem?.messages?.length) {
-                          msgs = queueItem.messages;
-                        }
-                      }
-                    } catch(e) {}
-                    if (!msgs || msgs.length === 0) {
-                      msgs = [{ sender: 'client', text: viewingTicket.message || 'Bu talep için detaylı mesaj girilmemiş.', date: viewingTicket.date }];
-                    }
-                    return msgs;
-                  })().map((msg, i) => (
-                    <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: msg.sender === 'admin' ? 'flex-end' : 'flex-start' }}>
-                      <div style={{ 
-                        maxWidth: '80%', 
-                        padding: '0.8rem 1rem', 
-                        borderRadius: msg.sender === 'admin' ? '12px 12px 0 12px' : '12px 12px 12px 0',
-                        background: msg.sender === 'admin' ? 'var(--primary)' : '#fff',
-                        color: msg.sender === 'admin' ? '#fff' : 'var(--text-dark)',
-                        border: msg.sender === 'admin' ? 'none' : '1px solid var(--glass-border)',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
-                        fontSize: '0.9rem',
-                        lineHeight: 1.5,
-                        whiteSpace: 'pre-wrap'
-                      }}>
-                        {msg.text}
-                      </div>
-                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                        {msg.sender === 'admin' ? 'Siz (Yönetici)' : 'Müşteri'} • {msg.date}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <input 
-                    type="text"
-                    value={adminReplyText}
-                    onChange={(e) => setAdminReplyText(e.target.value)}
-                    onKeyDown={(e) => { if(e.key === 'Enter') handleAdminReplySubmit(); }}
-                    placeholder="Yanıtınızı yazın..."
-                    style={{ flex: 1, padding: '1rem', borderRadius: '12px', border: '1px solid var(--glass-border)', background: '#fff', color: 'var(--text-dark)', outline: 'none', fontSize: '0.95rem' }}
-                  />
-                  <button onClick={handleAdminReplySubmit} className="btn btn-primary" style={{ padding: '0 2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600 }}>
-                    <i className="fa-solid fa-paper-plane"></i> Gönder
-                  </button>
+          </>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', height: '600px', background: '#fff', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <button onClick={() => setViewingTicket(null)} style={{ background: 'var(--bg-light)', border: 'none', color: 'var(--text-dark)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
+                  <i className="fa-solid fa-arrow-left"></i> Geri Dön
+                </button>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-dark)' }}>{viewingTicket.id} - {viewingTicket.client?.brandName || viewingTicket.brandName}</h3>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{viewingTicket.subject} | {viewingTicket.department}</span>
                 </div>
               </div>
-            )}
+            </div>
+            
+            <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', background: 'var(--bg-light)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1rem' }}>
+              {(viewingTicket.messages || []).map((msg, i) => {
+                const dateStr = msg.createdAt ? new Date(msg.createdAt).toLocaleString('tr-TR') : msg.date;
+                return (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: msg.sender === 'admin' ? 'flex-end' : 'flex-start' }}>
+                  <div style={{ 
+                    maxWidth: '80%', 
+                    padding: '0.8rem 1rem', 
+                    borderRadius: msg.sender === 'admin' ? '12px 12px 0 12px' : '12px 12px 12px 0',
+                    background: msg.sender === 'admin' ? 'var(--primary)' : '#fff',
+                    color: msg.sender === 'admin' ? '#fff' : 'var(--text-dark)',
+                    border: msg.sender === 'admin' ? 'none' : '1px solid var(--glass-border)',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+                    fontSize: '0.9rem',
+                    lineHeight: 1.5,
+                    whiteSpace: 'pre-wrap'
+                  }}>
+                    {msg.text}
+                  </div>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                    {msg.sender === 'admin' ? 'Siz (Yönetici)' : 'Müşteri'} • {dateStr}
+                  </span>
+                </div>
+              )})}
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <input 
+                type="text"
+                value={adminReplyText}
+                onChange={(e) => setAdminReplyText(e.target.value)}
+                onKeyDown={(e) => { if(e.key === 'Enter') handleAdminReplySubmit(); }}
+                placeholder="Yanıtınızı yazın..."
+                style={{ flex: 1, padding: '1rem', borderRadius: '12px', border: '1px solid var(--glass-border)', background: '#fff', color: 'var(--text-dark)', outline: 'none', fontSize: '0.95rem' }}
+              />
+              <button onClick={handleAdminReplySubmit} className="btn btn-primary" style={{ padding: '0 2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600 }}>
+                <i className="fa-solid fa-paper-plane"></i> Gönder
+              </button>
+            </div>
           </div>
-        
+        )}
+      </div>
     </>
   );
 }

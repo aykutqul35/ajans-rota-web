@@ -42,8 +42,6 @@ function AdminDashboardView({
   setClientReports,
   onLogout
 }) {
-  const [viewingTicket, setViewingTicket] = useState(null); // leads, settings, services, testimonials, team, blogs, analytics
-  const [adminReplyText, setAdminReplyText] = useState('');
   const [activeTab, setActiveTab] = useState('leads');
   const [editingReportBrand, setEditingReportBrand] = useState('ecommerce');
   const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
@@ -953,85 +951,6 @@ function AdminDashboardView({
       setBlogsData(blogsData.filter(i => i.id !== item.id));
     }
   };
-  const handleAdminReplySubmit = (e) => {
-    if (e?.preventDefault) e.preventDefault();
-    if (!adminReplyText.trim() || !viewingTicket) return;
-
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-    const replyMsg = {
-      sender: 'admin',
-      text: adminReplyText.trim(),
-      date: dateStr
-    };
-
-    // Update in clientReports if the ticket came from there
-    const updatedClientReports = { ...clientReports };
-    if (viewingTicket.brandKey && updatedClientReports[viewingTicket.brandKey]?.tickets) {
-      const brandData = updatedClientReports[viewingTicket.brandKey];
-      const ticketIdx = brandData.tickets.findIndex(t => t.id === viewingTicket.id);
-      
-      if (ticketIdx > -1) {
-        const ticket = brandData.tickets[ticketIdx];
-        if (!ticket.messages) {
-          ticket.messages = [{ sender: 'client', text: ticket.message || 'Detaylı mesaj girilmemiş.', date: ticket.date }];
-        }
-        ticket.messages.push(replyMsg);
-        ticket.status = 'İşlemde';
-        window._adminLastWrite = Date.now();
-        
-        setClientReports(updatedClientReports);
-        
-        // Save to ajans_rota_db
-        const dbPayload = {
-          settings: settingsData,
-          servicePagesData: servicesData,
-          teamMembers: teamMembersData,
-          blogPosts: blogsData,
-          testimonials: testimonialsData,
-          leads: leadsData,
-          clientReports: updatedClientReports
-        };
-        localStorage.setItem('ajans_rota_db', JSON.stringify(dbPayload));
-
-        // Push to Neon DB
-        if (brandData.client_id) {
-          fetch('/api/clients/update', {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${authToken}`
-            },
-            body: JSON.stringify({ 
-              client_id: brandData.client_id,
-              report_data: brandData
-            })
-          }).catch(e => console.error("Admin ticket reply sync error", e));
-        }
-        
-        setViewingTicket({ ...ticket, brandKey: viewingTicket.brandKey });
-      }
-    }
-
-    // Also sync to client_ticket_queue localStorage (for client panel to read)
-    try {
-      const raw = localStorage.getItem('client_ticket_queue');
-      if (raw) {
-        const queue = JSON.parse(raw);
-        const found = queue.find(t => t.id === viewingTicket.id);
-        if (found) {
-          if (!found.messages) {
-            found.messages = [{ sender: 'client', text: found.message || 'Detaylı mesaj girilmemiş.', date: found.date }];
-          }
-          found.messages.push(replyMsg);
-          found.status = 'İşlemde';
-          localStorage.setItem('client_ticket_queue', JSON.stringify(queue));
-        }
-      }
-    } catch(err) {}
-
-    setAdminReplyText('');
-  };
   if (!authToken) {
     return <div className="admin-login-container">
         <div className="admin-login-card">
@@ -1220,15 +1139,7 @@ function AdminDashboardView({
           )}
           
         {activeTab === 'tickets' && (
-          <TicketsTab
-            clientReports={clientReports}
-            setClientReports={handleClientReportsUpdate}
-            viewingTicket={viewingTicket}
-            setViewingTicket={setViewingTicket}
-            adminReplyText={adminReplyText}
-            setAdminReplyText={setAdminReplyText}
-            handleAdminReplySubmit={handleAdminReplySubmit}
-          />
+          <TicketsTab />
         )}
 
         {activeTab === 'reports' && (
