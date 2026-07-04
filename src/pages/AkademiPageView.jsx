@@ -165,7 +165,7 @@ export default function AkademiPageView({
               left: '50%',
               transform: 'translateX(-50%)',
               background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
-              color: '#fff',
+              color: '#ffffff',
               padding: '4px 16px',
               borderRadius: '20px',
               fontSize: '0.75rem',
@@ -195,22 +195,22 @@ export default function AkademiPageView({
               <span style={{ color: course.color, fontSize: '0.8rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
                 {course.level}
               </span>
-              <h3 style={{ fontSize: '1.3rem', color: '#f8fafc', margin: '4px 0 0 0', fontWeight: '800' }}>
+              <h3 style={{ fontSize: '1.3rem', color: '#1e293b', margin: '4px 0 0 0', fontWeight: '800' }}>
                 {course.title}
               </h3>
             </div>
           </div>
           
           <div style={{ marginBottom: '1.5rem', flexGrow: 1 }}>
-            <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+            <p style={{ fontSize: '0.85rem', color: '#64748b', lineHeight: '1.6', marginBottom: '1.5rem' }}>
               {course.targetAudience}
             </p>
             
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {course.features.map((feature, i) => (
-                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', fontSize: '0.85rem', color: '#cbd5e1' }}>
+                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', fontSize: '0.85rem', color: '#475569' }}>
                   <i className="fa-solid fa-check" style={{ color: course.color, marginTop: '4px' }}></i>
-                  <span style={{ color: '#e2e8f0' }}>{feature}</span>
+                  <span style={{ color: '#334155' }}>{feature}</span>
                 </li>
               ))}
             </ul>
@@ -220,14 +220,14 @@ export default function AkademiPageView({
           
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Program Süresi</span>
-              <span style={{ fontSize: '0.9rem', color: '#f8fafc', fontWeight: '600' }}>
+              <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Program Süresi</span>
+              <span style={{ fontSize: '0.9rem', color: '#1e293b', fontWeight: '600' }}>
                 <i className="fa-regular fa-clock" style={{marginRight: '5px'}}></i> {course.duration}
               </span>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <span style={{ fontSize: '1.5rem', color: '#fff', fontWeight: '800' }}>{course.price}</span>
-              <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block' }}>+KDV</span>
+              <span style={{ fontSize: '1.5rem', color: '#ffffff', fontWeight: '800' }}>{course.price}</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748b', display: 'block' }}>+KDV</span>
             </div>
           </div>
           
@@ -239,7 +239,7 @@ export default function AkademiPageView({
               onClick={() => {
                 toast.success(`${course.title} müfredatı detayları için ön kayıt formumuzu doldurabilirsiniz.`);
               }}
-              style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: '0.8rem', textDecoration: 'underline', cursor: 'pointer' }}
+              style={{ background: 'none', border: 'none', color: '#64748b', fontSize: '0.8rem', textDecoration: 'underline', cursor: 'pointer' }}
             >
               Detaylı Bilgi
             </button>
@@ -382,10 +382,10 @@ export default function AkademiPageView({
                   }}>
                     <i className={selectedCourse ? "fa-solid fa-graduation-cap" : "fa-solid fa-download"}></i>
                   </div>
-                  <h3 style={{ fontSize: '1.25rem', color: '#f8fafc', marginBottom: '0.5rem', fontWeight: '800' }}>
+                  <h3 style={{ fontSize: '1.25rem', color: '#1e293b', marginBottom: '0.5rem', fontWeight: '800' }}>
                     {selectedCourse ? 'Eğitim Ön Kayıt Formu' : 'Rehber Talebi'}
                   </h3>
-                  <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: '1.5' }}>
+                  <p style={{ fontSize: '0.8rem', color: '#64748b', lineHeight: '1.5' }}>
                     {selectedCourse 
                       ? <><strong style={{color:'#e2e8f0'}}>{selectedCourse.title}</strong> masterclass sınıfına ön kayıt oluşturmak ve müfredat detaylarını görüşmek için formu doldurun.</>
                       : <><strong style={{color:'#e2e8f0'}}>{selectedGuide.title}</strong> isimli rehberi indirmek için aşağıdaki bilgileri girin.</>
@@ -395,30 +395,30 @@ export default function AkademiPageView({
 
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div style={{position: 'relative'}}>
-                    <i className="fa-regular fa-user" style={{position: 'absolute', top: '15px', left: '16px', color: '#94a3b8', fontSize: '1rem'}}></i>
+                    <i className="fa-regular fa-user" style={{position: 'absolute', top: '15px', left: '16px', color: '#64748b', fontSize: '1rem'}}></i>
                     <input type="text" required placeholder="Adınız Soyadınız *" value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} style={{
-                      width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(15,23,42,0.6)', color: '#f8fafc', fontSize: '0.95rem', transition: 'border-color 0.3s'
+                      width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.1)', background: 'rgba(255,255,255,0.7)', color: '#1e293b', fontSize: '0.95rem', transition: 'border-color 0.3s'
                     }} />
                   </div>
                   
                   <div style={{position: 'relative'}}>
-                    <i className="fa-regular fa-envelope" style={{position: 'absolute', top: '15px', left: '16px', color: '#94a3b8', fontSize: '1rem'}}></i>
+                    <i className="fa-regular fa-envelope" style={{position: 'absolute', top: '15px', left: '16px', color: '#64748b', fontSize: '1rem'}}></i>
                     <input type="email" required placeholder="E-posta Adresiniz *" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} style={{
-                      width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(15,23,42,0.6)', color: '#f8fafc', fontSize: '0.95rem', transition: 'border-color 0.3s'
+                      width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.1)', background: 'rgba(255,255,255,0.7)', color: '#1e293b', fontSize: '0.95rem', transition: 'border-color 0.3s'
                     }} />
                   </div>
                   
                   <div style={{position: 'relative'}}>
-                    <i className="fa-solid fa-mobile-screen-button" style={{position: 'absolute', top: '15px', left: '16px', color: '#94a3b8', fontSize: '1rem'}}></i>
+                    <i className="fa-solid fa-mobile-screen-button" style={{position: 'absolute', top: '15px', left: '16px', color: '#64748b', fontSize: '1rem'}}></i>
                     <input type="tel" required placeholder="Telefon Numaranız *" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} style={{
-                      width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(15,23,42,0.6)', color: '#f8fafc', fontSize: '0.95rem', transition: 'border-color 0.3s'
+                      width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.1)', background: 'rgba(255,255,255,0.7)', color: '#1e293b', fontSize: '0.95rem', transition: 'border-color 0.3s'
                     }} />
                   </div>
                   
                   <div style={{position: 'relative'}}>
-                    <i className="fa-regular fa-building" style={{position: 'absolute', top: '15px', left: '16px', color: '#94a3b8', fontSize: '1rem'}}></i>
+                    <i className="fa-regular fa-building" style={{position: 'absolute', top: '15px', left: '16px', color: '#64748b', fontSize: '1rem'}}></i>
                     <input type="text" placeholder="Firma / Marka Adınız (Opsiyonel)" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} style={{
-                      width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(15,23,42,0.6)', color: '#f8fafc', fontSize: '0.95rem', transition: 'border-color 0.3s'
+                      width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.1)', background: 'rgba(255,255,255,0.7)', color: '#1e293b', fontSize: '0.95rem', transition: 'border-color 0.3s'
                     }} />
                   </div>
 
@@ -441,10 +441,10 @@ export default function AkademiPageView({
                 <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', margin: '0 auto 1.5rem auto' }}>
                   <i className="fa-solid fa-check"></i>
                 </div>
-                <h4 style={{ color: '#f8fafc', fontSize: '1.25rem', marginBottom: '0.75rem', fontWeight: '800' }}>
+                <h4 style={{ color: '#1e293b', fontSize: '1.25rem', marginBottom: '0.75rem', fontWeight: '800' }}>
                   Talebiniz Başarıyla Alındı!
                 </h4>
-                <p style={{ fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '2rem', lineHeight: '1.6' }}>
+                <p style={{ fontSize: '0.9rem', color: '#475569', marginBottom: '2rem', lineHeight: '1.6' }}>
                   {selectedCourse 
                     ? `Teşekkürler! ${selectedCourse.title} sınıfı kayıt işlemleri ve detaylı müfredat bilgisi için eğitim danışmanlarımız size en kısa sürede dönüş yapacaktır.`
                     : `Tebrikler! ${selectedGuide.title} rehberiniz hazırlanarak e-posta adresinize ve telefonunuza link olarak iletilecektir.`

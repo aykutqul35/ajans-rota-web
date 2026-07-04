@@ -35,7 +35,7 @@ export default function AcademyTab({ academyCoursesData, setAcademyCoursesData, 
       <div style={{ display: 'grid', gap: '1.5rem' }}>
         {(academyCoursesData || []).map(course => (
           <div key={course.id} style={{
-            background: 'var(--bg-lighter)',
+            background: '#ffffff',
             border: '1px solid var(--border-color)',
             borderRadius: '12px',
             padding: '1.5rem'
@@ -44,36 +44,36 @@ export default function AcademyTab({ academyCoursesData, setAcademyCoursesData, 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>Eğitim Başlığı</label>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '4px' }}>Eğitim Başlığı</label>
                     <input type="text" value={editFormData.title} onChange={(e) => handleChange(e, 'title')} style={{
-                      width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-dark)', color: '#f8fafc'
+                      width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#f8fafc', color: '#1e293b'
                     }} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>Fiyat (₺)</label>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '4px' }}>Fiyat (₺)</label>
                     <input type="text" value={editFormData.price} onChange={(e) => handleChange(e, 'price')} style={{
-                      width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-dark)', color: '#f8fafc'
+                      width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#f8fafc', color: '#1e293b'
                     }} />
                   </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>Süre / Saat</label>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '4px' }}>Süre / Saat</label>
                     <input type="text" value={editFormData.duration} onChange={(e) => handleChange(e, 'duration')} style={{
-                      width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-dark)', color: '#f8fafc'
+                      width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#f8fafc', color: '#1e293b'
                     }} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>Seviye Metni</label>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '4px' }}>Seviye Metni</label>
                     <input type="text" value={editFormData.level} onChange={(e) => handleChange(e, 'level')} style={{
-                      width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-dark)', color: '#f8fafc'
+                      width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#f8fafc', color: '#1e293b'
                     }} />
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>Hedef Kitle / Açıklama</label>
+                  <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '4px' }}>Hedef Kitle / Açıklama</label>
                   <textarea value={editFormData.targetAudience} onChange={(e) => handleChange(e, 'targetAudience')} rows="3" style={{
-                    width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-dark)', color: '#f8fafc', resize: 'vertical'
+                    width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#f8fafc', color: '#1e293b', resize: 'vertical'
                   }}></textarea>
                 </div>
                 
@@ -94,11 +94,11 @@ export default function AcademyTab({ academyCoursesData, setAcademyCoursesData, 
                       <i className={course.icon}></i>
                     </div>
                     <div>
-                      <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#f8fafc' }}>{course.title}</h3>
+                      <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#1e293b' }}>{course.title}</h3>
                       <span style={{ fontSize: '0.8rem', color: course.color, fontWeight: '700' }}>{course.level}</span>
                     </div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', marginTop: '1.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', marginTop: '1.5rem', color: '#334155', fontSize: '0.9rem' }}>
                     <div>
                       <strong style={{ color: '#64748b', display: 'block', marginBottom: '4px', fontSize: '0.75rem', textTransform: 'uppercase' }}>Fiyat</strong>
                       {course.price}
@@ -112,7 +112,7 @@ export default function AcademyTab({ academyCoursesData, setAcademyCoursesData, 
                       {course.popular ? <span style={{color:'#22c55e'}}><i className="fa-solid fa-check"></i> Evet</span> : <span style={{color:'#64748b'}}>-</span>}
                     </div>
                   </div>
-                  <div style={{ marginTop: '1rem', color: '#94a3b8', fontSize: '0.9rem' }}>
+                  <div style={{ marginTop: '1rem', color: '#475569', fontSize: '0.9rem' }}>
                     <strong style={{ color: '#64748b', display: 'block', marginBottom: '4px', fontSize: '0.75rem', textTransform: 'uppercase' }}>Açıklama</strong>
                     {course.targetAudience}
                   </div>
