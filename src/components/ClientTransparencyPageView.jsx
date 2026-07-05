@@ -38,6 +38,8 @@ export default function ClientTransparencyPageView({
   
   // V2 Dashboard States
   const [backendTickets, setBackendTickets] = useState([]);
+  const [aiLogs, setAiLogs] = useState([]);
+  const [aiLogsLoading, setAiLogsLoading] = useState(false);
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -67,6 +69,27 @@ export default function ClientTransparencyPageView({
   }, [isLoggedIn, user?.id]);
 
   const [activeTab, setActiveTab] = useState('overview');
+
+  useEffect(() => {
+    if (isLoggedIn && activeTab === 'ai_feed') {
+      const fetchLogs = async () => {
+        setAiLogsLoading(true);
+        try {
+          const res = await fetch('/api/ai/logs?limit=20'); // In real app: add client_id
+          const data = await res.json();
+          if (data.success) {
+            setAiLogs(data.data);
+          }
+        } catch(err) {
+          console.error(err);
+        } finally {
+          setAiLogsLoading(false);
+        }
+      };
+      fetchLogs();
+    }
+  }, [isLoggedIn, activeTab]);
+
   const [showTicketModal, setShowTicketModal] = useState(false);
   const [viewingTicket, setViewingTicket] = useState(null);
   const [clientReplyText, setClientReplyText] = useState('');
@@ -776,6 +799,9 @@ export default function ClientTransparencyPageView({
           <div className={`client-os-nav-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>
              <i className="fa-solid fa-chart-pie"></i> Genel Bakış & Grafikler
           </div>
+          <div className={`client-os-nav-item ${activeTab === 'ai_feed' ? 'active' : ''}`} onClick={() => setActiveTab('ai_feed')}>
+             <i className="fa-solid fa-microchip" style={{ color: activeTab === 'ai_feed' ? '#fff' : '#10b981' }}></i> Rota AI Canlı Akış
+          </div>
           <div className={`client-os-nav-item ${activeTab === 'ai_simulator' ? 'active' : ''}`} onClick={() => setActiveTab('ai_simulator')}>
              <i className="fa-solid fa-brain" style={{ color: activeTab === 'ai_simulator' ? '#fff' : '#c084fc' }}></i> AI Büyüme Simülasyonu
           </div>
@@ -1342,6 +1368,65 @@ export default function ClientTransparencyPageView({
         )}
 
         {/* --- TAB: AI SIMULATOR (Yapay Zeka Büyüme Simülatörü) --- */}
+        
+        {activeTab === 'ai_feed' && (
+          <div className="tab-pane-fade-in" style={{ padding: '2rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+              <div style={{ width: '50px', height: '50px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <i className="fa-solid fa-microchip" style={{ fontSize: '1.5rem', color: '#10b981' }}></i>
+              </div>
+              <div>
+                <h2 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  Rota AI Canlı Aksiyon Akışı
+                  <span style={{ fontSize: '0.75rem', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', padding: '0.2rem 0.6rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', animation: 'pulse 1.5s infinite' }}></div>
+                    SİSTEM AKTİF
+                  </span>
+                </h2>
+                <p style={{ margin: '0.2rem 0 0 0', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                  Yapay zeka motorumuz reklam verilerinizi 7/24 izler ve otonom optimizasyon kararları alır.
+                </p>
+              </div>
+            </div>
+
+            {aiLogsLoading ? (
+              <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                <i className="fa-solid fa-circle-notch fa-spin" style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--primary)' }}></i>
+                <div>AI Logları Yükleniyor...</div>
+              </div>
+            ) : aiLogs.length === 0 ? (
+              <div style={{ background: '#fff', borderRadius: '12px', padding: '3rem', textAlign: 'center', border: '1px solid rgba(15,23,42,0.1)' }}>
+                <i className="fa-solid fa-robot" style={{ fontSize: '3rem', color: 'var(--text-muted)', opacity: 0.5, marginBottom: '1rem' }}></i>
+                <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-main)' }}>Henüz Aksiyon Yok</h3>
+                <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.95rem' }}>Yapay zeka motoru ilk veri senkronizasyonunu bekliyor.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {aiLogs.map((log, idx) => (
+                  <div key={idx} style={{ background: '#fff', borderRadius: '12px', padding: '1.5rem', border: '1px solid rgba(15,23,42,0.1)', display: 'flex', gap: '1rem', alignItems: 'flex-start', transition: 'all 0.3s ease', cursor: 'default' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: log.platform === 'google' ? 'rgba(234, 67, 53, 0.1)' : log.platform === 'meta' ? 'rgba(24, 119, 242, 0.1)' : 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <i className={log.platform === 'google' ? 'fa-brands fa-google' : log.platform === 'meta' ? 'fa-brands fa-meta' : 'fa-solid fa-robot'} style={{ color: log.platform === 'google' ? '#ea4335' : log.platform === 'meta' ? '#1877f2' : '#10b981' }}></i>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          {log.action_type === 'daily_optimization' ? 'GÜNLÜK OPTİMİZASYON' : 'ANLIK MÜDAHALE'}
+                        </span>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                          {new Date(log.action_time).toLocaleString('tr-TR')}
+                        </span>
+                      </div>
+                      <p style={{ margin: 0, color: 'var(--text-main)', fontSize: '1rem', lineHeight: '1.5' }}>
+                        {log.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {activeTab === 'ai_simulator' && (
           <div className="tab-content-ai fade-in">
             {(() => {

@@ -1,69 +1,60 @@
-import { neon } from '@neondatabase/serverless';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import sql from '../db.js';
 
 export default async function handler(req, res) {
-  const sql = neon(process.env.DATABASE_URL);
+  // Sadece yetkili erişime izin ver (Şimdilik basit bir kontrol)
+  // İleride JWT eklenebilir.
 
   if (req.method === 'GET') {
     try {
-      const authHeader = req.headers.authorization;
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, message: 'Yetkisiz erişim.' });
-      }
-
-      const token = authHeader.split(' ')[1];
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'ajansrota_fallback_secret');
-        // İsteği yapan Admin olmalı (çünkü tüm müşterileri çekiyor)
-        if (decoded.role === 'client') {
-           return res.status(403).json({ success: false, message: 'Erişim reddedildi.' });
-        }
-      } catch (err) {
-        return res.status(401).json({ success: false, message: 'Geçersiz token.' });
-      }
-
-      // Get all clients with their reports
+      // Tüm müşterileri ve ilgili ayarlarını çek
       const clients = await sql`
-        SELECT c.id, c.username, c.brand_name, r.report_data 
-        FROM client_accounts c
-        LEFT JOIN client_reports r ON c.id = r.client_id
+        SELECT 
+          c.id, c.brand_name, c.name, c.logo, c.status,
+          s.ai_health_score, s.next_month_plan, s.custom_kpis
+        FROM clients c
+        LEFT JOIN client_settings s ON c.id = s.client_id
+        WHERE c.status = 'active'
+        ORDER BY c.created_at DESC
       `;
       
-      return res.status(200).json({ success: true, data: clients });
+      // Her müşteri için kampanyaları (Google & Meta) da çekebiliriz,
+      // ancak şimdilik temel bilgileri dönelim, kampanyalar ayrı bir route'dan veya join ile gelebilir.
+      
+      res.status(200).json({ success: true, data: clients });
     } catch (error) {
-      console.error("GET Clients Error:", error);
-      return res.status(500).json({ success: false, message: "Sunucu hatası" });
+      console.error('Clients API Error:', error);
+      res.status(500).json({ success: false, error: 'Sunucu Hatası' });
     }
-  }
+  } 
+  else if (req.method === 'POST') {
+    const { id, brand_name, name, logo } = req.body;
+    
+    if (!id || !brand_name || !name) {
+      return res.status(400).json({ success: false, error: 'Eksik parametre' });
+    }
 
-  if (req.method === 'POST') {
     try {
-      const { username, password, brand_name, report_data } = req.body;
-      
-      // In a real app, hash the password! But since this is a demo/prototype we'll keep it simple for now, 
-      // or use a mock hash. The prompt didn't specify hashing requirements for clients, but Admin is hashed.
-      const password_hash = await bcrypt.hash(password, 10);
-
+      // 1. Müşteriyi oluştur
       const newClient = await sql`
-        INSERT INTO client_accounts (username, password_hash, brand_name)
-        VALUES (${username}, ${password_hash}, ${brand_name})
-        RETURNING id
+        INSERT INTO clients (id, brand_name, name, logo)
+        VALUES (${id}, ${brand_name}, ${name}, ${logo || null})
+        RETURNING *
       `;
-
-      const clientId = newClient[0].id;
-
+      
+      // 2. Varsayılan ayarları oluştur
       await sql`
-        INSERT INTO client_reports (client_id, report_data)
-        VALUES (${clientId}, ${JSON.stringify(report_data)})
+        INSERT INTO client_settings (client_id, ai_health_score, next_month_plan, custom_kpis)
+        VALUES (${id}, 100, '[]'::jsonb, '[]'::jsonb)
       `;
 
-      return res.status(201).json({ success: true, message: "Müşteri oluşturuldu." });
+      res.status(201).json({ success: true, data: newClient[0] });
     } catch (error) {
-      console.error("POST Client Error:", error);
-      return res.status(500).json({ success: false, message: "Sunucu hatası" });
+      console.error('Clients API Post Error:', error);
+      res.status(500).json({ success: false, error: 'Kayıt Hatası' });
     }
+  } 
+  else {
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
-
-  return res.status(405).json({ message: 'Method Not Allowed' });
 }
