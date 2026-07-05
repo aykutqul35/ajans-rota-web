@@ -171,14 +171,58 @@ export default function ClientReportsTab({
                   </button>}
               </div>
 
+
+              {/* Inner Tabs Navigation */}
+              <div style={{
+                display: 'flex',
+                gap: '0.5rem',
+                marginBottom: '1.5rem',
+                padding: '0.5rem',
+                background: 'rgba(15, 23, 42, 0.2)',
+                borderRadius: '12px',
+                border: '1px solid var(--glass-border)',
+                width: '100%',
+                overflowX: 'auto'
+              }}>
+                {[
+                  { id: 'genel', label: '⚙️ Genel Ayarlar' },
+                  { id: 'kpi', label: '📈 Performans & SEO' },
+                  { id: 'timeline', label: '🗓️ Zaman Çizelgesi' }
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveInnerTab(tab.id)}
+                    type="button"
+                    style={{
+                      flex: 1,
+                      padding: '0.8rem 1rem',
+                      borderRadius: '8px',
+                      background: activeInnerTab === tab.id ? 'var(--primary-color)' : 'transparent',
+                      color: activeInnerTab === tab.id ? '#fff' : 'var(--text-muted)',
+                      border: 'none',
+                      fontSize: '0.85rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      boxShadow: activeInnerTab === tab.id ? '0 4px 12px rgba(14, 165, 233, 0.2)' : 'none',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
               {/* Edit Form */}
               <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
+            display: 'flex',
+            flexDirection: 'column',
             gap: '2rem',
             marginBottom: '2rem'
           }}>
+
                 {/* Left Column: General & KPIs */}
+                {activeInnerTab === 'genel' && (
                 <div style={{
               display: 'flex',
               flexDirection: 'column',
@@ -451,78 +495,81 @@ export default function ClientReportsTab({
                       }}
                     ></textarea>
                   </div>
-
-                  <div style={{
-                border: '1px solid var(--glass-border)',
-                padding: '1.25rem',
-                borderRadius: '10px',
-                background: 'rgba(15, 23, 42, 0.01)'
-              }}>
-                    <span style={{
-                  fontWeight: '700',
-                  fontSize: '0.85rem',
-                  color: 'var(--text-light)',
-                  display: 'block',
-                  marginBottom: '1rem'
-                }}>
-                      KPI Kart Değerleri
-                    </span>
+                </div>
+                )}
+                {activeInnerTab === 'kpi' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.75rem'
-                }}>
-                      {clientReports[editingReportBrand]?.kpis?.map((kpi, idx) => <div key={idx} style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '0.75rem',
-                    alignItems: 'center'
-                  }}>
-                          <span style={{
-                      fontSize: '0.8rem',
-                      color: 'var(--text-light)',
-                      fontWeight: 600
-                    }}>{kpi.label}</span>
-                          <div style={{
-                      display: 'flex',
-                      gap: '0.5rem'
+                      border: '1px solid var(--glass-border)',
+                      padding: '1.5rem',
+                      borderRadius: '12px',
+                      background: 'rgba(15, 23, 42, 0.1)',
+                      boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.05)'
                     }}>
-                            <input type="text" placeholder="Değer (örn: 984 Adet)" value={kpi.value} onChange={e => {
-                        const updated = {
-                          ...clientReports
-                        };
-                        updated[editingReportBrand].kpis[idx].value = e.target.value;
-                        setClientReports(updated);
-                      }} style={{
-                        width: '100%',
-                        padding: '0.4rem 0.6rem',
-                        borderRadius: '6px',
-                        border: '1px solid var(--glass-border)',
-                        fontSize: '0.8rem',
-                        background: '#fff',
-                        color: 'var(--text-light)'
-                      }} />
-                            <input type="text" placeholder="Değişim (örn: +18%)" value={kpi.change} onChange={e => {
-                        const updated = {
-                          ...clientReports
-                        };
-                        updated[editingReportBrand].kpis[idx].change = e.target.value;
-                        setClientReports(updated);
-                      }} style={{
-                        width: '100%',
-                        padding: '0.4rem 0.6rem',
-                        borderRadius: '6px',
-                        border: '1px solid var(--glass-border)',
-                        fontSize: '0.8rem',
-                        background: '#fff',
-                        color: 'var(--text-light)'
-                      }} />
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                        <span style={{ fontWeight: '700', fontSize: '0.9rem', color: 'var(--text-light)' }}>
+                          <i className="fa-solid fa-chart-pie" style={{ marginRight: '8px', color: 'var(--primary-color)' }}></i> 
+                          KPI Kart Değerleri
+                        </span>
+                      </div>
+                      
+                      <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                        gap: '1rem'
+                      }}>
+                        {clientReports[editingReportBrand]?.kpis?.map((kpi, idx) => (
+                          <div key={idx} style={{
+                            background: 'rgba(255,255,255,0.03)',
+                            border: '1px solid var(--glass-border)',
+                            borderRadius: '10px',
+                            padding: '1rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.5rem',
+                            transition: 'all 0.2s',
+                          }}>
+                            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                              {kpi.label}
+                            </span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <i className="fa-solid fa-hashtag" style={{ color: 'var(--primary-color)', opacity: 0.5 }}></i>
+                              <input 
+                                type="text" 
+                                placeholder="Değer (örn: 984 Adet)" 
+                                value={kpi.value} 
+                                onChange={e => {
+                                  const updated = { ...clientReports };
+                                  updated[editingReportBrand].kpis[idx].value = e.target.value;
+                                  setClientReports(updated);
+                                }} 
+                                style={{
+                                  flex: 1, padding: '0.4rem 0.5rem', borderRadius: '6px', border: '1px solid var(--glass-border)', background: 'rgba(0,0,0,0.1)', color: '#fff', fontSize: '0.9rem', fontWeight: 600
+                                }} 
+                              />
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <i className="fa-solid fa-arrow-trend-up" style={{ color: '#10b981', opacity: 0.7 }}></i>
+                              <input 
+                                type="text" 
+                                placeholder="Değişim (örn: +18%)" 
+                                value={kpi.change} 
+                                onChange={e => {
+                                  const updated = { ...clientReports };
+                                  updated[editingReportBrand].kpis[idx].change = e.target.value;
+                                  setClientReports(updated);
+                                }} 
+                                style={{
+                                  flex: 1, padding: '0.4rem 0.5rem', borderRadius: '6px', border: '1px solid var(--glass-border)', background: 'rgba(0,0,0,0.1)', color: '#10b981', fontSize: '0.8rem'
+                                }} 
+                              />
+                            </div>
                           </div>
-                        </div>)}
+                        ))}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* SEO Keyword Management */}
+{/* SEO Keyword Management */}
                   <div style={{
                 border: '1px solid var(--glass-border)',
                 padding: '1.25rem',
@@ -668,10 +715,10 @@ export default function ClientReportsTab({
                       )}
                     </div>
                   </div>
-
                 </div>
-
+                )}
                 {/* Right Column: Timeline Events */}
+                {activeInnerTab === 'timeline' && (
                 <div style={{
               display: 'flex',
               flexDirection: 'column',
@@ -1038,9 +1085,10 @@ export default function ClientReportsTab({
                             </div>
                           </div>;
                   })}
-                    </div>
                   </div>
                 </div>
+                </div>
+                )}
               </div>
               {/* Creatives & Files Upload Section */}
               <div style={{
