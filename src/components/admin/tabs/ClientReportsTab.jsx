@@ -179,9 +179,9 @@ export default function ClientReportsTab({
                 gap: '0.5rem',
                 marginBottom: '1.5rem',
                 padding: '0.5rem',
-                background: 'rgba(15, 23, 42, 0.2)',
+                background: 'rgba(15, 23, 42, 0.05)',
                 borderRadius: '12px',
-                border: '1px solid var(--glass-border)',
+                border: '1px solid rgba(15, 23, 42, 0.1)',
                 width: '100%',
                 overflowX: 'auto'
               }}>
@@ -198,7 +198,7 @@ export default function ClientReportsTab({
                       flex: 1,
                       padding: '0.8rem 1rem',
                       borderRadius: '8px',
-                      background: activeInnerTab === tab.id ? 'var(--primary-color)' : 'transparent',
+                      background: activeInnerTab === tab.id ? 'var(--primary)' : 'transparent',
                       color: activeInnerTab === tab.id ? '#fff' : 'var(--text-muted)',
                       border: 'none',
                       fontSize: '0.85rem',
@@ -241,7 +241,7 @@ export default function ClientReportsTab({
                   width: '100%',
                   padding: '0.65rem',
                   borderRadius: '6px',
-                  border: '1px solid var(--glass-border)',
+                  border: '1px solid rgba(15, 23, 42, 0.1)',
                   background: '#fff',
                   color: 'var(--text-light)'
                 }} />
@@ -259,7 +259,7 @@ export default function ClientReportsTab({
                   width: '100%',
                   padding: '0.65rem',
                   borderRadius: '6px',
-                  border: '1px solid var(--glass-border)',
+                  border: '1px solid rgba(15, 23, 42, 0.1)',
                   background: '#fff',
                   color: 'var(--text-light)'
                 }} />
@@ -283,7 +283,7 @@ export default function ClientReportsTab({
                     width: '100%',
                     padding: '0.65rem',
                     borderRadius: '6px',
-                    border: '1px solid var(--glass-border)',
+                    border: '1px solid rgba(15, 23, 42, 0.1)',
                     background: '#fff',
                     color: 'var(--text-light)'
                   }} />
@@ -301,7 +301,7 @@ export default function ClientReportsTab({
                     width: '100%',
                     padding: '0.65rem',
                     borderRadius: '6px',
-                    border: '1px solid var(--glass-border)',
+                    border: '1px solid rgba(15, 23, 42, 0.1)',
                     background: '#fff',
                     color: 'var(--text-light)'
                   }} />
@@ -350,7 +350,7 @@ export default function ClientReportsTab({
                         flex: 1,
                         padding: '0.45rem',
                         borderRadius: '6px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         background: '#f8fafc',
                         color: 'var(--text-muted)',
                         fontSize: '0.72rem'
@@ -392,7 +392,7 @@ export default function ClientReportsTab({
                         flex: 1,
                         padding: '0.45rem',
                         borderRadius: '6px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         background: '#f8fafc',
                         color: 'var(--text-muted)',
                         fontSize: '0.72rem'
@@ -450,7 +450,7 @@ export default function ClientReportsTab({
 
                   {/* AI Summary Input */}
                   <div style={{
-                    border: '1px solid var(--glass-border)',
+                    border: '1px solid rgba(15, 23, 42, 0.1)',
                     padding: '1.25rem',
                     borderRadius: '10px',
                     background: 'rgba(99, 102, 241, 0.05)',
@@ -501,15 +501,15 @@ export default function ClientReportsTab({
                 {activeInnerTab === 'kpi' && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <div style={{
-                      border: '1px solid var(--glass-border)',
+                      border: '1px solid rgba(15, 23, 42, 0.1)',
                       padding: '1.5rem',
                       borderRadius: '12px',
-                      background: 'rgba(15, 23, 42, 0.1)',
-                      boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.05)'
+                      background: 'rgba(15, 23, 42, 0.02)',
+                      boxShadow: 'none'
                     }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
                         <span style={{ fontWeight: '700', fontSize: '0.9rem', color: 'var(--text-light)' }}>
-                          <i className="fa-solid fa-chart-pie" style={{ marginRight: '8px', color: 'var(--primary-color)' }}></i> 
+                          <i className="fa-solid fa-chart-pie" style={{ marginRight: '8px', color: 'var(--primary)' }}></i> 
                           KPI Kart Değerleri
                         </span>
                       </div>
@@ -521,8 +521,8 @@ export default function ClientReportsTab({
                       }}>
                         {clientReports[editingReportBrand]?.kpis?.map((kpi, idx) => (
                           <div key={idx} style={{
-                            background: 'rgba(255,255,255,0.03)',
-                            border: '1px solid var(--glass-border)',
+                            background: '#fff',
+                            border: '1px solid rgba(15, 23, 42, 0.1)',
                             borderRadius: '10px',
                             padding: '1rem',
                             display: 'flex',
@@ -534,7 +534,7 @@ export default function ClientReportsTab({
                               {kpi.label}
                             </span>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                              <i className="fa-solid fa-hashtag" style={{ color: 'var(--primary-color)', opacity: 0.5 }}></i>
+                              <i className="fa-solid fa-hashtag" style={{ color: 'var(--primary)', opacity: 0.5 }}></i>
                               <input 
                                 type="text" 
                                 placeholder="Değer (örn: 984 Adet)" 
@@ -545,7 +545,7 @@ export default function ClientReportsTab({
                                   setClientReports(updated);
                                 }} 
                                 style={{
-                                  flex: 1, padding: '0.4rem 0.5rem', borderRadius: '6px', border: '1px solid var(--glass-border)', background: 'rgba(0,0,0,0.1)', color: '#fff', fontSize: '0.9rem', fontWeight: 600
+                                  flex: 1, padding: '0.4rem 0.5rem', borderRadius: '6px', border: '1px solid rgba(15, 23, 42, 0.1)', background: '#fff', color: 'var(--text-main)', fontSize: '0.9rem', fontWeight: 600
                                 }} 
                               />
                             </div>
@@ -561,7 +561,7 @@ export default function ClientReportsTab({
                                   setClientReports(updated);
                                 }} 
                                 style={{
-                                  flex: 1, padding: '0.4rem 0.5rem', borderRadius: '6px', border: '1px solid var(--glass-border)', background: 'rgba(0,0,0,0.1)', color: '#10b981', fontSize: '0.8rem'
+                                  flex: 1, padding: '0.4rem 0.5rem', borderRadius: '6px', border: '1px solid rgba(15, 23, 42, 0.1)', background: '#fff', color: '#10b981', fontSize: '0.8rem'
                                 }} 
                               />
                             </div>
@@ -572,7 +572,7 @@ export default function ClientReportsTab({
 
 {/* SEO Keyword Management */}
                   <div style={{
-                border: '1px solid var(--glass-border)',
+                border: '1px solid rgba(15, 23, 42, 0.1)',
                 padding: '1.25rem',
                 borderRadius: '10px',
                 background: 'rgba(15, 23, 42, 0.01)',
@@ -627,7 +627,7 @@ export default function ClientReportsTab({
                           flexDirection: 'column',
                           gap: '0.5rem',
                           background: '#fff',
-                          border: '1px solid var(--glass-border)',
+                          border: '1px solid rgba(15, 23, 42, 0.1)',
                           padding: '0.75rem',
                           borderRadius: '8px'
                         }}>
@@ -640,7 +640,7 @@ export default function ClientReportsTab({
                               flex: 1,
                               padding: '0.4rem 0.6rem',
                               borderRadius: '6px',
-                              border: '1px solid var(--glass-border)',
+                              border: '1px solid rgba(15, 23, 42, 0.1)',
                               fontSize: '0.8rem',
                               fontWeight: 600,
                               background: 'rgba(15, 23, 42, 0.01)'
@@ -671,7 +671,7 @@ export default function ClientReportsTab({
                                 updated[editingReportBrand].seo[idx].volume = e.target.value;
                                 setClientReports(updated);
                               }} style={{
-                                width: '100%', padding: '0.4rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem'
+                                width: '100%', padding: '0.4rem', borderRadius: '4px', border: '1px solid rgba(15, 23, 42, 0.1)', fontSize: '0.8rem'
                               }} />
                             </div>
                             <div>
@@ -696,7 +696,7 @@ export default function ClientReportsTab({
                                 
                                 setClientReports(updated);
                               }} style={{
-                                width: '100%', padding: '0.4rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem'
+                                width: '100%', padding: '0.4rem', borderRadius: '4px', border: '1px solid rgba(15, 23, 42, 0.1)', fontSize: '0.8rem'
                               }} />
                             </div>
                             <div>
@@ -726,7 +726,7 @@ export default function ClientReportsTab({
               gap: '1.25rem'
             }}>
                   <div style={{
-                border: '1px solid var(--glass-border)',
+                border: '1px solid rgba(15, 23, 42, 0.1)',
                 padding: '1.25rem',
                 borderRadius: '10px',
                 background: 'rgba(15, 23, 42, 0.01)',
@@ -873,7 +873,7 @@ export default function ClientReportsTab({
                     };
                     return <div key={idx} style={{
                       background: '#fff',
-                      border: '1px solid var(--glass-border)',
+                      border: '1px solid rgba(15, 23, 42, 0.1)',
                       borderRadius: '10px',
                       padding: '1rem',
                       display: 'flex',
@@ -927,7 +927,7 @@ export default function ClientReportsTab({
                           flex: 1,
                           padding: '0.35rem 0.5rem',
                           borderRadius: '6px',
-                          border: '1px solid var(--glass-border)',
+                          border: '1px solid rgba(15, 23, 42, 0.1)',
                           fontSize: '0.8rem',
                           fontWeight: 700,
                           background: 'rgba(15, 23, 42, 0.01)',
@@ -993,7 +993,7 @@ export default function ClientReportsTab({
                             width: '100%',
                             padding: '0.3rem 0.45rem',
                             borderRadius: '5px',
-                            border: '1px solid var(--glass-border)',
+                            border: '1px solid rgba(15, 23, 42, 0.1)',
                             fontSize: '0.72rem',
                             background: '#fff',
                             color: 'var(--text-light)',
@@ -1023,7 +1023,7 @@ export default function ClientReportsTab({
                             width: '100%',
                             padding: '0.3rem 0.45rem',
                             borderRadius: '5px',
-                            border: '1px solid var(--glass-border)',
+                            border: '1px solid rgba(15, 23, 42, 0.1)',
                             fontSize: '0.72rem',
                             background: '#fff',
                             color: 'var(--text-light)',
@@ -1075,7 +1075,7 @@ export default function ClientReportsTab({
                           width: '100%',
                           padding: '0.35rem 0.5rem',
                           borderRadius: '6px',
-                          border: '1px solid var(--glass-border)',
+                          border: '1px solid rgba(15, 23, 42, 0.1)',
                           fontSize: '0.72rem',
                           fontFamily: 'inherit',
                           resize: 'vertical',
@@ -1100,7 +1100,7 @@ export default function ClientReportsTab({
               }}>
                 {/* Vault / Files */}
                 <div style={{
-                  border: '1px solid var(--glass-border)',
+                  border: '1px solid rgba(15, 23, 42, 0.1)',
                   padding: '1.25rem',
                   borderRadius: '10px',
                   background: 'rgba(15, 23, 42, 0.01)'
@@ -1175,7 +1175,7 @@ export default function ClientReportsTab({
                         padding: '0.75rem',
                         background: '#fff',
                         borderRadius: '6px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center'
@@ -1212,7 +1212,7 @@ export default function ClientReportsTab({
           }}>
                 {/* Google Ads */}
                 <div style={{
-              border: '1px solid var(--glass-border)',
+              border: '1px solid rgba(15, 23, 42, 0.1)',
               padding: '1.25rem',
               borderRadius: '10px',
               background: 'rgba(15, 23, 42, 0.01)'
@@ -1258,7 +1258,7 @@ export default function ClientReportsTab({
               }}>
                     {clientReports[editingReportBrand]?.googleAds?.map((camp, idx) => <div key={idx} style={{
                   background: '#fff',
-                  border: '1px solid var(--glass-border)',
+                  border: '1px solid rgba(15, 23, 42, 0.1)',
                   borderRadius: '8px',
                   padding: '0.75rem',
                   display: 'flex',
@@ -1294,7 +1294,7 @@ export default function ClientReportsTab({
                     width: '90%',
                     padding: '0.35rem 0.5rem',
                     borderRadius: '4px',
-                    border: '1px solid var(--glass-border)',
+                    border: '1px solid rgba(15, 23, 42, 0.1)',
                     fontSize: '0.75rem',
                     fontWeight: 600,
                     background: '#fff',
@@ -1321,7 +1321,7 @@ export default function ClientReportsTab({
                         width: '100%',
                         padding: '0.25rem 0.4rem',
                         borderRadius: '4px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         fontSize: '0.7rem',
                         background: '#fff',
                         color: 'var(--text-light)'
@@ -1343,7 +1343,7 @@ export default function ClientReportsTab({
                         width: '100%',
                         padding: '0.25rem 0.4rem',
                         borderRadius: '4px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         fontSize: '0.7rem',
                         background: '#fff',
                         color: 'var(--text-light)'
@@ -1365,7 +1365,7 @@ export default function ClientReportsTab({
                         width: '100%',
                         padding: '0.25rem 0.4rem',
                         borderRadius: '4px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         fontSize: '0.7rem',
                         background: '#fff',
                         color: 'var(--text-light)'
@@ -1387,7 +1387,7 @@ export default function ClientReportsTab({
                         width: '100%',
                         padding: '0.25rem 0.4rem',
                         borderRadius: '4px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         fontSize: '0.7rem',
                         background: '#fff',
                         color: 'var(--text-light)'
@@ -1409,7 +1409,7 @@ export default function ClientReportsTab({
                         width: '100%',
                         padding: '0.25rem 0.4rem',
                         borderRadius: '4px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         fontSize: '0.7rem',
                         background: '#fff',
                         color: 'var(--text-light)'
@@ -1422,7 +1422,7 @@ export default function ClientReportsTab({
 
                 {/* Meta Ads */}
                 <div style={{
-              border: '1px solid var(--glass-border)',
+              border: '1px solid rgba(15, 23, 42, 0.1)',
               padding: '1.25rem',
               borderRadius: '10px',
               background: 'rgba(15, 23, 42, 0.01)'
@@ -1469,7 +1469,7 @@ export default function ClientReportsTab({
               }}>
                     {clientReports[editingReportBrand]?.metaAds?.map((camp, idx) => <div key={idx} style={{
                   background: '#fff',
-                  border: '1px solid var(--glass-border)',
+                  border: '1px solid rgba(15, 23, 42, 0.1)',
                   borderRadius: '8px',
                   padding: '0.75rem',
                   display: 'flex',
@@ -1511,7 +1511,7 @@ export default function ClientReportsTab({
                       flex: 2,
                       padding: '0.35rem 0.5rem',
                       borderRadius: '4px',
-                      border: '1px solid var(--glass-border)',
+                      border: '1px solid rgba(15, 23, 42, 0.1)',
                       fontSize: '0.75rem',
                       fontWeight: 600,
                       background: '#fff',
@@ -1527,7 +1527,7 @@ export default function ClientReportsTab({
                       flex: 1,
                       padding: '0.3rem 0.5rem',
                       borderRadius: '4px',
-                      border: '1px solid var(--glass-border)',
+                      border: '1px solid rgba(15, 23, 42, 0.1)',
                       fontSize: '0.75rem',
                       background: '#fff',
                       color: 'var(--text-light)'
@@ -1557,7 +1557,7 @@ export default function ClientReportsTab({
                         width: '100%',
                         padding: '0.25rem 0.4rem',
                         borderRadius: '4px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         fontSize: '0.7rem',
                         background: '#fff',
                         color: 'var(--text-light)'
@@ -1579,7 +1579,7 @@ export default function ClientReportsTab({
                         width: '100%',
                         padding: '0.25rem 0.4rem',
                         borderRadius: '4px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         fontSize: '0.7rem',
                         background: '#fff',
                         color: 'var(--text-light)'
@@ -1601,7 +1601,7 @@ export default function ClientReportsTab({
                         width: '100%',
                         padding: '0.25rem 0.4rem',
                         borderRadius: '4px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         fontSize: '0.7rem',
                         background: '#fff',
                         color: 'var(--text-light)'
@@ -1623,7 +1623,7 @@ export default function ClientReportsTab({
                         width: '100%',
                         padding: '0.25rem 0.4rem',
                         borderRadius: '4px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         fontSize: '0.7rem',
                         background: '#fff',
                         color: 'var(--text-light)'
@@ -1645,7 +1645,7 @@ export default function ClientReportsTab({
                         width: '100%',
                         padding: '0.25rem 0.4rem',
                         borderRadius: '4px',
-                        border: '1px solid var(--glass-border)',
+                        border: '1px solid rgba(15, 23, 42, 0.1)',
                         fontSize: '0.7rem',
                         background: '#fff',
                         color: 'var(--text-light)'
@@ -1673,7 +1673,7 @@ export default function ClientReportsTab({
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.75rem' }}>
                     {(clientReports[editingReportBrand]?.teamManagers || []).map((member, idx) => (
-                      <div key={idx} style={{ background: '#fff', border: '1px solid var(--glass-border)', borderRadius: '8px', padding: '0.75rem', position: 'relative', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <div key={idx} style={{ background: '#fff', border: '1px solid rgba(15, 23, 42, 0.1)', borderRadius: '8px', padding: '0.75rem', position: 'relative', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                         <button type="button" onClick={() => {
                           setClientReports(prev => {
                             const updated = { ...prev };
@@ -1708,7 +1708,7 @@ export default function ClientReportsTab({
                             updated[editingReportBrand] = brandData;
                             return updated;
                           });
-                        }} style={{ flex: 1, padding: '0.35rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.75rem' }}>
+                        }} style={{ flex: 1, padding: '0.35rem', borderRadius: '4px', border: '1px solid rgba(15, 23, 42, 0.1)', fontSize: '0.75rem' }}>
                           <option value="">İsim Seçin...</option>
                           <option value="Aykut Qul">Aykut Qul</option>
                           <option value="Ahmet Yılmaz">Ahmet Yılmaz</option>
@@ -1730,7 +1730,7 @@ export default function ClientReportsTab({
                             updated[editingReportBrand] = brandData;
                             return updated;
                           });
-                        }} placeholder="Rol" style={{ width: '100%', padding: '0.35rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.75rem' }} />
+                        }} placeholder="Rol" style={{ width: '100%', padding: '0.35rem', borderRadius: '4px', border: '1px solid rgba(15, 23, 42, 0.1)', fontSize: '0.75rem' }} />
                       </div>
                     ))}
                   </div>
@@ -1790,7 +1790,7 @@ export default function ClientReportsTab({
                       return (
                         <div key={plan.id || idx} style={{
                           background: '#fff',
-                          border: '1px solid var(--glass-border)',
+                          border: '1px solid rgba(15, 23, 42, 0.1)',
                           borderRadius: '10px',
                           padding: '1rem',
                           display: 'flex',
@@ -1839,7 +1839,7 @@ export default function ClientReportsTab({
                               flex: 1,
                               padding: '0.35rem 0.5rem',
                               borderRadius: '6px',
-                              border: '1px solid var(--glass-border)',
+                              border: '1px solid rgba(15, 23, 42, 0.1)',
                               fontSize: '0.85rem',
                               fontWeight: 700,
                               background: 'rgba(15, 23, 42, 0.01)',
@@ -1891,7 +1891,7 @@ export default function ClientReportsTab({
                                   updated[editingReportBrand] = brandData;
                                   return updated;
                                 });
-                              }} style={{ width: '100%', padding: '0.3rem 0.45rem', borderRadius: '5px', border: '1px solid var(--glass-border)', fontSize: '0.72rem', background: '#fff', color: 'var(--text-light)', outline: 'none', cursor: 'pointer' }}>
+                              }} style={{ width: '100%', padding: '0.3rem 0.45rem', borderRadius: '5px', border: '1px solid rgba(15, 23, 42, 0.1)', fontSize: '0.72rem', background: '#fff', color: 'var(--text-light)', outline: 'none', cursor: 'pointer' }}>
                                 <option value="">Seçiniz...</option>
                                 <option value="Ads">Google/Meta Ads</option>
                                 <option value="SEO">SEO</option>
@@ -1915,7 +1915,7 @@ export default function ClientReportsTab({
                                   updated[editingReportBrand] = brandData;
                                   return updated;
                                 });
-                              }} style={{ width: '100%', padding: '0.3rem 0.45rem', borderRadius: '5px', border: '1px solid var(--glass-border)', fontSize: '0.72rem', background: '#fff', color: 'var(--text-light)', outline: 'none', cursor: 'pointer' }} />
+                              }} style={{ width: '100%', padding: '0.3rem 0.45rem', borderRadius: '5px', border: '1px solid rgba(15, 23, 42, 0.1)', fontSize: '0.72rem', background: '#fff', color: 'var(--text-light)', outline: 'none', cursor: 'pointer' }} />
                             </div>
 
                             <div>
@@ -1931,7 +1931,7 @@ export default function ClientReportsTab({
                                   updated[editingReportBrand] = brandData;
                                   return updated;
                                 });
-                              }} style={{ width: '100%', padding: '0.3rem 0.45rem', borderRadius: '5px', border: '1px solid var(--glass-border)', fontSize: '0.72rem', background: '#fff', color: 'var(--text-light)', outline: 'none', cursor: 'pointer' }}>
+                              }} style={{ width: '100%', padding: '0.3rem 0.45rem', borderRadius: '5px', border: '1px solid rgba(15, 23, 42, 0.1)', fontSize: '0.72rem', background: '#fff', color: 'var(--text-light)', outline: 'none', cursor: 'pointer' }}>
                                 <option value="Bekliyor">Bekliyor</option>
                                 <option value="İşlemde">İşlemde</option>
                                 <option value="Planlandı">Planlandı</option>
