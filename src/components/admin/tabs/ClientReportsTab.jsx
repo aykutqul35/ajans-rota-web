@@ -730,7 +730,7 @@ export default function ClientReportsTab({
                     <div style={{
                   overflowY: 'auto',
                   flex: 1,
-                  maxHeight: '420px',
+                  maxHeight: '800px',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '1rem',
