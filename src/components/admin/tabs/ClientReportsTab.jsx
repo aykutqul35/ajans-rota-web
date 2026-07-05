@@ -9,6 +9,7 @@ export default function ClientReportsTab({
   activeTab, setNewClientFormData, authToken, teamMembersData
 }) {
   const [isGeneratingAi, setIsGeneratingAi] = React.useState(false);
+  const [activeInnerTab, setActiveInnerTab] = React.useState('genel');
 
   const handleGenerateAiSummary = async () => {
     if (!editingReportBrand) return;
