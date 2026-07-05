@@ -1298,10 +1298,13 @@ export default function ClientTransparencyPageView({
                         {currentData.seo.map((item, idx) => (
                           <tr key={idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.03)' }}>
                             <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 600, color: '#f8fafc' }}>{item.keyword}</td>
-                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#0ea5e9' }}>{item.rank}</td>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', fontWeight: 700, color: '#0ea5e9' }}>{item.rank}{String(item.rank).includes('Sıra') ? '' : '. Sıra'}</td>
                             <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', color: '#94a3b8', textAlign: 'center' }}>{item.volume}</td>
-                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', textAlign: 'right', color: item.trend === 'up' ? '#16a34a' : '#94a3b8' }}>
-                              <i className={`fa-solid fa-arrow-${item.trend === 'up' ? 'trend-up' : 'right'}`}></i>
+                            <td style={{ padding: '0.9rem 0.5rem', fontSize: '0.8rem', textAlign: 'right', color: item.trend === 'up' ? '#16a34a' : (item.trend === 'down' ? '#ef4444' : '#94a3b8') }}>
+                              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
+                                {item.trendText && <span style={{ fontWeight: 600 }}>{item.trendText}</span>}
+                                <i className={`fa-solid fa-arrow-${item.trend === 'up' ? 'trend-up' : (item.trend === 'down' ? 'trend-down' : 'right')}`}></i>
+                              </span>
                             </td>
                           </tr>
                         ))}

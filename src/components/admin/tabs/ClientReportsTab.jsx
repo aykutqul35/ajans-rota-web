@@ -521,6 +521,154 @@ export default function ClientReportsTab({
                         </div>)}
                     </div>
                   </div>
+
+                  {/* SEO Keyword Management */}
+                  <div style={{
+                border: '1px solid var(--glass-border)',
+                padding: '1.25rem',
+                borderRadius: '10px',
+                background: 'rgba(15, 23, 42, 0.01)',
+                marginTop: '1rem'
+              }}>
+                    <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '1rem'
+                }}>
+                      <span style={{
+                    fontWeight: '700',
+                    fontSize: '0.85rem',
+                    color: 'var(--text-light)'
+                  }}>
+                        SEO Kelime Yönetimi
+                      </span>
+                      <button type="button" onClick={() => {
+                    setClientReports(prev => {
+                      const updated = { ...prev };
+                      const brandData = { ...updated[editingReportBrand] };
+                      const newSeo = [...(brandData.seo || [])];
+                      newSeo.push({
+                        keyword: "Yeni Anahtar Kelime",
+                        rank: "0",
+                        volume: "0",
+                        trend: "right",
+                        trendText: ""
+                      });
+                      brandData.seo = newSeo;
+                      updated[editingReportBrand] = brandData;
+                      return updated;
+                    });
+                  }} className="btn btn-primary" style={{
+                    padding: '0.25rem 0.6rem',
+                    fontSize: '0.75rem',
+                    borderRadius: '4px'
+                  }}>
+                        <i className="fa-solid fa-plus"></i> Kelime Ekle
+                      </button>
+                    </div>
+
+                    <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem'
+                }}>
+                      {clientReports[editingReportBrand]?.seo?.map((item, idx) => (
+                        <div key={idx} style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.5rem',
+                          background: '#fff',
+                          border: '1px solid var(--glass-border)',
+                          padding: '0.75rem',
+                          borderRadius: '8px'
+                        }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <input type="text" placeholder="Kelime" value={item.keyword} onChange={e => {
+                              const updated = { ...clientReports };
+                              updated[editingReportBrand].seo[idx].keyword = e.target.value;
+                              setClientReports(updated);
+                            }} style={{
+                              flex: 1,
+                              padding: '0.4rem 0.6rem',
+                              borderRadius: '6px',
+                              border: '1px solid var(--glass-border)',
+                              fontSize: '0.8rem',
+                              fontWeight: 600,
+                              background: 'rgba(15, 23, 42, 0.01)'
+                            }} />
+                            <button type="button" onClick={() => {
+                                if (window.confirm('Bu kelimeyi silmek istiyor musunuz?')) {
+                                  setClientReports(prev => {
+                                    const updated = { ...prev };
+                                    updated[editingReportBrand].seo.splice(idx, 1);
+                                    return updated;
+                                  });
+                                }
+                              }} style={{
+                                border: 'none',
+                                background: 'transparent',
+                                color: '#ef4444',
+                                cursor: 'pointer',
+                                padding: '0 0.5rem'
+                              }}>
+                                <i className="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
+                            <div>
+                              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Hacim</span>
+                              <input type="text" value={item.volume} onChange={e => {
+                                const updated = { ...clientReports };
+                                updated[editingReportBrand].seo[idx].volume = e.target.value;
+                                setClientReports(updated);
+                              }} style={{
+                                width: '100%', padding: '0.4rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem'
+                              }} />
+                            </div>
+                            <div>
+                              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Sıra (Rakam)</span>
+                              <input type="text" value={item.rank} onChange={e => {
+                                const newRankStr = e.target.value;
+                                const newRank = parseInt(newRankStr, 10) || 0;
+                                const oldRank = parseInt(item.rank, 10) || 0;
+                                const updated = { ...clientReports };
+                                updated[editingReportBrand].seo[idx].rank = newRankStr;
+                                
+                                // Calculate Trend
+                                if (oldRank > 0 && newRank > 0 && newRank !== oldRank) {
+                                  if (newRank < oldRank) {
+                                    updated[editingReportBrand].seo[idx].trend = 'up';
+                                    updated[editingReportBrand].seo[idx].trendText = (oldRank - newRank) + ' Sıra Yükseldi';
+                                  } else {
+                                    updated[editingReportBrand].seo[idx].trend = 'down';
+                                    updated[editingReportBrand].seo[idx].trendText = (newRank - oldRank) + ' Sıra Düştü';
+                                  }
+                                }
+                                
+                                setClientReports(updated);
+                              }} style={{
+                                width: '100%', padding: '0.4rem', borderRadius: '4px', border: '1px solid var(--glass-border)', fontSize: '0.8rem'
+                              }} />
+                            </div>
+                            <div>
+                              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Trend (Oto)</span>
+                              <div style={{ fontSize: '0.75rem', padding: '0.4rem', color: item.trend === 'up' ? '#16a34a' : (item.trend === 'down' ? '#ef4444' : '#64748b'), display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <i className={"fa-solid fa-arrow-" + (item.trend === 'up' ? 'trend-up' : (item.trend === 'down' ? 'trend-down' : 'right'))}></i>
+                                {item.trendText || 'Belirtilmedi'}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {(!clientReports[editingReportBrand]?.seo || clientReports[editingReportBrand].seo.length === 0) && (
+                        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center', margin: '1rem 0' }}>
+                          Henüz kelime eklenmemiş.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
                 </div>
 
                 {/* Right Column: Timeline Events */}
