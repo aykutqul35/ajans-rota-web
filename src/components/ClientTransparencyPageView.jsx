@@ -278,6 +278,16 @@ export default function ClientTransparencyPageView({
     }
   };
 
+  const handleDeleteTicket = async (ticketId) => {
+    try {
+      await fetch(`/api/tickets?id=${ticketId}`, { method: 'DELETE' });
+      const res = await fetch(`/api/tickets?client_id=${activeBrand}`);
+      const data = await res.json();
+      if (data.success) setBackendTickets(data.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -1200,6 +1210,25 @@ export default function ClientTransparencyPageView({
                         }}>
                           {isResolved ? '✓ Tamamlandı' : isInProgress ? '⏳ Ekibimiz İnceliyor' : '🕐 Yanıt Bekliyor'}
                         </span>
+                        {!isResolved && !isInProgress && (
+                          <button 
+                            onClick={() => handleDeleteTicket(item.id)}
+                            style={{ 
+                              padding: '3px 10px', 
+                              borderRadius: '20px', 
+                              fontSize: '0.7rem', 
+                              fontWeight: 700,
+                              background: 'rgba(239, 68, 68, 0.15)',
+                              color: '#ef4444',
+                              border: '1px solid rgba(239, 68, 68, 0.2)',
+                              cursor: 'pointer',
+                              whiteSpace: 'nowrap',
+                              marginLeft: '6px'
+                            }}
+                          >
+                            <i className="fa-solid fa-xmark" style={{ marginRight: '4px' }}></i>İptal Et
+                          </button>
+                        )}
                       </div>
                     );
                   })}

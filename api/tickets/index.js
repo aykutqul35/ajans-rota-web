@@ -19,41 +19,71 @@ export default async function handler(req, res) {
       );
     `;
   } catch (err) {
-    console.error("Table creation error:", err);
+    // Table likely already exists
   }
 
+  // Helper: normalize DB rows to camelCase
+  const normalize = (rows) => rows.map(t => ({
+    id: t.id,
+    clientId: t.client_id,
+    subject: t.subject,
+    department: t.department,
+    text: t.text,
+    status: t.status,
+    messages: typeof t.messages === 'string' ? JSON.parse(t.messages) : (t.messages || []),
+    createdAt: t.created_at,
+    updatedAt: t.updated_at
+  }));
+
+  // ──────────────────────────────────────
+  // GET: List tickets (optionally by client_id)
+  // ──────────────────────────────────────
   if (req.method === 'GET') {
     try {
       const { client_id } = req.query;
       let tickets;
-      
       if (client_id) {
         tickets = await sql`SELECT * FROM tickets WHERE client_id = ${client_id} ORDER BY created_at DESC`;
       } else {
         tickets = await sql`SELECT * FROM tickets ORDER BY created_at DESC`;
       }
-
-      // Normalize snake_case DB fields to camelCase for frontend
-      const normalized = tickets.map(t => ({
-        id: t.id,
-        clientId: t.client_id,
-        subject: t.subject,
-        department: t.department,
-        text: t.text,
-        status: t.status,
-        messages: typeof t.messages === 'string' ? JSON.parse(t.messages) : (t.messages || []),
-        createdAt: t.created_at,
-        updatedAt: t.updated_at
-      }));
-      
-      return res.status(200).json({ success: true, data: normalized });
+      return res.status(200).json({ success: true, data: normalize(tickets) });
     } catch (error) {
       console.error("GET Tickets Error:", error);
       return res.status(500).json({ success: false, message: "Sunucu hatası" });
     }
   }
 
+  // ──────────────────────────────────────
+  // POST: Create ticket OR add message
+  // Uses "action" query param to differentiate
+  // POST /api/tickets              → create new ticket
+  // POST /api/tickets?action=message&id=xxx  → add message
+  // ──────────────────────────────────────
   if (req.method === 'POST') {
+    const { action, id: ticketId } = req.query;
+
+    // ── Add message to existing ticket ──
+    if (action === 'message' && ticketId) {
+      try {
+        const { sender, text } = req.body;
+        const now = new Date().toISOString();
+        const newMessage = { sender: sender || 'admin', text, timestamp: now };
+
+        await sql`
+          UPDATE tickets
+          SET messages = COALESCE(messages, '[]'::jsonb) || ${JSON.stringify([newMessage])}::jsonb,
+              updated_at = ${now}
+          WHERE id = ${ticketId}
+        `;
+        return res.status(200).json({ success: true, data: newMessage });
+      } catch (error) {
+        console.error("POST Message Error:", error);
+        return res.status(500).json({ success: false, message: "Mesaj gönderilemedi" });
+      }
+    }
+
+    // ── Create new ticket ──
     try {
       const { client_id, clerkId, subject, department, text } = req.body;
       const id = 't_' + Date.now();
@@ -69,11 +99,51 @@ export default async function handler(req, res) {
         INSERT INTO tickets (id, client_id, subject, department, text, messages, created_at, updated_at)
         VALUES (${id}, ${clientIdToUse}, ${subject}, ${department}, ${text}, ${initialMessages}::jsonb, ${now}, ${now})
       `;
-
       return res.status(201).json({ success: true, data: { id, client_id: clientIdToUse } });
     } catch (error) {
       console.error("POST Ticket Error:", error);
-      return res.status(500).json({ success: false, message: "Sunucu hatası" });
+      return res.status(500).json({ success: false, message: "Talep oluşturulamadı" });
+    }
+  }
+
+  // ──────────────────────────────────────
+  // PUT: Update ticket status
+  // PUT /api/tickets?id=xxx
+  // ──────────────────────────────────────
+  if (req.method === 'PUT') {
+    const { id: ticketId } = req.query;
+    if (!ticketId) return res.status(400).json({ success: false, message: 'Ticket ID gerekli' });
+
+    try {
+      const { status } = req.body;
+      const now = new Date().toISOString();
+
+      await sql`
+        UPDATE tickets
+        SET status = ${status}, updated_at = ${now}
+        WHERE id = ${ticketId}
+      `;
+      return res.status(200).json({ success: true, message: 'Durum güncellendi' });
+    } catch (error) {
+      console.error("PUT Status Error:", error);
+      return res.status(500).json({ success: false, message: "Durum güncellenemedi" });
+    }
+  }
+
+  // ──────────────────────────────────────
+  // DELETE: Delete a ticket
+  // DELETE /api/tickets?id=xxx
+  // ──────────────────────────────────────
+  if (req.method === 'DELETE') {
+    const { id: ticketId } = req.query;
+    if (!ticketId) return res.status(400).json({ success: false, message: 'Ticket ID gerekli' });
+
+    try {
+      await sql`DELETE FROM tickets WHERE id = ${ticketId}`;
+      return res.status(200).json({ success: true, message: 'Talep silindi' });
+    } catch (error) {
+      console.error("DELETE Ticket Error:", error);
+      return res.status(500).json({ success: false, message: "Talep silinemedi" });
     }
   }
 

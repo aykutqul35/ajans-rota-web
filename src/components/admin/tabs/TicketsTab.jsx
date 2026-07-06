@@ -38,44 +38,53 @@ export default function TicketsTab() {
 
   const handleStatusChange = async (ticket, newStatus) => {
     try {
-      const res = await fetch(`/api/tickets/${ticket.id}/status`, {
+      const res = await fetch(`/api/tickets?id=${ticket.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
       });
       const result = await res.json();
-      console.log('[TicketsTab] Status update result:', result);
       if (!res.ok) console.error('[TicketsTab] Status update failed:', result);
-      await fetchTickets(); // Refresh immediately after update
+      await fetchTickets();
     } catch(err) {
       console.error('[TicketsTab] Status change error:', err);
+    }
+  };
+
+  const handleDeleteTicket = async (ticketId) => {
+    if (!window.confirm('Bu talep kalıcı olarak silinecek. Emin misiniz?')) return;
+    try {
+      await fetch(`/api/tickets?id=${ticketId}`, { method: 'DELETE' });
+      if (viewingTicket?.id === ticketId) setViewingTicket(null);
+      await fetchTickets();
+    } catch(err) {
+      console.error('[TicketsTab] Delete error:', err);
     }
   };
 
   const handleAdminReplySubmit = async () => {
     if (!adminReplyText.trim() || !viewingTicket) return;
     try {
-      const res = await fetch(`/api/tickets/${viewingTicket.id}/messages`, {
+      const res = await fetch(`/api/tickets?id=${viewingTicket.id}&action=message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sender: 'admin', text: adminReplyText.trim() })
       });
       const result = await res.json();
-      console.log('[TicketsTab] Message send result:', result);
       if (!res.ok) {
         console.error('[TicketsTab] Message send failed:', result);
         return;
       }
-      // also update ticket status to "İşlemde" if still open
       if (viewingTicket.status === 'Açık') {
         await handleStatusChange(viewingTicket, 'İşlemde');
       }
       setAdminReplyText('');
-      await fetchTickets(); // Refresh
+      await fetchTickets();
     } catch (err) {
       console.error('[TicketsTab] Reply submit error:', err);
     }
   };
+
 
   const openCount = allTickets.filter(t => t.status === 'Açık').length;
 
@@ -158,6 +167,14 @@ export default function TicketsTab() {
                           <option value="İşlemde">İşlemde</option>
                           <option value="Çözüldü">Çözüldü</option>
                         </select>
+                        <button 
+                          type="button" 
+                          onClick={() => handleDeleteTicket(ticket.id)} 
+                          title="Talebi Sil"
+                          style={{ marginLeft: '8px', padding: '0.4rem 0.6rem', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)', cursor: 'pointer', fontSize: '0.75rem' }}
+                        >
+                          <i className="fa-solid fa-trash"></i>
+                        </button>
                       </td>
                     </tr>
                   )})}
