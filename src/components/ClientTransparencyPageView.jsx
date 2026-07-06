@@ -242,17 +242,26 @@ export default function ClientTransparencyPageView({
   };
 
   
-  const handleAiActionRequest = async (insightText) => {
+  const handleAiActionRequest = async (actionName, insightReason) => {
     setAiRequestLoading(true);
     try {
+      const brandLabel = activeBrand === 'ecommerce' ? 'E-Ticaret Müşterisi' : activeBrand === 'b2b' ? 'B2B Müşterisi' : activeBrand;
+      
       await fetch('/api/tickets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           client_id: activeBrand,
-          subject: `AI Öneri Talebi: ${insightText.substring(0, 30)}...`,
+          subject: `🤖 AI Aksiyon Talebi: ${actionName}`,
           department: 'Yapay Zeka Önerileri',
-          text: `Müşteri, yapay zeka önerisi doğrultusunda "${insightText}" talebinde bulundu.`
+          text: [
+            `📌 Talep Edilen Aksiyon: ${actionName}`,
+            `📊 AI Gerekçesi: ${insightReason}`,
+            `👤 Müşteri: ${brandLabel}`,
+            `📅 Dönem: ${dateRange}`,
+            ``,
+            `Müşteri, raporlama panelindeki yapay zeka önerisini inceleyerek bu aksiyonun uygulanmasını talep etmiştir.`
+          ].join('\n')
         })
       });
       setAiRequestSuccess(true);
@@ -268,6 +277,7 @@ export default function ClientTransparencyPageView({
       setAiRequestLoading(false);
     }
   };
+
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -1107,7 +1117,13 @@ export default function ClientTransparencyPageView({
                       </span>
                     </div>
                     <button 
-                      onClick={() => handleAiActionRequest(currentData.aiInsightAction || (activeBrand === 'ecommerce' ? "Yeni Reels Kreatif Çekimi" : "LinkedIn Bütçe Artırımı"))}
+                      onClick={() => {
+                        const actionName = currentData.aiInsightAction || (activeBrand === 'ecommerce' ? "Yeni Reels Kreatif Çekimi" : "LinkedIn Bütçe Artırımı");
+                        const insightReason = currentData.aiInsight || (activeBrand === 'ecommerce' 
+                          ? "CPL maliyetiniz düştü, yeni bir Reels kreatifi çekmenizi öneriyoruz." 
+                          : "LinkedIn form optimizasyonu için bütçe artırımı tavsiye ediliyor.");
+                        handleAiActionRequest(actionName, insightReason);
+                      }}
                       disabled={aiRequestLoading || aiRequestSuccess}
                       style={{
                         padding: '0.5rem 1.25rem',
