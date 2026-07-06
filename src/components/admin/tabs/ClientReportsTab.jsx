@@ -496,6 +496,57 @@ export default function ClientReportsTab({
                       }}
                     ></textarea>
                   </div>
+
+                  {/* AI Insight Settings */}
+                  <div style={{
+                    border: '1px solid rgba(15, 23, 42, 0.1)',
+                    padding: '1.25rem',
+                    borderRadius: '10px',
+                    background: 'rgba(16, 185, 129, 0.05)',
+                    marginBottom: '1rem',
+                    borderLeft: '4px solid #10b981'
+                  }}>
+                    <div style={{ marginBottom: '1rem' }}>
+                      <span style={{ fontWeight: '800', fontSize: '0.9rem', color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <i className="fa-solid fa-lightbulb" style={{ color: '#10b981' }}></i> Yapay Zeka Aksiyon Önerisi
+                      </span>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>Müşterinin "Talep Et" diyerek onaylayabileceği tekil bir yapay zeka önerisi oluşturun.</p>
+                    </div>
+                    
+                    <div style={{ display: 'grid', gap: '1rem' }}>
+                      <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                        <label>Öneri Metni</label>
+                        <input 
+                          type="text" 
+                          placeholder="Örn: CPL maliyetiniz düştü, yeni bir Reels kreatifi çekmenizi öneriyoruz."
+                          value={clientReports[editingReportBrand]?.aiInsight || ''}
+                          onChange={e => {
+                            const updated = { ...clientReports };
+                            if (!updated[editingReportBrand]) updated[editingReportBrand] = {};
+                            updated[editingReportBrand].aiInsight = e.target.value;
+                            setClientReports(updated);
+                          }}
+                          style={{ width: '100%', padding: '0.65rem', borderRadius: '6px', border: '1px solid rgba(15, 23, 42, 0.1)' }}
+                        />
+                      </div>
+                      
+                      <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                        <label>Buton / Aksiyon Başlığı</label>
+                        <input 
+                          type="text" 
+                          placeholder="Örn: Yeni Reels Kreatif Çekimi"
+                          value={clientReports[editingReportBrand]?.aiInsightAction || ''}
+                          onChange={e => {
+                            const updated = { ...clientReports };
+                            if (!updated[editingReportBrand]) updated[editingReportBrand] = {};
+                            updated[editingReportBrand].aiInsightAction = e.target.value;
+                            setClientReports(updated);
+                          }}
+                          style={{ width: '100%', padding: '0.65rem', borderRadius: '6px', border: '1px solid rgba(15, 23, 42, 0.1)' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 )}
                 {activeInnerTab === 'kpi' && (

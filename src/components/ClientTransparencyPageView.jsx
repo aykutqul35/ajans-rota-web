@@ -1089,13 +1089,13 @@ export default function ClientTransparencyPageView({
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 0 4px rgba(16, 185, 129, 0.1)' }}></div>
                       <span style={{ fontSize: '0.85rem', color: '#f8fafc', fontWeight: 600 }}>
-                        {activeBrand === 'ecommerce' 
+                        {currentData.aiInsight || (activeBrand === 'ecommerce' 
                           ? "CPL maliyetiniz düştü, yeni bir Reels kreatifi çekmenizi öneriyoruz." 
-                          : "LinkedIn form optimizasyonu için bütçe artırımı tavsiye ediliyor."}
+                          : "LinkedIn form optimizasyonu için bütçe artırımı tavsiye ediliyor.")}
                       </span>
                     </div>
                     <button 
-                      onClick={() => handleAiActionRequest(activeBrand === 'ecommerce' ? "Yeni Reels Kreatif Çekimi" : "LinkedIn Bütçe Artırımı")}
+                      onClick={() => handleAiActionRequest(currentData.aiInsightAction || (activeBrand === 'ecommerce' ? "Yeni Reels Kreatif Çekimi" : "LinkedIn Bütçe Artırımı"))}
                       disabled={aiRequestLoading || aiRequestSuccess}
                       style={{
                         padding: '0.5rem 1.25rem',
