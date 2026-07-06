@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 export default function EditItemModal({
   editingItem, setEditingItem, editingType, setEditingType,
   modalFormData, setModalFormData,
@@ -12,16 +10,6 @@ export default function EditItemModal({
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState('');
   const [blogEditTab, setBlogEditTab] = useState('edit');
-
-  const quillModules = {
-    toolbar: [
-      [{ 'header': [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [{'list': 'ordered'}, {'list': 'bullet'}],
-      ['link', 'image', 'video'],
-      ['clean']
-    ],
-  };
 
   const openEditModal = (type, item) => {
     setEditingType(type);
@@ -868,16 +856,41 @@ Anahtar kelimeler: ${aiKeywords}
                     }}>HTML etiketlerini kullanabilirsiniz</span>
                           </label>
                           
-                          {/* Rich Text Editor (WYSIWYG) */}
-                          <div style={{ background: '#fff', borderRadius: '6px', border: '1px solid var(--glass-border)' }}>
-                            <ReactQuill 
-                              theme="snow"
-                              value={modalFormData.content || ''}
-                              onChange={(content) => handleModalFieldChange('content', content)}
-                              modules={quillModules}
-                              style={{ height: '350px', paddingBottom: '42px' }}
-                            />
+                          {/* HTML Toolbar Editor */}
+                          <div className="html-toolbar" style={{
+                            display: 'flex',
+                            gap: '4px',
+                            padding: '0.5rem',
+                            background: 'rgba(15, 23, 42, 0.03)',
+                            border: '1px solid var(--glass-border)',
+                            borderBottom: 'none',
+                            borderTopLeftRadius: '6px',
+                            borderTopRightRadius: '6px',
+                            flexWrap: 'wrap'
+                          }}>
+                            <button type="button" onClick={() => insertHTMLTag('h2')} className="btn-icon" title="H2 Başlık" style={{ padding: '4px 8px', fontSize: '0.8rem', fontWeight: 'bold' }}>H2</button>
+                            <button type="button" onClick={() => insertHTMLTag('h3')} className="btn-icon" title="H3 Başlık" style={{ padding: '4px 8px', fontSize: '0.8rem', fontWeight: 'bold' }}>H3</button>
+                            <button type="button" onClick={() => insertHTMLTag('p')} className="btn-icon" title="Paragraf" style={{ padding: '4px 8px', fontSize: '0.8rem', fontWeight: 'bold' }}>P</button>
+                            <button type="button" onClick={() => insertHTMLTag('bold')} className="btn-icon" title="Kalın (Bold)" style={{ padding: '4px 8px' }}><i className="fa-solid fa-bold"></i></button>
+                            <button type="button" onClick={() => insertHTMLTag('italic')} className="btn-icon" title="Eğik (Italic)" style={{ padding: '4px 8px' }}><i className="fa-solid fa-italic"></i></button>
+                            <button type="button" onClick={() => insertHTMLTag('ul')} className="btn-icon" title="Liste (UL)" style={{ padding: '4px 8px' }}><i className="fa-solid fa-list-ul"></i></button>
+                            <button type="button" onClick={() => insertHTMLTag('li')} className="btn-icon" title="Liste Elemanı (LI)" style={{ padding: '4px 8px', fontSize: '0.8rem', fontWeight: 'bold' }}>LI</button>
+                            <button type="button" onClick={() => insertHTMLTag('link')} className="btn-icon" title="Bağlantı (Link)" style={{ padding: '4px 8px' }}><i className="fa-solid fa-link"></i></button>
+                            <button type="button" onClick={() => insertHTMLTag('img')} className="btn-icon" title="Resim Ekle" style={{ padding: '4px 8px' }}><i className="fa-regular fa-image"></i></button>
+                            <button type="button" onClick={() => insertHTMLTag('quote')} className="btn-icon" title="Alıntı (Blockquote)" style={{ padding: '4px 8px' }}><i className="fa-solid fa-quote-right"></i></button>
+                            <button type="button" onClick={() => insertHTMLTag('table')} className="btn-icon" title="Tablo Ekle" style={{ padding: '4px 8px' }}><i className="fa-solid fa-table"></i></button>
                           </div>
+                          <textarea id="blog-content-textarea" required rows="14" value={modalFormData.content || ''} onChange={e => handleModalFieldChange('content', e.target.value)} style={{
+                            width: '100%',
+                            padding: '0.65rem',
+                            borderBottomLeftRadius: '6px',
+                            borderBottomRightRadius: '6px',
+                            border: '1px solid var(--glass-border)',
+                            fontFamily: 'monospace',
+                            fontSize: '0.85rem',
+                            lineHeight: '1.5',
+                            resize: 'vertical'
+                          }}></textarea>
                         </div>
                       </> : (/* Live Preview Tab rendering */
               <div className="blog-live-preview" style={{
