@@ -14,6 +14,7 @@ const MarketingTab = lazy(() => import('../components/admin/tabs/MarketingTab'))
 const AnalyticsTab = lazy(() => import('../components/admin/tabs/AnalyticsTab'));
 const AcademyTab = lazy(() => import('../components/admin/tabs/AcademyTab'));
 const ClientReportsTab = lazy(() => import('../components/admin/tabs/ClientReportsTab'));
+const AIEngineTab = lazy(() => import('../components/admin/tabs/AIEngineTab'));
 
 // Lazy-loaded modals (only loaded when opened)
 const AddClientModal = lazy(() => import('../components/admin/modals/AddClientModal'));
@@ -1155,6 +1156,10 @@ function AdminDashboardView({
           
         {activeTab === 'tickets' && (
           <TicketsTab />
+        )}
+
+        {activeTab === 'aiengine' && (
+          <AIEngineTab authToken={authToken} />
         )}
 
         {activeTab === 'reports' && (

@@ -33,17 +33,18 @@ export default async function handler(req, res) {
     }
   } 
   else if (req.method === 'POST') {
-    // Sadece iç sistemlerin veya AI Cron Job'larının buraya post atması gerekir
-    const { client_id, action_type, description, platform } = req.body;
+    // Admin Panel veya Cron Job'ların buraya post atması gerekir
+    const { client_id, action_type, description, platform, details } = req.body;
     
     if (!client_id || !description) {
       return res.status(400).json({ success: false, error: 'Eksik parametre' });
     }
 
     try {
+      const detailsValue = details ? JSON.stringify(details) : null;
       const newLog = await sql`
-        INSERT INTO ai_logs (client_id, action_type, description, platform)
-        VALUES (${client_id}, ${action_type || 'system'}, ${description}, ${platform || 'system'})
+        INSERT INTO ai_logs (client_id, action_type, description, platform, details)
+        VALUES (${client_id}, ${action_type || 'system'}, ${description}, ${platform || 'system'}, ${detailsValue})
         RETURNING *
       `;
       
@@ -53,8 +54,23 @@ export default async function handler(req, res) {
       res.status(500).json({ success: false, error: 'Kayıt Hatası' });
     }
   } 
+  else if (req.method === 'DELETE') {
+    const { id } = req.query;
+    
+    if (!id) {
+      return res.status(400).json({ success: false, error: 'Log ID gerekli' });
+    }
+
+    try {
+      await sql`DELETE FROM ai_logs WHERE id = ${id}`;
+      res.status(200).json({ success: true, message: 'Log başarıyla silindi' });
+    } catch (error) {
+      console.error('AI Logs API Delete Error:', error);
+      res.status(500).json({ success: false, error: 'Silme Hatası' });
+    }
+  }
   else {
-    res.setHeader('Allow', ['GET', 'POST']);
+    res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

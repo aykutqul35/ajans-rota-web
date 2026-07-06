@@ -71,6 +71,9 @@ export default function AdminSidebar({ activeTab, setActiveTab, unreadLeadsCount
       <button className={`admin-nav-btn ${activeTab === 'reports' ? 'active' : ''}`} onClick={() => setActiveTab('reports')}>
         <i className="fa-solid fa-chart-line"></i> Müşteri Raporları
       </button>
+      <button className={`admin-nav-btn ${activeTab === 'aiengine' ? 'active' : ''}`} onClick={() => setActiveTab('aiengine')}>
+        <i className="fa-solid fa-microchip"></i> ROTA AI Motoru
+      </button>
       <button className={`admin-nav-btn ${activeTab === 'tickets' ? 'active' : ''}`} onClick={() => setActiveTab('tickets')}>
         <i className="fa-solid fa-ticket"></i> Müşteri Talepleri
         {openTicketCount > 0 && <span style={{
