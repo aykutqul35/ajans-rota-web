@@ -1,3 +1,37 @@
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
+
+/* ──────────────────────────────────────────────────────
+   Tailwind CSS v4 Theme — Ajans Rota Design Tokens
+   Maps existing CSS variables to Tailwind utility classes.
+   Usage: bg-primary, text-muted, font-heading, etc.
+   ────────────────────────────────────────────────────── */
+@theme {
+  /* Brand Colors */
+  --color-primary: #0284c7;
+  --color-primary-glow: rgba(2, 132, 199, 0.08);
+  --color-secondary: #0d9488;
+  --color-accent: #b45309;
+
+  /* Background Colors */
+  --color-bg-dark: #f1f5f9;
+  --color-bg-deep: #f8fafc;
+
+  /* Text Colors */
+  --color-text-main: #334155;
+  --color-text-light: #0f172a;
+  --color-text-muted: #64748b;
+
+  /* Glass Effect Colors */
+  --color-glass-bg: rgba(255, 255, 255, 0.75);
+  --color-glass-border: rgba(15, 23, 42, 0.08);
+  --color-glass-border-hover: rgba(2, 132, 199, 0.25);
+
+  /* Fonts */
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
 /* Core Styling and Design System - Ajans Rota */
 
 :root {
