@@ -632,140 +632,59 @@ export default function ClientTransparencyPageView({
   return (
     <>
       {!isLoggedIn && (
-      <div className="client-dashboard-page-wrapper" style={{ 
-        minHeight: '100vh', 
-        paddingTop: '120px', 
-        paddingBottom: '4rem', 
-        background: '#0f172a',
-        position: 'relative',
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center'
-      }}>
+      <div className="min-h-screen pt-[120px] pb-16 bg-slate-900 relative overflow-hidden flex items-center">
         {/* Background blobs for premium glassmorphism effect */}
-        <div style={{
-          position: 'absolute',
-          width: '300px',
-          height: '300px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, var(--primary-glow) 0%, transparent 70%)',
-          top: '20%',
-          left: '15%',
-          filter: 'blur(50px)',
-          zIndex: 1,
-          pointerEvents: 'none'
-        }}></div>
-        <div style={{
-          position: 'absolute',
-          width: '350px',
-          height: '350px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%)',
-          bottom: '15%',
-          right: '15%',
-          filter: 'blur(60px)',
-          zIndex: 1,
-          pointerEvents: 'none'
-        }}></div>
+        <div className="absolute w-[300px] h-[300px] rounded-full bg-[radial-gradient(circle,var(--primary-glow)_0%,transparent_70%)] top-[20%] left-[15%] blur-[50px] z-[1] pointer-events-none"></div>
+        <div className="absolute w-[350px] h-[350px] rounded-full bg-[radial-gradient(circle,rgba(236,72,153,0.15)_0%,transparent_70%)] bottom-[15%] right-[15%] blur-[60px] z-[1] pointer-events-none"></div>
 
-        <div className="container" style={{ position: 'relative', zIndex: 2, maxWidth: '460px', margin: '0 auto', padding: '0 1rem' }}>
+        <div className="container relative z-[2] max-w-[460px] mx-auto px-4">
           {/* Back Button */}
-          <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'flex-start' }}>
+          <div className="mb-6 flex justify-start">
             <button 
               onClick={onBack}
-              className="btn btn-secondary"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '0.6rem 1.2rem',
-                borderRadius: '12px',
-                fontSize: '0.85rem',
-                fontWeight: '600',
-                cursor: 'pointer',
-                border: '1px solid var(--glass-border)',
-                background: '#1e293b',
-                color: '#94a3b8',
-                boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
-                height: 'auto',
-                width: 'auto'
-              }}
+              className="inline-flex items-center gap-2 py-2.5 px-5 rounded-xl text-[0.85rem] font-semibold cursor-pointer border border-glass bg-slate-800 text-slate-400 shadow-[0_2px_10px_rgba(0,0,0,0.02)] transition-colors hover:bg-slate-700 hover:text-slate-200"
             >
               <i className="fa-solid fa-arrow-left"></i>
               Anasayfaya Dön
             </button>
           </div>
 
-          <div style={{
-            background: 'rgba(30, 41, 59, 0.75)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
-            borderRadius: '24px',
-            padding: '2.5rem 2rem',
-            textAlign: 'center'
-          }}>
-            <div style={{
-              width: '60px',
-              height: '60px',
-              borderRadius: '16px',
-              background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
-              color: '#fff',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.5rem',
-              marginBottom: '1.25rem',
-              boxShadow: '0 8px 20px rgba(99, 102, 241, 0.25)'
-            }}>
+          <div className="bg-slate-800/75 backdrop-blur-[20px] border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)] rounded-3xl p-10 text-center">
+            <div className="w-[60px] h-[60px] rounded-2xl bg-gradient-to-br from-primary to-secondary text-white inline-flex items-center justify-center text-2xl mb-5 shadow-[0_8px_20px_rgba(99,102,241,0.25)]">
               <i className="fa-solid fa-lock"></i>
             </div>
 
-            <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#f8fafc', marginBottom: '0.5rem' }}>
+            <h1 className="text-[1.6rem] font-extrabold text-slate-50 mb-2">
               Rota Growth OS
             </h1>
-            <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', marginBottom: '2rem' }}>
+            <p className="text-slate-400 text-[0.85rem] leading-relaxed mb-8">
               Reklam performansınızı ve operasyon süreçlerini canlı izlemek için firmanıza tanımlanan giriş bilgilerini kullanın.
             </p>
 
             {loginError && (
-              <div style={{
-                background: 'rgba(239, 68, 68, 0.08)',
-                border: '1px solid rgba(239, 68, 68, 0.2)',
-                color: '#ef4444',
-                padding: '0.75rem',
-                borderRadius: '12px',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                marginBottom: '1.25rem',
-                textAlign: 'left',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
+              <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-3 rounded-xl text-sm font-semibold mb-5 text-left flex items-center gap-2">
                 <i className="fa-solid fa-triangle-exclamation"></i>
                 <span>{loginError}</span>
               </div>
             )}
 
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
-              <form onSubmit={handleLogin} style={{ width: '100%', maxWidth: '400px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div className="flex justify-center mt-8">
+              <form onSubmit={handleLogin} className="w-full max-w-[400px] flex flex-col gap-4">
                 <input 
                   type="text" 
                   placeholder="Kullanıcı Adı" 
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  style={{ padding: '0.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: '#fff' }}
+                  className="p-3.5 rounded-xl border border-white/10 bg-black/20 text-white placeholder-slate-400 focus:border-primary/50 focus:outline-none transition-colors"
                 />
                 <input 
                   type="password" 
                   placeholder="Şifre" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  style={{ padding: '0.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', color: '#fff' }}
+                  className="p-3.5 rounded-xl border border-white/10 bg-black/20 text-white placeholder-slate-400 focus:border-primary/50 focus:outline-none transition-colors"
                 />
-                <button type="submit" disabled={isLoggingIn} style={{ padding: '0.8rem', borderRadius: '12px', background: 'var(--primary)', color: '#fff', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}>
+                <button type="submit" disabled={isLoggingIn} className="p-3.5 rounded-xl bg-primary text-white border-none font-bold cursor-pointer transition-all hover:bg-primary/90 disabled:opacity-70 mt-2">
                   {isLoggingIn ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
                 </button>
               </form>

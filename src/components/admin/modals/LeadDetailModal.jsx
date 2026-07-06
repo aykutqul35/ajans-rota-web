@@ -1036,554 +1036,170 @@ export default function LeadDetailModal({
         }
       }
     };
-    return <div style={{
-      marginTop: '0.5rem',
-      marginBottom: '1rem',
-      backgroundColor: 'rgba(255, 255, 255, 0.01)',
-      border: '1px solid var(--glass-border)',
-      borderRadius: '12px',
-      overflow: 'hidden'
-    }}>
+    return <div className="mt-2 mb-4 bg-white/1 border border-glass rounded-xl overflow-hidden">
         {/* Header */}
-        <div style={{
-        background: isEcom ? 'linear-gradient(90deg, rgba(14, 165, 233, 0.12) 0%, rgba(2, 132, 199, 0.03) 100%)' : 'linear-gradient(90deg, rgba(236, 72, 153, 0.12) 0%, rgba(217, 70, 239, 0.03) 100%)',
-        padding: '0.8rem 1rem',
-        borderBottom: '1px solid var(--glass-border)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '0.6rem'
-      }}>
-          <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.6rem'
-        }}>
-            <i className={isEcom ? "fa-solid fa-cart-shopping" : "fa-solid fa-briefcase"} style={{
-            color: accentColor,
-            fontSize: '1.1rem'
-          }}></i>
+        <div className={`px-4 py-3 border-b border-glass flex items-center justify-between gap-2.5 ${isEcom ? 'bg-gradient-to-r from-sky-500/12 to-sky-600/3' : 'bg-gradient-to-r from-pink-500/12 to-fuchsia-500/3'}`}>
+          <div className="flex items-center gap-2.5">
+            <i className={`${isEcom ? "fa-solid fa-cart-shopping" : "fa-solid fa-briefcase"} text-lg`} style={{ color: accentColor }}></i>
             <div>
-              <h4 style={{
-              margin: 0,
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              color: 'var(--text-light)'
-            }}>
+              <h4 className="m-0 text-sm font-semibold text-textLight">
                 {isEcom ? 'E-Ticaret Büyüme Simülasyonu Verileri' : 'B2B Büyüme Simülasyonu Verileri'}
               </h4>
-              <span style={{
-              fontSize: '0.7rem',
-              color: 'var(--text-muted)'
-            }}>Müşterinin form doldururken seçtiği parametreler</span>
+              <span className="text-[11px] text-textMuted">Müşterinin form doldururken seçtiği parametreler</span>
             </div>
           </div>
-          {sector && <div style={{
-          backgroundColor: isEcom ? 'rgba(14, 165, 233, 0.15)' : 'rgba(236, 72, 153, 0.15)',
-          border: `1px solid ${isEcom ? 'var(--primary)' : 'var(--secondary)'}`,
-          borderRadius: '6px',
-          padding: '0.25rem 0.6rem',
-          fontSize: '0.75rem',
-          fontWeight: '600',
-          color: isEcom ? '#0284c7' : '#ec4899'
-        }}>
+          {sector && <div className={`px-2.5 py-1 text-xs font-semibold rounded-md border ${isEcom ? 'bg-sky-500/15 border-primary text-sky-600' : 'bg-pink-500/15 border-secondary text-pink-500'}`}>
               Sektör: {getSectorLabel(type, sector)}
             </div>}
         </div>
 
         {/* Input Parameters Grid */}
-        <div style={{
-        padding: '0.8rem 1rem',
-        borderBottom: '1px solid var(--glass-border)'
-      }}>
-          <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
-          gap: '0.6rem'
-        }}>
+        <div className="px-4 py-3 border-b border-glass">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(130px,1fr))] gap-2.5">
             {isEcom ? <>
-                <div style={{
-              backgroundColor: 'rgba(255,255,255,0.01)',
-              border: '1px solid rgba(255,255,255,0.03)',
-              borderRadius: '8px',
-              padding: '0.4rem 0.6rem'
-            }}>
-                  <span style={{
-                display: 'block',
-                fontSize: '0.65rem',
-                color: 'var(--text-muted)'
-              }}>Aylık Bütçe</span>
-                  <strong style={{
-                fontSize: '0.85rem',
-                color: 'var(--text-light)'
-              }}>{params.spend?.toLocaleString('tr-TR')} ₺</strong>
+                <div className="bg-white/1 border border-white/3 rounded-lg px-2.5 py-1.5">
+                  <span className="block text-[10.5px] text-textMuted">Aylık Bütçe</span>
+                  <strong className="text-sm text-textLight">{params.spend?.toLocaleString('tr-TR')} ₺</strong>
                 </div>
-                <div style={{
-              backgroundColor: 'rgba(255,255,255,0.01)',
-              border: '1px solid rgba(255,255,255,0.03)',
-              borderRadius: '8px',
-              padding: '0.4rem 0.6rem'
-            }}>
-                  <span style={{
-                display: 'block',
-                fontSize: '0.65rem',
-                color: 'var(--text-muted)'
-              }}>Aylık Trafik</span>
-                  <strong style={{
-                fontSize: '0.85rem',
-                color: 'var(--text-light)'
-              }}>{params.traffic?.toLocaleString('tr-TR')}</strong>
+                <div className="bg-white/1 border border-white/3 rounded-lg px-2.5 py-1.5">
+                  <span className="block text-[10.5px] text-textMuted">Aylık Trafik</span>
+                  <strong className="text-sm text-textLight">{params.traffic?.toLocaleString('tr-TR')}</strong>
                 </div>
-                <div style={{
-              backgroundColor: 'rgba(255,255,255,0.01)',
-              border: '1px solid rgba(255,255,255,0.03)',
-              borderRadius: '8px',
-              padding: '0.4rem 0.6rem'
-            }}>
-                  <span style={{
-                display: 'block',
-                fontSize: '0.65rem',
-                color: 'var(--text-muted)'
-              }}>Ort. Sepet (AOV)</span>
-                  <strong style={{
-                fontSize: '0.85rem',
-                color: 'var(--text-light)'
-              }}>{params.aov?.toLocaleString('tr-TR')} ₺</strong>
+                <div className="bg-white/1 border border-white/3 rounded-lg px-2.5 py-1.5">
+                  <span className="block text-[10.5px] text-textMuted">Ort. Sepet (AOV)</span>
+                  <strong className="text-sm text-textLight">{params.aov?.toLocaleString('tr-TR')} ₺</strong>
                 </div>
-                <div style={{
-              backgroundColor: 'rgba(255,255,255,0.01)',
-              border: '1px solid rgba(255,255,255,0.03)',
-              borderRadius: '8px',
-              padding: '0.4rem 0.6rem'
-            }}>
-                  <span style={{
-                display: 'block',
-                fontSize: '0.65rem',
-                color: 'var(--text-muted)'
-              }}>Mevcut Ciro</span>
-                  <strong style={{
-                fontSize: '0.85rem',
-                color: 'var(--text-light)'
-              }}>{params.revenue?.toLocaleString('tr-TR')} ₺</strong>
+                <div className="bg-white/1 border border-white/3 rounded-lg px-2.5 py-1.5">
+                  <span className="block text-[10.5px] text-textMuted">Mevcut Ciro</span>
+                  <strong className="text-sm text-textLight">{params.revenue?.toLocaleString('tr-TR')} ₺</strong>
                 </div>
               </> : <>
-                <div style={{
-              backgroundColor: 'rgba(255,255,255,0.01)',
-              border: '1px solid rgba(255,255,255,0.03)',
-              borderRadius: '8px',
-              padding: '0.4rem 0.6rem'
-            }}>
-                  <span style={{
-                display: 'block',
-                fontSize: '0.65rem',
-                color: 'var(--text-muted)'
-              }}>Aylık Bütçe</span>
-                  <strong style={{
-                fontSize: '0.85rem',
-                color: 'var(--text-light)'
-              }}>{params.spend?.toLocaleString('tr-TR')} ₺</strong>
+                <div className="bg-white/1 border border-white/3 rounded-lg px-2.5 py-1.5">
+                  <span className="block text-[10.5px] text-textMuted">Aylık Bütçe</span>
+                  <strong className="text-sm text-textLight">{params.spend?.toLocaleString('tr-TR')} ₺</strong>
                 </div>
-                <div style={{
-              backgroundColor: 'rgba(255,255,255,0.01)',
-              border: '1px solid rgba(255,255,255,0.03)',
-              borderRadius: '8px',
-              padding: '0.4rem 0.6rem'
-            }}>
-                  <span style={{
-                display: 'block',
-                fontSize: '0.65rem',
-                color: 'var(--text-muted)'
-              }}>Talep (Lead)</span>
-                  <strong style={{
-                fontSize: '0.85rem',
-                color: 'var(--text-light)'
-              }}>{params.leads}</strong>
+                <div className="bg-white/1 border border-white/3 rounded-lg px-2.5 py-1.5">
+                  <span className="block text-[10.5px] text-textMuted">Talep (Lead)</span>
+                  <strong className="text-sm text-textLight">{params.leads}</strong>
                 </div>
-                <div style={{
-              backgroundColor: 'rgba(255,255,255,0.01)',
-              border: '1px solid rgba(255,255,255,0.03)',
-              borderRadius: '8px',
-              padding: '0.4rem 0.6rem'
-            }}>
-                  <span style={{
-                display: 'block',
-                fontSize: '0.65rem',
-                color: 'var(--text-muted)'
-              }}>Dönüşüm Oranı</span>
-                  <strong style={{
-                fontSize: '0.85rem',
-                color: 'var(--text-light)'
-              }}>%{params.conversion}</strong>
+                <div className="bg-white/1 border border-white/3 rounded-lg px-2.5 py-1.5">
+                  <span className="block text-[10.5px] text-textMuted">Dönüşüm Oranı</span>
+                  <strong className="text-sm text-textLight">%{params.conversion}</strong>
                 </div>
-                <div style={{
-              backgroundColor: 'rgba(255,255,255,0.01)',
-              border: '1px solid rgba(255,255,255,0.03)',
-              borderRadius: '8px',
-              padding: '0.4rem 0.6rem'
-            }}>
-                  <span style={{
-                display: 'block',
-                fontSize: '0.65rem',
-                color: 'var(--text-muted)'
-              }}>LTV</span>
-                  <strong style={{
-                fontSize: '0.85rem',
-                color: 'var(--text-light)'
-              }}>{params.ltv?.toLocaleString('tr-TR')} ₺</strong>
+                <div className="bg-white/1 border border-white/3 rounded-lg px-2.5 py-1.5">
+                  <span className="block text-[10.5px] text-textMuted">LTV</span>
+                  <strong className="text-sm text-textLight">{params.ltv?.toLocaleString('tr-TR')} ₺</strong>
                 </div>
               </>}
           </div>
         </div>
 
         {/* Comparison Details */}
-        <div style={{
-        padding: '0.8rem 1rem'
-      }}>
-          <span style={{
-          fontSize: '0.75rem',
-          fontWeight: '600',
-          textTransform: 'uppercase',
-          letterSpacing: '0.05em',
-          color: accentColor,
-          display: 'block',
-          marginBottom: '0.6rem'
-        }}>
+        <div className="px-4 py-3">
+          <span className="text-xs font-semibold uppercase tracking-wider block mb-2.5" style={{ color: accentColor }}>
             Karşılaştırma Tablosu (Mevcut vs. Ajans Rota Büyüme)
           </span>
-          <div style={{
-          border: '1px solid var(--glass-border)',
-          borderRadius: '8px',
-          overflow: 'hidden',
-          backgroundColor: 'rgba(0,0,0,0.1)'
-        }}>
+          <div className="border border-glass rounded-lg overflow-hidden bg-black/10">
             {/* Table Header */}
-            <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1.2fr 1fr 1.2fr',
-            backgroundColor: 'rgba(255,255,255,0.02)',
-            padding: '0.4rem 0.6rem',
-            borderBottom: '1px solid var(--glass-border)',
-            fontSize: '0.65rem',
-            fontWeight: '600',
-            color: 'var(--text-muted)',
-            textTransform: 'uppercase'
-          }}>
+            <div className="grid grid-cols-[1.2fr_1fr_1.2fr] bg-white/2 px-2.5 py-1.5 border-b border-glass text-[10px] font-semibold text-textMuted uppercase">
               <span>Metrik</span>
-              <span style={{
-              textAlign: 'center'
-            }}>Mevcut</span>
-              <span style={{
-              textAlign: 'right'
-            }}>Ajans Rota</span>
+              <span className="text-center">Mevcut</span>
+              <span className="text-right">Ajans Rota</span>
             </div>
 
             {/* Table Rows */}
             {isEcom ? <>
                 {/* Row 1: Ciro */}
-                <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1.2fr 1fr 1.2fr',
-              padding: '0.4rem 0.6rem',
-              borderBottom: '1px solid rgba(255,255,255,0.03)',
-              fontSize: '0.75rem',
-              alignItems: 'center'
-            }}>
-                  <span style={{
-                color: 'var(--text-light)'
-              }}>Aylık Gelir</span>
-                  <span style={{
-                textAlign: 'center',
-                color: 'var(--text-muted)'
-              }}>{params.revenue?.toLocaleString('tr-TR')} ₺</span>
-                  <span style={{
-                textAlign: 'right',
-                color: 'var(--primary)',
-                fontWeight: '600',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                gap: '0.3rem'
-              }}>
+                <div className="grid grid-cols-[1.2fr_1fr_1.2fr] px-2.5 py-1.5 border-b border-white/3 text-xs items-center">
+                  <span className="text-textLight">Aylık Gelir</span>
+                  <span className="text-center text-textMuted">{params.revenue?.toLocaleString('tr-TR')} ₺</span>
+                  <span className="text-right text-primary font-semibold flex items-center justify-end gap-1">
                     {improvements.newCiro?.toLocaleString('tr-TR')} ₺
-                    <span style={{
-                  backgroundColor: 'rgba(22, 163, 74, 0.08)',
-                  color: '#16a34a',
-                  border: '1px solid rgba(22, 163, 74, 0.15)',
-                  padding: '0.05rem 0.25rem',
-                  borderRadius: '4px',
-                  fontSize: '0.6rem'
-                }}>
+                    <span className="bg-green-600/10 text-green-600 border border-green-600/15 px-1 py-0.5 rounded text-[10px]">
                       +{Math.round(improvements.revenueIncrease / (params.revenue || 1) * 100)}%
                     </span>
                   </span>
                 </div>
 
                 {/* Row 2: CR */}
-                <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1.2fr 1fr 1.2fr',
-              padding: '0.4rem 0.6rem',
-              borderBottom: '1px solid rgba(255,255,255,0.03)',
-              fontSize: '0.75rem',
-              alignItems: 'center'
-            }}>
-                  <span style={{
-                color: 'var(--text-light)'
-              }}>Dönüşüm Oranı</span>
-                  <span style={{
-                textAlign: 'center',
-                color: 'var(--text-muted)'
-              }}>%{params.cr?.toFixed(2)}</span>
-                  <span style={{
-                textAlign: 'right',
-                color: 'var(--primary)',
-                fontWeight: '600',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                gap: '0.3rem'
-              }}>
+                <div className="grid grid-cols-[1.2fr_1fr_1.2fr] px-2.5 py-1.5 border-b border-white/3 text-xs items-center">
+                  <span className="text-textLight">Dönüşüm Oranı</span>
+                  <span className="text-center text-textMuted">%{params.cr?.toFixed(2)}</span>
+                  <span className="text-right text-primary font-semibold flex items-center justify-end gap-1">
                     %{improvements.newCR?.toFixed(2)}
-                    <span style={{
-                  backgroundColor: accentGlow,
-                  color: accentColor,
-                  border: '1px solid rgba(2, 132, 199, 0.15)',
-                  padding: '0.05rem 0.25rem',
-                  borderRadius: '4px',
-                  fontSize: '0.6rem'
-                }}>
+                    <span className="bg-sky-500/10 text-sky-500 border border-sky-500/15 px-1 py-0.5 rounded text-[10px]" style={{ backgroundColor: accentGlow, color: accentColor }}>
                       +{Math.round((improvements.newCR - params.cr) / (params.cr || 1) * 100)}%
                     </span>
                   </span>
                 </div>
 
                 {/* Row 3: ROAS */}
-                <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1.2fr 1fr 1.2fr',
-              padding: '0.4rem 0.6rem',
-              borderBottom: '1px solid rgba(255,255,255,0.03)',
-              fontSize: '0.75rem',
-              alignItems: 'center'
-            }}>
-                  <span style={{
-                color: 'var(--text-light)'
-              }}>ROAS</span>
-                  <span style={{
-                textAlign: 'center',
-                color: 'var(--text-muted)'
-              }}>{params.roas}x</span>
-                  <span style={{
-                textAlign: 'right',
-                color: '#16a34a',
-                fontWeight: '600',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                gap: '0.3rem'
-              }}>
+                <div className="grid grid-cols-[1.2fr_1fr_1.2fr] px-2.5 py-1.5 border-b border-white/3 text-xs items-center">
+                  <span className="text-textLight">ROAS</span>
+                  <span className="text-center text-textMuted">{params.roas}x</span>
+                  <span className="text-right text-green-600 font-semibold flex items-center justify-end gap-1">
                     {improvements.newRoas}x
-                    <span style={{
-                  backgroundColor: 'rgba(22, 163, 74, 0.08)',
-                  color: '#16a34a',
-                  border: '1px solid rgba(22, 163, 74, 0.15)',
-                  padding: '0.05rem 0.25rem',
-                  borderRadius: '4px',
-                  fontSize: '0.6rem'
-                }}>
+                    <span className="bg-green-600/10 text-green-600 border border-green-600/15 px-1 py-0.5 rounded text-[10px]">
                       +{Math.round((improvements.newRoas - params.roas) / (params.roas || 1) * 100)}%
                     </span>
                   </span>
                 </div>
 
                 {/* Row 4: CAC */}
-                <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1.2fr 1fr 1.2fr',
-              padding: '0.4rem 0.6rem',
-              fontSize: '0.75rem',
-              alignItems: 'center'
-            }}>
-                  <span style={{
-                color: 'var(--text-light)'
-              }}>CAC (Müşteri Edinme)</span>
-                  <span style={{
-                textAlign: 'center',
-                color: 'var(--text-muted)'
-              }}>{params.cac?.toLocaleString('tr-TR')} ₺</span>
-                  <span style={{
-                textAlign: 'right',
-                color: '#ef4444',
-                fontWeight: '600',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                gap: '0.3rem'
-              }}>
+                <div className="grid grid-cols-[1.2fr_1fr_1.2fr] px-2.5 py-1.5 text-xs items-center">
+                  <span className="text-textLight">CAC (Müşteri Edinme)</span>
+                  <span className="text-center text-textMuted">{params.cac?.toLocaleString('tr-TR')} ₺</span>
+                  <span className="text-right text-red-500 font-semibold flex items-center justify-end gap-1">
                     {improvements.newCac?.toLocaleString('tr-TR')} ₺
-                    <span style={{
-                  backgroundColor: 'rgba(239, 68, 68, 0.08)',
-                  color: '#ef4444',
-                  border: '1px solid rgba(239, 68, 68, 0.15)',
-                  padding: '0.05rem 0.25rem',
-                  borderRadius: '4px',
-                  fontSize: '0.6rem'
-                }}>
+                    <span className="bg-red-500/10 text-red-500 border border-red-500/15 px-1 py-0.5 rounded text-[10px]">
                       -{Math.round((params.cac - improvements.newCac) / (params.cac || 1) * 100)}%
                     </span>
                   </span>
                 </div>
               </> : <>
                 {/* Row 1: Ciro */}
-                <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1.2fr 1fr 1.2fr',
-              padding: '0.4rem 0.6rem',
-              borderBottom: '1px solid rgba(255,255,255,0.03)',
-              fontSize: '0.75rem',
-              alignItems: 'center'
-            }}>
-                  <span style={{
-                color: 'var(--text-light)'
-              }}>Toplam Gelir (LTV)</span>
-                  <span style={{
-                textAlign: 'center',
-                color: 'var(--text-muted)'
-              }}>{params.revenue?.toLocaleString('tr-TR')} ₺</span>
-                  <span style={{
-                textAlign: 'right',
-                color: 'var(--secondary)',
-                fontWeight: '600',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                gap: '0.3rem'
-              }}>
+                <div className="grid grid-cols-[1.2fr_1fr_1.2fr] px-2.5 py-1.5 border-b border-white/3 text-xs items-center">
+                  <span className="text-textLight">Toplam Gelir (LTV)</span>
+                  <span className="text-center text-textMuted">{params.revenue?.toLocaleString('tr-TR')} ₺</span>
+                  <span className="text-right text-secondary font-semibold flex items-center justify-end gap-1">
                     {improvements.newCiro?.toLocaleString('tr-TR')} ₺
-                    <span style={{
-                  backgroundColor: 'rgba(22, 163, 74, 0.08)',
-                  color: '#16a34a',
-                  border: '1px solid rgba(22, 163, 74, 0.15)',
-                  padding: '0.05rem 0.25rem',
-                  borderRadius: '4px',
-                  fontSize: '0.6rem'
-                }}>
+                    <span className="bg-green-600/10 text-green-600 border border-green-600/15 px-1 py-0.5 rounded text-[10px]">
                       +{Math.round(improvements.revenueIncrease / (params.revenue || 1) * 100)}%
                     </span>
                   </span>
                 </div>
 
                 {/* Row 2: Leads */}
-                <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1.2fr 1fr 1.2fr',
-              padding: '0.4rem 0.6rem',
-              borderBottom: '1px solid rgba(255,255,255,0.03)',
-              fontSize: '0.75rem',
-              alignItems: 'center'
-            }}>
-                  <span style={{
-                color: 'var(--text-light)'
-              }}>Aylık Form / Talep</span>
-                  <span style={{
-                textAlign: 'center',
-                color: 'var(--text-muted)'
-              }}>{params.leads}</span>
-                  <span style={{
-                textAlign: 'right',
-                color: 'var(--secondary)',
-                fontWeight: '600',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                gap: '0.3rem'
-              }}>
+                <div className="grid grid-cols-[1.2fr_1fr_1.2fr] px-2.5 py-1.5 border-b border-white/3 text-xs items-center">
+                  <span className="text-textLight">Aylık Form / Talep</span>
+                  <span className="text-center text-textMuted">{params.leads}</span>
+                  <span className="text-right text-secondary font-semibold flex items-center justify-end gap-1">
                     {improvements.newLeads}
-                    <span style={{
-                  backgroundColor: accentGlow,
-                  color: accentColor,
-                  border: '1px solid rgba(236, 72, 153, 0.15)',
-                  padding: '0.05rem 0.25rem',
-                  borderRadius: '4px',
-                  fontSize: '0.6rem'
-                }}>
+                    <span className="bg-pink-500/10 text-pink-500 border border-pink-500/15 px-1 py-0.5 rounded text-[10px]" style={{ backgroundColor: accentGlow, color: accentColor }}>
                       +{Math.round((improvements.newLeads - params.leads) / (params.leads || 1) * 100)}%
                     </span>
                   </span>
                 </div>
 
                 {/* Row 3: Conversion Rate */}
-                <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1.2fr 1fr 1.2fr',
-              padding: '0.4rem 0.6rem',
-              borderBottom: '1px solid rgba(255,255,255,0.03)',
-              fontSize: '0.75rem',
-              alignItems: 'center'
-            }}>
-                  <span style={{
-                color: 'var(--text-light)'
-              }}>Satış Dönüşüm Oranı</span>
-                  <span style={{
-                textAlign: 'center',
-                color: 'var(--text-muted)'
-              }}>%{params.conversion}</span>
-                  <span style={{
-                textAlign: 'right',
-                color: 'var(--secondary)',
-                fontWeight: '600',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                gap: '0.3rem'
-              }}>
+                <div className="grid grid-cols-[1.2fr_1fr_1.2fr] px-2.5 py-1.5 border-b border-white/3 text-xs items-center">
+                  <span className="text-textLight">Satış Dönüşüm Oranı</span>
+                  <span className="text-center text-textMuted">%{params.conversion}</span>
+                  <span className="text-right text-secondary font-semibold flex items-center justify-end gap-1">
                     %{improvements.newConversion}
-                    <span style={{
-                  backgroundColor: accentGlow,
-                  color: accentColor,
-                  border: '1px solid rgba(236, 72, 153, 0.15)',
-                  padding: '0.05rem 0.25rem',
-                  borderRadius: '4px',
-                  fontSize: '0.6rem'
-                }}>
+                    <span className="bg-pink-500/10 text-pink-500 border border-pink-500/15 px-1 py-0.5 rounded text-[10px]" style={{ backgroundColor: accentGlow, color: accentColor }}>
                       +{Math.round((improvements.newConversion - params.conversion) / (params.conversion || 1) * 100)}%
                     </span>
                   </span>
                 </div>
 
                 {/* Row 4: ROI */}
-                <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1.2fr 1fr 1.2fr',
-              padding: '0.4rem 0.6rem',
-              fontSize: '0.75rem',
-              alignItems: 'center'
-            }}>
-                  <span style={{
-                color: 'var(--text-light)'
-              }}>ROI</span>
-                  <span style={{
-                textAlign: 'center',
-                color: 'var(--text-muted)'
-              }}>{params.roi}x</span>
-                  <span style={{
-                textAlign: 'right',
-                color: '#16a34a',
-                fontWeight: '600',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                gap: '0.3rem'
-              }}>
+                <div className="grid grid-cols-[1.2fr_1fr_1.2fr] px-2.5 py-1.5 text-xs items-center">
+                  <span className="text-textLight">ROI</span>
+                  <span className="text-center text-textMuted">{params.roi}x</span>
+                  <span className="text-right text-green-600 font-semibold flex items-center justify-end gap-1">
                     {improvements.newRoi}x
-                    <span style={{
-                  backgroundColor: 'rgba(22, 163, 74, 0.08)',
-                  color: '#16a34a',
-                  border: '1px solid rgba(22, 163, 74, 0.15)',
-                  padding: '0.05rem 0.25rem',
-                  borderRadius: '4px',
-                  fontSize: '0.6rem'
-                }}>
+                    <span className="bg-green-600/10 text-green-600 border border-green-600/15 px-1 py-0.5 rounded text-[10px]">
                       +{Math.round((improvements.newRoi - params.roi) / (params.roi || 1) * 100)}%
                     </span>
                   </span>
@@ -1628,95 +1244,33 @@ export default function LeadDetailModal({
     const lines = lead.message.split('\n');
     const isStructured = lines.length > 1 && lines.some(line => line.includes(':'));
     if (!isStructured) {
-      return <p style={{
-        whiteSpace: 'pre-wrap',
-        backgroundColor: 'rgba(15, 23, 42, 0.02)',
-        padding: '1rem',
-        borderRadius: '8px',
-        border: '1px solid var(--glass-border)',
-        fontSize: '0.9rem',
-        color: 'var(--text-light)',
-        lineHeight: '1.6',
-        margin: '0.25rem 0 0 0'
-      }}>
+      return <p className="whitespace-pre-wrap bg-slate-900/2 p-4 rounded-lg border border-glass text-sm text-textLight leading-relaxed mt-1">
           {lead.message}
         </p>;
     }
-    return <div style={{
-      backgroundColor: 'rgba(15, 23, 42, 0.01)',
-      border: '1px solid var(--glass-border)',
-      borderRadius: '8px',
-      overflow: 'hidden',
-      marginTop: '0.25rem'
-    }}>
-        <div style={{
-        backgroundColor: 'rgba(15, 23, 42, 0.03)',
-        padding: '0.6rem 0.8rem',
-        borderBottom: '1px solid var(--glass-border)',
-        fontSize: '0.75rem',
-        fontWeight: 'bold',
-        color: 'var(--primary)',
-        letterSpacing: '0.05em',
-        textTransform: 'uppercase',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.4rem'
-      }}>
+    return <div className="bg-slate-900/1 border border-glass rounded-lg overflow-hidden mt-1">
+        <div className="bg-slate-900/3 px-3 py-2 border-b border-glass text-xs font-bold text-primary tracking-wider uppercase flex items-center gap-1.5">
           <i className="fa-solid fa-calculator"></i> Simülasyon / Detay Verileri
         </div>
-        <div style={{
-        padding: '0.8rem 1rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.6rem'
-      }}>
+        <div className="p-3 flex flex-col gap-2.5">
           {lines.map((line, index) => {
           if (!line.trim()) return null;
           const isNote = line.startsWith('(') && line.endsWith(')');
           const displayLine = isNote ? line.slice(1, -1) : line;
           const colonIndex = displayLine.indexOf(':');
           if (colonIndex === -1) {
-            return <div key={index} style={{
-              fontSize: '0.8rem',
-              color: 'var(--text-muted)',
-              fontStyle: 'italic',
-              paddingTop: '0.25rem',
-              borderTop: '1px dashed var(--glass-border)',
-              marginTop: '0.25rem'
-            }}>
+            return <div key={index} className="text-xs text-textMuted italic pt-1 border-t border-dashed border-glass mt-1">
                   {line}
                 </div>;
           }
           const label = displayLine.substring(0, colonIndex).trim();
           const value = displayLine.substring(colonIndex + 1).trim();
           const isHighlight = label.includes('Bedel') || label.includes('Kâr') || label.includes('Ciro') && !label.includes('Hedef') && !label.includes('Bütçe');
-          return <div key={index} style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingBottom: '0.4rem',
-            borderBottom: index === lines.length - 1 ? 'none' : '1px solid rgba(15, 23, 42, 0.03)',
-            flexWrap: 'wrap',
-            gap: '0.5rem'
-          }}>
-                <span style={{
-              fontWeight: '500',
-              fontSize: '0.8rem',
-              color: isNote ? 'var(--text-muted)' : 'var(--text-light)',
-              display: 'flex',
-              alignItems: 'center'
-            }}>
+          return <div key={index} className={`flex justify-between items-center pb-1.5 flex-wrap gap-2 ${index === lines.length - 1 ? '' : 'border-b border-slate-900/3'}`}>
+                <span className={`font-medium text-xs flex items-center gap-1 ${isNote ? 'text-textMuted' : 'text-textLight'}`}>
                   {getIconForLabel(label)} {label}
                 </span>
-                <span style={{
-              fontWeight: isHighlight ? '700' : '600',
-              fontSize: isHighlight ? '0.85rem' : '0.8rem',
-              color: isHighlight ? 'var(--secondary)' : 'var(--text-light)',
-              backgroundColor: isHighlight ? 'var(--secondary-glow)' : 'rgba(15, 23, 42, 0.02)',
-              padding: '0.15rem 0.45rem',
-              borderRadius: '6px',
-              border: isHighlight ? '1px solid rgba(236, 72, 153, 0.2)' : '1px solid var(--glass-border)'
-            }}>
+                <span className={`${isHighlight ? 'font-bold text-[13.5px] text-secondary bg-pink-500/10 border border-pink-500/20' : 'font-semibold text-xs text-textLight bg-slate-900/2 border border-glass'} px-2 py-0.5 rounded-md`}>
                   {value}
                 </span>
               </div>;
@@ -2064,21 +1618,8 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
               </div>
               {selectedLead.trafficSource && <div className="lead-info-item">
                   <strong>Trafik Kaynağı</strong>
-                  <p style={{
-              marginTop: '0.2rem'
-            }}>
-                    <span style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                fontWeight: '600',
-                fontSize: '0.8rem',
-                backgroundColor: selectedLead.trafficSource === 'Google Ads' ? 'rgba(14, 165, 233, 0.08)' : selectedLead.trafficSource === 'Meta Ads' ? 'rgba(236, 72, 153, 0.08)' : 'rgba(34, 197, 94, 0.08)',
-                color: selectedLead.trafficSource === 'Google Ads' ? 'var(--primary)' : selectedLead.trafficSource === 'Meta Ads' ? 'var(--secondary)' : '#16a34a',
-                padding: '0.2rem 0.6rem',
-                borderRadius: '12px',
-                border: '1px solid currentColor'
-              }}>
+                  <p className="mt-1">
+                    <span className={`inline-flex items-center gap-1.5 font-semibold text-xs px-2.5 py-1 rounded-xl border ${selectedLead.trafficSource === 'Google Ads' ? 'bg-sky-500/10 text-primary border-primary' : selectedLead.trafficSource === 'Meta Ads' ? 'bg-pink-500/10 text-secondary border-secondary' : 'bg-green-600/10 text-green-600 border-green-600'}`}>
                       {selectedLead.trafficSource === 'Google Ads' ? <i className="fa-brands fa-google"></i> : selectedLead.trafficSource === 'Meta Ads' ? <i className="fa-brands fa-meta"></i> : <i className="fa-solid fa-seedling"></i>}
                       {selectedLead.trafficSource}
                     </span>
@@ -2098,48 +1639,17 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
               </div>
 
               {/* CRM LITE SECTION */}
-              <div className="crm-lite-section" style={{
-            marginTop: '1.5rem',
-            paddingTop: '1.5rem',
-            borderTop: '2px dashed var(--glass-border)'
-          }}>
-                <h4 style={{
-              fontSize: '0.95rem',
-              fontWeight: '700',
-              color: 'var(--text-light)',
-              marginBottom: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}>
-                  <i className="fa-solid fa-address-book" style={{
-                color: 'var(--primary)'
-              }}></i>
+              <div className="crm-lite-section mt-6 pt-6 border-t-2 border-dashed border-glass">
+                <h4 className="text-[15px] font-bold text-textLight mb-4 flex items-center gap-2">
+                  <i className="fa-solid fa-address-book text-primary"></i>
                   CRM & Müşteri Takip Kartı
                 </h4>
 
                 {/* Status & Date row */}
-                <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: '1rem',
-              marginBottom: '1rem'
-            }}>
-                  <div className="lead-info-item" style={{
-                marginBottom: 0
-              }}>
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-4 mb-4">
+                  <div className="lead-info-item mb-0">
                     <strong>Talep Durumu</strong>
-                    <select value={crmStatus} onChange={e => setCrmStatus(e.target.value)} className="admin-select" style={{
-                  width: '100%',
-                  padding: '0.6rem',
-                  borderRadius: '8px',
-                  border: '1px solid var(--glass-border)',
-                  backgroundColor: '#fff',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.9rem',
-                  marginTop: '0.4rem',
-                  color: 'var(--text-light)'
-                }}>
+                    <select value={crmStatus} onChange={e => setCrmStatus(e.target.value)} className="admin-select w-full p-2.5 rounded-lg border border-glass bg-white font-body text-sm mt-1.5 text-textLight">
                       <option value="yeni">Yeni Başvuru</option>
                       <option value="iletisimde">İletişimde</option>
                       <option value="toplanti_planlandi">Toplantı Planlandı</option>
@@ -2154,60 +1664,21 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                     </select>
                   </div>
 
-                  <div className="lead-info-item" style={{
-                marginBottom: 0
-              }}>
+                  <div className="lead-info-item mb-0">
                     <strong>Takip / Hatırlatıcı Tarihi</strong>
-                    <input type="date" value={crmReminderDate} onChange={e => setCrmReminderDate(e.target.value)} className="admin-input" style={{
-                  width: '100%',
-                  padding: '0.55rem',
-                  borderRadius: '8px',
-                  border: '1px solid var(--glass-border)',
-                  backgroundColor: '#fff',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.9rem',
-                  marginTop: '0.4rem',
-                  color: 'var(--text-light)',
-                  height: '38px',
-                  boxSizing: 'border-box'
-                }} />
+                    <input type="date" value={crmReminderDate} onChange={e => setCrmReminderDate(e.target.value)} className="admin-input w-full p-[0.55rem] rounded-lg border border-glass bg-white font-body text-sm mt-1.5 text-textLight h-[38px] box-border" />
                   </div>
                 </div>
 
-                <div className="lead-info-item" style={{
-              marginBottom: '1rem'
-            }}>
+                <div className="lead-info-item mb-4">
                   <strong>Dahili Görüşme Notları</strong>
-                  <textarea value={crmNotes} onChange={e => setCrmNotes(e.target.value)} className="admin-textarea" placeholder="Müşteri aramaları, talepleri, bütçe ayrıntıları vb. dahili notlar..." style={{
-                width: '100%',
-                minHeight: '80px',
-                padding: '0.6rem',
-                borderRadius: '8px',
-                border: '1px solid var(--glass-border)',
-                backgroundColor: '#fff',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.85rem',
-                marginTop: '0.4rem',
-                color: 'var(--text-light)',
-                resize: 'vertical'
-              }} />
+                  <textarea value={crmNotes} onChange={e => setCrmNotes(e.target.value)} className="admin-textarea w-full min-h-[80px] p-2.5 rounded-lg border border-glass bg-white font-body text-[13.5px] mt-1.5 text-textLight resize-y" placeholder="Müşteri aramaları, talepleri, bütçe ayrıntıları vb. dahili notlar..." />
                 </div>
 
                 {/* Hızlı İletişim Kanalları */}
-                <div style={{
-              marginBottom: '1rem'
-            }}>
-                  <strong style={{
-                fontSize: '0.8rem',
-                color: 'var(--text-muted)',
-                display: 'block',
-                marginBottom: '0.4rem'
-              }}>Hızlı İletişim Kanalları</strong>
-                  <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '0.75rem'
-              }}>
+                <div className="mb-4">
+                  <strong className="text-xs text-textMuted block mb-1.5">Hızlı İletişim Kanalları</strong>
+                  <div className="grid grid-cols-2 gap-3">
                     {(() => {
                   const cleanPhone = selectedLead.phone ? selectedLead.phone.replace(/[^0-9]/g, '') : '';
                   const cleanPhoneFormatted = cleanPhone.startsWith('90') ? cleanPhone : cleanPhone.startsWith('0') ? '90' + cleanPhone.substring(1) : '90' + cleanPhone;
@@ -2217,42 +1688,10 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                   const mailBody = encodeURIComponent(`Merhaba ${selectedLead.fullName || ''},\n\nAjans Rota'dan iletişime geçiyorum. Web sitemiz üzerinden ilettiğiniz ${selectedLead.service || 'hizmet talebi'} ile ilgili başvurunuzu aldık. Detayları görüşmek ve size en uygun dijital büyüme planını hazırlamak için ne zaman görüşebiliriz?\n\nİyi çalışmalar,\nAjans Rota Satış Ekibi`);
                   const mailLink = selectedLead.email ? `mailto:${selectedLead.email}?subject=${mailSubject}&body=${mailBody}` : '#';
                   return <>
-                          <a href={waLink} target="_blank" rel="noopener noreferrer" className={`btn ${cleanPhone ? '' : 'disabled'}`} style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      backgroundColor: '#25D366',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontSize: '0.8rem',
-                      fontWeight: '600',
-                      textDecoration: 'none',
-                      padding: '0.6rem',
-                      cursor: cleanPhone ? 'pointer' : 'not-allowed',
-                      opacity: cleanPhone ? 1 : 0.5
-                    }}>
-                            <i className="fa-brands fa-whatsapp" style={{
-                        fontSize: '1.05rem'
-                      }}></i> WhatsApp
+                          <a href={waLink} target="_blank" rel="noopener noreferrer" className={`btn flex items-center justify-center gap-1.5 bg-[#25D366] text-white border-none rounded-lg text-xs font-semibold no-underline p-2.5 ${cleanPhone ? 'cursor-pointer opacity-100' : 'disabled cursor-not-allowed opacity-50'}`}>
+                            <i className="fa-brands fa-whatsapp text-[1.05rem]"></i> WhatsApp
                           </a>
-                          <a href={mailLink} className={`btn ${selectedLead.email ? '' : 'disabled'}`} style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      backgroundColor: 'var(--primary)',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontSize: '0.8rem',
-                      fontWeight: '600',
-                      textDecoration: 'none',
-                      padding: '0.6rem',
-                      cursor: selectedLead.email ? 'pointer' : 'not-allowed',
-                      opacity: selectedLead.email ? 1 : 0.5
-                    }}>
+                          <a href={mailLink} className={`btn flex items-center justify-center gap-1.5 bg-primary text-white border-none rounded-lg text-xs font-semibold no-underline p-2.5 ${selectedLead.email ? 'cursor-pointer opacity-100' : 'disabled cursor-not-allowed opacity-50'}`}>
                             <i className="fa-solid fa-envelope"></i> E-Posta Gönder
                           </a>
                         </>;
@@ -2260,57 +1699,20 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                   </div>
                 </div>
 
-                <button type="button" className="btn btn-primary" onClick={() => handleSaveCRM(selectedLead.id, crmStatus, crmNotes, crmReminderDate)} style={{
-              width: '100%',
-              padding: '0.75rem',
-              borderRadius: '8px',
-              fontWeight: '600',
-              fontFamily: 'var(--font-heading)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              marginTop: '0.5rem',
-              boxShadow: 'none',
-              height: 'auto'
-            }}>
+                <button type="button" className="btn btn-primary w-full p-3 rounded-lg font-semibold font-heading flex items-center justify-center gap-2 mt-2 shadow-none h-auto" onClick={() => handleSaveCRM(selectedLead.id, crmStatus, crmNotes, crmReminderDate)}>
                   <i className="fa-solid fa-floppy-disk"></i>
                   CRM Bilgilerini Kaydet
                 </button>
               </div>
 
               {/* CRM ACTIVITY TIMELINE */}
-              <div className="crm-activity-section" style={{
-            marginTop: '1.5rem',
-            paddingTop: '1.5rem',
-            borderTop: '2px dashed var(--glass-border)'
-          }}>
-                <h4 style={{
-              fontSize: '0.95rem',
-              fontWeight: '700',
-              color: 'var(--text-light)',
-              marginBottom: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}>
-                  <i className="fa-solid fa-clock-rotate-left" style={{
-                color: 'var(--secondary)'
-              }}></i>
+              <div className="crm-activity-section mt-6 pt-6 border-t-2 border-dashed border-glass">
+                <h4 className="text-[15px] font-bold text-textLight mb-4 flex items-center gap-2">
+                  <i className="fa-solid fa-clock-rotate-left text-secondary"></i>
                   Müşteri Etkinlik Geçmişi
                 </h4>
                 
-                {Array.isArray(selectedLead.activityHistory) && selectedLead.activityHistory.length > 0 ? <div className="crm-timeline" style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem',
-              paddingLeft: '0.5rem',
-              borderLeft: '2px solid var(--glass-border)',
-              marginLeft: '8px',
-              maxHeight: '220px',
-              overflowY: 'auto',
-              paddingRight: '0.5rem'
-            }}>
+                {Array.isArray(selectedLead.activityHistory) && selectedLead.activityHistory.length > 0 ? <div className="crm-timeline flex flex-col gap-4 pl-2 border-l-2 border-glass ml-2 max-h-[220px] overflow-y-auto pr-2">
                     {selectedLead.activityHistory.map((item, idx) => {
                 let iconClass = 'fa-circle-dot';
                 let iconColor = 'var(--text-muted)';
@@ -2327,167 +1729,56 @@ Lütfen bu müşteriye ve firmasına özel olarak hazırlanmış, 4 bölümden o
                   iconClass = 'fa-calendar-check';
                   iconColor = '#f59e0b';
                 }
-                return <div key={idx} className="crm-timeline-item" style={{
-                  position: 'relative',
-                  paddingLeft: '1.5rem',
-                  marginBottom: '0.2rem'
-                }}>
-                          <span style={{
-                    position: 'absolute',
-                    left: '-15px',
-                    top: '2px',
-                    width: '18px',
-                    height: '18px',
-                    borderRadius: '50%',
-                    backgroundColor: '#fff',
-                    border: '2px solid ' + iconColor,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '0.65rem',
-                    color: iconColor,
-                    zIndex: 2
-                  }}>
+                return <div key={idx} className="crm-timeline-item relative pl-6 mb-1">
+                          <span className="absolute -left-[15px] top-[2px] w-[18px] h-[18px] rounded-full bg-white border-2 flex items-center justify-center text-[10px] z-[2]" style={{ borderColor: iconColor, color: iconColor }}>
                             <i className={`fa-solid ${iconClass}`}></i>
                           </span>
-                          <div style={{
-                    fontSize: '0.7rem',
-                    color: 'var(--text-muted)',
-                    fontWeight: '600'
-                  }}>{item.date}</div>
-                          <div style={{
-                    fontSize: '0.8rem',
-                    color: 'var(--text-light)',
-                    marginTop: '0.1rem',
-                    lineHeight: '1.4'
-                  }}>{item.text}</div>
+                          <div className="text-[11px] text-textMuted font-semibold">{item.date}</div>
+                          <div className="text-xs text-textLight mt-[2px] leading-relaxed">{item.text}</div>
                         </div>;
               })}
-                  </div> : <p style={{
-              fontSize: '0.8rem',
-              color: 'var(--text-muted)',
-              fontStyle: 'italic',
-              paddingLeft: '8px'
-            }}>
+                  </div> : <p className="text-xs text-textMuted italic pl-2">
                     Henüz bir etkinlik kaydı bulunmuyor. Durum, not veya hatırlatıcı güncellendiğinde burada listelenecektir.
                   </p>}
               </div>
             </div>
              <div className="lead-modal-footer lead-modal-footer-responsive">
               {((selectedLead.service && selectedLead.service.toLowerCase().includes('seo')) || (selectedLead.trafficSource && selectedLead.trafficSource.toLowerCase().includes('seo')) || (selectedLead.message && selectedLead.message.toLowerCase().includes('seo skoru'))) ? (
-                <button className="btn btn-primary" onClick={generateSeoPdf} disabled={isGeneratingPdf} style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                  border: 'none',
-                  padding: '0.6rem 1.2rem',
-                  fontSize: '0.85rem',
-                  fontWeight: '600',
-                  borderRadius: '8px'
-                }}>
+                <button className="btn btn-primary flex items-center gap-1.5 bg-gradient-to-br from-emerald-500 to-emerald-600 border-none px-5 py-2.5 text-[13.5px] font-semibold rounded-lg" onClick={generateSeoPdf} disabled={isGeneratingPdf}>
                   {isGeneratingPdf ? (
                     <><i className="fa-solid fa-spinner fa-spin"></i> PDF Hazırlanıyor...</>
                   ) : (
                     <><i className="fa-solid fa-wand-magic-sparkles"></i> AI SEO Raporu Üret (PDF)</>
                   )}
                 </button>
-              ) : selectedLead.simulatorData ? <button className="btn btn-primary" onClick={() => handleDownloadPDF(selectedLead)} style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            background: selectedLead.simulatorData.type === 'ecommerce' ? 'linear-gradient(135deg, var(--primary) 0%, #0284c7 100%)' : 'linear-gradient(135deg, var(--secondary) 0%, #0f766e 100%)',
-            border: 'none',
-            padding: '0.6rem 1.2rem',
-            fontSize: '0.85rem',
-            fontWeight: '600'
+              ) : selectedLead.simulatorData ? <button className="btn btn-primary flex items-center gap-1.5 border-none px-5 py-2.5 text-[13.5px] font-semibold rounded-lg" onClick={() => handleDownloadPDF(selectedLead)} style={{
+            background: selectedLead.simulatorData.type === 'ecommerce' ? 'linear-gradient(135deg, var(--primary) 0%, #0284c7 100%)' : 'linear-gradient(135deg, var(--secondary) 0%, #0f766e 100%)'
           }}>
                   <i className="fa-solid fa-file-pdf"></i> Raporu PDF Olarak İndir
-                </button> : selectedLead.service === 'Teklif Hesaplayıcı Talebi' || selectedLead.service === 'Web Tasarım Talebi' ? <div style={{
-            display: 'flex',
-            gap: '0.75rem'
-          }}>
-                  <button className="btn btn-primary" onClick={() => handleDownloadProposalPDF(selectedLead)} style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              background: 'linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%)',
-              border: 'none',
-              padding: '0.6rem 1.2rem',
-              fontSize: '0.85rem',
-              fontWeight: '600',
-              borderRadius: '8px'
-            }}>
+                </button> : selectedLead.service === 'Teklif Hesaplayıcı Talebi' || selectedLead.service === 'Web Tasarım Talebi' ? <div className="flex gap-3">
+                  <button className="btn btn-primary flex items-center gap-1.5 bg-gradient-to-br from-primary to-indigo-600 border-none px-5 py-2.5 text-[13.5px] font-semibold rounded-lg" onClick={() => handleDownloadProposalPDF(selectedLead)}>
                     <i className="fa-solid fa-file-pdf"></i> Teklif PDF İndir
                   </button>
-                  <button className="btn btn-secondary" onClick={() => handleSendProposalEmail(selectedLead)} disabled={isSendingProposal} style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              border: '1px solid rgba(236, 72, 153, 0.4)',
-              background: 'rgba(236, 72, 153, 0.05)',
-              color: 'var(--secondary)',
-              padding: '0.6rem 1.2rem',
-              fontSize: '0.85rem',
-              fontWeight: '600',
-              borderRadius: '8px',
-              cursor: 'pointer'
-            }}>
+                  <button className="btn btn-secondary flex items-center gap-1.5 border border-pink-500/40 bg-pink-500/5 text-secondary px-5 py-2.5 text-[13.5px] font-semibold rounded-lg cursor-pointer" onClick={() => handleSendProposalEmail(selectedLead)} disabled={isSendingProposal}>
                     {isSendingProposal ? <>
                         <i className="fa-solid fa-spinner fa-spin"></i> Gönderiliyor...
                       </> : <>
                         <i className="fa-solid fa-paper-plane"></i> Teklifi İlet
                       </>}
                   </button>
-                </div> : selectedLead.service && selectedLead.service.includes('Rehber') ? <div style={{
-            display: 'flex',
-            gap: '0.75rem'
-          }}>
+                </div> : selectedLead.service && selectedLead.service.includes('Rehber') ? <div className="flex gap-3">
                   {aiGuideContents[selectedLead.id] ? <>
-                      <button className="btn btn-primary" onClick={() => handleDownloadGuidePDF(selectedLead, aiGuideContents[selectedLead.id])} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                background: 'linear-gradient(135deg, var(--primary) 0%, #0284c7 100%)',
-                border: 'none',
-                padding: '0.6rem 1.2rem',
-                fontSize: '0.85rem',
-                fontWeight: '600',
-                borderRadius: '8px'
-              }}>
+                      <button className="btn btn-primary flex items-center gap-1.5 bg-gradient-to-br from-primary to-sky-600 border-none px-5 py-2.5 text-[13.5px] font-semibold rounded-lg" onClick={() => handleDownloadGuidePDF(selectedLead, aiGuideContents[selectedLead.id])}>
                         <i className="fa-solid fa-file-pdf"></i> Rehber PDF İndir
                       </button>
-                      <button className="btn btn-secondary" onClick={() => handleSendGuideEmail(selectedLead)} disabled={isSendingGuide} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                border: '1px solid rgba(13, 148, 136, 0.4)',
-                background: 'rgba(13, 148, 136, 0.05)',
-                color: 'var(--secondary)',
-                padding: '0.6rem 1.2rem',
-                fontSize: '0.85rem',
-                fontWeight: '600',
-                borderRadius: '8px',
-                cursor: 'pointer'
-              }}>
+                      <button className="btn btn-secondary flex items-center gap-1.5 border border-teal-600/40 bg-teal-600/5 text-secondary px-5 py-2.5 text-[13.5px] font-semibold rounded-lg cursor-pointer" onClick={() => handleSendGuideEmail(selectedLead)} disabled={isSendingGuide}>
                         {isSendingGuide ? <>
                             <i className="fa-solid fa-spinner fa-spin"></i> Gönderiliyor...
                           </> : <>
                             <i className="fa-solid fa-paper-plane"></i> Rehberi Gönder
                           </>}
                       </button>
-                    </> : <button className="btn btn-primary" onClick={() => handleGenerateGuidePDFWithAI(selectedLead)} disabled={aiGuideLoading} style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
-              border: 'none',
-              padding: '0.6rem 1.2rem',
-              fontSize: '0.85rem',
-              fontWeight: '600',
-              borderRadius: '8px',
-              justifyContent: 'center'
-            }}>
+                    </> : <button className="btn btn-primary flex items-center justify-center gap-1.5 bg-gradient-to-br from-violet-500 to-violet-700 border-none px-5 py-2.5 text-[13.5px] font-semibold rounded-lg" onClick={() => handleGenerateGuidePDFWithAI(selectedLead)} disabled={aiGuideLoading}>
                       {aiGuideLoading ? <>
                           <i className="fa-solid fa-spinner fa-spin"></i> Özel Rehber Hazırlanıyor...
                         </> : <>

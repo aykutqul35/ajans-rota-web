@@ -988,14 +988,14 @@ function AdminDashboardView({
     setClientReports(updater);
   };
 
-  return <div className="container admin-dashboard">
+  return <div className="min-h-screen bg-bgDark text-textLight font-body selection:bg-primary/30 selection:text-primary">
       <AdminHeader
         handleSaveAll={handleSaveAll}
         isSaving={isSaving}
         handleLogoutClick={handleLogoutClick}
       />
 
-      <div className="admin-grid-layout">
+      <div className="flex flex-col lg:flex-row relative">
         <AdminSidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -1003,7 +1003,7 @@ function AdminDashboardView({
           clientReports={clientReports}
         />
 
-        <main className="admin-content-card">
+        <main className="flex-1 p-6 md:p-8 lg:p-10 lg:w-[calc(100%-280px)] overflow-x-hidden">
           <Suspense fallback={
             <div className="flex items-center justify-center min-h-[400px] gap-4">
               <div className="w-9 h-9 border-3 border-glass-border border-t-primary rounded-full animate-spin" />

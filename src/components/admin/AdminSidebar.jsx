@@ -32,58 +32,51 @@ export default function AdminSidebar({ activeTab, setActiveTab, unreadLeadsCount
     return () => socket.disconnect();
   }, []);
 
+  const navBtnCls = (tabId) => `flex items-center gap-3 w-full py-3 px-4 rounded-xl text-[13px] font-bold border-none transition-all cursor-pointer ${activeTab === tabId ? 'bg-primary text-white shadow-[0_0_15px_rgba(14,165,233,0.3)]' : 'bg-transparent text-textMuted hover:bg-white/5 hover:text-textLight'}`;
+
   return (
-    <aside className="admin-sidebar">
-      <button className={`admin-nav-btn ${activeTab === 'leads' ? 'active' : ''}`} onClick={() => setActiveTab('leads')}>
-        <i className="fa-solid fa-inbox"></i> Gelen Talepler
-        {unreadLeadsCount > 0 && <span className="lead-count-badge" style={{
-          background: '#ff2a85', color: '#fff', borderRadius: '50%', padding: '2px 8px',
-          fontSize: '0.75rem', marginLeft: 'auto', fontWeight: 'bold'
-        }}>{unreadLeadsCount}</span>}
+    <aside className="w-full lg:w-[280px] bg-white/2 border-r border-glass p-5 flex flex-col gap-2 overflow-y-auto h-[calc(100vh-80px)] sticky top-[80px]">
+      <button className={navBtnCls('leads')} onClick={() => setActiveTab('leads')}>
+        <i className="fa-solid fa-inbox text-lg w-5 text-center"></i> Gelen Talepler
+        {unreadLeadsCount > 0 && <span className="bg-rose-500 text-white rounded-full px-2 py-0.5 text-[10px] ml-auto font-bold min-w-[20px] text-center shadow-[0_0_10px_rgba(244,63,94,0.5)]">{unreadLeadsCount}</span>}
       </button>
-      <button className={`admin-nav-btn ${activeTab === 'analytics' ? 'active' : ''}`} onClick={() => setActiveTab('analytics')}>
-        <i className="fa-solid fa-chart-pie"></i> Analiz & İstatistik
+      <button className={navBtnCls('analytics')} onClick={() => setActiveTab('analytics')}>
+        <i className="fa-solid fa-chart-pie text-lg w-5 text-center"></i> Analiz & İstatistik
       </button>
-      <button className={`admin-nav-btn ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
-        <i className="fa-solid fa-gears"></i> Genel Ayarlar
+      <button className={navBtnCls('settings')} onClick={() => setActiveTab('settings')}>
+        <i className="fa-solid fa-gears text-lg w-5 text-center"></i> Genel Ayarlar
       </button>
-      <button className={`admin-nav-btn ${activeTab === 'landing' ? 'active' : ''}`} onClick={() => setActiveTab('landing')}>
-        <i className="fa-solid fa-house-chimney-window"></i> Ana Sayfa İçerikleri
+      <button className={navBtnCls('landing')} onClick={() => setActiveTab('landing')}>
+        <i className="fa-solid fa-house-chimney-window text-lg w-5 text-center"></i> Ana Sayfa İçerikleri
       </button>
-      <button className={`admin-nav-btn ${activeTab === 'marketing' ? 'active' : ''}`} onClick={() => setActiveTab('marketing')}>
-        <i className="fa-solid fa-bullhorn"></i> Dijital Pazarlama (Pixel/Ads)
+      <button className={navBtnCls('marketing')} onClick={() => setActiveTab('marketing')}>
+        <i className="fa-solid fa-bullhorn text-lg w-5 text-center"></i> Dijital Pazarlama (Pixel/Ads)
       </button>
-      <button className={`admin-nav-btn ${activeTab === 'services' ? 'active' : ''}`} onClick={() => setActiveTab('services')}>
-        <i className="fa-solid fa-laptop-code"></i> Hizmetlerimiz
+      <button className={navBtnCls('services')} onClick={() => setActiveTab('services')}>
+        <i className="fa-solid fa-laptop-code text-lg w-5 text-center"></i> Hizmetlerimiz
       </button>
-      <button className={`admin-nav-btn ${activeTab === 'testimonials' ? 'active' : ''}`} onClick={() => setActiveTab('testimonials')}>
-        <i className="fa-solid fa-quote-left"></i> Yorumlar (Referanslar)
+      <button className={navBtnCls('testimonials')} onClick={() => setActiveTab('testimonials')}>
+        <i className="fa-solid fa-quote-left text-lg w-5 text-center"></i> Yorumlar (Referanslar)
       </button>
-      <button className={`admin-nav-btn ${activeTab === 'academy' ? 'active' : ''}`} onClick={() => setActiveTab('academy')}>
-        <i className="fa-solid fa-graduation-cap"></i> Akademi Eğitimleri
+      <button className={navBtnCls('academy')} onClick={() => setActiveTab('academy')}>
+        <i className="fa-solid fa-graduation-cap text-lg w-5 text-center"></i> Akademi Eğitimleri
       </button>
-      <button className={`admin-nav-btn ${activeTab === 'team' ? 'active' : ''}`} onClick={() => setActiveTab('team')}>
-        <i className="fa-solid fa-users"></i> Ekibimiz
+      <button className={navBtnCls('team')} onClick={() => setActiveTab('team')}>
+        <i className="fa-solid fa-users text-lg w-5 text-center"></i> Ekibimiz
       </button>
-      <button className={`admin-nav-btn ${activeTab === 'blogs' ? 'active' : ''}`} onClick={() => setActiveTab('blogs')}>
-        <i className="fa-solid fa-file-lines"></i> Blog Yazıları
+      <button className={navBtnCls('blogs')} onClick={() => setActiveTab('blogs')}>
+        <i className="fa-solid fa-file-lines text-lg w-5 text-center"></i> Blog Yazıları
       </button>
-      <button className={`admin-nav-btn ${activeTab === 'reports' ? 'active' : ''}`} onClick={() => setActiveTab('reports')}>
-        <i className="fa-solid fa-chart-line"></i> Müşteri Raporları
+      <button className={navBtnCls('reports')} onClick={() => setActiveTab('reports')}>
+        <i className="fa-solid fa-chart-line text-lg w-5 text-center"></i> Müşteri Raporları
       </button>
-      <button className={`admin-nav-btn ${activeTab === 'aiengine' ? 'active' : ''}`} onClick={() => setActiveTab('aiengine')}>
-        <i className="fa-solid fa-microchip"></i> ROTA AI Motoru
+      <button className={navBtnCls('aiengine')} onClick={() => setActiveTab('aiengine')}>
+        <i className="fa-solid fa-microchip text-lg w-5 text-center"></i> ROTA AI Motoru
       </button>
-      <button className={`admin-nav-btn ${activeTab === 'tickets' ? 'active' : ''}`} onClick={() => setActiveTab('tickets')}>
-        <i className="fa-solid fa-ticket"></i> Müşteri Talepleri
-        {openTicketCount > 0 && <span style={{
-          background: 'linear-gradient(135deg, #ef4444, #f97316)', color: '#fff', borderRadius: '50%',
-          padding: '2px 8px', fontSize: '0.75rem', marginLeft: 'auto', fontWeight: 'bold',
-          animation: 'pulse 2s infinite', minWidth: '22px', textAlign: 'center'
-        }}>{openTicketCount}</span>}
+      <button className={navBtnCls('tickets')} onClick={() => setActiveTab('tickets')}>
+        <i className="fa-solid fa-ticket text-lg w-5 text-center"></i> Müşteri Talepleri
+        {openTicketCount > 0 && <span className="bg-gradient-to-br from-red-500 to-orange-500 text-white rounded-full px-2 py-0.5 text-[10px] ml-auto font-bold animate-pulse min-w-[22px] text-center">{openTicketCount}</span>}
       </button>
-
-
     </aside>
   );
 }
