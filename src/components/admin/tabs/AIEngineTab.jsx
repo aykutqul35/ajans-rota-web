@@ -196,8 +196,8 @@ export default function AIEngineTab({ authToken, clientReports }) {
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div>
-              <label className="admin-label">Hedef Müşteri *</label>
-              <select name="client_id" value={formData.client_id} onChange={handleInputChange} className="admin-input" required>
+              <label style={labelStyle}>Hedef Müşteri *</label>
+              <select name="client_id" value={formData.client_id} onChange={handleInputChange} style={inputStyle} required>
                 <option value="">-- Müşteri Seçin --</option>
                 {combinedClients.map(c => (
                   <option key={c.id} value={c.id}>{c.name}</option>
@@ -207,8 +207,8 @@ export default function AIEngineTab({ authToken, clientReports }) {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div>
-                <label className="admin-label">Platform</label>
-                <select name="platform" value={formData.platform} onChange={handleInputChange} className="admin-input">
+                <label style={labelStyle}>Platform</label>
+                <select name="platform" value={formData.platform} onChange={handleInputChange} style={inputStyle}>
                   <option value="google">Google Ads</option>
                   <option value="meta">Meta Ads</option>
                   <option value="seo">SEO</option>
@@ -216,8 +216,8 @@ export default function AIEngineTab({ authToken, clientReports }) {
                 </select>
               </div>
               <div>
-                <label className="admin-label">Aksiyon Tipi</label>
-                <select name="action_type" value={formData.action_type} onChange={handleInputChange} className="admin-input">
+                <label style={labelStyle}>Aksiyon Tipi</label>
+                <select name="action_type" value={formData.action_type} onChange={handleInputChange} style={inputStyle}>
                   <option value="daily_optimization">Günlük Optimizasyon</option>
                   <option value="anomaly_detection">Anomali Tespiti</option>
                   <option value="budget_increase">Bütçe Artırımı</option>
@@ -228,12 +228,12 @@ export default function AIEngineTab({ authToken, clientReports }) {
             </div>
 
             <div>
-              <label className="admin-label">Açıklama *</label>
+              <label style={labelStyle}>Açıklama *</label>
               <textarea 
                 name="description" 
                 value={formData.description} 
                 onChange={handleInputChange} 
-                className="admin-input"
+                style={inputStyle}
                 style={{ minHeight: '80px', resize: 'vertical' }} 
                 placeholder="Müşteriye gösterilecek AI tespit açıklaması..."
                 required
@@ -253,29 +253,29 @@ export default function AIEngineTab({ authToken, clientReports }) {
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label className="admin-label">Kampanya / Alan Adı</label>
-                  <input type="text" name="campaign_name" value={formData.campaign_name} onChange={handleInputChange} className="admin-input" placeholder="Örn: PMax - Tüm Ürünler" />
+                  <label style={labelStyle}>Kampanya / Alan Adı</label>
+                  <input type="text" name="campaign_name" value={formData.campaign_name} onChange={handleInputChange} style={inputStyle} placeholder="Örn: PMax - Tüm Ürünler" />
                 </div>
                 <div>
-                  <label className="admin-label">Metrik Odak</label>
-                  <input type="text" name="metric_focus" value={formData.metric_focus} onChange={handleInputChange} className="admin-input" placeholder="Örn: ROAS (Hedef: %350)" />
+                  <label style={labelStyle}>Metrik Odak</label>
+                  <input type="text" name="metric_focus" value={formData.metric_focus} onChange={handleInputChange} style={inputStyle} placeholder="Örn: ROAS (Hedef: %350)" />
                 </div>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label className="admin-label">Önceki Değer</label>
-                  <input type="text" name="old_value" value={formData.old_value} onChange={handleInputChange} className="admin-input" placeholder="Örn: 5.000 ₺ / gün" />
+                  <label style={labelStyle}>Önceki Değer</label>
+                  <input type="text" name="old_value" value={formData.old_value} onChange={handleInputChange} style={inputStyle} placeholder="Örn: 5.000 ₺ / gün" />
                 </div>
                 <div>
-                  <label className="admin-label">Yeni Değer</label>
-                  <input type="text" name="new_value" value={formData.new_value} onChange={handleInputChange} className="admin-input" placeholder="Örn: 6.000 ₺ / gün" />
+                  <label style={labelStyle}>Yeni Değer</label>
+                  <input type="text" name="new_value" value={formData.new_value} onChange={handleInputChange} style={inputStyle} placeholder="Örn: 6.000 ₺ / gün" />
                 </div>
               </div>
 
               <div>
-                <label className="admin-label">Aksiyon Durumu</label>
-                <select name="status" value={formData.status} onChange={handleInputChange} className="admin-input">
+                <label style={labelStyle}>Aksiyon Durumu</label>
+                <select name="status" value={formData.status} onChange={handleInputChange} style={inputStyle}>
                   <option value="ONAY BEKLİYOR">ONAY BEKLİYOR (Müşteri onayı gerekir)</option>
                   <option value="OTONOM UYGULANDI">OTONOM UYGULANDI (Sistem kendi uyguladı)</option>
                   <option value="ONAYLANDI">ONAYLANDI (Manuel olarak onaylandı)</option>
@@ -393,3 +393,24 @@ export default function AIEngineTab({ authToken, clientReports }) {
     </div>
   );
 }
+
+const labelStyle = {
+  display: 'block',
+  fontSize: '0.8rem',
+  fontWeight: 600,
+  color: 'var(--text-muted)',
+  marginBottom: '0.4rem'
+};
+
+const inputStyle = {
+  width: '100%',
+  padding: '0.75rem',
+  background: '#fff',
+  border: '1px solid var(--glass-border)',
+  borderRadius: '8px',
+  color: 'var(--text-dark)',
+  fontSize: '0.85rem',
+  fontFamily: 'inherit',
+  outline: 'none',
+  boxSizing: 'border-box'
+};
