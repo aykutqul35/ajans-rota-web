@@ -1,9 +1,6 @@
 import toast from 'react-hot-toast';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { io } from 'socket.io-client';
-
-
 export default function ClientTransparencyPageView({
   clientReports,
   setClientReports,
@@ -69,30 +66,26 @@ export default function ClientTransparencyPageView({
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
+    let interval;
     if (isLoggedIn) {
       const fetchTickets = async () => {
         try {
-          const res = await fetch('/api/client/tickets', {
-            headers: { 'x-clerk-id': user?.id || 'demo' }
-          });
+          const res = await fetch(`/api/tickets?client_id=${activeBrand}`);
           const data = await res.json();
           if (data.success) {
             setBackendTickets(data.data);
           }
-        } catch (err) {}
+        } catch (err) {
+          console.error("Error fetching tickets:", err);
+        }
       };
       fetchTickets();
-
-      const newSocket = io();
-      setSocket(newSocket);
-
-      newSocket.on('new_ticket', fetchTickets);
-      newSocket.on('new_message', fetchTickets);
-      newSocket.on('ticket_updated', fetchTickets);
-
-      return () => newSocket.disconnect();
+      
+      // Polling every 15 seconds
+      interval = setInterval(fetchTickets, 15000);
     }
-  }, [isLoggedIn, user?.id]);
+    return () => clearInterval(interval);
+  }, [isLoggedIn, activeBrand]);
 
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -256,13 +249,18 @@ export default function ClientTransparencyPageView({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          clerkId: user?.id || 'demo',
+          client_id: activeBrand,
           subject: `AI Öneri Talebi: ${insightText.substring(0, 30)}...`,
           department: 'Yapay Zeka Önerileri',
-          text: `Müşteri, yapay zeka önerisi doğrultusunda "\${insightText}" talebinde bulundu.`
+          text: `Müşteri, yapay zeka önerisi doğrultusunda "${insightText}" talebinde bulundu.`
         })
       });
       setAiRequestSuccess(true);
+      // Immediately fetch new tickets to show in queue
+      const res = await fetch(`/api/tickets?client_id=${activeBrand}`);
+      const data = await res.json();
+      if (data.success) setBackendTickets(data.data);
+      
       setTimeout(() => setAiRequestSuccess(false), 3000);
     } catch (err) {
       console.error(err);
@@ -448,6 +446,15 @@ export default function ClientTransparencyPageView({
         body: JSON.stringify({ sender: 'client', text: clientReplyText.trim() })
       });
       setClientReplyText('');
+      
+      // Update local state quickly
+      const newMsg = { sender: 'client', text: clientReplyText.trim(), timestamp: new Date().toISOString() };
+      setViewingTicket(prev => ({
+        ...prev,
+        messages: [...(prev.messages || []), newMsg]
+      }));
+      setBackendTickets(prev => prev.map(t => t.id === viewingTicket.id ? { ...t, messages: [...(t.messages || []), newMsg] } : t));
+
     } catch(e) {}
   };
 
@@ -460,7 +467,7 @@ export default function ClientTransparencyPageView({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          clerkId: user?.id || 'demo',
+          client_id: activeBrand,
           subject: newTicketSubject,
           department: newTicketDepartment,
           text: newTicketMessage
@@ -469,6 +476,11 @@ export default function ClientTransparencyPageView({
       setNewTicketSubject('');
       setNewTicketMessage('');
       setTicketSuccess(true);
+      
+      // Refresh tickets
+      const res = await fetch(`/api/tickets?client_id=${activeBrand}`);
+      const data = await res.json();
+      if (data.success) setBackendTickets(data.data);
     } catch (err) {
       console.error(err);
       toast.error('Talep oluşturulurken bir hata oluştu.');
@@ -1127,13 +1139,7 @@ export default function ClientTransparencyPageView({
 
             {/* Show status of previous AI requests from queue */}
             {(() => {
-              let queueItems = [];
-              try {
-                const raw = localStorage.getItem('client_ticket_queue');
-                if (raw) {
-                  queueItems = JSON.parse(raw).filter(t => t.brandKey === activeBrand && t.source === 'ai-recommendation');
-                }
-              } catch(e) {}
+              const queueItems = backendTickets.filter(t => t.department === 'Yapay Zeka Önerileri');
               if (queueItems.length === 0) return null;
               return (
                 <div style={{ 
@@ -1148,10 +1154,11 @@ export default function ClientTransparencyPageView({
                     <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#f8fafc' }}>Talep Durumlarınız</span>
                   </div>
                   {queueItems.map((item, idx) => {
-                    const isResolved = item.status === 'Çözüldü';
+                    const statusColor = item.status === 'İşlemde' ? '#3b82f6' : item.status === 'Çözüldü' || item.status === 'Kapalı' ? '#10b981' : '#f59e0b';
+                    const isResolved = item.status === 'Çözüldü' || item.status === 'Kapalı';
                     const isInProgress = item.status === 'İşlemde';
                     return (
-                      <div key={item.id || idx} style={{ 
+                      <div key={item.id} style={{ 
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'space-between',
@@ -2112,19 +2119,9 @@ export default function ClientTransparencyPageView({
                   
                   <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', background: '#0f172a', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1rem' }}>
                     {(() => {
-                      // Read messages from localStorage queue (shared channel) as source of truth
-                      let msgs = viewingTicket.messages;
-                      try {
-                        const raw = localStorage.getItem('client_ticket_queue');
-                        if (raw) {
-                          const queueItem = JSON.parse(raw).find(t => t.id === viewingTicket.id);
-                          if (queueItem?.messages?.length) {
-                            msgs = queueItem.messages;
-                          }
-                        }
-                      } catch(e) {}
+                      let msgs = viewingTicket.messages || [];
                       if (!msgs || msgs.length === 0) {
-                        msgs = [{ sender: 'client', text: viewingTicket.message || 'Bu talep için detaylı mesaj girilmemiş.', date: viewingTicket.date }];
+                        msgs = [{ sender: 'client', text: viewingTicket.text || 'Bu talep için detaylı mesaj girilmemiş.', timestamp: viewingTicket.created_at }];
                       }
                       return msgs;
                     })().map((msg, i) => (

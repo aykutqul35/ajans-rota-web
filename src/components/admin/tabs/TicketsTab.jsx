@@ -1,62 +1,40 @@
-import { useState, useEffect } from 'react';
-import { io } from 'socket.io-client';
+import { useState, useEffect, useRef } from 'react';
 
 export default function TicketsTab() {
   const [allTickets, setAllTickets] = useState([]);
   const [viewingTicket, setViewingTicket] = useState(null);
   const [adminReplyText, setAdminReplyText] = useState('');
   const [loading, setLoading] = useState(true);
-  const [socket, setSocket] = useState(null);
+
+  const fetchTickets = async () => {
+    try {
+      const res = await fetch('/api/tickets');
+      const data = await res.json();
+      if (data.success) {
+        setAllTickets(data.data);
+      }
+    } catch (err) {
+      console.error("Error fetching tickets", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Fetch initial tickets
-    const fetchTickets = async () => {
-      try {
-        const res = await fetch('/api/tickets');
-        const data = await res.json();
-        if (data.success) {
-          setAllTickets(data.data);
-        }
-      } catch (err) {
-        console.error("Error fetching tickets", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchTickets();
-
-    // Connect WebSocket
-    const newSocket = io();
-    setSocket(newSocket);
-
-    newSocket.on('new_ticket', (ticket) => {
-      setAllTickets(prev => [ticket, ...prev]);
-    });
-
-    newSocket.on('new_message', ({ ticketId, message }) => {
-      setAllTickets(prev => prev.map(t => {
-        if (t.id === ticketId) {
-          const updatedMessages = t.messages ? [...t.messages, message] : [message];
-          return { ...t, messages: updatedMessages, status: 'İşlemde' };
-        }
-        return t;
-      }));
-      setViewingTicket(prev => {
-        if (prev && prev.id === ticketId) {
-          const updatedMessages = prev.messages ? [...prev.messages, message] : [message];
-          return { ...prev, messages: updatedMessages, status: 'İşlemde' };
-        }
-        return prev;
-      });
-    });
-
-    newSocket.on('ticket_updated', (updatedTicket) => {
-      setAllTickets(prev => prev.map(t => t.id === updatedTicket.id ? { ...t, status: updatedTicket.status } : t));
-      setViewingTicket(prev => prev?.id === updatedTicket.id ? { ...prev, status: updatedTicket.status } : prev);
-    });
-
-    return () => newSocket.disconnect();
+    const interval = setInterval(fetchTickets, 15000); // Poll every 15 seconds
+    return () => clearInterval(interval);
   }, []);
+
+  // Keep viewing ticket synced with fresh data
+  useEffect(() => {
+    if (viewingTicket && allTickets.length > 0) {
+      const updated = allTickets.find(t => t.id === viewingTicket.id);
+      if (updated && JSON.stringify(updated) !== JSON.stringify(viewingTicket)) {
+        setViewingTicket(updated);
+      }
+    }
+  }, [allTickets]);
 
   const handleStatusChange = async (ticket, newStatus) => {
     try {
@@ -65,6 +43,7 @@ export default function TicketsTab() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
       });
+      fetchTickets(); // Refresh immediately after update
     } catch(err) {
       console.error(err);
     }
@@ -81,6 +60,7 @@ export default function TicketsTab() {
       // also update ticket status to "İşlemde"
       await handleStatusChange(viewingTicket, 'İşlemde');
       setAdminReplyText('');
+      fetchTickets(); // Refresh
     } catch (err) {
       console.error(err);
     }

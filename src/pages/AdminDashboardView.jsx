@@ -1159,7 +1159,7 @@ function AdminDashboardView({
         )}
 
         {activeTab === 'aiengine' && (
-          <AIEngineTab authToken={authToken} />
+          <AIEngineTab authToken={authToken} clientReports={clientReports} />
         )}
 
         {activeTab === 'reports' && (
