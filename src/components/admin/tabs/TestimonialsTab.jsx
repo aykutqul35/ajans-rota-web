@@ -3,926 +3,226 @@ import { useState } from 'react';
 export default function TestimonialsTab({
   testimonialsData, setTestimonialsData, handleSaveAll, isSaving, settingsData, setSettingsData, openEditModal, handleDeleteItem
 }) {
-const [testSearch, setTestSearch] = useState('');
-const [testCatFilter, setTestCatFilter] = useState('all');
-const [activeTestimonialsSection, setActiveTestimonialsSection] = useState('reviews');
+  const [testSearch, setTestSearch] = useState('');
+  const [testCatFilter, setTestCatFilter] = useState('all');
+  const [activeTestimonialsSection, setActiveTestimonialsSection] = useState('reviews');
+
+  const inputCls = "w-full p-2 rounded border border-glass-border focus:border-primary outline-none transition-colors";
+  const sectionTitle = "text-lg font-bold text-text-light mb-5 flex items-center gap-2 border-b border-slate-900/5 pb-2";
+  const cardCls = "border border-glass-border p-5 rounded-lg bg-slate-50";
+
+  const upd = (key, val) => setSettingsData({ ...settingsData, [key]: val });
+
+  // Reusable Case Study form
+  const CaseStudyForm = ({ n }) => (
+    <div className={cardCls}>
+      <h5 className="m-0 mb-4 text-primary font-bold">Vaka Çalışması {n}</h5>
+      
+      {/* Company Info */}
+      <div className="grid grid-cols-3 gap-3 mb-3">
+        {[
+          { label: 'Şirket Adı', key: `cs${n}_company` },
+          { label: 'Logo / İkon / Emoji', key: `cs${n}_logo` },
+          { label: 'Sektör', key: `cs${n}_sector` },
+        ].map(f => <div key={f.key} className="admin-form-group">
+          <label>{f.label}</label>
+          <input type="text" value={settingsData[f.key] || ''} onChange={e => upd(f.key, e.target.value)} className={inputCls} />
+        </div>)}
+      </div>
+
+      {/* Before Metrics */}
+      <div className="grid grid-cols-3 gap-3 mb-3">
+        {[
+          { label: 'Önceki ROAS / Metrik', key: `cs${n}_before_roas` },
+          { label: 'Önceki Trafik / Durum', key: `cs${n}_before_traffic` },
+          { label: 'Önceki Maliyet / Sorun', key: `cs${n}_before_cost` },
+        ].map(f => <div key={f.key} className="admin-form-group">
+          <label>{f.label}</label>
+          <input type="text" value={settingsData[f.key] || ''} onChange={e => upd(f.key, e.target.value)} className={inputCls} />
+        </div>)}
+      </div>
+
+      {/* After Metrics */}
+      <div className="grid grid-cols-3 gap-3 mb-3">
+        {[
+          { label: 'Sonraki ROAS / Metrik', key: `cs${n}_after_roas` },
+          { label: 'Sonraki Trafik / Durum', key: `cs${n}_after_traffic` },
+          { label: 'Sonraki Maliyet / İyileşme', key: `cs${n}_after_cost` },
+        ].map(f => <div key={f.key} className="admin-form-group">
+          <label>{f.label}</label>
+          <input type="text" value={settingsData[f.key] || ''} onChange={e => upd(f.key, e.target.value)} className={inputCls} />
+        </div>)}
+      </div>
+
+      {/* Strategies */}
+      <div className="flex flex-col gap-2">
+        {[1, 2, 3].map(s => <div key={s} className="admin-form-group">
+          <label>Strateji {s}</label>
+          <input type="text" value={settingsData[`cs${n}_strat${s}`] || ''} onChange={e => upd(`cs${n}_strat${s}`, e.target.value)} className={inputCls} />
+        </div>)}
+      </div>
+    </div>
+  );
+
+  const SaveButton = () => (
+    <button type="submit" className="btn btn-primary w-full py-3 text-sm rounded-lg cursor-pointer inline-flex items-center justify-center gap-2">
+      <i className="fa-solid fa-floppy-disk"></i> Değişiklikleri Kaydet
+    </button>
+  );
+
   return (
-              <div>
-              <div className="admin-section-title" style={{
-            marginBottom: '1.5rem'
-          }}>
-                Referanslar & Yorumlar Sayfası Yönetimi
-              </div>
+    <div>
+      <div className="admin-section-title mb-6">
+        Referanslar & Yorumlar Sayfası Yönetimi
+      </div>
 
-              <form onSubmit={e => {
-            e.preventDefault();
-            handleSaveAll();
-          }} className="admin-split-layout">
-                {/* Left Column: Sections Sidebar */}
-                <div className="service-editor-sidebar admin-split-sidebar">
-                  {[{
-                id: 'reviews',
-                label: 'Müşteri Yorumları',
-                icon: 'fa-solid fa-comments'
-              }, {
-                id: 'kpis',
-                label: 'Performans Göstergeleri',
-                icon: 'fa-solid fa-chart-line'
-              }, {
-                id: 'case_studies',
-                label: 'Vaka Çalışmaları (CS)',
-                icon: 'fa-solid fa-file-invoice-dollar'
-              }, {
-                id: 'logos',
-                label: 'Marka Logoları Duvarı',
-                icon: 'fa-solid fa-cubes'
-              }].map(sec => {
-                const isActive = activeTestimonialsSection === sec.id;
-                return <button key={sec.id} type="button" onClick={() => setActiveTestimonialsSection(sec.id)} className={`service-sec-btn ${isActive ? 'active' : ''}`}>
-                        <i className={sec.icon} style={{
-                    width: '16px',
-                    textAlign: 'center',
-                    fontSize: '0.95rem'
-                  }}></i>
-                        {sec.label}
-                      </button>;
-              })}
+      <form onSubmit={e => { e.preventDefault(); handleSaveAll(); }} className="admin-split-layout">
+        {/* Sidebar */}
+        <div className="service-editor-sidebar admin-split-sidebar">
+          {[
+            { id: 'reviews', label: 'Müşteri Yorumları', icon: 'fa-solid fa-comments' },
+            { id: 'kpis', label: 'Performans Göstergeleri', icon: 'fa-solid fa-chart-line' },
+            { id: 'case_studies', label: 'Vaka Çalışmaları (CS)', icon: 'fa-solid fa-file-invoice-dollar' },
+            { id: 'logos', label: 'Marka Logoları Duvarı', icon: 'fa-solid fa-cubes' }
+          ].map(sec => {
+            const isActive = activeTestimonialsSection === sec.id;
+            return <button key={sec.id} type="button" onClick={() => setActiveTestimonialsSection(sec.id)} className={`service-sec-btn ${isActive ? 'active' : ''}`}>
+              <i className={`${sec.icon} w-4 text-center text-[0.95rem]`}></i>
+              {sec.label}
+            </button>;
+          })}
 
-                  <div className="admin-split-sidebar-save">
-                    <button type="submit" className="btn btn-primary" style={{
-                  width: '100%',
-                  padding: '0.8rem',
-                  fontSize: '0.85rem',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem'
-                }}>
-                      <i className="fa-solid fa-floppy-disk"></i> Değişiklikleri Kaydet
-                    </button>
-                  </div>
-                </div>
+          <div className="admin-split-sidebar-save">
+            <SaveButton />
+          </div>
+        </div>
 
-                {/* Right Column: Section Fields */}
-                <div className="service-editor-fields admin-split-content">
-                  
-                  {/* Option 1: Reviews List */}
-                  {activeTestimonialsSection === 'reviews' && <div>
-                      <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: '1.25rem',
-                  borderBottom: '1px solid rgba(15,23,42,0.05)',
-                  paddingBottom: '0.5rem'
-                }}>
-                        <h4 style={{
-                    fontSize: '1.05rem',
-                    fontWeight: 700,
-                    color: 'var(--text-light)',
-                    margin: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem'
-                  }}>
-                          <i className="fa-solid fa-comments" style={{
-                      color: 'var(--primary)'
-                    }}></i> Müşteri Yorumları & Kartları
-                        </h4>
-                        <button type="button" onClick={() => openEditModal('testimonial', 'new')} className="btn btn-secondary" style={{
-                    padding: '0.4rem 0.85rem',
-                    fontSize: '0.8rem'
-                  }}>
-                          <i className="fa-solid fa-plus" style={{
-                      marginRight: '6px'
-                    }}></i> Yeni Yorum Ekle
-                        </button>
-                      </div>
-
-                      {/* Filters */}
-                      <div style={{
-                  display: 'flex',
-                  gap: '1rem',
-                  marginBottom: '1.5rem',
-                  flexWrap: 'wrap'
-                }}>
-                        <input type="text" placeholder="Müşteri veya şirket adı ara..." value={testSearch} onChange={e => setTestSearch(e.target.value)} style={{
-                    flex: 1,
-                    minWidth: '200px',
-                    padding: '0.65rem 1rem',
-                    borderRadius: '8px',
-                    border: '1px solid var(--glass-border)',
-                    background: '#fff',
-                    fontSize: '0.9rem'
-                  }} />
-                        <select value={testCatFilter} onChange={e => setTestCatFilter(e.target.value)} style={{
-                    padding: '0.65rem 1rem',
-                    borderRadius: '8px',
-                    border: '1px solid var(--glass-border)',
-                    background: '#fff',
-                    fontSize: '0.9rem',
-                    minWidth: '150px'
-                  }}>
-                          <option value="all">Tüm Kategoriler</option>
-                          <option value="google-ads">Google Ads</option>
-                          <option value="meta-ads">Meta Ads</option>
-                          <option value="seo">SEO &amp; İçerik</option>
-                          <option value="social-media">Sosyal Medya</option>
-                          <option value="ecommerce">E-Ticaret</option>
-                          <option value="web-design">Web Tasarım</option>
-                        </select>
-                      </div>
-
-                      <div className="admin-item-list" style={{
-                  maxHeight: '450px',
-                  overflowY: 'auto',
-                  paddingRight: '4px'
-                }}>
-                        {testimonialsData.filter(item => {
-                    const matchQuery = (item.name || '').toLowerCase().includes(testSearch.toLowerCase()) || (item.company || '').toLowerCase().includes(testSearch.toLowerCase());
-                    const matchCat = testCatFilter === 'all' || item.category === testCatFilter;
-                    return matchQuery && matchCat;
-                  }).map(item => <div key={item.id} className="admin-item-row">
-                              <div className="admin-item-info">
-                                <h4>{item.name} <span style={{
-                          fontSize: '0.8rem',
-                          fontWeight: 'normal',
-                          color: 'var(--text-muted)'
-                        }}>({item.company} - {item.role})</span></h4>
-                                <span>Kategori: {item.category} | Metrik: {item.metric || 'Yok'}</span>
-                                <p style={{
-                        fontSize: '0.85rem',
-                        color: 'var(--text-main)',
-                        marginTop: '6px',
-                        fontStyle: 'italic',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
-                      }}>
-                                  "{item.quote}"
-                                </p>
-                              </div>
-                              <div className="admin-action-btns">
-                                <button type="button" onClick={() => openEditModal('testimonial', item)} className="btn-icon" title="Düzenle">
-                                  <i className="fa-solid fa-pen-to-square"></i>
-                                </button>
-                                <button type="button" onClick={() => handleDeleteItem('testimonial', item)} className="btn-icon btn-delete" title="Sil">
-                                  <i className="fa-solid fa-trash"></i>
-                                </button>
-                              </div>
-                            </div>)}
-                      </div>
-                    </div>}
-
-                  {/* Option 2: KPIs */}
-                  {activeTestimonialsSection === 'kpis' && <div>
-                      <h4 style={{
-                  fontSize: '1.05rem',
-                  fontWeight: 700,
-                  color: 'var(--text-light)',
-                  marginBottom: '1.25rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  borderBottom: '1px solid rgba(15,23,42,0.05)',
-                  paddingBottom: '0.5rem'
-                }}>
-                        <i className="fa-solid fa-chart-line" style={{
-                    color: 'var(--primary)'
-                  }}></i> Performans Gösterge Paneli (KPI'lar)
-                      </h4>
-
-                      <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '1rem'
-                }}>
-                        <div className="admin-form-group">
-                          <label>Gösterge 1 Başlık</label>
-                          <input type="text" value={settingsData.ref_kpi1_title || ''} onChange={e => setSettingsData({
-                      ...settingsData,
-                      ref_kpi1_title: e.target.value
-                    })} style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      borderRadius: '6px',
-                      border: '1px solid var(--glass-border)'
-                    }} />
-                        </div>
-                        <div className="admin-form-group">
-                          <label>Gösterge 1 Değer</label>
-                          <input type="text" value={settingsData.ref_kpi1_val || ''} onChange={e => setSettingsData({
-                      ...settingsData,
-                      ref_kpi1_val: e.target.value
-                    })} style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      borderRadius: '6px',
-                      border: '1px solid var(--glass-border)'
-                    }} />
-                        </div>
-
-                        <div className="admin-form-group">
-                          <label>Gösterge 2 Başlık</label>
-                          <input type="text" value={settingsData.ref_kpi2_title || ''} onChange={e => setSettingsData({
-                      ...settingsData,
-                      ref_kpi2_title: e.target.value
-                    })} style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      borderRadius: '6px',
-                      border: '1px solid var(--glass-border)'
-                    }} />
-                        </div>
-                        <div className="admin-form-group">
-                          <label>Gösterge 2 Değer</label>
-                          <input type="text" value={settingsData.ref_kpi2_val || ''} onChange={e => setSettingsData({
-                      ...settingsData,
-                      ref_kpi2_val: e.target.value
-                    })} style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      borderRadius: '6px',
-                      border: '1px solid var(--glass-border)'
-                    }} />
-                        </div>
-
-                        <div className="admin-form-group">
-                          <label>Gösterge 3 Başlık</label>
-                          <input type="text" value={settingsData.ref_kpi3_title || ''} onChange={e => setSettingsData({
-                      ...settingsData,
-                      ref_kpi3_title: e.target.value
-                    })} style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      borderRadius: '6px',
-                      border: '1px solid var(--glass-border)'
-                    }} />
-                        </div>
-                        <div className="admin-form-group">
-                          <label>Gösterge 3 Değer</label>
-                          <input type="text" value={settingsData.ref_kpi3_val || ''} onChange={e => setSettingsData({
-                      ...settingsData,
-                      ref_kpi3_val: e.target.value
-                    })} style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      borderRadius: '6px',
-                      border: '1px solid var(--glass-border)'
-                    }} />
-                        </div>
-
-                        <div className="admin-form-group">
-                          <label>Gösterge 4 Başlık</label>
-                          <input type="text" value={settingsData.ref_kpi4_title || ''} onChange={e => setSettingsData({
-                      ...settingsData,
-                      ref_kpi4_title: e.target.value
-                    })} style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      borderRadius: '6px',
-                      border: '1px solid var(--glass-border)'
-                    }} />
-                        </div>
-                        <div className="admin-form-group">
-                          <label>Gösterge 4 Değer</label>
-                          <input type="text" value={settingsData.ref_kpi4_val || ''} onChange={e => setSettingsData({
-                      ...settingsData,
-                      ref_kpi4_val: e.target.value
-                    })} style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      borderRadius: '6px',
-                      border: '1px solid var(--glass-border)'
-                    }} />
-                        </div>
-                      </div>
-                    </div>}
-
-                  {/* Option 3: Case Studies */}
-                  {activeTestimonialsSection === 'case_studies' && <div>
-                      <h4 style={{
-                  fontSize: '1.05rem',
-                  fontWeight: 700,
-                  color: 'var(--text-light)',
-                  marginBottom: '1.25rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  borderBottom: '1px solid rgba(15,23,42,0.05)',
-                  paddingBottom: '0.5rem'
-                }}>
-                        <i className="fa-solid fa-file-invoice-dollar" style={{
-                    color: 'var(--primary)'
-                  }}></i> Öncesi / Sonrası Büyüme Analizleri (3 adet)
-                      </h4>
-
-                      <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '2rem'
-                }}>
-                        {/* Case Study 1 Form */}
-                        <div style={{
-                    border: '1px solid var(--glass-border)',
-                    padding: '1.25rem',
-                    borderRadius: '8px',
-                    background: '#f8fafc'
-                  }}>
-                          <h5 style={{
-                      margin: '0 0 1rem 0',
-                      color: 'var(--primary)',
-                      fontWeight: '700'
-                    }}>Vaka Çalışması 1</h5>
-                          <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 1fr',
-                      gap: '0.75rem',
-                      marginBottom: '0.75rem'
-                    }}>
-                            <div className="admin-form-group">
-                              <label>Şirket Adı</label>
-                              <input type="text" value={settingsData.cs1_company || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs1_company: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Logo / İkon / Emoji</label>
-                              <input type="text" value={settingsData.cs1_logo || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs1_logo: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Sektör</label>
-                              <input type="text" value={settingsData.cs1_sector || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs1_sector: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                          </div>
-
-                          <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 1fr',
-                      gap: '0.75rem',
-                      marginBottom: '0.75rem'
-                    }}>
-                            <div className="admin-form-group">
-                              <label>Önceki ROAS / Metrik</label>
-                              <input type="text" value={settingsData.cs1_before_roas || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs1_before_roas: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Önceki Trafik / Durum</label>
-                              <input type="text" value={settingsData.cs1_before_traffic || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs1_before_traffic: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Önceki Maliyet / Sorun</label>
-                              <input type="text" value={settingsData.cs1_before_cost || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs1_before_cost: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                          </div>
-
-                          <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 1fr',
-                      gap: '0.75rem',
-                      marginBottom: '0.75rem'
-                    }}>
-                            <div className="admin-form-group">
-                              <label>Sonraki ROAS / Metrik</label>
-                              <input type="text" value={settingsData.cs1_after_roas || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs1_after_roas: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Sonraki Trafik / Durum</label>
-                              <input type="text" value={settingsData.cs1_after_traffic || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs1_after_traffic: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Sonraki Maliyet / İyileşme</label>
-                              <input type="text" value={settingsData.cs1_after_cost || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs1_after_cost: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                          </div>
-
-                          <div style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.5rem'
-                    }}>
-                            <div className="admin-form-group">
-                              <label>Strateji 1</label>
-                              <input type="text" value={settingsData.cs1_strat1 || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs1_strat1: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Strateji 2</label>
-                              <input type="text" value={settingsData.cs1_strat2 || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs1_strat2: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Strateji 3</label>
-                              <input type="text" value={settingsData.cs1_strat3 || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs1_strat3: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Case Study 2 Form */}
-                        <div style={{
-                    border: '1px solid var(--glass-border)',
-                    padding: '1.25rem',
-                    borderRadius: '8px',
-                    background: '#f8fafc'
-                  }}>
-                          <h5 style={{
-                      margin: '0 0 1rem 0',
-                      color: 'var(--primary)',
-                      fontWeight: '700'
-                    }}>Vaka Çalışması 2</h5>
-                          <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 1fr',
-                      gap: '0.75rem',
-                      marginBottom: '0.75rem'
-                    }}>
-                            <div className="admin-form-group">
-                              <label>Şirket Adı</label>
-                              <input type="text" value={settingsData.cs2_company || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs2_company: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Logo / İkon / Emoji</label>
-                              <input type="text" value={settingsData.cs2_logo || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs2_logo: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Sektör</label>
-                              <input type="text" value={settingsData.cs2_sector || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs2_sector: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                          </div>
-
-                          <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 1fr',
-                      gap: '0.75rem',
-                      marginBottom: '0.75rem'
-                    }}>
-                            <div className="admin-form-group">
-                              <label>Önceki ROAS / Metrik</label>
-                              <input type="text" value={settingsData.cs2_before_roas || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs2_before_roas: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Önceki Trafik / Durum</label>
-                              <input type="text" value={settingsData.cs2_before_traffic || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs2_before_traffic: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Önceki Maliyet / Sorun</label>
-                              <input type="text" value={settingsData.cs2_before_cost || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs2_before_cost: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Case Study 3 Form */}
-                        <div style={{
-                    border: '1px solid var(--glass-border)',
-                    padding: '1.25rem',
-                    borderRadius: '8px',
-                    background: '#f8fafc'
-                  }}>
-                          <h5 style={{
-                      margin: '0 0 1rem 0',
-                      color: 'var(--primary)',
-                      fontWeight: '700'
-                    }}>Vaka Çalışması 3</h5>
-                          <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 1fr',
-                      gap: '0.75rem',
-                      marginBottom: '0.75rem'
-                    }}>
-                            <div className="admin-form-group">
-                              <label>Şirket Adı</label>
-                              <input type="text" value={settingsData.cs3_company || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs3_company: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Logo / İkon / Emoji</label>
-                              <input type="text" value={settingsData.cs3_logo || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs3_logo: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Sektör</label>
-                              <input type="text" value={settingsData.cs3_sector || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs3_sector: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                          </div>
-
-                          <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 1fr',
-                      gap: '0.75rem',
-                      marginBottom: '0.75rem'
-                    }}>
-                            <div className="admin-form-group">
-                              <label>Önceki ROAS / Metrik</label>
-                              <input type="text" value={settingsData.cs3_before_roas || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs3_before_roas: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Önceki Trafik / Durum</label>
-                              <input type="text" value={settingsData.cs3_before_traffic || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs3_before_traffic: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Önceki Maliyet / Sorun</label>
-                              <input type="text" value={settingsData.cs3_before_cost || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs3_before_cost: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                          </div>
-
-                          <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr 1fr',
-                      gap: '0.75rem',
-                      marginBottom: '0.75rem'
-                    }}>
-                            <div className="admin-form-group">
-                              <label>Sonraki ROAS / Metrik</label>
-                              <input type="text" value={settingsData.cs3_after_roas || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs3_after_roas: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Sonraki Trafik / Durum</label>
-                              <input type="text" value={settingsData.cs3_after_traffic || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs3_after_traffic: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Sonraki Maliyet / İyileşme</label>
-                              <input type="text" value={settingsData.cs3_after_cost || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs3_after_cost: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                          </div>
-
-                          <div style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.5rem'
-                    }}>
-                            <div className="admin-form-group">
-                              <label>Strateji 1</label>
-                              <input type="text" value={settingsData.cs3_strat1 || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs3_strat1: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Strateji 2</label>
-                              <input type="text" value={settingsData.cs3_strat2 || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs3_strat2: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                            <div className="admin-form-group">
-                              <label>Strateji 3</label>
-                              <input type="text" value={settingsData.cs3_strat3 || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          cs3_strat3: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>}
-
-
-
-                  {/* Option 5: Brand Logo Wall */}
-                  {activeTestimonialsSection === 'logos' && <div>
-                      <h4 style={{
-                  fontSize: '1.05rem',
-                  fontWeight: 700,
-                  color: 'var(--text-light)',
-                  marginBottom: '1.25rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  borderBottom: '1px solid rgba(15,23,42,0.05)',
-                  paddingBottom: '0.5rem'
-                }}>
-                        <i className="fa-solid fa-cubes" style={{
-                    color: 'var(--primary)'
-                  }}></i> Marka Logoları Duvarı (6 adet)
-                      </h4>
-
-                      <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '1.5rem'
-                }}>
-                        {[1, 2, 3, 4, 5, 6].map(num => <div key={num} style={{
-                    border: '1px solid var(--glass-border)',
-                    padding: '1rem',
-                    borderRadius: '8px',
-                    background: '#f8fafc'
-                  }}>
-                            <h5 style={{
-                      margin: '0 0 0.75rem 0',
-                      color: 'var(--primary)',
-                      fontWeight: '700'
-                    }}>Marka Kartı {num}</h5>
-                            
-                            <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 3fr',
-                      gap: '0.5rem',
-                      marginBottom: '0.5rem'
-                    }}>
-                              <div className="admin-form-group">
-                                <label>Logo (Emoji)</label>
-                                <input type="text" value={settingsData[`logo${num}_logo`] || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          [`logo${num}_logo`]: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)',
-                          textAlign: 'center'
-                        }} />
-                              </div>
-                              <div className="admin-form-group">
-                                <label>Şirket Adı</label>
-                                <input type="text" value={settingsData[`logo${num}_company`] || ''} onChange={e => setSettingsData({
-                          ...settingsData,
-                          [`logo${num}_company`]: e.target.value
-                        })} style={{
-                          width: '100%',
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          border: '1px solid var(--glass-border)'
-                        }} />
-                              </div>
-                            </div>
-
-                            <div className="admin-form-group" style={{
-                      marginBottom: '0.5rem'
-                    }}>
-                              <label>Verilen Hizmetler</label>
-                              <input type="text" value={settingsData[`logo${num}_services`] || ''} onChange={e => setSettingsData({
-                        ...settingsData,
-                        [`logo${num}_services`]: e.target.value
-                      })} style={{
-                        width: '100%',
-                        padding: '0.5rem',
-                        borderRadius: '4px',
-                        border: '1px solid var(--glass-border)'
-                      }} />
-                            </div>
-
-                            <div className="admin-form-group" style={{
-                      marginBottom: 0
-                    }}>
-                              <label>Elde Edilen Başarı (Metrik)</label>
-                              <input type="text" value={settingsData[`logo${num}_metric`] || ''} onChange={e => setSettingsData({
-                        ...settingsData,
-                        [`logo${num}_metric`]: e.target.value
-                      })} style={{
-                        width: '100%',
-                        padding: '0.5rem',
-                        borderRadius: '4px',
-                        border: '1px solid var(--glass-border)'
-                      }} />
-                            </div>
-                          </div>)}
-                      </div>
-                    </div>}
-
-                  <div className="mobile-only-save" style={{
-                marginTop: '2rem'
-              }}>
-                    <button type="submit" className="btn btn-primary" style={{
-                  width: '100%',
-                  padding: '0.8rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem'
-                }}>
-                      <i className="fa-solid fa-floppy-disk"></i> Değişiklikleri Kaydet
-                    </button>
-                  </div>
-                </div>
-              </form>
+        {/* Content */}
+        <div className="service-editor-fields admin-split-content">
+          
+          {/* Reviews */}
+          {activeTestimonialsSection === 'reviews' && <div>
+            <div className="flex justify-between items-center mb-5 border-b border-slate-900/5 pb-2">
+              <h4 className="text-lg font-bold text-text-light m-0 flex items-center gap-2">
+                <i className="fa-solid fa-comments text-primary"></i> Müşteri Yorumları & Kartları
+              </h4>
+              <button type="button" onClick={() => openEditModal('testimonial', 'new')} className="btn btn-secondary py-1.5 px-3 text-xs">
+                <i className="fa-solid fa-plus mr-1.5"></i> Yeni Yorum Ekle
+              </button>
             </div>
+
+            {/* Filters */}
+            <div className="flex gap-4 mb-6 flex-wrap">
+              <input type="text" placeholder="Müşteri veya şirket adı ara..." value={testSearch} onChange={e => setTestSearch(e.target.value)} className="flex-1 min-w-[200px] py-2.5 px-4 rounded-lg border border-glass-border bg-white text-sm outline-none focus:border-primary transition-colors" />
+              <select value={testCatFilter} onChange={e => setTestCatFilter(e.target.value)} className="py-2.5 px-4 rounded-lg border border-glass-border bg-white text-sm min-w-[150px] outline-none cursor-pointer focus:border-primary transition-colors">
+                <option value="all">Tüm Kategoriler</option>
+                <option value="google-ads">Google Ads</option>
+                <option value="meta-ads">Meta Ads</option>
+                <option value="seo">SEO &amp; İçerik</option>
+                <option value="social-media">Sosyal Medya</option>
+                <option value="ecommerce">E-Ticaret</option>
+                <option value="web-design">Web Tasarım</option>
+              </select>
+            </div>
+
+            <div className="admin-item-list max-h-[450px] overflow-y-auto pr-1">
+              {testimonialsData.filter(item => {
+                const matchQuery = (item.name || '').toLowerCase().includes(testSearch.toLowerCase()) || (item.company || '').toLowerCase().includes(testSearch.toLowerCase());
+                const matchCat = testCatFilter === 'all' || item.category === testCatFilter;
+                return matchQuery && matchCat;
+              }).map(item => <div key={item.id} className="admin-item-row">
+                <div className="admin-item-info">
+                  <h4>{item.name} <span className="text-xs font-normal text-text-muted">({item.company} - {item.role})</span></h4>
+                  <span>Kategori: {item.category} | Metrik: {item.metric || 'Yok'}</span>
+                  <p className="text-sm text-text-main mt-1.5 italic line-clamp-2">
+                    "{item.quote}"
+                  </p>
+                </div>
+                <div className="admin-action-btns">
+                  <button type="button" onClick={() => openEditModal('testimonial', item)} className="btn-icon" title="Düzenle">
+                    <i className="fa-solid fa-pen-to-square"></i>
+                  </button>
+                  <button type="button" onClick={() => handleDeleteItem('testimonial', item)} className="btn-icon btn-delete" title="Sil">
+                    <i className="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </div>)}
+            </div>
+          </div>}
+
+          {/* KPIs */}
+          {activeTestimonialsSection === 'kpis' && <div>
+            <h4 className={sectionTitle}>
+              <i className="fa-solid fa-chart-line text-primary"></i> Performans Gösterge Paneli (KPI'lar)
+            </h4>
+
+            <div className="grid grid-cols-2 gap-4">
+              {[1, 2, 3, 4].map(n => <>
+                <div key={`title-${n}`} className="admin-form-group">
+                  <label>Gösterge {n} Başlık</label>
+                  <input type="text" value={settingsData[`ref_kpi${n}_title`] || ''} onChange={e => upd(`ref_kpi${n}_title`, e.target.value)} className={inputCls} />
+                </div>
+                <div key={`val-${n}`} className="admin-form-group">
+                  <label>Gösterge {n} Değer</label>
+                  <input type="text" value={settingsData[`ref_kpi${n}_val`] || ''} onChange={e => upd(`ref_kpi${n}_val`, e.target.value)} className={inputCls} />
+                </div>
+              </>)}
+            </div>
+          </div>}
+
+          {/* Case Studies */}
+          {activeTestimonialsSection === 'case_studies' && <div>
+            <h4 className={sectionTitle}>
+              <i className="fa-solid fa-file-invoice-dollar text-primary"></i> Öncesi / Sonrası Büyüme Analizleri (3 adet)
+            </h4>
+
+            <div className="flex flex-col gap-8">
+              <CaseStudyForm n={1} />
+              <CaseStudyForm n={2} />
+              <CaseStudyForm n={3} />
+            </div>
+          </div>}
+
+          {/* Brand Logos */}
+          {activeTestimonialsSection === 'logos' && <div>
+            <h4 className={sectionTitle}>
+              <i className="fa-solid fa-cubes text-primary"></i> Marka Logoları Duvarı (6 adet)
+            </h4>
+
+            <div className="grid grid-cols-2 gap-6">
+              {[1, 2, 3, 4, 5, 6].map(num => <div key={num} className={cardCls}>
+                <h5 className="m-0 mb-3 text-primary font-bold">Marka Kartı {num}</h5>
+                
+                <div className="grid grid-cols-[1fr_3fr] gap-2 mb-2">
+                  <div className="admin-form-group">
+                    <label>Logo (Emoji)</label>
+                    <input type="text" value={settingsData[`logo${num}_logo`] || ''} onChange={e => upd(`logo${num}_logo`, e.target.value)} className={`${inputCls} text-center`} />
+                  </div>
+                  <div className="admin-form-group">
+                    <label>Şirket Adı</label>
+                    <input type="text" value={settingsData[`logo${num}_company`] || ''} onChange={e => upd(`logo${num}_company`, e.target.value)} className={inputCls} />
+                  </div>
+                </div>
+
+                <div className="admin-form-group mb-2">
+                  <label>Verilen Hizmetler</label>
+                  <input type="text" value={settingsData[`logo${num}_services`] || ''} onChange={e => upd(`logo${num}_services`, e.target.value)} className={inputCls} />
+                </div>
+
+                <div className="admin-form-group !mb-0">
+                  <label>Elde Edilen Başarı (Metrik)</label>
+                  <input type="text" value={settingsData[`logo${num}_metric`] || ''} onChange={e => upd(`logo${num}_metric`, e.target.value)} className={inputCls} />
+                </div>
+              </div>)}
+            </div>
+          </div>}
+
+          {/* Mobile Save */}
+          <div className="mobile-only-save mt-8">
+            <SaveButton />
+          </div>
+        </div>
+      </form>
+    </div>
   );
 }
