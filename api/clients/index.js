@@ -1,4 +1,4 @@
-import sql from '../db.js';
+import sql from '../../lib/db.js';
 
 export default async function handler(req, res) {
   // Sadece yetkili erişime izin ver (Şimdilik basit bir kontrol)

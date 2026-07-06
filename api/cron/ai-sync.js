@@ -1,6 +1,6 @@
-import sql from '../db.js';
-import { fetchGoogleAdsData } from '../integrations/google-ads.js';
-import { fetchMetaAdsData } from '../integrations/meta-ads.js';
+import sql from '../../lib/db.js';
+import { fetchGoogleAdsData } from '../../lib/integrations/google-ads.js';
+import { fetchMetaAdsData } from '../../lib/integrations/meta-ads.js';
 
 export default async function handler(req, res) {
   // Vercel Cron yetkilendirme doğrulaması
