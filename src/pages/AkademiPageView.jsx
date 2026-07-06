@@ -229,16 +229,16 @@ export default function AkademiPageView({
           
           <div style={{ borderTop: '1px solid var(--glass-border)', margin: '1.5rem -2rem', opacity: 0.5 }}></div>
           
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Program Süresi</span>
-              <span style={{ fontSize: '0.9rem', color: '#1e293b', fontWeight: '600' }}>
+              <span style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '2px' }}>Program Süresi</span>
+              <span style={{ fontSize: '0.9rem', color: '#1e293b', fontWeight: '600', lineHeight: 1 }}>
                 <i className="fa-regular fa-clock" style={{marginRight: '5px'}}></i> {course.duration}
               </span>
             </div>
-            <div style={{ textAlign: 'right' }}>
-              <span style={{ fontSize: '1.5rem', color: '#1e293b', fontWeight: '800' }}>{course.price}</span>
-              <span style={{ fontSize: '0.75rem', color: '#64748b', display: 'block' }}>+KDV</span>
+            <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+              <span style={{ fontSize: '1.5rem', color: '#1e293b', fontWeight: '800', lineHeight: 1 }}>{course.price}</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '2px' }}>+KDV</span>
             </div>
           </div>
           
