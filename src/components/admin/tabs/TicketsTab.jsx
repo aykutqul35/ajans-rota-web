@@ -38,31 +38,42 @@ export default function TicketsTab() {
 
   const handleStatusChange = async (ticket, newStatus) => {
     try {
-      await fetch(`/api/tickets/${ticket.id}/status`, {
+      const res = await fetch(`/api/tickets/${ticket.id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
       });
-      fetchTickets(); // Refresh immediately after update
+      const result = await res.json();
+      console.log('[TicketsTab] Status update result:', result);
+      if (!res.ok) console.error('[TicketsTab] Status update failed:', result);
+      await fetchTickets(); // Refresh immediately after update
     } catch(err) {
-      console.error(err);
+      console.error('[TicketsTab] Status change error:', err);
     }
   };
 
   const handleAdminReplySubmit = async () => {
     if (!adminReplyText.trim() || !viewingTicket) return;
     try {
-      await fetch(`/api/tickets/${viewingTicket.id}/messages`, {
+      const res = await fetch(`/api/tickets/${viewingTicket.id}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sender: 'admin', text: adminReplyText.trim() })
       });
-      // also update ticket status to "İşlemde"
-      await handleStatusChange(viewingTicket, 'İşlemde');
+      const result = await res.json();
+      console.log('[TicketsTab] Message send result:', result);
+      if (!res.ok) {
+        console.error('[TicketsTab] Message send failed:', result);
+        return;
+      }
+      // also update ticket status to "İşlemde" if still open
+      if (viewingTicket.status === 'Açık') {
+        await handleStatusChange(viewingTicket, 'İşlemde');
+      }
       setAdminReplyText('');
-      fetchTickets(); // Refresh
+      await fetchTickets(); // Refresh
     } catch (err) {
-      console.error(err);
+      console.error('[TicketsTab] Reply submit error:', err);
     }
   };
 
@@ -110,8 +121,8 @@ export default function TicketsTab() {
                 </thead>
                 <tbody>
                   {allTickets.map((ticket, globalIdx) => {
-                    const brandName = ticket.client?.brandName || ticket.brandName || "Bilinmiyor";
-                    const dateStr = ticket.createdAt ? new Date(ticket.createdAt).toLocaleString('tr-TR') : ticket.date;
+                    const brandName = ticket.clientId || "Bilinmiyor";
+                    const dateStr = ticket.createdAt ? new Date(ticket.createdAt).toLocaleString('tr-TR') : '-';
                     
                     return (
                     <tr key={ticket.id || globalIdx} style={{ borderBottom: '1px solid var(--glass-border)', background: ticket.status === 'Açık' ? 'rgba(239, 68, 68, 0.02)' : 'transparent' }}>
@@ -174,8 +185,8 @@ export default function TicketsTab() {
             </div>
             
             <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', background: 'var(--bg-light)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1rem' }}>
-              {(viewingTicket.messages || []).map((msg, i) => {
-                const dateStr = msg.createdAt ? new Date(msg.createdAt).toLocaleString('tr-TR') : msg.date;
+              {(Array.isArray(viewingTicket.messages) ? viewingTicket.messages : []).map((msg, i) => {
+                const dateStr = msg.timestamp ? new Date(msg.timestamp).toLocaleString('tr-TR') : '-';
                 return (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: msg.sender === 'admin' ? 'flex-end' : 'flex-start' }}>
                   <div style={{ 

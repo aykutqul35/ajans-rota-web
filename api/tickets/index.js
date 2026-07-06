@@ -30,11 +30,23 @@ export default async function handler(req, res) {
       if (client_id) {
         tickets = await sql`SELECT * FROM tickets WHERE client_id = ${client_id} ORDER BY created_at DESC`;
       } else {
-        // Admin gets all tickets
         tickets = await sql`SELECT * FROM tickets ORDER BY created_at DESC`;
       }
+
+      // Normalize snake_case DB fields to camelCase for frontend
+      const normalized = tickets.map(t => ({
+        id: t.id,
+        clientId: t.client_id,
+        subject: t.subject,
+        department: t.department,
+        text: t.text,
+        status: t.status,
+        messages: typeof t.messages === 'string' ? JSON.parse(t.messages) : (t.messages || []),
+        createdAt: t.created_at,
+        updatedAt: t.updated_at
+      }));
       
-      return res.status(200).json({ success: true, data: tickets });
+      return res.status(200).json({ success: true, data: normalized });
     } catch (error) {
       console.error("GET Tickets Error:", error);
       return res.status(500).json({ success: false, message: "Sunucu hatası" });
