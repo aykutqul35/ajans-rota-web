@@ -17,38 +17,58 @@ export default function Navbar({
   const location = useLocation();
 
   return (
-    <nav className={`navbar ${isScrolled ? 'scrolled' : ''} ${location.pathname.startsWith('/dijital-ajans/') ? 'dark-hero' : ''}`}>
-      <div className="nav-container container">
-        <a href="/" className="logo" onClick={e => {
+    <nav className={`fixed top-0 left-0 right-0 w-full z-[1000] flex items-center transition-all duration-300 ${
+      isScrolled 
+        ? 'bg-white/90 backdrop-blur-xl border-b border-glass h-[70px] shadow-[0_10px_30px_rgba(0,0,0,0.1)]' 
+        : location.pathname.startsWith('/dijital-ajans/') 
+          ? 'bg-slate-900/60 backdrop-blur-md border-b border-white/10 h-[80px]' 
+          : 'bg-white/80 backdrop-blur-md border-b border-white/30 h-[80px]'
+    }`}>
+      <div className="container mx-auto px-4 md:px-8 w-full flex items-center justify-between h-full">
+        <a href="/" className={`text-2xl font-bold flex items-center gap-2 transition-colors ${
+          !isScrolled && location.pathname.startsWith('/dijital-ajans/') ? 'text-white' : 'text-slate-800'
+        }`} onClick={e => {
             e.preventDefault();
             handleNavClick('home');
           }}>
           {settingsData.logo_light || settingsData.logo_dark ? <picture>
               {settingsData.logo_light_mobile && <source media="(max-width: 768px)" srcSet={settingsData.logo_light_mobile} />}
-              <img src={settingsData.logo_light || settingsData.logo_dark} alt="AJANS ROTA Logo" style={{
-                height: '32px',
-                objectFit: 'contain'
-              }} />
+              <img src={settingsData.logo_light || settingsData.logo_dark} alt="AJANS ROTA Logo" className="h-8 object-contain" />
             </picture> : <>
-              <i className="fa-solid fa-compass logo-icon"></i>
-              <span>AJANS ROTA</span>
+              <i className="fa-solid fa-compass text-primary"></i>
+              <span className="tracking-tight">AJANS ROTA</span>
             </>}
         </a>
         
-        <ul className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
-          <li className="nav-link"><a href="/" onClick={e => {
-            e.preventDefault();
-            handleNavClick('home');
-          }}><i className="fa-solid fa-house nav-icon"></i>Ana Sayfa</a></li>
-          <li className={`nav-link dropdown ${activeMobileDropdown === 'services' ? 'active' : ''}`}>
+        <ul className={`fixed xl:static top-[70px] xl:top-auto left-0 w-full xl:w-auto bg-white xl:bg-transparent flex flex-col xl:flex-row items-start xl:items-center gap-2 xl:gap-8 p-6 xl:p-0 transition-all duration-300 xl:translate-y-0 xl:opacity-100 xl:visible ${
+          isMobileMenuOpen ? 'translate-y-0 opacity-100 visible shadow-xl xl:shadow-none border-b border-glass xl:border-none' : '-translate-y-4 opacity-0 invisible xl:opacity-100 xl:visible'
+        }`}>
+          <li className="w-full xl:w-auto">
+            <a href="/" className={`flex items-center gap-2 font-semibold text-[1.05rem] whitespace-nowrap py-2 xl:py-6 transition-colors hover:text-primary w-full ${
+              !isScrolled && location.pathname.startsWith('/dijital-ajans/') ? 'xl:text-white/85 xl:hover:text-sky-400 text-slate-800' : 'text-slate-800'
+            }`} onClick={e => {
+              e.preventDefault();
+              handleNavClick('home');
+              setIsMobileMenuOpen(false);
+            }}>
+              <i className="fa-solid fa-house w-5 text-center"></i>Ana Sayfa
+            </a>
+          </li>
+          
+          <li className="w-full xl:w-auto relative group">
             <a href="javascript:void(0)" onClick={e => {
-            e.preventDefault();
-            setActiveMobileDropdown(activeMobileDropdown === 'services' ? null : 'services');
-          }} className="dropdown-toggle">
-                <span><i className="fa-solid fa-briefcase nav-icon"></i>Hizmetlerimiz</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
-              </a>
-              <ul className={`dropdown-menu ${activeMobileDropdown === 'services' ? 'mobile-active' : ''}`}>
-                {Object.keys(servicesData || {}).map(key => {
+              e.preventDefault();
+              setActiveMobileDropdown(activeMobileDropdown === 'services' ? null : 'services');
+            }} className={`flex items-center justify-between xl:justify-start gap-2 font-semibold text-[1.05rem] whitespace-nowrap py-2 xl:py-6 transition-colors hover:text-primary w-full ${
+              !isScrolled && location.pathname.startsWith('/dijital-ajans/') ? 'xl:text-white/85 xl:hover:text-sky-400 text-slate-800' : 'text-slate-800'
+            } ${activeMobileDropdown === 'services' ? 'text-primary' : ''}`}>
+              <span className="flex items-center gap-2"><i className="fa-solid fa-briefcase w-5 text-center"></i>Hizmetlerimiz</span> 
+              <i className={`fa-solid fa-chevron-down text-xs opacity-60 transition-transform ${activeMobileDropdown === 'services' ? 'rotate-180' : ''}`}></i>
+            </a>
+            <ul className={`xl:absolute top-full left-0 xl:bg-white xl:rounded-xl xl:min-w-[260px] xl:shadow-[0_10px_40px_rgba(0,0,0,0.1)] xl:border xl:border-glass xl:py-4 flex-col xl:opacity-0 xl:invisible xl:group-hover:opacity-100 xl:group-hover:visible xl:translate-y-2 xl:group-hover:translate-y-0 transition-all duration-200 ${
+              activeMobileDropdown === 'services' ? 'flex bg-slate-50/50 rounded-lg p-3' : 'hidden xl:flex'
+            }`}>
+              {Object.keys(servicesData || {}).map(key => {
                 let iconClass = 'fa-solid fa-chevron-right';
                 if (key === 'google') iconClass = 'fa-brands fa-google';
                 if (key === 'meta') iconClass = 'fa-brands fa-facebook';
@@ -56,152 +76,156 @@ export default function Navbar({
                 if (key === 'social') iconClass = 'fa-solid fa-share-nodes';
                 if (key === 'ecommerce') iconClass = 'fa-solid fa-cart-shopping';
                 return <li key={key}>
-                      <a href={`/dijital-ajans/${slugify(key)}`} onClick={e => {
+                  <a href={`/dijital-ajans/${slugify(key)}`} className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => {
                     e.preventDefault();
                     handleServiceClick(key);
+                    setIsMobileMenuOpen(false);
                   }}>
-                        <i className={`${iconClass} nav-icon`}></i>{servicesData[key].title}
-                      </a>
-                    </li>;
+                    <i className={`${iconClass} w-5 text-center text-primary/70`}></i>{servicesData[key].title}
+                  </a>
+                </li>;
               })}
-              </ul>
-            </li>
-            <li className={`nav-link dropdown ${activeMobileDropdown === 'sectors' ? 'active' : ''}`}>
-              <a href="javascript:void(0)" onClick={e => {
-                e.preventDefault();
-                setActiveMobileDropdown(activeMobileDropdown === 'sectors' ? null : 'sectors');
-              }} className="dropdown-toggle">
-                <span><i className="fa-solid fa-chart-pie nav-icon"></i>Sektörler</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
-              </a>
-              <ul className={`dropdown-menu ${activeMobileDropdown === 'sectors' ? 'mobile-active' : ''}`}>
-                <li><a href="/sektorler/saglik-turizmi" onClick={e => { e.preventDefault(); navigateTo('/sektorler/saglik-turizmi'); }}><i className="fa-solid fa-user-doctor nav-icon"></i>Sağlık Turizmi</a></li>
-                <li><a href="/sektorler/gayrimenkul-insaat" onClick={e => { e.preventDefault(); navigateTo('/sektorler/gayrimenkul-insaat'); }}><i className="fa-solid fa-building-shield nav-icon"></i>Gayrimenkul & İnşaat</a></li>
-                <li><a href="/sektorler/b2b-ihracat" onClick={e => { e.preventDefault(); navigateTo('/sektorler/b2b-ihracat'); }}><i className="fa-solid fa-industry nav-icon"></i>B2B & İhracat</a></li>
-                <li><a href="/sektorler/turizm-otelcilik" onClick={e => { e.preventDefault(); navigateTo('/sektorler/turizm-otelcilik'); }}><i className="fa-solid fa-umbrella-beach nav-icon"></i>Turizm & Otelcilik</a></li>
-              </ul>
-            </li>
-            <li className={`nav-link dropdown ${activeMobileDropdown === 'corporate' ? 'active' : ''}`}>
-              <a href="javascript:void(0)" className="dropdown-toggle" onClick={e => {
+            </ul>
+          </li>
+
+          <li className="w-full xl:w-auto relative group">
+            <a href="javascript:void(0)" onClick={e => {
               e.preventDefault();
-              if (window.innerWidth <= 768) {
-                setActiveMobileDropdown(activeMobileDropdown === 'corporate' ? null : 'corporate');
-              }
+              setActiveMobileDropdown(activeMobileDropdown === 'sectors' ? null : 'sectors');
+            }} className={`flex items-center justify-between xl:justify-start gap-2 font-semibold text-[1.05rem] whitespace-nowrap py-2 xl:py-6 transition-colors hover:text-primary w-full ${
+              !isScrolled && location.pathname.startsWith('/dijital-ajans/') ? 'xl:text-white/85 xl:hover:text-sky-400 text-slate-800' : 'text-slate-800'
+            } ${activeMobileDropdown === 'sectors' ? 'text-primary' : ''}`}>
+              <span className="flex items-center gap-2"><i className="fa-solid fa-chart-pie w-5 text-center"></i>Sektörler</span> 
+              <i className={`fa-solid fa-chevron-down text-xs opacity-60 transition-transform ${activeMobileDropdown === 'sectors' ? 'rotate-180' : ''}`}></i>
+            </a>
+            <ul className={`xl:absolute top-full left-0 xl:bg-white xl:rounded-xl xl:min-w-[260px] xl:shadow-[0_10px_40px_rgba(0,0,0,0.1)] xl:border xl:border-glass xl:py-4 flex-col xl:opacity-0 xl:invisible xl:group-hover:opacity-100 xl:group-hover:visible xl:translate-y-2 xl:group-hover:translate-y-0 transition-all duration-200 ${
+              activeMobileDropdown === 'sectors' ? 'flex bg-slate-50/50 rounded-lg p-3' : 'hidden xl:flex'
+            }`}>
+              <li><a href="/sektorler/saglik-turizmi" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/sektorler/saglik-turizmi'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-user-doctor w-5 text-center text-primary/70"></i>Sağlık Turizmi</a></li>
+              <li><a href="/sektorler/gayrimenkul-insaat" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/sektorler/gayrimenkul-insaat'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-building-shield w-5 text-center text-primary/70"></i>Gayrimenkul & İnşaat</a></li>
+              <li><a href="/sektorler/b2b-ihracat" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/sektorler/b2b-ihracat'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-industry w-5 text-center text-primary/70"></i>B2B & İhracat</a></li>
+              <li><a href="/sektorler/turizm-otelcilik" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/sektorler/turizm-otelcilik'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-umbrella-beach w-5 text-center text-primary/70"></i>Turizm & Otelcilik</a></li>
+            </ul>
+          </li>
+
+          <li className="w-full xl:w-auto relative group">
+            <a href="javascript:void(0)" className={`flex items-center justify-between xl:justify-start gap-2 font-semibold text-[1.05rem] whitespace-nowrap py-2 xl:py-6 transition-colors hover:text-primary w-full ${
+              !isScrolled && location.pathname.startsWith('/dijital-ajans/') ? 'xl:text-white/85 xl:hover:text-sky-400 text-slate-800' : 'text-slate-800'
+            } ${activeMobileDropdown === 'corporate' ? 'text-primary' : ''}`} onClick={e => {
+              e.preventDefault();
+              if (window.innerWidth <= 1280) setActiveMobileDropdown(activeMobileDropdown === 'corporate' ? null : 'corporate');
             }}>
-                <span><i className="fa-solid fa-building nav-icon"></i>Kurumsal</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
-              </a>
-              <ul className={`dropdown-menu ${activeMobileDropdown === 'corporate' ? 'mobile-active' : ''}`}>
-                {!settingsData.hide_page_hakkimizda && <li><a href="/hakkimizda" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/hakkimizda');
-                }}><i className="fa-solid fa-address-card nav-icon"></i>Hakkımızda</a></li>}
-                {!settingsData.hide_page_ekiplerimiz && <li><a href="/ekiplerimiz" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/ekiplerimiz');
-                }}><i className="fa-solid fa-users nav-icon"></i>Ekiplerimiz</a></li>}
-                {!settingsData.hide_page_blog && <li><a href="/blog" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/blog');
-                }}><i className="fa-solid fa-newspaper nav-icon"></i>Blog</a></li>}
-                {!settingsData.hide_page_izmir && <li><a href="/neden-izmir" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/neden-izmir');
-                }}><i className="fa-solid fa-map-location-dot nav-icon"></i>Neden İzmir?</a></li>}
-                {!settingsData.hide_page_iletisim && <li><a href="/iletisim" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/iletisim');
-                }}><i className="fa-solid fa-envelope nav-icon"></i>İletişim</a></li>}
-                {!settingsData.hide_page_referanslar && <li><a href="/referanslar" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/referanslar');
-                }}><i className="fa-solid fa-star nav-icon"></i>Referanslarımız</a></li>}
-              </ul>
-            </li>
-            <li className={`nav-link dropdown ${activeMobileDropdown === 'calculators' ? 'active' : ''}`}>
-              <a href="javascript:void(0)" className="dropdown-toggle" onClick={e => {
+              <span className="flex items-center gap-2"><i className="fa-solid fa-building w-5 text-center"></i>Kurumsal</span> 
+              <i className={`fa-solid fa-chevron-down text-xs opacity-60 transition-transform ${activeMobileDropdown === 'corporate' ? 'rotate-180' : ''}`}></i>
+            </a>
+            <ul className={`xl:absolute top-full left-0 xl:bg-white xl:rounded-xl xl:min-w-[260px] xl:shadow-[0_10px_40px_rgba(0,0,0,0.1)] xl:border xl:border-glass xl:py-4 flex-col xl:opacity-0 xl:invisible xl:group-hover:opacity-100 xl:group-hover:visible xl:translate-y-2 xl:group-hover:translate-y-0 transition-all duration-200 ${
+              activeMobileDropdown === 'corporate' ? 'flex bg-slate-50/50 rounded-lg p-3' : 'hidden xl:flex'
+            }`}>
+              {!settingsData.hide_page_hakkimizda && <li><a href="/hakkimizda" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/hakkimizda'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-address-card w-5 text-center text-primary/70"></i>Hakkımızda</a></li>}
+              {!settingsData.hide_page_ekiplerimiz && <li><a href="/ekiplerimiz" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/ekiplerimiz'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-users w-5 text-center text-primary/70"></i>Ekiplerimiz</a></li>}
+              {!settingsData.hide_page_blog && <li><a href="/blog" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/blog'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-newspaper w-5 text-center text-primary/70"></i>Blog</a></li>}
+              {!settingsData.hide_page_izmir && <li><a href="/neden-izmir" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/neden-izmir'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-map-location-dot w-5 text-center text-primary/70"></i>Neden İzmir?</a></li>}
+              {!settingsData.hide_page_iletisim && <li><a href="/iletisim" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/iletisim'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-envelope w-5 text-center text-primary/70"></i>İletişim</a></li>}
+              {!settingsData.hide_page_referanslar && <li><a href="/referanslar" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/referanslar'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-star w-5 text-center text-primary/70"></i>Referanslarımız</a></li>}
+            </ul>
+          </li>
+
+          <li className="w-full xl:w-auto relative group">
+            <a href="javascript:void(0)" className={`flex items-center justify-between xl:justify-start gap-2 font-semibold text-[1.05rem] whitespace-nowrap py-2 xl:py-6 transition-colors hover:text-primary w-full ${
+              !isScrolled && location.pathname.startsWith('/dijital-ajans/') ? 'xl:text-white/85 xl:hover:text-sky-400 text-slate-800' : 'text-slate-800'
+            } ${activeMobileDropdown === 'calculators' ? 'text-primary' : ''}`} onClick={e => {
               e.preventDefault();
-              if (window.innerWidth <= 768) {
+              if (window.innerWidth <= 1280) {
                 setActiveMobileDropdown(activeMobileDropdown === 'calculators' ? null : 'calculators');
               } else {
                 handleNavClick('calculator');
               }
             }}>
-                <span><i className="fa-solid fa-calculator nav-icon"></i>Hesaplayıcılar</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
-              </a>
-              <ul className={`dropdown-menu ${activeMobileDropdown === 'calculators' ? 'mobile-active' : ''}`}>
-                <li><a href="javascript:void(0)" onClick={e => {
-                  e.preventDefault();
-                  handleCalculatorNavClick('fee');
-                }}><i className="fa-solid fa-file-invoice-dollar nav-icon"></i>Ajans hizmet planlayıcısı</a></li>
-                <li><a href="javascript:void(0)" onClick={e => {
-                  e.preventDefault();
-                  handleCalculatorNavClick('roas_ecommerce');
-                }}><i className="fa-solid fa-cart-shopping nav-icon"></i>E-Ticaret Büyüme Simülatörü</a></li>
-                <li><a href="javascript:void(0)" onClick={e => {
-                  e.preventDefault();
-                  handleCalculatorNavClick('roas_b2b');
-                }}><i className="fa-solid fa-phone-volume nav-icon"></i>B2B / Hizmet Simülatörü</a></li>
-              </ul>
-            </li>
-            <li className={`nav-link dropdown ${activeMobileDropdown === 'tools' ? 'active' : ''}`}>
-              <a href="javascript:void(0)" className="dropdown-toggle" onClick={e => {
+              <span className="flex items-center gap-2"><i className="fa-solid fa-calculator w-5 text-center"></i>Hesaplayıcılar</span> 
+              <i className={`fa-solid fa-chevron-down text-xs opacity-60 transition-transform ${activeMobileDropdown === 'calculators' ? 'rotate-180' : ''}`}></i>
+            </a>
+            <ul className={`xl:absolute top-full left-0 xl:bg-white xl:rounded-xl xl:min-w-[260px] xl:shadow-[0_10px_40px_rgba(0,0,0,0.1)] xl:border xl:border-glass xl:py-4 flex-col xl:opacity-0 xl:invisible xl:group-hover:opacity-100 xl:group-hover:visible xl:translate-y-2 xl:group-hover:translate-y-0 transition-all duration-200 ${
+              activeMobileDropdown === 'calculators' ? 'flex bg-slate-50/50 rounded-lg p-3' : 'hidden xl:flex'
+            }`}>
+              <li><a href="javascript:void(0)" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); handleCalculatorNavClick('fee'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-file-invoice-dollar w-5 text-center text-primary/70"></i>Ajans hizmet planlayıcısı</a></li>
+              <li><a href="javascript:void(0)" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); handleCalculatorNavClick('roas_ecommerce'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-cart-shopping w-5 text-center text-primary/70"></i>E-Ticaret Büyüme Simülatörü</a></li>
+              <li><a href="javascript:void(0)" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); handleCalculatorNavClick('roas_b2b'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-phone-volume w-5 text-center text-primary/70"></i>B2B / Hizmet Simülatörü</a></li>
+            </ul>
+          </li>
+
+          <li className="w-full xl:w-auto relative group">
+            <a href="javascript:void(0)" className={`flex items-center justify-between xl:justify-start gap-2 font-semibold text-[1.05rem] whitespace-nowrap py-2 xl:py-6 transition-colors hover:text-primary w-full ${
+              !isScrolled && location.pathname.startsWith('/dijital-ajans/') ? 'xl:text-white/85 xl:hover:text-sky-400 text-slate-800' : 'text-slate-800'
+            } ${activeMobileDropdown === 'tools' ? 'text-primary' : ''}`} onClick={e => {
               e.preventDefault();
-              if (window.innerWidth <= 768) {
-                setActiveMobileDropdown(activeMobileDropdown === 'tools' ? null : 'tools');
-              }
+              if (window.innerWidth <= 1280) setActiveMobileDropdown(activeMobileDropdown === 'tools' ? null : 'tools');
             }}>
-                <span><i className="fa-solid fa-screwdriver-wrench nav-icon"></i>Büyüme Araçları</span> <i className="fa-solid fa-chevron-down dropdown-arrow"></i>
-              </a>
-              <ul className={`dropdown-menu ${activeMobileDropdown === 'tools' ? 'mobile-active' : ''}`}>
-                {!settingsData.hide_page_seo && <li><a href="/seo-analizi" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/seo-analizi');
-                }}><i className="fa-solid fa-magnifying-glass-chart nav-icon"></i>Ücretsiz SEO Analizi</a></li>}
-                {!settingsData.hide_page_kobi && <li><a href="/kobi-endeksi" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/kobi-endeksi');
-                }}><i className="fa-solid fa-chart-line nav-icon"></i>KOBİ Dijitalleşme Endeksi</a></li>}
-                {!settingsData.hide_page_rakip && <li><a href="/rakip-analizi" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/rakip-analizi');
-                }}><i className="fa-solid fa-code-compare nav-icon"></i>Siz vs. Rakibiniz</a></li>}
-                {!settingsData.hide_page_kreatif && <li><a href="/kreatif-vitrin" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/kreatif-vitrin');
-                }}><i className="fa-solid fa-wand-magic-sparkles nav-icon"></i>Kreatif Reklam Vitrini</a></li>}
+              <span className="flex items-center gap-2"><i className="fa-solid fa-screwdriver-wrench w-5 text-center"></i>Büyüme Araçları</span> 
+              <i className={`fa-solid fa-chevron-down text-xs opacity-60 transition-transform ${activeMobileDropdown === 'tools' ? 'rotate-180' : ''}`}></i>
+            </a>
+            <ul className={`xl:absolute top-full left-0 xl:bg-white xl:rounded-xl xl:min-w-[260px] xl:shadow-[0_10px_40px_rgba(0,0,0,0.1)] xl:border xl:border-glass xl:py-4 flex-col xl:opacity-0 xl:invisible xl:group-hover:opacity-100 xl:group-hover:visible xl:translate-y-2 xl:group-hover:translate-y-0 transition-all duration-200 ${
+              activeMobileDropdown === 'tools' ? 'flex bg-slate-50/50 rounded-lg p-3' : 'hidden xl:flex'
+            }`}>
+              {!settingsData.hide_page_seo && <li><a href="/seo-analizi" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/seo-analizi'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-magnifying-glass-chart w-5 text-center text-primary/70"></i>Ücretsiz SEO Analizi</a></li>}
+              {!settingsData.hide_page_kobi && <li><a href="/kobi-endeksi" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/kobi-endeksi'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-chart-line w-5 text-center text-primary/70"></i>KOBİ Dijitalleşme Endeksi</a></li>}
+              {!settingsData.hide_page_rakip && <li><a href="/rakip-analizi" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/rakip-analizi'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-code-compare w-5 text-center text-primary/70"></i>Siz vs. Rakibiniz</a></li>}
+              {!settingsData.hide_page_kreatif && <li><a href="/kreatif-vitrin" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/kreatif-vitrin'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-wand-magic-sparkles w-5 text-center text-primary/70"></i>Kreatif Reklam Vitrini</a></li>}
+              {!settingsData.hide_page_akademi && <li><a href="/akademi" className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-primary hover:bg-sky-50 transition-colors font-medium text-sm whitespace-nowrap" onClick={e => { e.preventDefault(); navigateTo('/akademi'); setIsMobileMenuOpen(false); }}><i className="fa-solid fa-graduation-cap w-5 text-center text-primary/70"></i>Rota Akademi</a></li>}
+            </ul>
+          </li>
 
-                {!settingsData.hide_page_akademi && <li><a href="/akademi" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/akademi');
-                }}><i className="fa-solid fa-graduation-cap nav-icon"></i>Rota Akademi</a></li>}
-              </ul>
-            </li>
-
-            {!settingsData.hide_page_iletisim && <li className="nav-link"><a href="/iletisim" onClick={e => {
+          {!settingsData.hide_page_iletisim && <li className="w-full xl:w-auto">
+            <a href="/iletisim" className={`flex items-center gap-2 font-semibold text-[1.05rem] whitespace-nowrap py-2 xl:py-6 transition-colors hover:text-primary w-full ${
+              !isScrolled && location.pathname.startsWith('/dijital-ajans/') ? 'xl:text-white/85 xl:hover:text-sky-400 text-slate-800' : 'text-slate-800'
+            }`} onClick={e => {
               e.preventDefault();
               handleNavClick('contact');
-            }}><i className="fa-solid fa-envelope nav-icon"></i>İletişim</a></li>}
-          </ul>
-
-          <div className="nav-actions">
-            <a href="/client-portal-secure" className="btn btn-secondary" style={{ background: 'transparent', color: 'var(--text-dark)', border: '1px solid var(--glass-border)' }} onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/client-portal-secure');
               setIsMobileMenuOpen(false);
             }}>
-              <i className="fa-solid fa-lock" style={{ marginRight: '6px' }}></i>
-              Müşteri Girişi
+              <i className="fa-solid fa-envelope w-5 text-center"></i>İletişim
             </a>
-
-            <a href="/iletisim" className="btn btn-secondary" onClick={e => {
+          </li>}
+          
+          <li className="w-full xl:hidden flex flex-col gap-3 mt-4 pt-4 border-t border-glass">
+            <a href="/client-portal-secure" className="w-full text-center py-2.5 rounded-full border-2 border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition-colors" onClick={e => {
+              e.preventDefault();
+              navigateTo('/client-portal-secure');
+              setIsMobileMenuOpen(false);
+            }}>
+              <i className="fa-solid fa-lock mr-2"></i>Müşteri Girişi
+            </a>
+            <a href="/iletisim" className="w-full text-center py-2.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-bold hover:shadow-lg transition-all" onClick={e => {
               e.preventDefault();
               handleNavClick('contact');
+              setIsMobileMenuOpen(false);
             }}>Teklif Al</a>
-          </div>
+          </li>
+        </ul>
 
-          <button className="menu-toggle" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Menüyü Aç/Kapa">
-            <i className={isMobileMenuOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars"}></i>
-          </button>
+        <div className="hidden xl:flex items-center gap-4">
+          <a href="/client-portal-secure" className={`px-5 py-2 rounded-full font-bold transition-colors border-2 ${
+            !isScrolled && location.pathname.startsWith('/dijital-ajans/') 
+              ? 'border-white/20 text-white hover:bg-white/10' 
+              : 'border-slate-200 text-slate-700 hover:bg-slate-50'
+          }`} onClick={e => {
+            e.preventDefault();
+            navigateTo('/client-portal-secure');
+          }}>
+            <i className="fa-solid fa-lock mr-2"></i>Müşteri Girişi
+          </a>
+
+          <a href="/iletisim" className="px-5 py-2.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-bold hover:shadow-lg transition-all" onClick={e => {
+            e.preventDefault();
+            handleNavClick('contact');
+          }}>Teklif Al</a>
         </div>
-      </nav>
+
+        <button className={`xl:hidden ml-auto text-2xl w-10 h-10 flex items-center justify-center transition-colors ${
+          !isScrolled && location.pathname.startsWith('/dijital-ajans/') ? 'text-white' : 'text-slate-800'
+        }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Menüyü Aç/Kapa">
+          <i className={isMobileMenuOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars"}></i>
+        </button>
+      </div>
+    </nav>
   );
 }
