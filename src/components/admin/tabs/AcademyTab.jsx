@@ -72,7 +72,7 @@ export default function AcademyTab({ academyCoursesData, setAcademyCoursesData, 
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '4px' }}>Hedef Kitle / Açıklama</label>
-                  <textarea value={editFormData.targetAudience} onChange={(e) => handleChange(e, 'targetAudience')} rows="3" style={{
+                  <textarea value={editFormData.targetAudience} onChange={(e) => handleChange(e, 'targetAudience')} rows="8" style={{
                     width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#f8fafc', color: '#1e293b', resize: 'vertical'
                   }}></textarea>
                 </div>

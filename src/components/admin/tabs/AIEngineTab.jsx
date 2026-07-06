@@ -233,8 +233,7 @@ export default function AIEngineTab({ authToken, clientReports }) {
                 name="description" 
                 value={formData.description} 
                 onChange={handleInputChange} 
-                style={inputStyle}
-                style={{ minHeight: '80px', resize: 'vertical' }} 
+                style={{ ...inputStyle, minHeight: '250px', resize: 'vertical' }} 
                 placeholder="Müşteriye gösterilecek AI tespit açıklaması..."
                 required
               />
