@@ -22,102 +22,91 @@ export default function AcademyTab({ academyCoursesData, setAcademyCoursesData, 
     setEditFormData({ ...editFormData, [field]: e.target.value });
   };
 
+  const inputClasses = "w-full p-3 rounded-lg border border-glass-border bg-bg-deep text-text-light focus:border-primary outline-none transition-colors";
+
   return (
     <div className="tab-pane active" id="academy-tab">
-      <div className="tab-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2><i className="fa-solid fa-graduation-cap"></i> Akademi Eğitimleri (Masterclass)</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold text-text-light flex items-center gap-3">
+          <i className="fa-solid fa-graduation-cap"></i> Akademi Eğitimleri (Masterclass)
+        </h2>
       </div>
       
-      <p style={{ color: '#64748b', marginBottom: '2rem' }}>
+      <p className="text-text-muted mb-8">
         Buradan Akademi sayfasındaki Başlangıç, Orta ve İleri seviye Masterclass eğitimlerinizin fiyatlarını, başlıklarını ve temel detaylarını güncelleyebilirsiniz.
       </p>
 
-      <div style={{ display: 'grid', gap: '1.5rem' }}>
+      <div className="grid gap-6">
         {(academyCoursesData || []).map(course => (
-          <div key={course.id} style={{
-            background: '#ffffff',
-            border: '1px solid var(--border-color)',
-            borderRadius: '12px',
-            padding: '1.5rem'
-          }}>
+          <div key={course.id} className="bg-white border border-glass-border rounded-xl p-6">
             {editingId === course.id ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '4px' }}>Eğitim Başlığı</label>
-                    <input type="text" value={editFormData.title} onChange={(e) => handleChange(e, 'title')} style={{
-                      width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#f8fafc', color: '#1e293b'
-                    }} />
+                    <label className="block text-sm text-text-muted mb-1">Eğitim Başlığı</label>
+                    <input type="text" value={editFormData.title} onChange={(e) => handleChange(e, 'title')} className={inputClasses} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '4px' }}>Fiyat (₺)</label>
-                    <input type="text" value={editFormData.price} onChange={(e) => handleChange(e, 'price')} style={{
-                      width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#f8fafc', color: '#1e293b'
-                    }} />
+                    <label className="block text-sm text-text-muted mb-1">Fiyat (₺)</label>
+                    <input type="text" value={editFormData.price} onChange={(e) => handleChange(e, 'price')} className={inputClasses} />
                   </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '4px' }}>Süre / Saat</label>
-                    <input type="text" value={editFormData.duration} onChange={(e) => handleChange(e, 'duration')} style={{
-                      width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#f8fafc', color: '#1e293b'
-                    }} />
+                    <label className="block text-sm text-text-muted mb-1">Süre / Saat</label>
+                    <input type="text" value={editFormData.duration} onChange={(e) => handleChange(e, 'duration')} className={inputClasses} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '4px' }}>Seviye Metni</label>
-                    <input type="text" value={editFormData.level} onChange={(e) => handleChange(e, 'level')} style={{
-                      width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#f8fafc', color: '#1e293b'
-                    }} />
+                    <label className="block text-sm text-text-muted mb-1">Seviye Metni</label>
+                    <input type="text" value={editFormData.level} onChange={(e) => handleChange(e, 'level')} className={inputClasses} />
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '4px' }}>Hedef Kitle / Açıklama</label>
-                  <textarea value={editFormData.targetAudience} onChange={(e) => handleChange(e, 'targetAudience')} rows="8" style={{
-                    width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#f8fafc', color: '#1e293b', resize: 'vertical'
-                  }}></textarea>
+                  <label className="block text-sm text-text-muted mb-1">Hedef Kitle / Açıklama</label>
+                  <textarea value={editFormData.targetAudience} onChange={(e) => handleChange(e, 'targetAudience')} rows="8" className={`${inputClasses} resize-y`}></textarea>
                 </div>
                 
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                  <button className="btn btn-primary" onClick={handleSave} style={{ borderRadius: '8px' }}>
+                <div className="flex gap-4 mt-4">
+                  <button className="btn btn-primary rounded-lg" onClick={handleSave}>
                     <i className="fa-solid fa-save"></i> Kaydet
                   </button>
-                  <button className="btn btn-secondary" onClick={() => setEditingId(null)} style={{ borderRadius: '8px' }}>
+                  <button className="btn btn-secondary rounded-lg" onClick={() => setEditingId(null)}>
                     İptal
                   </button>
                 </div>
               </div>
             ) : (
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div className="flex justify-between items-start">
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-                    <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: `${course.color}20`, color: course.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style={{ background: `${course.color}20`, color: course.color }}>
                       <i className={course.icon}></i>
                     </div>
                     <div>
-                      <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#1e293b' }}>{course.title}</h3>
-                      <span style={{ fontSize: '0.8rem', color: course.color, fontWeight: '700' }}>{course.level}</span>
+                      <h3 className="m-0 text-xl text-text-light">{course.title}</h3>
+                      <span className="text-xs font-bold" style={{ color: course.color }}>{course.level}</span>
                     </div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', marginTop: '1.5rem', color: '#334155', fontSize: '0.9rem' }}>
+                  <div className="grid grid-cols-3 gap-8 mt-6 text-text-main text-sm">
                     <div>
-                      <strong style={{ color: '#64748b', display: 'block', marginBottom: '4px', fontSize: '0.75rem', textTransform: 'uppercase' }}>Fiyat</strong>
+                      <strong className="block mb-1 text-xs text-text-muted uppercase">Fiyat</strong>
                       {course.price}
                     </div>
                     <div>
-                      <strong style={{ color: '#64748b', display: 'block', marginBottom: '4px', fontSize: '0.75rem', textTransform: 'uppercase' }}>Süre</strong>
+                      <strong className="block mb-1 text-xs text-text-muted uppercase">Süre</strong>
                       {course.duration}
                     </div>
                     <div>
-                      <strong style={{ color: '#64748b', display: 'block', marginBottom: '4px', fontSize: '0.75rem', textTransform: 'uppercase' }}>Popüler Mi?</strong>
-                      {course.popular ? <span style={{color:'#22c55e'}}><i className="fa-solid fa-check"></i> Evet</span> : <span style={{color:'#64748b'}}>-</span>}
+                      <strong className="block mb-1 text-xs text-text-muted uppercase">Popüler Mi?</strong>
+                      {course.popular ? <span className="text-green-500"><i className="fa-solid fa-check"></i> Evet</span> : <span className="text-text-muted">-</span>}
                     </div>
                   </div>
-                  <div style={{ marginTop: '1rem', color: '#475569', fontSize: '0.9rem' }}>
-                    <strong style={{ color: '#64748b', display: 'block', marginBottom: '4px', fontSize: '0.75rem', textTransform: 'uppercase' }}>Açıklama</strong>
+                  <div className="mt-4 text-sm text-text-main">
+                    <strong className="block mb-1 text-xs text-text-muted uppercase">Açıklama</strong>
                     {course.targetAudience}
                   </div>
                 </div>
-                <button className="btn btn-secondary" onClick={() => handleEdit(course)} style={{ padding: '0.5rem 1rem', borderRadius: '8px' }}>
+                <button className="btn btn-secondary px-4 py-2 rounded-lg" onClick={() => handleEdit(course)}>
                   <i className="fa-solid fa-pen"></i> Düzenle
                 </button>
               </div>

@@ -964,37 +964,16 @@ function AdminDashboardView({
             <h2>Yönetim Paneli Girişi</h2>
             <p>Devam etmek için şifrenizi girin.</p>
           </div>
-          {errorMsg && <div className="form-error-message" style={{
-          marginBottom: '1rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '10px',
-          background: 'rgba(239, 68, 68, 0.1)',
-          color: '#ef4444',
-          borderRadius: '6px',
-          fontSize: '0.85rem'
-        }}>
+          {errorMsg && <div className="mb-4 flex items-center gap-2 p-2.5 bg-red-500/10 text-red-500 rounded-md text-sm">
               <i className="fa-solid fa-triangle-exclamation"></i>
               <span>{errorMsg}</span>
             </div>}
           <form onSubmit={handleLogin}>
             <div className="admin-form-group">
               <label htmlFor="admin_pass">Şifre</label>
-              <input id="admin_pass" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Şifre" required style={{
-              width: '100%',
-              padding: '0.85rem 1.25rem',
-              borderRadius: '8px',
-              border: '1px solid var(--glass-border)',
-              background: 'rgba(255,255,255,0.8)',
-              color: 'var(--text-light)',
-              marginBottom: '1rem'
-            }} />
+              <input id="admin_pass" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Şifre" required className="w-full py-3.5 px-5 rounded-lg border border-glass-border bg-white/80 text-text-light mb-4" />
             </div>
-            <button type="submit" className="btn btn-primary" style={{
-            width: '100%',
-            padding: '0.85rem'
-          }}>
+            <button type="submit" className="btn btn-primary w-full py-3.5">
               Giriş Yap
             </button>
           </form>
@@ -1026,9 +1005,9 @@ function AdminDashboardView({
 
         <main className="admin-content-card">
           <Suspense fallback={
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '400px', gap: '1rem' }}>
-              <div style={{ width: '36px', height: '36px', border: '3px solid var(--glass-border)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Yükleniyor...</span>
+            <div className="flex items-center justify-center min-h-[400px] gap-4">
+              <div className="w-9 h-9 border-3 border-glass-border border-t-primary rounded-full animate-spin" />
+              <span className="text-text-muted text-sm">Yükleniyor...</span>
             </div>
           }>
           {/* TAB 1: LEADS */}
@@ -1071,7 +1050,7 @@ function AdminDashboardView({
 
           {/* TAB: ACADEMY */}
         {activeTab === 'academy' && (
-          <Suspense fallback={<div style={{padding:'2rem',textAlign:'center'}}>Yükleniyor...</div>}>
+          <Suspense fallback={<div className="p-8 text-center">Yükleniyor...</div>}>
             <AcademyTab 
               academyCoursesData={academyCoursesData} 
               setAcademyCoursesData={setAcademyCoursesData}
