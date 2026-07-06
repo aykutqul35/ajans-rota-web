@@ -25,7 +25,7 @@ export default function Navbar({
           : 'bg-white/80 backdrop-blur-md border-b border-white/30 h-[80px]'
     }`}>
       <div className="container mx-auto px-4 md:px-8 w-full flex items-center justify-between h-full">
-        <a href="/" className={`text-2xl font-bold flex items-center gap-2 transition-colors ${
+        <a href="/" className={`text-2xl font-bold flex items-center font-heading tracking-tight gap-2 transition-colors ${
           !isScrolled && location.pathname.startsWith('/dijital-ajans/') ? 'text-white' : 'text-slate-800'
         }`} onClick={e => {
             e.preventDefault();
@@ -36,7 +36,7 @@ export default function Navbar({
               <img src={settingsData.logo_light || settingsData.logo_dark} alt="AJANS ROTA Logo" className="h-8 object-contain" />
             </picture> : <>
               <i className="fa-solid fa-compass text-primary"></i>
-              <span className="tracking-tight">AJANS ROTA</span>
+              <span>AJANS ROTA</span>
             </>}
         </a>
         

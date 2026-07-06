@@ -50,7 +50,7 @@ export default function Footer({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand Block */}
           <div className="flex flex-col items-start">
-            <a href="/" className="inline-flex items-center gap-3 text-2xl font-bold text-slate-800 mb-6" onClick={e => {
+            <a href="/" className="inline-flex items-center gap-3 text-2xl font-bold font-heading tracking-tight text-slate-800 mb-6" onClick={e => {
               e.preventDefault();
               handleNavClick('home');
             }}>
