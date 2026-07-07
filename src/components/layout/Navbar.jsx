@@ -106,6 +106,10 @@ export default function Navbar({
                   e.preventDefault();
                   navigateTo('/neden-izmir');
                 }}><i className="fa-solid fa-map-location-dot nav-icon"></i>Neden İzmir?</a></li>}
+                {!settingsData.hide_page_akademi && <li><a href="/akademi" onClick={e => {
+                  e.preventDefault();
+                  navigateTo('/akademi');
+                }}><i className="fa-solid fa-graduation-cap nav-icon"></i>Rota Akademi</a></li>}
                 {!settingsData.hide_page_iletisim && <li><a href="/iletisim" onClick={e => {
                   e.preventDefault();
                   navigateTo('/iletisim');
@@ -168,11 +172,6 @@ export default function Navbar({
                   e.preventDefault();
                   navigateTo('/kreatif-vitrin');
                 }}><i className="fa-solid fa-wand-magic-sparkles nav-icon"></i>Kreatif Reklam Vitrini</a></li>}
-
-                {!settingsData.hide_page_akademi && <li><a href="/akademi" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/akademi');
-                }}><i className="fa-solid fa-graduation-cap nav-icon"></i>Rota Akademi</a></li>}
               </ul>
             </li>
 

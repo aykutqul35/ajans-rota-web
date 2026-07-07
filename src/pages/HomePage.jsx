@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
+import FuturisticServices from '../components/home/FuturisticServices';
+
 import { lazy, useState, useEffect, useRef } from 'react';
 const RoasSimulatorWidget = lazy(() => import('../components/RoasSimulatorWidget'));
 
@@ -293,40 +295,8 @@ export default function HomePage(props) {
         </div>
       </section>
       {/* 4. Calculator Section */}
-      <section id="services" className="services">
-        <div className="container">
-          <FadeIn className="section-header">
-            <span className="section-tag">{settingsData.services_section_tag || "Uzmanlık Alanlarımız"}</span>
-            <h2 className="section-title">{settingsData.services_section_title || "Büyümenizi Hızlandıracak Çözümler"}</h2>
-            <p className="section-desc">{settingsData.services_section_desc || "E-ticaret ve dijital satış hunilerinde en yüksek verimi alabilmeniz için veriye dayalı stratejiler geliştiriyoruz."}</p>
-          </FadeIn>
-
-          <div className="mobile-swipe-hint">
-            <i className="fa-solid fa-arrows-left-right"></i>
-            <span>Tüm hizmetleri görmek için kaydırın</span>
-          </div>
-
-          <StaggerContainer className="services-grid">
-            {Object.keys(servicesData).map(key => {
-              const service = servicesData[key];
-              return <StaggerItem key={key} className="glass-card service-card" onClick={() => handleServiceClick(key)}>
-                  <div className="service-icon-box">
-                    <i className={service.iconName || "fa-solid fa-compass"}></i>
-                  </div>
-                  <h3>{service.title}</h3>
-                  <p>{service.description}</p>
-                  <ul className="service-features">
-                    {(service.features || []).slice(0, 3).map((f, idx) => <li key={idx}><i className="fa-solid fa-circle-check"></i> {f}</li>)}
-                  </ul>
-                  <div className="service-card-cta">
-                    <span>Detayları Gör &amp; Planla</span>
-                    <i className="fa-solid fa-arrow-right"></i>
-                  </div>
-                </StaggerItem>;
-            })}
-          </StaggerContainer>
-        </div>
-      </section>
+      {/* Futuristic 3D Services Ecosystem */}
+      <FuturisticServices handleServiceClick={handleServiceClick} />
 
       <section className="why-agency-section">
         <div className="container">
