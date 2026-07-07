@@ -220,6 +220,7 @@ export default function SettingsTab({
                 </div>
               ))}
             </div>
+          </div>
         </Accordion>
 
         {/* ── Yapay Zeka (AI) Ayarları ── */}
