@@ -131,6 +131,10 @@ export default function Footer({
                   e.preventDefault();
                   navigateTo('/blog');
                 }}><span className="link-bullet"></span><span>Rehber & Blog</span></a></li>}
+                {!settingsData.hide_page_akademi && <li><a href="/akademi" onClick={e => {
+                  e.preventDefault();
+                  navigateTo('/akademi');
+                }}><span className="link-bullet"></span><span>Rota Akademi</span></a></li>}
                 {!settingsData.hide_page_iletisim && <li><a href="javascript:void(0)" onClick={e => {
                   e.preventDefault();
                   handleNavClick('contact');
@@ -157,11 +161,6 @@ export default function Footer({
                   e.preventDefault();
                   navigateTo('/kreatif-vitrin');
                 }}><span className="link-bullet"></span><span>Reklam Vitrini</span></a></li>}
-
-                {!settingsData.hide_page_akademi && <li><a href="/akademi" onClick={e => {
-                  e.preventDefault();
-                  navigateTo('/akademi');
-                }}><span className="link-bullet"></span><span>Rota Akademi</span></a></li>}
                 <li><a href="javascript:void(0)" onClick={e => {
                   e.preventDefault();
                   handleNavClick('calculator');
