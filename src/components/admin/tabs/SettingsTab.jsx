@@ -220,7 +220,12 @@ export default function SettingsTab({
                 </div>
               ))}
             </div>
-            <Field label="Google Gemini API Anahtarı (Yapay Zeka Blog Asistanı için Opsiyonel)" field="gemini_api_key" type="password" placeholder="AI Blog Asistanı için Gemini API key girin" />
+        </Accordion>
+
+        {/* ── Yapay Zeka (AI) Ayarları ── */}
+        <Accordion id="ai_settings" icon="fa-solid fa-robot" title="Genel Yapay Zeka (AI) Ayarları">
+          <div className="admin-form-row mt-4">
+            <Field label="Google Gemini API Anahtarı (Blog Asistanı için)" field="gemini_api_key" type="password" placeholder="AI Blog Asistanı için Gemini API key girin" />
           </div>
         </Accordion>
 

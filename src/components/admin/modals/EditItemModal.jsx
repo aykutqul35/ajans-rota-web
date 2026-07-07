@@ -107,6 +107,7 @@ export default function EditItemModal({
       } catch (err) { console.warn("Gemini fallback:", err); }
     }
     // LOCAL TEMPLATE FALLBACK
+    setAiError('Gemini API anahtarı yok veya geçersiz. Çevrimdışı (Kısa) taslak kullanılıyor.');
     setTimeout(() => {
       let title = '', excerpt = '', content = '';
       if (kw.includes('seo') || kw.includes('arama') || kw.includes('optimizasyon')) {
