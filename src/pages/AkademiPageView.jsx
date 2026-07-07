@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
+import GuidePdfTemplate from '../components/academy/GuidePdfTemplate';
 
 export default function AkademiPageView({
   onBack,
@@ -29,31 +32,58 @@ export default function AkademiPageView({
 
   const freeGuides = [
     {
-      id: 'export',
-      title: "Ege'den Dünyaya E-İhracat Rehberi",
-      desc: "İzmir ve Ege'deki yerel üreticiler ve işletmeler için Amazon, Etsy ve Shopify üzerinden yurt dışı pazarlara açılma kılavuzu.",
-      icon: "fa-solid fa-globe",
-      color: "var(--primary)",
-      pages: "42 sayfa PDF",
-      outline: ["Ege ürünleri için pazar seçimi", "Etsy & Amazon mağaza kurulum sırları", "Lojistik & Gümrükleme süreçleri", "Global Meta reklam bütçesi yönetimi"]
-    }, 
+      id: 'ecom-meta',
+      title: "E-Ticarette İlk 1 Milyon TL Ciroya Ulaşma Haritası",
+      desc: "Meta Ads algoritmasının yeni kuralları, ROAS (Reklam Getirisi) artırma taktikleri ve doğru bütçe ölçekleme mantığı.",
+      icon: "fa-solid fa-cart-shopping",
+      color: "#f97316",
+      pages: "24 sayfa PDF",
+      outline: ["Meta Ads hesap mimarisi", "ROAS optimize etme teknikleri", "Sepet terk edenleri kurtarma senaryoları", "Ciro hedeflerine göre bütçe planlama"]
+    },
     {
-      id: 'tourism',
-      title: "Konaklama ve Turizm Dijital Büyüme",
-      desc: "Butik oteller, acenteler ve turizm işletmeleri için dijital reklamlar ve SEO ile doğrudan turist kazanma yöntemleri.",
-      icon: "fa-solid fa-hotel",
-      color: "var(--secondary)",
-      pages: "35 sayfa PDF",
-      outline: ["Google Otel Reklamları entegrasyonu", "İngilizce & Almanca SEO kurguları", "Sosyal medyada görsel deneyim tasarımı", "Mevsim dışı dönemde rezervasyon artırma"]
-    }, 
-    {
-      id: 'cro',
-      title: "E-Ticarette Dönüşüm Oranı Artırma",
-      desc: "Web sitenize gelen trafiği satışa dönüştürme oranını %50'ye kadar artırabilecek 28 maddelik teknik ve tasarımsal kontrol listesi.",
-      icon: "fa-solid fa-cart-flatbed-suitcases",
-      color: "var(--accent-teal)",
+      id: 'seo-checklist',
+      title: "Google'da İlk Sayfaya Çıkmanın 25 Adımlık Kontrol Listesi",
+      desc: "Teknik terimlere boğmadan, işletme sahibinin bile uygulayabileceği teknik SEO, hız ve içerik optimizasyon adımları.",
+      icon: "fa-solid fa-magnifying-glass-chart",
+      color: "#10b981",
       pages: "18 sayfa PDF",
-      outline: ["Sepet terk etme oranlarını düşürme", "Tek tıkla ödeme ve UX kuralları", "Hız optimizasyonunun dönüşüme etkisi", "Kullanıcı güven ve kanıt etiketleri"]
+      outline: ["Sitenizin anlık röntgenini çekme", "Sayfa hızı ve Core Web Vitals iyileştirmesi", "Lokal işletmeler için Google Haritalar optimizasyonu", "Rakip backlink analizi"]
+    },
+    {
+      id: 'b2b-linkedin',
+      title: "B2B'de Soğuk Müşteriyi Sıcak Satışa Çeviren LinkedIn Hunisi",
+      desc: "LinkedIn üzerinden kurumsal müşteri bulma, güven veren mesajlaşma şablonları ve randevu alma taktikleri.",
+      icon: "fa-brands fa-linkedin-in",
+      color: "#0284c7",
+      pages: "30 sayfa PDF",
+      outline: ["LinkedIn profil optimizasyonu", "Karar vericilere ulaşma (Sales Navigator)", "Soğuk mesajlaşma (Cold Outreach) şablonları", "Toplantıya ikna eden açılış sayfaları"]
+    },
+    {
+      id: 'creative-hooks',
+      title: "Müşteriyi İlk 3 Saniyede Yakalayan 50 Farklı 'Hook' Şablonu",
+      desc: "Instagram Reels ve TikTok reklamlarında kullanıcıyı kaydırmaktan alıkoyacak başlıklar ve senaryo girişleri.",
+      icon: "fa-solid fa-clapperboard",
+      color: "#ec4899",
+      pages: "15 sayfa PDF",
+      outline: ["Dikkati anında yakalayan görsel hileler", "Sektörlere özel 50 hazır 'Hook' cümlesi", "Yüksek dönüşümlü TikTok senaryo matematiği", "UGC (Kullanıcı Tarafından Oluşturulan İçerik)"]
+    },
+    {
+      id: 'budget-planner',
+      title: "KOBİ'ler İçin Dijital Pazarlama Bütçe Dağılım Rehberi",
+      desc: "Aylık bütçesi olan bir işletme parayı Google'a mı, Meta'ya mı, SEO'ya mı yatırmalı?",
+      icon: "fa-solid fa-chart-pie",
+      color: "#8b5cf6",
+      pages: "22 sayfa PDF",
+      outline: ["Farklı bütçeler için pasta grafikleri", "Reklam vs. SEO: Hangisine ne zaman yatırım yapılmalı?", "Bütçe sızıntılarını tespit etme", "Maksimum ROAS için platform kombinasyonları"]
+    },
+    {
+      id: 'case-studies',
+      title: "Ajans Rota'nın Gizli Silahı: %300 Büyüme Sağlanan 3 Vaka",
+      desc: "Farklı sektörlerden 3 müşterimizin başarı hikayesi. 'Neredeydiler, hangi tedaviyi uyguladık, sonuç ne oldu?'",
+      icon: "fa-solid fa-rocket",
+      color: "#3b82f6",
+      pages: "35 sayfa PDF",
+      outline: ["E-ticaret firmasının ROAS'ını 5 katına çıkaran strateji", "B2B yazılım şirketine ayda 40 demo aldıran kurgu", "Yerel kliniğin hasta trafiğini ikiye katlayan SEO hamlesi", "Sizin işletmenize nasıl uyarlanır?"]
     }
   ];
 
@@ -138,6 +168,45 @@ export default function AkademiPageView({
       
       if (isCourse) {
         toast.success('Ön kaydınız başarıyla alındı. Sizinle iletişime geçeceğiz.', { duration: 5000 });
+      } else {
+        toast.success(`${targetItem.title} yüksek çözünürlükte hazırlanıyor, lütfen bekleyin...`, { duration: 8000 });
+        
+        // Yüksek Çözünürlüklü Sayfa Sayfa PDF Oluşturma (Canvas Limitini Aşmak İçin)
+        setTimeout(async () => {
+          try {
+            const pages = document.querySelectorAll('.pdf-page-section');
+            if (!pages || pages.length === 0) {
+              throw new Error("PDF sayfaları bulunamadı");
+            }
+            
+            const pdf = new jsPDF('p', 'pt', [595, 842]);
+            
+            for (let i = 0; i < pages.length; i++) {
+              // Yüksek çözünürlük için scale: 2 kullanılıyor
+              const canvas = await html2canvas(pages[i], { 
+                scale: 2, 
+                useCORS: true, 
+                logging: false,
+                backgroundColor: '#ffffff'
+              });
+              
+              const imgData = canvas.toDataURL('image/jpeg', 0.98);
+              
+              if (i > 0) {
+                pdf.addPage([595, 842], 'p');
+              }
+              
+              // Canvas'ı PDF boyutuna tam sığdır
+              pdf.addImage(imgData, 'JPEG', 0, 0, 595, 842);
+            }
+            
+            pdf.save(`ajans_rota_${targetItem.id}.pdf`);
+            toast.success('PDF yüksek çözünürlükte başarıyla indirildi!', { duration: 5000 });
+          } catch (err) {
+            console.error("PDF oluşturma hatası:", err);
+            toast.error('PDF oluşturulurken bir hata oluştu.');
+          }
+        }, 1500); // Recharts render süresi için bekleniyor
       }
     } catch (err) {
       console.error(err);
@@ -458,7 +527,7 @@ export default function AkademiPageView({
                 <p style={{ fontSize: '0.9rem', color: '#475569', marginBottom: '2rem', lineHeight: '1.6' }}>
                   {selectedCourse 
                     ? `Teşekkürler! ${selectedCourse.title} sınıfı kayıt işlemleri ve detaylı müfredat bilgisi için eğitim danışmanlarımız size en kısa sürede dönüş yapacaktır.`
-                    : `Tebrikler! ${selectedGuide.title} rehberiniz hazırlanarak e-posta adresinize ve telefonunuza link olarak iletilecektir.`
+                    : `Tebrikler! ${selectedGuide.title} rehberiniz cihazınıza otomatik olarak indirilmektedir. İndirme işlemi bitene kadar lütfen bu pencereyi kapatmayın.`
                   }
                 </p>
                 <button onClick={handleCloseModal} className="btn btn-secondary" style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', fontWeight: '700' }}>
@@ -469,6 +538,9 @@ export default function AkademiPageView({
           </div>
         </div>
       )}
+      
+      {/* Gizli PDF Şablonu (Sadece form doldurulduğunda html2pdf tarafından çekilecek) */}
+      <GuidePdfTemplate guide={selectedGuide} user={formData} />
     </div>
   );
 }
