@@ -134,6 +134,7 @@ export const initialSettingsData = {
     meta_title: "Ajans Rota | İzmir Google & Meta Reklam ve SEO Ajansı",
     meta_description: "İzmir'de Google Ads, Meta reklamları, SEO ve sosyal medya yönetimi ile markanızı Ege'den dünyaya açın. Veri odaklı dijital büyüme ajansı.",
     meta_keywords: "izmir dijital ajans, google ads ajansı izmir, meta ads ajansı, seo ajansı izmir, sosyal medya yönetimi, web tasarım",
+    active_partners: "google,meta,tiktok,trendyol,hepsiburada,shopify,ideasoft,ticimax,tsoft,ikas,n11,ciceksepeti,amazon",
     seo_izmir_title: "Neden İzmir? | Ajans Rota Ege Odaklı Dijital Ajans",
     seo_izmir_description: "Körfezin rüzgarıyla veri odaklı stratejileri harmanlayan Ajans Rota'nın İzmir ve Ege aşkını, yerel üreticilerle kurduğu güçlü bağı okuyun.",
     seo_izmir_keywords: "izmir dijital ajans, neden izmir, ege dijital ajans",

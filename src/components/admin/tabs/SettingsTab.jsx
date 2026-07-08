@@ -141,6 +141,15 @@ export default function SettingsTab({
       <form onSubmit={e => { e.preventDefault(); handleSaveAll(); }}>
         <p className="text-sm text-text-muted mb-6 leading-relaxed">Web sitenizin genel ayarlarını, görsel varlıklarını, SEO meta etiketlerini ve site haritasını buradan yapılandırabilirsiniz.</p>
 
+        {/* ── Partner Logoları (Ana Sayfa) ── */}
+        <Accordion id="partners" icon="fa-solid fa-handshake" iconColor="#F59E0B" title="Partner & Entegrasyon Logoları" borderColor="rgba(245,158,11,0.2)">
+          <div className="text-sm text-text-light mb-4 leading-relaxed p-4 bg-amber-500/5 rounded-lg border border-amber-500/20">
+            <strong>Kullanılabilir Partner ID'leri:</strong> google, meta, tiktok, trendyol, hepsiburada, shopify, ideasoft, ticimax, tsoft, ikas, n11, ciceksepeti, amazon<br/>
+            Ekranda görünmesini istediğiniz partnerlerin ID'lerini aralarına virgül koyarak yazın.
+          </div>
+          <Field label="Aktif Partnerler (Virgülle ayırın)" field="active_partners" placeholder="google,meta,tiktok,trendyol,shopify" />
+        </Accordion>
+
         {/* ── WhatsApp Bildirimler ── */}
         <Accordion id="webhook" icon="fa-brands fa-whatsapp" iconColor="#25D366" title="SaaS Bildirim Ayarları (WhatsApp)" borderColor="rgba(99,102,241,0.2)">
           <div className="text-sm text-text-light mb-5 leading-relaxed p-4 bg-green-500/5 rounded-lg border border-green-500/20">

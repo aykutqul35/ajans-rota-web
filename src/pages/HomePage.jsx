@@ -1,8 +1,56 @@
 import { motion } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
+import PartnerLogos from '../components/home/PartnerLogos';
 import { lazy, useState, useEffect, useRef } from 'react';
+
+const SpotlightServiceCard = ({ service, onClick }) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
+  return (
+    <StaggerItem 
+      className="glass-card service-card"
+      style={{ position: 'relative', overflow: 'hidden' }}
+      onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setOpacity(1)}
+      onMouseLeave={() => setOpacity(0)}
+    >
+      <div 
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-500 z-0"
+        style={{
+          opacity,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(2, 132, 199, 0.08), transparent 40%)`
+        }}
+      />
+      <div className="relative z-10 flex flex-col h-full pointer-events-none">
+        <div className="service-icon-box pointer-events-auto">
+          <i className={service.iconName || "fa-solid fa-compass"}></i>
+        </div>
+        <h3 className="pointer-events-auto">{service.title}</h3>
+        <p className="pointer-events-auto">{service.description}</p>
+        <ul className="service-features pointer-events-auto">
+          {(service.features || []).slice(0, 3).map((f, idx) => (
+            <li key={idx}><i className="fa-solid fa-circle-check"></i> {f}</li>
+          ))}
+        </ul>
+        <div className="service-card-cta pointer-events-auto mt-auto">
+          <span>Detayları Gör &amp; Planla</span>
+          <i className="fa-solid fa-arrow-right"></i>
+        </div>
+      </div>
+    </StaggerItem>
+  );
+};
+
 const RoasSimulatorWidget = lazy(() => import('../components/RoasSimulatorWidget'));
+import AiCommandCenter from '../components/home/AiCommandCenter';
 
 // Counter-up animation component for hero stats
 const CountUpStat = ({ value, label, delay = 0 }) => {
@@ -263,71 +311,17 @@ export default function HomePage(props) {
         </div>
       </section>
 
-      {/* Client Logos Marquee */}
-      <section className="client-logos-section">
-        <div className="container">
-          <p className="client-logos-label">Güvenilir Markalarla Çalışıyoruz</p>
-        </div>
-        <div className="marquee-wrapper">
-          <div className="marquee-track">
-            {[...Array(2)].map((_, setIdx) => (
-              <div key={setIdx} className="marquee-set" aria-hidden={setIdx > 0}>
-                {[
-                  { name: 'TechVista', icon: 'fa-solid fa-microchip' },
-                  { name: 'EgeExport', icon: 'fa-solid fa-ship' },
-                  { name: 'OliveDigital', icon: 'fa-solid fa-leaf' },
-                  { name: 'İzmirPazar', icon: 'fa-solid fa-store' },
-                  { name: 'AegeanCraft', icon: 'fa-solid fa-gem' },
-                  { name: 'SmartGrow', icon: 'fa-solid fa-chart-line' },
-                  { name: 'BlueBay', icon: 'fa-solid fa-water' },
-                  { name: 'SunriseTech', icon: 'fa-solid fa-sun' },
-                ].map((brand, i) => (
-                  <div key={i} className="marquee-logo-item">
-                    <i className={brand.icon}></i>
-                    <span>{brand.name}</span>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* 4. Calculator Section */}
-      <section id="services" className="services">
-        <div className="container">
-          <FadeIn className="section-header">
-            <span className="section-tag">{settingsData.services_section_tag || "Uzmanlık Alanlarımız"}</span>
-            <h2 className="section-title">{settingsData.services_section_title || "Büyümenizi Hızlandıracak Çözümler"}</h2>
-            <p className="section-desc">{settingsData.services_section_desc || "E-ticaret ve dijital satış hunilerinde en yüksek verimi alabilmeniz için veriye dayalı stratejiler geliştiriyoruz."}</p>
-          </FadeIn>
+      {/* Partner Logos Marquee */}
+      <PartnerLogos settingsData={settingsData} />
 
-          <div className="mobile-swipe-hint">
-            <i className="fa-solid fa-arrows-left-right"></i>
-            <span>Tüm hizmetleri görmek için kaydırın</span>
-          </div>
+      {/* 4. AI Command Center Services Section */}
+      <AiCommandCenter 
+        settingsData={settingsData} 
+        servicesData={servicesData} 
+        onServiceClick={handleServiceClick} 
+      />
 
-          <StaggerContainer className="services-grid">
-            {Object.keys(servicesData).map(key => {
-              const service = servicesData[key];
-              return <StaggerItem key={key} className="glass-card service-card" onClick={() => handleServiceClick(key)}>
-                  <div className="service-icon-box">
-                    <i className={service.iconName || "fa-solid fa-compass"}></i>
-                  </div>
-                  <h3>{service.title}</h3>
-                  <p>{service.description}</p>
-                  <ul className="service-features">
-                    {(service.features || []).slice(0, 3).map((f, idx) => <li key={idx}><i className="fa-solid fa-circle-check"></i> {f}</li>)}
-                  </ul>
-                  <div className="service-card-cta">
-                    <span>Detayları Gör &amp; Planla</span>
-                    <i className="fa-solid fa-arrow-right"></i>
-                  </div>
-                </StaggerItem>;
-            })}
-          </StaggerContainer>
-        </div>
-      </section>
-
+      {/* 5. Why Agency Section */}
       <section className="why-agency-section">
         <div className="container">
           <div className="why-agency-split-container">

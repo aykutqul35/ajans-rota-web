@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="tr-TR" xml:lang="tr-TR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Soft E-ticaret Yazılımları - 404</title>
+    <link rel="shortcut icon" href="https://www.tsoft.com.tr/assets/images/favicon.ico" type="image/x-icon" />
+    <meta name="robots" content="noindex">
+    <!-- Styles -->
+    <link rel="stylesheet" href="/assets/css/skeleton.min.css?v=1.0.0">
+    <link rel="stylesheet" href="/assets/cdn/css/swiper-bundle.min.css?v=1.0.0">
+    <link rel="stylesheet" href="/assets/css/style.min.css?v=1.2.0">
+</head>
+
+<body>
+
+    <a href="https://wa.me/+902124800048?text=Merhaba" class="d-flex d-lg-none home-page--bottom-whatsapp"></a>
+    <a href="tel:+902124800048" class="d-flex d-lg-none home-page--bottom-call-me">
+        <i class="ti-phone"></i>
+    </a>
+    <section>
+        <style>
+            .notfound-wrapper {
+                position: relative;
+                height: 100vh;
+            }
+
+            .notfound-wrapper .notfound {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                -webkit-transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
+
+            .notfound {
+                max-width: 520px;
+                width: 100%;
+                line-height: 1.4;
+            }
+
+            .notfound .notfound-404 {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 150px;
+                width: 200px;
+                z-index: -1;
+            }
+
+            .notfound .notfound-404 .title {
+                font-size: 18rem;
+                font-weight: 700;
+                margin: 0px;
+                color: #e3e3e3;
+                text-transform: uppercase;
+                letter-spacing: 7px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                -webkit-transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
+
+            .notfound .sub-title {
+                font-size: 1.8rem;
+                font-weight: 500;
+                text-transform: uppercase;
+                color: #444;
+                margin-top: 12px;
+                margin-bottom: 15px;
+            }
+
+            .notfound .notfound-search {
+                display: flex;
+                gap: 10px;
+            }
+
+            .notfound .notfound-search input {
+                width: 100%;
+                height: 40px;
+                padding: 10px;
+                color: #222;
+                font-size: 0.85rem;
+                font-weight: 400;
+                background: #fff;
+                border: 2px solid rgba(21, 23, 35, 0.2);
+                border-radius: 3px;
+                -webkit-transition: 0.2s all;
+                transition: 0.2s all;
+            }
+
+            .notfound .notfound-search input:focus {
+                border-color: #57a3f8;
+            }
+
+            .notfound .notfound-search .notfound-btn-search {
+                flex-shrink: 0;
+                width: 120px;
+                text-align: center;
+                border: none;
+                background: #57a3f8;
+                cursor: pointer;
+                color: #fff;
+                font-weight: 700;
+                font-size: 1rem;
+                border-radius: 3px;
+            }
+
+            @media only screen and (max-width: 767px) {
+                .notfound {
+                    padding: 25px;
+                }
+
+                .notfound .notfound-404 {
+                    height: 110px;
+                    line-height: 110px;
+                }
+
+                .notfound .notfound-404 .title {
+                    font-size: 8rem;
+                }
+
+                .notfound .sub-title {
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                }
+
+                .notfound .notfound-search .notfound-btn-search {
+                    width: 85px;
+                    font-size: 0.9rem;
+                }
+
+                .notfound .notfound-search input {
+                    font-size: 0.95rem;
+                    padding: 5px;
+                }
+            }
+        </style>
+        <div class="notfound-wrapper">
+            <div class="notfound">
+                <div class="notfound-404">
+                    <div class="title">404</div>
+                </div>
+                <div class="sub-title">
+                    <a href="/" class="d-block fw-semibold mt-1">
+                        <img loading="lazy" src="/assets/images/logo/tsoft-logo-tr.svg?v=2" width="158" height="50" class="d-block mb-2" alt="T-SOFT TR">
+                    </a>
+                    Üzgünüz, Aradığınız sayfayı bulamadık. Arama yapmak ister misiniz?
+                </div>
+                <form action="/Eticaret/Arama.php" method="GET" class="notfound-search">
+                    <input type="hidden" name="searchid" value="2315715">
+                    <input type="hidden" name="web" value="0">
+                    <input type="search" name="text" id="text" placeholder="Aradığınız konu hakkında birşeyler yazın" class="search-field">
+                    <input type="submit" value="ARA" class="notfound-btn-search">
+                </form>
+                <a href="/" class="d-block fw-semibold mt-1"> &#60; Ana Sayfaya git </a>
+            </div>
+        </div>
+    </section>
+
+    </div>
+</body>
+
+</html>

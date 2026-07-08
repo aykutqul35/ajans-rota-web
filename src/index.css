@@ -9404,3 +9404,22 @@ select:focus, input:focus {
   gap: 0.85rem;
   color: var(--secondary);
 }
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-33.333333%); }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+  will-change: transform;
+}
+
+@keyframes marquee-reverse {
+  0% { transform: translateX(-33.333333%); }
+  100% { transform: translateX(0%); }
+}
+.animate-marquee-reverse {
+  animation: marquee-reverse 45s linear infinite;
+  will-change: transform;
+}
+
