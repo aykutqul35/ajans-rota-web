@@ -148,7 +148,7 @@ export default function EditItemModal({
     <div className="lead-modal-overlay" onClick={() => { setEditingItem(null); setEditingType(''); }}>
       <div className="lead-modal-card" onClick={e => e.stopPropagation()} style={{ maxWidth: editingType === 'blog' ? '800px' : '550px' }}>
         <div className="lead-modal-header">
-          <h3>{editingItem === 'new' ? 'Yeni Ekle' : 'Düzenle'} - {editingType === 'testimonial' ? 'Yorum' : editingType === 'team' ? 'Ekip Üyesi' : 'Blog'}</h3>
+          <h3>{editingItem === 'new' ? 'Yeni Ekle' : 'Düzenle'} - {editingType === 'testimonial' ? 'Yorum' : editingType === 'team' ? 'Yazar' : 'Blog'}</h3>
           <button className="btn-icon" onClick={() => { setEditingItem(null); setEditingType(''); }}><i className="fa-solid fa-xmark"></i></button>
         </div>
         <form onSubmit={handleModalSave}>

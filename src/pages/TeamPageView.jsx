@@ -120,63 +120,93 @@ function TeamPageView({
       </div>
 
       {/* Hero Header */}
-      <div className="izmir-hero-header">
-        <h1 className="izmir-hero-title">İnsan Hatalarından Arındırılmış <br /><span style={{ color: 'var(--cyber-blue)' }}>7/24 Otonom Zeka</span></h1>
-        <p className="izmir-hero-desc">
-          Uyku, yorgunluk ve duygusal kararlar yok. Markanızın büyüme rotasını milisaniyeler içinde çizen otonom ajanlarımızla tanışın.
+      <div className="izmir-hero-header" style={{ position: 'relative', overflow: 'hidden', paddingBottom: '3rem' }}>
+        <div className="hero-glow" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '150%', height: '150%', background: 'radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 60%)', zIndex: 0, pointerEvents: 'none' }}></div>
+        <h1 className="izmir-hero-title" style={{ position: 'relative', zIndex: 1 }}>
+          Sınırları Kaldıran <br /><span style={{ color: 'var(--primary)' }}>Hibrid Büyüme Ekosistemi</span>
+        </h1>
+        <p className="izmir-hero-desc" style={{ position: 'relative', zIndex: 1, maxWidth: '800px', margin: '0 auto' }}>
+          Elit insan stratejistleri ile binlerce otonom yapay zeka ajanının entegre çalıştığı, 7/24 kesintisiz operasyon yürüten devasa mekanizmamızla tanışın. Klasik ajans hantallığına yer yok.
         </p>
       </div>
 
-      {/* Team Grid Groups */}
-      {Object.entries(departments).map(([key, dept]) => <div key={key} className="team-department-section">
-          <div className="dept-header">
-            <h2 className="dept-title">{dept.title}</h2>
-            <p className="dept-desc">{dept.desc}</p>
+      {/* Capacity Stats */}
+      <div className="team-stats-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', margin: '2rem 0 4rem 0', position: 'relative', zIndex: 1 }}>
+        {[
+          { icon: "fa-bolt", value: "Milisaniye", label: "Reaksiyon Hızı" },
+          { icon: "fa-infinity", value: "7/24", label: "Kesintisiz Operasyon" },
+          { icon: "fa-network-wired", value: "10+", label: "Entegre Dijital Disiplin" },
+          { icon: "fa-microchip", value: "Otonom", label: "Hibrid İş Gücü" }
+        ].map((stat, idx) => (
+          <div key={idx} className="glass-card stat-card hover-glow" style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+            <i className={`fa-solid ${stat.icon}`} style={{ fontSize: '2rem', color: 'var(--primary)', marginBottom: '1rem' }}></i>
+            <h3 style={{ fontSize: '1.75rem', fontWeight: '700', color: 'var(--text-light)', marginBottom: '0.25rem', fontFamily: 'var(--font-heading)' }}>{stat.value}</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{stat.label}</p>
           </div>
-          
-          <div className="team-grid">
-            {dept.members.map((member, idx) => <div key={idx} className="glass-card team-member-card">
-                {/* Avatar Circle with Initials & Custom Gradient */}
-                <div className="team-avatar-circle" style={{
-            background: member.gradient
-          }}>
-                  {member.init}
-                </div>
-                
-                {/* Experience Stars */}
-                <div className="team-experience-stars">
-                  {Array.from({
-              length: member.stars
-            }).map((_, i) => <i key={i} className="fa-solid fa-star star-icon"></i>)}
-                  <span className="exp-years">{member.exp} Deneyim</span>
-                </div>
-                
-                <span className="team-member-role" style={{
-            color: member.gradient.includes('ff2a85') ? 'var(--secondary)' : 'var(--primary)'
-          }}>
-                  {member.role}
-                </span>
-                
-                <h3 className="team-member-name">
-                  {member.name}
-                </h3>
-                
-                <p className="team-member-desc">
-                  {member.desc}
-                </p>
-                
-                {/* Social Links placeholder */}
-                <div className="team-social-links">
-                  <a href="javascript:void(0)" className="team-social-icon">
-                    <i className="fa-brands fa-linkedin"></i>
-                  </a>
-                  <a href="javascript:void(0)" className="team-social-icon">
-                    <i className="fa-solid fa-envelope"></i>
-                  </a>
-                </div>
-              </div>)}
-          </div>
-        </div>)}
+        ))}
+      </div>
+
+      {/* Department Hubs */}
+      <div className="team-hubs-section" style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+          <span style={{ color: 'var(--primary)', fontWeight: '700', fontSize: '0.85rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Operasyon Merkezlerimiz</span>
+          <h2 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-heading)', color: 'var(--text-light)', marginTop: '0.5rem' }}>Dijitalin Her Alanında Kurumsal Yetkinlik</h2>
+        </div>
+        
+        <div className="hubs-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+          {[
+            { 
+              icon: "fa-chart-line", 
+              title: "Veri Bilimi & Performans Masası", 
+              desc: "Milyonlarca veriyi anlık analiz ederek en karlı hedef kitleyi bulan, bütçenizi yöneten operasyon üssü.",
+              tags: ["Google Ads", "Meta Ads", "Programatik", "Analytics"]
+            },
+            { 
+              icon: "fa-pen-nib", 
+              title: "Kreatif Stüdyo & Prodüksiyon", 
+              desc: "Görsel hafızalara kazınan marka hikayeleri yaratan, saniyeler içinde binlerce varyasyon üreten tasarım laboratuvarı.",
+              tags: ["Video Kurgu", "Hareketli Grafik", "Copywriting", "UI/UX"]
+            },
+            { 
+              icon: "fa-chess-knight", 
+              title: "Strateji & Büyüme Ekibi", 
+              desc: "Sektörel rakipleri inceleyip markanızı pazarda paha biçilmez bir konuma oturtan elit büyüme stratejistleri.",
+              tags: ["Pazar Araştırması", "Konumlandırma", "CRM", "CRO"]
+            },
+            { 
+              icon: "fa-robot", 
+              title: "Yapay Zeka & Otomasyon Lab.", 
+              desc: "İnsan gücünün sınırlarını aşan, uyumadan sistemleri denetleyen ve iyileştiren yapay zeka ajanlarımız.",
+              tags: ["AI Agent", "Entegrasyon", "Makine Öğrenimi", "Veri"]
+            },
+            { 
+              icon: "fa-globe", 
+              title: "Global SEO & İçerik Ağı", 
+              desc: "Arama motorlarında üst sıralara çıkmanızı sağlayan algoritmik analiz ve programatik içerik üretim merkezi.",
+              tags: ["Teknik SEO", "Yerel SEO", "Backlink", "İçerik Stratejisi"]
+            },
+            { 
+              icon: "fa-code", 
+              title: "Web & Otonom Mimari", 
+              desc: "Dönüşüm odaklı hibrid e-ticaret siteleri ve yüksek performanslı otonom yazılım ekosistemleri inşa eden takım.",
+              tags: ["E-Ticaret", "PWA", "Mobil Uygulama", "Özel Yazılım"]
+            }
+          ].map((hub, idx) => (
+            <div key={idx} className="glass-card hub-card" style={{ padding: '2.5rem 2rem', borderTop: '2px solid rgba(16, 185, 129, 0.3)', transition: 'transform 0.4s ease' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-10px)'; e.currentTarget.style.borderTopColor = 'var(--primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderTopColor = 'rgba(16, 185, 129, 0.3)'; }}>
+              <div style={{ width: '65px', height: '65px', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
+                <i className={`fa-solid ${hub.icon}`} style={{ fontSize: '1.75rem', color: 'var(--primary)' }}></i>
+              </div>
+              <h3 style={{ fontSize: '1.35rem', color: 'var(--text-light)', marginBottom: '1rem', fontFamily: 'var(--font-heading)', fontWeight: '600', lineHeight: '1.3' }}>{hub.title}</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>{hub.desc}</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+                {hub.tags.map((tag, i) => (
+                  <span key={i} style={{ padding: '0.4rem 0.8rem', background: 'rgba(16, 185, 129, 0.08)', borderRadius: '20px', fontSize: '0.75rem', color: 'var(--primary)', border: '1px solid rgba(16, 185, 129, 0.15)', fontWeight: '600' }}>{tag}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
 
       {/* Ekiplerimiz Sayfası Alt CTA Banner */}

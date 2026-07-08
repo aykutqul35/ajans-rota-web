@@ -62,7 +62,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, unreadLeadsCount
         <i className="fa-solid fa-graduation-cap text-lg w-5 text-center"></i> Akademi Eğitimleri
       </button>
       <button className={navBtnCls('team')} onClick={() => setActiveTab('team')}>
-        <i className="fa-solid fa-users text-lg w-5 text-center"></i> Ekibimiz
+        <i className="fa-solid fa-users text-lg w-5 text-center"></i> Blog Yazarları
       </button>
       <button className={navBtnCls('blogs')} onClick={() => setActiveTab('blogs')}>
         <i className="fa-solid fa-file-lines text-lg w-5 text-center"></i> Blog Yazıları

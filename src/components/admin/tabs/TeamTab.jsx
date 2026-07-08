@@ -35,7 +35,7 @@ const [teamDeptFilter, setTeamDeptFilter] = useState('all');
   return (
               <div>
               <div className="admin-section-title">
-                Ajans Ekip Üyeleri
+                Blog Yazarları
                 <button onClick={() => openEditModal('team', 'new')} className="btn btn-primary px-3.5 py-1.5 text-xs">
                   <i className="fa-solid fa-plus mr-1.5"></i> Yeni Üye Ekle
                 </button>
