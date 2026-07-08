@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { initialServicePagesData, initialBlogPosts, categories } from '../src/data/mockData.js';
+import { locationData } from '../src/data/locationData.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -79,6 +80,15 @@ const generateSitemap = () => {
     xml += `  <url>
     <loc>${DOMAIN}/blog/${slugify(post.title)}</loc>
     <lastmod>${formatDate(post.date)}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>\n`;
+  });
+
+  locationData.forEach(loc => {
+    xml += `  <url>
+    <loc>${DOMAIN}/dijital-ajans/${loc.slug}</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>\n`;
