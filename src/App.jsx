@@ -92,6 +92,11 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPath]);
+
   const appState = useAppState(currentPath);
 const {  isLeadPopupOpen, setIsLeadPopupOpen, isExitIntentPopup, setIsExitIntentPopup, settingsData, setSettingsData, servicesData, setServicesData, teamMembersData, setTeamMembersData, blogsData, setBlogsData, academyCoursesData, setAcademyCoursesData, leadsData, setLeadsData, newsletterEmail, setNewsletterEmail, newsletterLoading, setNewsletterLoading, newsletterSubmitted, setNewsletterSubmitted, newsletterError, setNewsletterError, clientReports, setClientReports, authToken, setAuthToken, whyAgencySlide, setWhyAgencySlide, isScrolled, setIsScrolled, isMobileMenuOpen, setIsMobileMenuOpen, calculatorTab, setCalculatorTab, feeAdBudget, setFeeAdBudget, pricingModel, setPricingModel, targetRevenue, setTargetRevenue, selectedServices, setSelectedServices, googleSpend, setGoogleSpend, googleRoas, setGoogleRoas, metaSpend, setMetaSpend, metaRoas, setMetaRoas, ecomTraffic, setEcomTraffic, ecomAov, setEcomAov, ecomSpend, setEcomSpend, ecomRevenue, setEcomRevenue, b2bSpend, setB2bSpend, b2bLeads, setB2bLeads, b2bConversion, setB2bConversion, b2bLtv, setB2bLtv, budgetIndex, setBudgetIndex, reportFullName, setReportFullName, reportEmail, setReportEmail, reportWebsite, setReportWebsite, reportPhone, setReportPhone, proposalFullName, setProposalFullName, proposalEmail, setProposalEmail, proposalWebsite, setProposalWebsite, proposalPhone, setProposalPhone, isReportGenerated, setIsReportGenerated, reportLoading, setReportLoading, reportError, setReportError, isProposalGenerated, setIsProposalGenerated, proposalLoading, setProposalLoading, proposalError, setProposalError, ecomSector, setEcomSector, handleEcomSectorChange, b2bSector, setB2bSector, handleB2bSectorChange, handleNavClick, handleServiceClick, testimonialsData, seoData, setTestimonialsData } = appState;
 
