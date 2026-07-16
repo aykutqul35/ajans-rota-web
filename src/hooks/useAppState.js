@@ -116,6 +116,16 @@ const [isLeadPopupOpen, setIsLeadPopupOpen] = useState(false);
     
     const targetSlug = seoSlugs[serviceKey] || serviceKey;
     navigate(`/hizmetlerimiz/${targetSlug}`);
+    window.scrollTo(0, 0);
+    
+    // SPA CSS :hover dropdown fix: force hide the dropdown briefly so it doesn't stay open on new page
+    const dropdowns = document.querySelectorAll('.dropdown:hover .dropdown-menu');
+    dropdowns.forEach(el => {
+      el.style.display = 'none';
+      setTimeout(() => {
+        el.style.display = '';
+      }, 100);
+    });
   };
 
   // SEO Data Helper

@@ -56,7 +56,7 @@ export default function Navbar({
                 if (key === 'social') iconClass = 'fa-solid fa-share-nodes';
                 if (key === 'ecommerce') iconClass = 'fa-solid fa-cart-shopping';
                 return <li key={key}>
-                      <a href={`/hizmetlerimiz/${slugify(key)}`} onClick={e => {
+                      <a href={`/hizmetlerimiz/${seoSlugs[key] || slugify(key)}`} onClick={e => {
                     e.preventDefault();
                     handleServiceClick(key);
                   }}>

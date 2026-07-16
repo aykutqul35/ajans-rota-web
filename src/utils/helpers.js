@@ -219,3 +219,12 @@ export const getAgencyStatus = (settingsData) => {
       };
     }
   };
+
+export const seoSlugs = {
+  'google': 'google-ads-danismanligi',
+  'meta': 'meta-reklam-yonetimi',
+  'seo': 'arama-motoru-optimizasyonu-seo',
+  'social': 'sosyal-medya-yonetimi',
+  'ecommerce': 'e-ticaret-ve-pazaryeri-yonetimi',
+  'design': 'donusum-odakli-web-tasarim'
+};

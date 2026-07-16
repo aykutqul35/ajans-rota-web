@@ -93,7 +93,7 @@ export default function Footer({
               <h4>Hizmetlerimiz</h4>
               <ul className="footer-links">
                 {Object.keys(servicesData).map(key => <li key={key}>
-                    <a href={`/hizmetlerimiz/${slugify(key)}`} onClick={e => {
+                    <a href={`/hizmetlerimiz/${seoSlugs[key] || slugify(key)}`} onClick={e => {
                   e.preventDefault();
                   handleServiceClick(key);
                 }}>
