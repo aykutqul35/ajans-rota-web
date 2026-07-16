@@ -337,7 +337,7 @@ function IzmirPageView({
                   <h3 style={{
               fontFamily: 'var(--font-heading)',
               fontSize: '1.5rem',
-              color: '#ffffff',
+              color: 'var(--text-dark)',
               fontWeight: '700',
               lineHeight: '1.2'
             }}>
@@ -377,10 +377,10 @@ function IzmirPageView({
                 borderRadius: '10px',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 background: 'rgba(255, 255, 255, 0.03)',
-                color: '#ffffff',
+                color: 'var(--text-dark)',
                 fontSize: '0.9rem',
                 transition: 'border-color 0.2s'
-              }} onFocus={e => e.target.style.borderColor = 'var(--primary)'} onBlur={e => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'} />
+              }} className="form-input" />
                   </div>
 
                   <div style={{
@@ -407,9 +407,9 @@ function IzmirPageView({
                   borderRadius: '10px',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   background: 'rgba(255, 255, 255, 0.03)',
-                  color: '#ffffff',
+                  color: 'var(--text-dark)',
                   fontSize: '0.9rem'
-                }} onFocus={e => e.target.style.borderColor = 'var(--primary)'} onBlur={e => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'} />
+                }} className="form-input" />
                     </div>
                     <div style={{
                 display: 'flex',
@@ -430,9 +430,9 @@ function IzmirPageView({
                   borderRadius: '10px',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   background: 'rgba(255, 255, 255, 0.03)',
-                  color: '#ffffff',
+                  color: 'var(--text-dark)',
                   fontSize: '0.9rem'
-                }} onFocus={e => e.target.style.borderColor = 'var(--primary)'} onBlur={e => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'} />
+                }} className="form-input" />
                     </div>
                   </div>
 
@@ -455,9 +455,9 @@ function IzmirPageView({
                 borderRadius: '10px',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 background: 'rgba(255, 255, 255, 0.03)',
-                color: '#ffffff',
+                color: 'var(--text-dark)',
                 fontSize: '0.9rem'
-              }} onFocus={e => e.target.style.borderColor = 'var(--primary)'} onBlur={e => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'} />
+              }} className="form-input" />
                   </div>
 
                   <div style={{
@@ -479,10 +479,10 @@ function IzmirPageView({
                 borderRadius: '10px',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 background: 'rgba(255, 255, 255, 0.03)',
-                color: '#ffffff',
+                color: 'var(--text-dark)',
                 fontSize: '0.9rem',
                 resize: 'none'
-              }} onFocus={e => e.target.style.borderColor = 'var(--primary)'} onBlur={e => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'} />
+              }} className="form-input" />
                   </div>
 
                   {error && <div style={{
@@ -534,7 +534,7 @@ function IzmirPageView({
                   <i className="fa-solid fa-check"></i>
                 </div>
                 <h4 style={{
-            color: '#ffffff',
+            color: 'var(--text-dark)',
             fontSize: '1.35rem',
             marginBottom: '0.5rem',
             fontWeight: '700',

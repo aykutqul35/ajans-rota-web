@@ -8580,116 +8580,13 @@ select:focus, input:focus {
   padding: 2.5rem 2rem;
   position: relative;
   border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  background: rgba(15, 23, 42, 0.85);
-  color: var(--text-light);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lg);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  color: var(--text-dark);
   animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
-}
-
-.appointment-modal-close {
-  position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-muted);
-  font-size: 1rem;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.appointment-modal-close:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  transform: rotate(90deg);
-}
-
-.appointment-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.appointment-form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-}
-
-@media (max-width: 576px) {
-  .appointment-form-row {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
-  .appointment-modal-card {
-    padding: 2rem 1.5rem;
-  }
-}
-
-.appointment-form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.appointment-form-group label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.02em;
-}
-
-.appointment-form-input,
-.appointment-form-textarea {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
-  color: #ffffff;
-  font-size: 0.9rem;
-  transition: all 0.25s ease;
-}
-
-.appointment-form-input:focus,
-.appointment-form-textarea:focus {
-  outline: none;
-  border-color: var(--primary);
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
-}
-
-.appointment-form-textarea {
-  resize: none;
-  min-height: 90px;
-}
-
-.appointment-success-container {
-  text-align: center;
-  padding: 1rem 0;
-}
-
-.appointment-success-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: rgba(34, 197, 94, 0.15);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-  color: #22c55e;
-  font-size: 2rem;
-  animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 

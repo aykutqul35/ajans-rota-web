@@ -290,7 +290,7 @@ function TeamPageView({
                   <h3 style={{
               fontFamily: 'var(--font-heading)',
               fontSize: '1.5rem',
-              color: '#ffffff',
+              color: 'var(--text-dark)',
               fontWeight: '700',
               lineHeight: '1.2'
             }}>
@@ -382,7 +382,7 @@ function TeamPageView({
                   <i className="fa-solid fa-check"></i>
                 </div>
                 <h4 style={{
-            color: '#ffffff',
+            color: 'var(--text-dark)',
             fontSize: '1.35rem',
             marginBottom: '0.5rem',
             fontWeight: '700',
