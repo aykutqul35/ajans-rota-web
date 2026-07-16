@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { slugify } from '../../utils/helpers';
+import { slugify, seoSlugs } from '../../utils/helpers';
 
 export default function Navbar({
   isScrolled,
