@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import SkeletonLoader from '../components/SkeletonLoader';
 import { getSmartGreeting } from '../utils/helpers';
 import { budgetSteps, whyAgencyData } from '../data/mockData';
@@ -27,6 +27,7 @@ const LocationPageView = lazy(() => import('../pages/LocationPageView'));
 const SectorPageView = lazy(() => import('../pages/SectorPageView'));
 
 export default function AppRoutes(props) {
+  const location = useLocation();
   const {settingsData, setSettingsData, servicesData, setServicesData, teamMembersData, setTeamMembersData, blogsData, setBlogsData, academyCoursesData, setAcademyCoursesData, leadsData, setLeadsData, clientReports, setClientReports, authToken, setAuthToken, whyAgencySlide, setWhyAgencySlide, calculatorTab, setCalculatorTab, feeAdBudget, setFeeAdBudget, pricingModel, setPricingModel, targetRevenue, setTargetRevenue, selectedServices, setSelectedServices, ecomTraffic, setEcomTraffic, ecomAov, setEcomAov, ecomSpend, setEcomSpend, ecomRevenue, setEcomRevenue, b2bSpend, setB2bSpend, b2bLeads, setB2bLeads, b2bConversion, setB2bConversion, b2bLtv, setB2bLtv, budgetIndex, setBudgetIndex, reportFullName, setReportFullName, reportEmail, setReportEmail, reportWebsite, setReportWebsite, reportPhone, setReportPhone, proposalFullName, setProposalFullName, proposalEmail, setProposalEmail, proposalWebsite, setProposalWebsite, proposalPhone, setProposalPhone, isReportGenerated, reportLoading, reportError, isProposalGenerated, setIsProposalGenerated, proposalLoading, proposalError, setProposalError, ecomSector, handleEcomSectorChange, b2bSector, handleB2bSectorChange, testimonialsData, handleNavClick, handleServiceClick, simulateLeadLocally, logHit, navigate, handleGenerateReport, handleGenerateProposal, renderContactForm, renderWebDesignForm, renderReportForm, setTestimonialsData, commitment, setCommitment, reportingPackage, setReportingPackage, smPackage, setSmPackage, webDesignType, setWebDesignType, webDesignFullName, setWebDesignFullName, webDesignEmail, setWebDesignEmail, webDesignPhone, setWebDesignPhone, webDesignMessage, setWebDesignMessage, webDesignLoading, webDesignSubmitted, baselineEcomOrders, baselineEcomCR, baselineEcomRoas, baselineEcomCac, rotaEcomCR, rotaEcomOrders, rotaEcomRevenue, rotaEcomRoas, rotaEcomCac, rotaEcomRevenueIncrease, ecomBudgetSavings, baselineB2bCustomers, baselineB2bRevenue, baselineB2bCpl, baselineB2bCac, baselineB2bRoi, rotaB2bLeads, rotaB2bConversion, rotaB2bCustomers, rotaB2bRevenue, rotaB2bCpl, rotaB2bCacFinal, rotaB2bRoi, rotaB2bRevenueIncrease, isSocialSelected, selectedCount, isOnlyDesignSelected, isOnlySocialSelected, isOnlySeoSelected, bundleDiscountPercent, bundleDiscountAmount, activePricingModel, calculatedAgencyFee, discountPercent, discountAmount, finalAgencyFee, baseRetainerLabel, managementFeeDesc, rawBaseRetainer, scaledBundleDiscountAmount, performanceBundleDiscountAmount, b2bBudgetSavings} = props;
   return (
     <Routes>
@@ -48,9 +49,9 @@ export default function AppRoutes(props) {
             <Route path="/blog" element={<BlogPageView onBack={() => navigate('/')} onNavToContact={() => navigate('/iletisim')} blogPosts={blogsData} initialSlug={null} />} />
             <Route path="/blog/:slug" element={<BlogPageView onBack={() => navigate('/')} onNavToContact={() => navigate('/iletisim')} blogPosts={blogsData} />} />
             <Route path="/hizmetlerimiz" element={<Navigate to="/" replace />} />
-            <Route path="/hizmetlerimiz/:slug" element={<ServicePageView onBack={() => navigate('/')} onNavToContact={() => navigate('/iletisim')} budgetSteps={budgetSteps} servicesData={servicesData} testimonialsData={testimonialsData} />} />
-            <Route path="/sektorler/:slug" element={<Suspense fallback={<SkeletonLoader />}><SectorPageView onNavToContact={() => navigate('/iletisim')} /></Suspense>} />
-            <Route path="/dijital-ajans/:slug" element={<Suspense fallback={<SkeletonLoader />}><LocationPageView /></Suspense>} />
+            <Route path="/hizmetlerimiz/:slug" element={<ServicePageView key={location.pathname} onBack={() => navigate('/')} onNavToContact={() => navigate('/iletisim')} budgetSteps={budgetSteps} servicesData={servicesData} testimonialsData={testimonialsData} />} />
+            <Route path="/sektorler/:slug" element={<Suspense fallback={<SkeletonLoader />}><SectorPageView key={location.pathname} onNavToContact={() => navigate('/iletisim')} /></Suspense>} />
+            <Route path="/dijital-ajans/:slug" element={<Suspense fallback={<SkeletonLoader />}><LocationPageView key={location.pathname} /></Suspense>} />
             <Route path="/" element={
               <HomePage
                 settingsData={settingsData}
