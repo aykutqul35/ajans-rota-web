@@ -1,3 +1,4 @@
+import SEO from '../components/SEO';
 
 export default // Dedicated Contact Page View Component
 function ContactPageView({
@@ -5,6 +6,11 @@ function ContactPageView({
   settingsData
 }) {
   return <div className="contact-page-view container">
+      <SEO 
+        title="İletişim & Randevu | Ajans Rota"
+        description="Ege'nin samimiyetiyle dijital dünyada yanınızdayız. Ekibimizle hemen bir görüntülü toplantı planlayın veya yüz yüze görüşelim."
+        canonicalPath="/iletisim"
+      />
       {/* Navigation & Breadcrumb */}
       <div className="service-page-nav">
         <button className="btn btn-secondary back-btn" onClick={onBack}>

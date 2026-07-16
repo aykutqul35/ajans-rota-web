@@ -1,5 +1,78 @@
 import { useState } from 'react';
 
+// ── Shared CSS helpers ──
+const inputCls = "w-full py-3 px-3 rounded-lg border border-glass-border bg-white text-sm outline-none focus:border-primary transition-colors";
+const textareaCls = "w-full py-3 px-3 rounded-lg border border-glass-border bg-white text-sm leading-relaxed outline-none focus:border-primary transition-colors font-[inherit]";
+
+// ── Accordion wrapper ──
+const Accordion = ({ id, icon, iconColor, title, borderColor = 'rgba(2,132,199,0.2)', children, settingsAccordion, toggleSettingsSection }) => {
+  const isOpen = settingsAccordion[id];
+  return (
+    <div className="mb-2 rounded-[14px] overflow-hidden transition-shadow" style={{ border: `1px solid ${borderColor}`, boxShadow: isOpen ? `0 4px 16px ${borderColor.replace('0.2', '0.08')}` : 'none' }}>
+      <button type="button" onClick={() => toggleSettingsSection(id)} className={`w-full flex items-center justify-between py-4 px-5 border-none cursor-pointer transition-colors ${isOpen ? 'bg-sky-500/5' : 'bg-white/70'}`} style={isOpen ? { borderBottom: `1px solid ${borderColor}` } : {}}>
+        <span className="flex items-center gap-2.5 font-heading font-bold text-base text-text-light"><i className={icon} style={{ color: iconColor || 'var(--primary)', fontSize: '1.05rem' }}></i>{title}</span>
+        <i className={`fa-solid ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'} text-sm`} style={{ color: iconColor || 'var(--primary)' }}></i>
+      </button>
+      {isOpen && <div className="p-6">{children}</div>}
+    </div>
+  );
+};
+
+// ── Sub-tab nav helper ──
+const SubTabNav = ({ tabs, active, setActive }) => (
+  <div className="flex gap-2 border-b border-glass-border pb-4 mb-6 overflow-x-auto whitespace-nowrap admin-subtabs">
+    {tabs.map(tab => <button key={tab.id} type="button" onClick={() => setActive(tab.id)} className={`py-2.5 px-5 rounded-lg inline-flex items-center gap-2 text-xs font-semibold cursor-pointer transition-all ${active === tab.id ? 'bg-primary text-white border-none' : 'bg-white/40 text-text-light border border-glass-border'}`}>
+      <i className={`${tab.icon} text-sm`}></i><span>{tab.label}</span>
+    </button>)}
+  </div>
+);
+
+// ── Field helpers ──
+const Field = ({ label, field, type = 'text', placeholder = '', hint, settingsData, upd, ...rest }) => (
+  <div className="admin-form-group">
+    <label className="text-sm font-semibold text-text-light mb-1.5 block">{label}</label>
+    {type === 'textarea'
+      ? <textarea value={settingsData[field] || ''} onChange={e => upd(field, e.target.value)} className={`${textareaCls} min-h-[100px]`} placeholder={placeholder} {...rest} />
+      : <input type={type} value={settingsData[field] || ''} onChange={e => upd(field, e.target.value)} className={inputCls} placeholder={placeholder} {...rest} />}
+    {hint && <span className="text-xs text-text-muted mt-1 block">{hint}</span>}
+  </div>
+);
+
+// ── SEO form for a page ──
+const SeoForm = ({ prefix, pageName, settingsData, upd }) => (
+  <div>
+    <Field settingsData={settingsData} upd={upd} label={`Meta Başlığı (Title) - ${pageName}`} field={`${prefix}_title`} settingsData={settingsData} upd={upd} />
+    <Field settingsData={settingsData} upd={upd} label={`Meta Açıklaması (Description) - ${pageName}`} field={`${prefix}_description`} type="textarea" settingsData={settingsData} upd={upd} />
+    <Field settingsData={settingsData} upd={upd} label={`Meta Anahtar Kelimeler (Keywords) - ${pageName}`} field={`${prefix}_keywords`} settingsData={settingsData} upd={upd} />
+  </div>
+);
+
+// ── SM Package Card ──
+const SmPkgCard = ({ prefix, title, icon, colorCls, badge, settingsData, upd }) => (
+  <div className={`border border-glass-border rounded-2xl p-5 relative ${colorCls}`}>
+    {badge && <span className="absolute -top-2.5 right-3 bg-primary text-white text-[0.6rem] font-bold py-0.5 px-2 rounded-full tracking-wider">{badge}</span>}
+    <h4 className="text-sm font-bold mb-4 flex items-center gap-1.5"><i className={icon}></i> {title}</h4>
+    <Field settingsData={settingsData} upd={upd} label="Paket Adı" field={`${prefix}_name`} placeholder={title} settingsData={settingsData} upd={upd} />
+    <div className="grid grid-cols-2 gap-2 my-3">
+      <div className="admin-form-group"><label className="text-xs font-semibold">Post/Ay</label><input type="number" value={settingsData[`${prefix}_posts`] || ''} onChange={e => upd(`${prefix}_posts`, e.target.value)} className={inputCls} /></div>
+      <div className="admin-form-group"><label className="text-xs font-semibold">Reels/Ay</label><input type="number" value={settingsData[`${prefix}_reels`] || ''} onChange={e => upd(`${prefix}_reels`, e.target.value)} className={inputCls} /></div>
+    </div>
+    <Field settingsData={settingsData} upd={upd} label="Aylık Fiyat (₺)" field={`${prefix}_price`} type="number" settingsData={settingsData} upd={upd} />
+    <Field settingsData={settingsData} upd={upd} label="Dahil Hizmetler (virgülle)" field={`${prefix}_extras`} settingsData={settingsData} upd={upd} />
+  </div>
+);
+
+// ── Rule Card ──
+const RuleCard = ({ num, prefix, color, bgColor, settingsData, upd }) => (
+  <div className="border border-glass-border rounded-xl p-5 relative" style={{ background: bgColor }}>
+    <span className="absolute top-2 right-3 text-2xl font-extrabold opacity-[0.08] pointer-events-none">{num}</span>
+    <h6 className="text-sm font-bold mb-4 flex items-center gap-1.5" style={{ color }}><i className={settingsData[`${prefix}_icon`] || 'fa-solid fa-star'}></i> Altın Kural {num.replace('0','')}</h6>
+    <Field settingsData={settingsData} upd={upd} label="Kural Başlığı" field={`${prefix}_title`} settingsData={settingsData} upd={upd} />
+    <Field settingsData={settingsData} upd={upd} label="İkon Sınıfı (FontAwesome)" field={`${prefix}_icon`} settingsData={settingsData} upd={upd} />
+    <Field settingsData={settingsData} upd={upd} label="Kural Açıklaması" field={`${prefix}_desc`} type="textarea" settingsData={settingsData} upd={upd} />
+  </div>
+);
+
 export default function SettingsTab({
   settingsData, setSettingsData, handleSaveAll, isSaving, authToken,
   waPhone, setWaPhone, waApiKey, setWaApiKey,
@@ -62,78 +135,7 @@ export default function SettingsTab({
     finally { setSitemapLoading(false); }
   };
 
-  // ── Shared CSS helpers ──
-  const inputCls = "w-full py-3 px-3 rounded-lg border border-glass-border bg-white text-sm outline-none focus:border-primary transition-colors";
-  const textareaCls = "w-full py-3 px-3 rounded-lg border border-glass-border bg-white text-sm leading-relaxed outline-none focus:border-primary transition-colors font-[inherit]";
 
-  // ── Accordion wrapper ──
-  const Accordion = ({ id, icon, iconColor, title, borderColor = 'rgba(2,132,199,0.2)', children }) => {
-    const isOpen = settingsAccordion[id];
-    return (
-      <div className="mb-2 rounded-[14px] overflow-hidden transition-shadow" style={{ border: `1px solid ${borderColor}`, boxShadow: isOpen ? `0 4px 16px ${borderColor.replace('0.2', '0.08')}` : 'none' }}>
-        <button type="button" onClick={() => toggleSettingsSection(id)} className={`w-full flex items-center justify-between py-4 px-5 border-none cursor-pointer transition-colors ${isOpen ? 'bg-sky-500/5' : 'bg-white/70'}`} style={isOpen ? { borderBottom: `1px solid ${borderColor}` } : {}}>
-          <span className="flex items-center gap-2.5 font-heading font-bold text-base text-text-light"><i className={icon} style={{ color: iconColor || 'var(--primary)', fontSize: '1.05rem' }}></i>{title}</span>
-          <i className={`fa-solid ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'} text-sm`} style={{ color: iconColor || 'var(--primary)' }}></i>
-        </button>
-        {isOpen && <div className="p-6">{children}</div>}
-      </div>
-    );
-  };
-
-  // ── Sub-tab nav helper ──
-  const SubTabNav = ({ tabs, active, setActive }) => (
-    <div className="flex gap-2 border-b border-glass-border pb-4 mb-6 overflow-x-auto whitespace-nowrap admin-subtabs">
-      {tabs.map(tab => <button key={tab.id} type="button" onClick={() => setActive(tab.id)} className={`py-2.5 px-5 rounded-lg inline-flex items-center gap-2 text-xs font-semibold cursor-pointer transition-all ${active === tab.id ? 'bg-primary text-white border-none' : 'bg-white/40 text-text-light border border-glass-border'}`}>
-        <i className={`${tab.icon} text-sm`}></i><span>{tab.label}</span>
-      </button>)}
-    </div>
-  );
-
-  // ── Field helpers ──
-  const Field = ({ label, field, type = 'text', placeholder = '', hint, ...rest }) => (
-    <div className="admin-form-group">
-      <label className="text-sm font-semibold text-text-light mb-1.5 block">{label}</label>
-      {type === 'textarea'
-        ? <textarea value={settingsData[field] || ''} onChange={e => upd(field, e.target.value)} className={`${textareaCls} min-h-[100px]`} placeholder={placeholder} {...rest} />
-        : <input type={type} value={settingsData[field] || ''} onChange={e => upd(field, e.target.value)} className={inputCls} placeholder={placeholder} {...rest} />}
-      {hint && <span className="text-xs text-text-muted mt-1 block">{hint}</span>}
-    </div>
-  );
-
-  // ── SEO form for a page ──
-  const SeoForm = ({ prefix, pageName }) => (
-    <div>
-      <Field label={`Meta Başlığı (Title) - ${pageName}`} field={`${prefix}_title`} />
-      <Field label={`Meta Açıklaması (Description) - ${pageName}`} field={`${prefix}_description`} type="textarea" />
-      <Field label={`Meta Anahtar Kelimeler (Keywords) - ${pageName}`} field={`${prefix}_keywords`} />
-    </div>
-  );
-
-  // ── SM Package Card ──
-  const SmPkgCard = ({ prefix, title, icon, colorCls, badge }) => (
-    <div className={`border border-glass-border rounded-2xl p-5 relative ${colorCls}`}>
-      {badge && <span className="absolute -top-2.5 right-3 bg-primary text-white text-[0.6rem] font-bold py-0.5 px-2 rounded-full tracking-wider">{badge}</span>}
-      <h4 className="text-sm font-bold mb-4 flex items-center gap-1.5"><i className={icon}></i> {title}</h4>
-      <Field label="Paket Adı" field={`${prefix}_name`} placeholder={title} />
-      <div className="grid grid-cols-2 gap-2 my-3">
-        <div className="admin-form-group"><label className="text-xs font-semibold">Post/Ay</label><input type="number" value={settingsData[`${prefix}_posts`] || ''} onChange={e => upd(`${prefix}_posts`, e.target.value)} className={inputCls} /></div>
-        <div className="admin-form-group"><label className="text-xs font-semibold">Reels/Ay</label><input type="number" value={settingsData[`${prefix}_reels`] || ''} onChange={e => upd(`${prefix}_reels`, e.target.value)} className={inputCls} /></div>
-      </div>
-      <Field label="Aylık Fiyat (₺)" field={`${prefix}_price`} type="number" />
-      <Field label="Dahil Hizmetler (virgülle)" field={`${prefix}_extras`} />
-    </div>
-  );
-
-  // ── Rule Card ──
-  const RuleCard = ({ num, prefix, color, bgColor }) => (
-    <div className="border border-glass-border rounded-xl p-5 relative" style={{ background: bgColor }}>
-      <span className="absolute top-2 right-3 text-2xl font-extrabold opacity-[0.08] pointer-events-none">{num}</span>
-      <h6 className="text-sm font-bold mb-4 flex items-center gap-1.5" style={{ color }}><i className={settingsData[`${prefix}_icon`] || 'fa-solid fa-star'}></i> Altın Kural {num.replace('0','')}</h6>
-      <Field label="Kural Başlığı" field={`${prefix}_title`} />
-      <Field label="İkon Sınıfı (FontAwesome)" field={`${prefix}_icon`} />
-      <Field label="Kural Açıklaması" field={`${prefix}_desc`} type="textarea" />
-    </div>
-  );
 
   return (
     <div>
@@ -142,16 +144,16 @@ export default function SettingsTab({
         <p className="text-sm text-text-muted mb-6 leading-relaxed">Web sitenizin genel ayarlarını, görsel varlıklarını, SEO meta etiketlerini ve site haritasını buradan yapılandırabilirsiniz.</p>
 
         {/* ── Partner Logoları (Ana Sayfa) ── */}
-        <Accordion id="partners" icon="fa-solid fa-handshake" iconColor="#F59E0B" title="Partner & Entegrasyon Logoları" borderColor="rgba(245,158,11,0.2)">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="partners" icon="fa-solid fa-handshake" iconColor="#F59E0B" title="Partner & Entegrasyon Logoları" borderColor="rgba(245,158,11,0.2)">
           <div className="text-sm text-text-light mb-4 leading-relaxed p-4 bg-amber-500/5 rounded-lg border border-amber-500/20">
             <strong>Kullanılabilir Partner ID'leri:</strong> google, meta, tiktok, trendyol, hepsiburada, shopify, ideasoft, ticimax, tsoft, ikas, n11, ciceksepeti, amazon<br/>
             Ekranda görünmesini istediğiniz partnerlerin ID'lerini aralarına virgül koyarak yazın.
           </div>
-          <Field label="Aktif Partnerler (Virgülle ayırın)" field="active_partners" placeholder="google,meta,tiktok,trendyol,shopify" />
+          <Field settingsData={settingsData} upd={upd} label="Aktif Partnerler (Virgülle ayırın)" field="active_partners" placeholder="google,meta,tiktok,trendyol,shopify" />
         </Accordion>
 
         {/* ── WhatsApp Bildirimler ── */}
-        <Accordion id="webhook" icon="fa-brands fa-whatsapp" iconColor="#25D366" title="SaaS Bildirim Ayarları (WhatsApp)" borderColor="rgba(99,102,241,0.2)">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="webhook" icon="fa-brands fa-whatsapp" iconColor="#25D366" title="SaaS Bildirim Ayarları (WhatsApp)" borderColor="rgba(99,102,241,0.2)">
           <div className="text-sm text-text-light mb-5 leading-relaxed p-4 bg-green-500/5 rounded-lg border border-green-500/20">
             <strong>Kurulum Adımları:</strong><br/>1. +34 624 54 22 28 numarasını rehberinize "CallMeBot" olarak kaydedin.<br/>2. "I allow callmebot to send me messages" yazıp gönderin.<br/>3. Gelen API Key'i aşağıya girin.
           </div>
@@ -162,7 +164,7 @@ export default function SettingsTab({
         </Accordion>
 
         {/* ── Güvenlik ── */}
-        <Accordion id="security" icon="fa-solid fa-shield-halved" iconColor="#ef4444" title="Güvenlik ve Giriş Bilgileri (Şifre Değiştir)" borderColor="rgba(239,68,68,0.2)">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="security" icon="fa-solid fa-shield-halved" iconColor="#ef4444" title="Güvenlik ve Giriş Bilgileri (Şifre Değiştir)" borderColor="rgba(239,68,68,0.2)">
           <div className="bg-red-500/5 border border-red-500/20 rounded-2xl p-6">
             <p className="text-sm text-red-900 mb-5 leading-relaxed font-medium"><i className="fa-solid fa-lock mr-2"></i>Neon PostgreSQL yönetici bilgilerinizi güncelleyin.</p>
             <div className="grid grid-cols-2 gap-6">
@@ -179,28 +181,28 @@ export default function SettingsTab({
         </Accordion>
 
         {/* ── Temel İletişim ── */}
-        <Accordion id="contact" icon="fa-solid fa-address-card" title="Temel İletişim Bilgileri">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="contact" icon="fa-solid fa-address-card" title="Temel İletişim Bilgileri">
           <div className="bg-sky-500/5 border border-sky-600/20 rounded-2xl p-6">
             <p className="text-xs text-text-muted mb-5 leading-relaxed"><i className="fa-solid fa-circle-info text-primary mr-1.5"></i>Bu bilgiler footer'da, iletişim sayfasında ve Google <strong>LocalBusiness Schema</strong>'sında kullanılır.</p>
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Telefon Numarası" field="phone" placeholder="+90 232 000 00 00" />
-              <Field label="E-Posta Adresi" field="email" type="email" placeholder="info@ajansrota.com" />
-              <Field label="Site URL (Domain)" field="site_url" type="url" placeholder="https://ajansrota.com" hint="Google Schema için kullanılır — www olmadan yazın" />
-              <Field label="SEO / Schema E-postası" field="contact_email" type="email" placeholder="info@ajansrota.com" hint="Schema.org kaydında görünür" />
+              <Field settingsData={settingsData} upd={upd} label="Telefon Numarası" field="phone" placeholder="+90 232 000 00 00" />
+              <Field settingsData={settingsData} upd={upd} label="E-Posta Adresi" field="email" type="email" placeholder="info@ajansrota.com" />
+              <Field settingsData={settingsData} upd={upd} label="Site URL (Domain)" field="site_url" type="url" placeholder="https://ajansrota.com" hint="Google Schema için kullanılır — www olmadan yazın" />
+              <Field settingsData={settingsData} upd={upd} label="SEO / Schema E-postası" field="contact_email" type="email" placeholder="info@ajansrota.com" hint="Schema.org kaydında görünür" />
             </div>
             <div className="mt-6 pt-6 border-t border-sky-600/10">
               <h4 className="text-sm font-semibold text-text-light mb-4 flex items-center gap-2"><i className="fa-solid fa-share-nodes text-primary"></i> Sosyal Medya Linkleri</h4>
               <div className="grid grid-cols-3 gap-4">
-                <Field label="LinkedIn URL" field="linkedin_url" type="url" placeholder="https://linkedin.com/company/ajansrota" />
-                <Field label="Instagram URL" field="instagram_url" type="url" placeholder="https://instagram.com/ajansrota" />
-                <Field label="WhatsApp URL" field="whatsapp_url" type="url" placeholder="https://wa.me/90500..." hint="SaaS WhatsApp Bot alanı boşsa bu kullanılır" />
+                <Field settingsData={settingsData} upd={upd} label="LinkedIn URL" field="linkedin_url" type="url" placeholder="https://linkedin.com/company/ajansrota" />
+                <Field settingsData={settingsData} upd={upd} label="Instagram URL" field="instagram_url" type="url" placeholder="https://instagram.com/ajansrota" />
+                <Field settingsData={settingsData} upd={upd} label="WhatsApp URL" field="whatsapp_url" type="url" placeholder="https://wa.me/90500..." hint="SaaS WhatsApp Bot alanı boşsa bu kullanılır" />
               </div>
             </div>
           </div>
         </Accordion>
 
         {/* ── Görsel ve Logo ── */}
-        <Accordion id="visuals" icon="fa-solid fa-image" title="Görsel ve Logo Varlık Ayarları">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="visuals" icon="fa-solid fa-image" title="Görsel ve Logo Varlık Ayarları">
           <div className="grid grid-cols-1 gap-6 mt-4">
             <div className="border border-glass-border rounded-2xl p-6 bg-white/40">
               <h4 className="text-base font-semibold text-text-light mb-5 flex items-center gap-2"><i className="fa-solid fa-compass text-primary"></i> Logo Varlıkları</h4>
@@ -233,95 +235,95 @@ export default function SettingsTab({
         </Accordion>
 
         {/* ── Yapay Zeka (AI) Ayarları ── */}
-        <Accordion id="ai_settings" icon="fa-solid fa-robot" title="Genel Yapay Zeka (AI) Ayarları">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="ai_settings" icon="fa-solid fa-robot" title="Genel Yapay Zeka (AI) Ayarları">
           <div className="admin-form-row mt-4">
-            <Field label="Google Gemini API Anahtarı (Blog Asistanı için)" field="gemini_api_key" type="password" placeholder="AI Blog Asistanı için Gemini API key girin" />
+            <Field settingsData={settingsData} upd={upd} label="Google Gemini API Anahtarı (Blog Asistanı için)" field="gemini_api_key" type="password" placeholder="AI Blog Asistanı için Gemini API key girin" />
           </div>
         </Accordion>
 
         {/* ── WhatsApp AI Asistan ── */}
-        <Accordion id="whatsapp" icon="fa-brands fa-whatsapp" iconColor="#25d366" title="WhatsApp Yapay Zeka Müşteri Asistanı Ayarları">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="whatsapp" icon="fa-brands fa-whatsapp" iconColor="#25d366" title="WhatsApp Yapay Zeka Müşteri Asistanı Ayarları">
           <div className="admin-form-row">
-            <Field label="WhatsApp Asistan Numarası" field="whatsapp_assistant_phone" placeholder="Sadece rakamlardan oluşan telefon numarası" />
-            <Field label="Sohbet Robotu Konuları (Virgülle)" field="whatsapp_assistant_topics" placeholder="Örn: Google / Meta Reklamı, SEO Çalışması" />
+            <Field settingsData={settingsData} upd={upd} label="WhatsApp Asistan Numarası" field="whatsapp_assistant_phone" placeholder="Sadece rakamlardan oluşan telefon numarası" />
+            <Field settingsData={settingsData} upd={upd} label="Sohbet Robotu Konuları (Virgülle)" field="whatsapp_assistant_topics" placeholder="Örn: Google / Meta Reklamı, SEO Çalışması" />
           </div>
         </Accordion>
 
         {/* ── SM Paket Fiyatları ── */}
-        <Accordion id="social_pricing" icon="fa-solid fa-share-nodes" title="Sosyal Medya Yönetimi Paket Fiyatları">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="social_pricing" icon="fa-solid fa-share-nodes" title="Sosyal Medya Yönetimi Paket Fiyatları">
           <p className="text-xs text-text-muted mb-5 leading-relaxed">Hizmet bedeli hesaplayıcısında gösterilecek 3 paketin detaylarını buradan yönetin.</p>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 mb-8">
-            <SmPkgCard prefix="sm_pkg_baslangic" title="Başlangıç Paketi" icon="fa-solid fa-seedling" colorCls="bg-gradient-to-br from-sky-100/50 to-green-50/50" />
-            <SmPkgCard prefix="sm_pkg_orta" title="Orta Paket" icon="fa-solid fa-rocket" colorCls="bg-gradient-to-br from-sky-100/60 to-blue-50/60 !border-2 !border-sky-600/30" badge="EN POPÜLER" />
-            <SmPkgCard prefix="sm_pkg_zirve" title="Zirve Paketi" icon="fa-solid fa-crown" colorCls="bg-gradient-to-br from-yellow-100/50 to-amber-50/30 !border-amber-700/30" />
+            <SmPkgCard settingsData={settingsData} upd={upd} prefix="sm_pkg_baslangic" title="Başlangıç Paketi" icon="fa-solid fa-seedling" colorCls="bg-gradient-to-br from-sky-100/50 to-green-50/50" />
+            <SmPkgCard settingsData={settingsData} upd={upd} prefix="sm_pkg_orta" title="Orta Paket" icon="fa-solid fa-rocket" colorCls="bg-gradient-to-br from-sky-100/60 to-blue-50/60 !border-2 !border-sky-600/30" badge="EN POPÜLER" />
+            <SmPkgCard settingsData={settingsData} upd={upd} prefix="sm_pkg_zirve" title="Zirve Paketi" icon="fa-solid fa-crown" colorCls="bg-gradient-to-br from-yellow-100/50 to-amber-50/30 !border-amber-700/30" />
           </div>
         </Accordion>
 
         {/* ── Hakkımızda İçerik ── */}
-        <Accordion id="about_content" icon="fa-solid fa-address-card" title="Kurumsal (Hakkımızda) Sayfa İçerik Yönetimi">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="about_content" icon="fa-solid fa-address-card" title="Kurumsal (Hakkımızda) Sayfa İçerik Yönetimi">
           <div className="border border-glass-border rounded-[20px] p-6 bg-gradient-to-br from-white/70 to-white/45 shadow-md mb-10">
             <SubTabNav tabs={[{ id: 'hero', label: 'Giriş & Kahraman', icon: 'fa-solid fa-crown' }, { id: 'story', label: 'Hikaye & Anlayış', icon: 'fa-solid fa-book-open' }, { id: 'culture', label: 'Kültür & Kurallar', icon: 'fa-solid fa-gavel' }, { id: 'coffee', label: 'Kahve Daveti', icon: 'fa-solid fa-mug-hot' }]} active={aboutSettingsSubTab} setActive={setAboutSettingsSubTab} />
 
             {aboutSettingsSubTab === 'hero' && <div className="animate-fadeIn">
               <p className="text-xs text-text-muted mb-5">Hakkımızda sayfasının en üstünde yer alan karşılama başlıklarını düzenleyin.</p>
-              <div className="admin-form-row"><Field label="Sayfa Başlığı (Giriş)" field="about_title_top" placeholder="Biz Kimiz?" /><Field label="Sayfa Başlığı (Alt Vurgu/Span)" field="about_title_span" placeholder="Ege Sıcaklığı ve Dijital Performans" /></div>
-              <Field label="Giriş Açıklaması (Spot)" field="about_desc" type="textarea" placeholder="Başlığın altındaki spot metin..." />
+              <div className="admin-form-row"><Field settingsData={settingsData} upd={upd} label="Sayfa Başlığı (Giriş)" field="about_title_top" placeholder="Biz Kimiz?" /><Field settingsData={settingsData} upd={upd} label="Sayfa Başlığı (Alt Vurgu/Span)" field="about_title_span" placeholder="Ege Sıcaklığı ve Dijital Performans" /></div>
+              <Field settingsData={settingsData} upd={upd} label="Giriş Açıklaması (Spot)" field="about_desc" type="textarea" placeholder="Başlığın altındaki spot metin..." />
             </div>}
 
             {aboutSettingsSubTab === 'story' && <div className="animate-fadeIn">
               <p className="text-xs text-text-muted mb-5">Samimi Hikayemiz kartının başlığını ve paragraflarını düzenleyin.</p>
-              <div className="admin-form-row"><Field label="Hikaye Etiketi (Tag)" field="about_story_tag" placeholder="BİZİM ANLAYIŞIMIZ" /><Field label="Hikaye Başlığı (H2)" field="about_story_title" placeholder="E-postalara Hapsolmayan Özgürlük" /></div>
-              <Field label="Hikaye Paragrafı 1" field="about_story_p1" type="textarea" />
-              <Field label="Hikaye Paragrafı 2" field="about_story_p2" type="textarea" />
-              <Field label="Vurgulanan Alıntı Sözü (Quote)" field="about_story_quote" type="textarea" placeholder="Çift tırnak içinde gösterilecek vurucu ifade..." />
+              <div className="admin-form-row"><Field settingsData={settingsData} upd={upd} label="Hikaye Etiketi (Tag)" field="about_story_tag" placeholder="BİZİM ANLAYIŞIMIZ" /><Field settingsData={settingsData} upd={upd} label="Hikaye Başlığı (H2)" field="about_story_title" placeholder="E-postalara Hapsolmayan Özgürlük" /></div>
+              <Field settingsData={settingsData} upd={upd} label="Hikaye Paragrafı 1" field="about_story_p1" type="textarea" />
+              <Field settingsData={settingsData} upd={upd} label="Hikaye Paragrafı 2" field="about_story_p2" type="textarea" />
+              <Field settingsData={settingsData} upd={upd} label="Vurgulanan Alıntı Sözü (Quote)" field="about_story_quote" type="textarea" placeholder="Çift tırnak içinde gösterilecek vurucu ifade..." />
             </div>}
 
             {aboutSettingsSubTab === 'culture' && <div className="animate-fadeIn">
               <p className="text-xs text-text-muted mb-5">3 altın kuralın başlığını, açıklamalarını ve ikonlarını özelleştirin.</p>
-              <Field label="Kültür Bölüm Ana Başlığı" field="about_culture_title" placeholder="Çalışma Kültürümüzün 3 Altın Kuralı" />
+              <Field settingsData={settingsData} upd={upd} label="Kültür Bölüm Ana Başlığı" field="about_culture_title" placeholder="Çalışma Kültürümüzün 3 Altın Kuralı" />
               <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 mt-6">
-                <RuleCard num="01" prefix="about_rule1" color="var(--primary)" bgColor="rgba(14,165,233,0.02)" />
-                <RuleCard num="02" prefix="about_rule2" color="var(--secondary)" bgColor="rgba(244,63,94,0.02)" />
-                <RuleCard num="03" prefix="about_rule3" color="#10b981" bgColor="rgba(16,185,129,0.02)" />
+                <RuleCard settingsData={settingsData} upd={upd} num="01" prefix="about_rule1" color="var(--primary)" bgColor="rgba(14,165,233,0.02)" />
+                <RuleCard settingsData={settingsData} upd={upd} num="02" prefix="about_rule2" color="var(--secondary)" bgColor="rgba(244,63,94,0.02)" />
+                <RuleCard settingsData={settingsData} upd={upd} num="03" prefix="about_rule3" color="#10b981" bgColor="rgba(16,185,129,0.02)" />
               </div>
             </div>}
 
             {aboutSettingsSubTab === 'coffee' && <div className="animate-fadeIn">
               <p className="text-xs text-text-muted mb-5">Kahve daveti kartının içeriğini ve butonunu düzenleyin.</p>
-              <div className="admin-form-row"><Field label="Kahve Daveti Başlığı" field="about_coffee_title" placeholder="Çevrimiçi ya da Yüz Yüze Bir Kahveye?" /><Field label="Buton Çağrı Metni" field="about_coffee_btn" placeholder="Bizimle Tanışın" /></div>
-              <Field label="Davet Açıklama Paragrafı" field="about_coffee_desc" type="textarea" />
+              <div className="admin-form-row"><Field settingsData={settingsData} upd={upd} label="Kahve Daveti Başlığı" field="about_coffee_title" placeholder="Çevrimiçi ya da Yüz Yüze Bir Kahveye?" /><Field settingsData={settingsData} upd={upd} label="Buton Çağrı Metni" field="about_coffee_btn" placeholder="Bizimle Tanışın" /></div>
+              <Field settingsData={settingsData} upd={upd} label="Davet Açıklama Paragrafı" field="about_coffee_desc" type="textarea" />
             </div>}
           </div>
         </Accordion>
 
         {/* ── İletişim Sayfası ── */}
-        <Accordion id="contact_page" icon="fa-solid fa-envelope" title="İletişim Sayfası İçerik & Bilgi Yönetimi">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="contact_page" icon="fa-solid fa-envelope" title="İletişim Sayfası İçerik & Bilgi Yönetimi">
           <SubTabNav tabs={[{ id: 'info', label: 'Genel & Sayfa Girişi', icon: 'fa-solid fa-circle-info' }, { id: 'contact_fields', label: 'İletişim Bilgileri', icon: 'fa-solid fa-address-book' }, { id: 'office_hours', label: 'Mesai Saatleri & Tatiller', icon: 'fa-solid fa-clock' }]} active={contactSettingsSubTab} setActive={setContactSettingsSubTab} />
           <div className="border border-glass-border rounded-2xl p-6 bg-white/40 mb-8">
             {contactSettingsSubTab === 'info' && <div className="fade-in">
               <h4 className="text-sm font-semibold text-text-light mb-5 flex items-center gap-1.5"><i className="fa-solid fa-circle-info text-primary"></i> Genel & Sayfa Giriş Ayarları</h4>
-              <div className="admin-form-row"><Field label="Sayfa Başlığı (Giriş)" field="contact_title_top" placeholder="Bizimle" /><Field label="Sayfa Başlığı (Alt/Span)" field="contact_title_span" placeholder="İletişime Geçin" /></div>
-              <Field label="Sayfa Açıklaması (Giriş Spotu)" field="contact_desc" type="textarea" placeholder="Harita ve formun üstündeki açıklama metni..." />
+              <div className="admin-form-row"><Field settingsData={settingsData} upd={upd} label="Sayfa Başlığı (Giriş)" field="contact_title_top" placeholder="Bizimle" /><Field settingsData={settingsData} upd={upd} label="Sayfa Başlığı (Alt/Span)" field="contact_title_span" placeholder="İletişime Geçin" /></div>
+              <Field settingsData={settingsData} upd={upd} label="Sayfa Açıklaması (Giriş Spotu)" field="contact_desc" type="textarea" placeholder="Harita ve formun üstündeki açıklama metni..." />
             </div>}
             {contactSettingsSubTab === 'contact_fields' && <div className="fade-in">
               <h4 className="text-sm font-semibold text-text-light mb-5 flex items-center gap-1.5"><i className="fa-solid fa-address-book text-primary"></i> Global İletişim Bilgileri</h4>
-              <div className="admin-form-row"><Field label="Telefon" field="phone" placeholder="+90 544 584 45 43" /><Field label="E-Posta" field="email" type="email" placeholder="hello@ajansrota.com" /></div>
+              <div className="admin-form-row"><Field settingsData={settingsData} upd={upd} label="Telefon" field="phone" placeholder="+90 544 584 45 43" /><Field settingsData={settingsData} upd={upd} label="E-Posta" field="email" type="email" placeholder="hello@ajansrota.com" /></div>
               <div className="admin-form-row mt-4">
-                <div className="admin-form-group flex-[2]"><Field label="Adres / Çalışma Modelimiz" field="address" placeholder="Uzaktan Çalışma (Remote) / İzmir, Ege" /></div>
-                <div className="admin-form-group flex-1"><Field label="Google Maps URL" field="google_maps_url" placeholder="Haritada Göster bağlantısı" /></div>
+                <div className="admin-form-group flex-[2]"><Field settingsData={settingsData} upd={upd} label="Adres / Çalışma Modelimiz" field="address" placeholder="Uzaktan Çalışma (Remote) / İzmir, Ege" /></div>
+                <div className="admin-form-group flex-1"><Field settingsData={settingsData} upd={upd} label="Google Maps URL" field="google_maps_url" placeholder="Haritada Göster bağlantısı" /></div>
               </div>
             </div>}
             {contactSettingsSubTab === 'office_hours' && <div className="fade-in">
               <h4 className="text-sm font-semibold text-text-light mb-5 flex items-center gap-1.5"><i className="fa-solid fa-clock text-primary"></i> Çalışma Saatleri & Otomatik Mesai Durumu</h4>
-              <Field label="Çalışma Saatleri Açıklama Metni" field="working_hours_text" placeholder="Pazartesi – Cuma: 09:00 – 18:30" />
-              <div className="admin-form-row mt-4"><Field label="Mesai Başlangıç Saati" field="working_hours_start" placeholder="09:00" /><Field label="Mesai Bitiş Saati" field="working_hours_end" placeholder="18:30" /></div>
-              <Field label="Özel Tatil Günleri (YYYY-MM-DD, virgülle)" field="custom_holidays" placeholder="2026-06-25, 2026-06-26" hint="Ulusal resmi tatiller (1 Ocak, 23 Nisan, 1 Mayıs vb.) otomatik olarak kapalı hesaplanır." />
+              <Field settingsData={settingsData} upd={upd} label="Çalışma Saatleri Açıklama Metni" field="working_hours_text" placeholder="Pazartesi – Cuma: 09:00 – 18:30" />
+              <div className="admin-form-row mt-4"><Field settingsData={settingsData} upd={upd} label="Mesai Başlangıç Saati" field="working_hours_start" placeholder="09:00" /><Field settingsData={settingsData} upd={upd} label="Mesai Bitiş Saati" field="working_hours_end" placeholder="18:30" /></div>
+              <Field settingsData={settingsData} upd={upd} label="Özel Tatil Günleri (YYYY-MM-DD, virgülle)" field="custom_holidays" placeholder="2026-06-25, 2026-06-26" hint="Ulusal resmi tatiller (1 Ocak, 23 Nisan, 1 Mayıs vb.) otomatik olarak kapalı hesaplanır." />
             </div>}
           </div>
         </Accordion>
 
         {/* ── Yasal Metinler ── */}
-        <Accordion id="legal_content" icon="fa-solid fa-file-shield" title="Yasal Metin ve Politika Yönetimi">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="legal_content" icon="fa-solid fa-file-shield" title="Yasal Metin ve Politika Yönetimi">
           <p className="text-sm text-text-muted mb-6 leading-snug">Footer'daki yasal metinleri buradan düzenleyebilirsiniz. HTML etiketleri desteklenir.</p>
           <div className="border border-glass-border rounded-[20px] p-6 bg-gradient-to-br from-white/70 to-white/45 shadow-md mb-10">
             <SubTabNav tabs={[{ id: 'privacy', label: 'Gizlilik Politikası', icon: 'fa-solid fa-user-lock' }, { id: 'terms', label: 'Kullanım Koşulları', icon: 'fa-solid fa-scale-balanced' }, { id: 'kvkk', label: 'KVKK Aydınlatma', icon: 'fa-solid fa-shield-halved' }, { id: 'cookies', label: 'Çerez Politikası', icon: 'fa-solid fa-cookie-bite' }]} active={legalSettingsSubTab} setActive={setLegalSettingsSubTab} />
@@ -334,7 +336,7 @@ export default function SettingsTab({
               };
               const t = map[legalSettingsSubTab]; if (!t) return null;
               return <div className="animate-fadeIn">
-                <Field label={t.titleLabel} field={t.titleKey} placeholder={t.placeholder} />
+                <Field settingsData={settingsData} upd={upd} label={t.titleLabel} field={t.titleKey} placeholder={t.placeholder} />
                 <div className="admin-form-group mt-5">
                   <label className="text-sm font-semibold text-text-light mb-1.5 block">{t.contentLabel} (HTML Destekli Zengin Editör)</label>
                   {/* Toolbar */}
@@ -359,7 +361,7 @@ export default function SettingsTab({
         </Accordion>
 
         {/* ── Sayfa Gösterim ── */}
-        <Accordion id="menu" icon="fa-solid fa-eye-slash" title="Sayfa Gösterim ve Menü Yönetimi">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="menu" icon="fa-solid fa-eye-slash" title="Sayfa Gösterim ve Menü Yönetimi">
           <p className="text-sm text-text-muted mb-6 leading-snug">Sayfaları ziyaretçilere gizleyebilir veya yeniden görünür kılabilirsiniz.</p>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4 mb-10">
             {[{ key: 'hide_page_hakkimizda', label: 'Hakkımızda' }, { key: 'hide_page_ekiplerimiz', label: 'Ekiplerimiz' }, { key: 'hide_page_blog', label: 'Blog' }, { key: 'hide_page_izmir', label: 'Neden İzmir?' }, { key: 'hide_page_iletisim', label: 'İletişim' }, { key: 'hide_page_seo', label: 'Ücretsiz SEO Analiz Aracı' }, { key: 'hide_page_kobi', label: 'KOBİ Dijitalleşme Endeksi' }, { key: 'hide_page_rakip', label: 'Siz vs. Rakibiniz' }, { key: 'hide_page_kreatif', label: 'Kreatif Reklam Vitrini' }, { key: 'hide_page_akademi', label: 'Rota Akademi' }, { key: 'hide_page_referanslar', label: 'Referanslarımız' }].map(item => (
@@ -375,19 +377,19 @@ export default function SettingsTab({
         </Accordion>
 
         {/* ── SEO & Meta ── */}
-        <Accordion id="seo" icon="fa-solid fa-magnifying-glass-chart" title="Sayfa Bazlı SEO ve Meta Etiket Ayarları">
+        <Accordion settingsAccordion={settingsAccordion} toggleSettingsSection={toggleSettingsSection} id="seo" icon="fa-solid fa-magnifying-glass-chart" title="Sayfa Bazlı SEO ve Meta Etiket Ayarları">
           <div className="flex gap-1.5 flex-wrap mb-6 bg-slate-900/[0.03] p-1.5 rounded-lg">
             {[{ id: 'home', label: 'Ana Sayfa / Genel' }, { id: 'izmir', label: 'Neden İzmir' }, { id: 'referanslar', label: 'Referanslar' }, { id: 'iletisim', label: 'İletişim' }, { id: 'hakkimizda', label: 'Hakkımızda' }, { id: 'ekiplerimiz', label: 'Ekiplerimiz' }, { id: 'blog', label: 'Blog' }, { id: 'seo', label: 'SEO Analiz Aracı' }].map(tab => <button key={tab.id} type="button" className={`btn ${activeSeoTab === tab.id ? 'btn-primary' : 'btn-secondary'} py-1.5 px-3 text-xs rounded-md`} onClick={() => setActiveSeoTab(tab.id)}>{tab.label}</button>)}
           </div>
 
-          {activeSeoTab === 'home' && <SeoForm prefix="meta" pageName="Ana Sayfa / Genel" />}
-          {activeSeoTab === 'izmir' && <SeoForm prefix="seo_izmir" pageName="Neden İzmir" />}
-          {activeSeoTab === 'referanslar' && <SeoForm prefix="seo_referanslar" pageName="Referanslar" />}
-          {activeSeoTab === 'iletisim' && <SeoForm prefix="seo_iletisim" pageName="İletişim" />}
-          {activeSeoTab === 'hakkimizda' && <SeoForm prefix="seo_hakkimizda" pageName="Hakkımızda" />}
-          {activeSeoTab === 'ekiplerimiz' && <SeoForm prefix="seo_ekiplerimiz" pageName="Ekiplerimiz" />}
-          {activeSeoTab === 'blog' && <SeoForm prefix="seo_blog" pageName="Blog" />}
-          {activeSeoTab === 'seo' && <SeoForm prefix="seo_seo" pageName="SEO Analiz Aracı" />}
+          {activeSeoTab === 'home' && <SeoForm settingsData={settingsData} upd={upd} prefix="meta" pageName="Ana Sayfa / Genel" />}
+          {activeSeoTab === 'izmir' && <SeoForm settingsData={settingsData} upd={upd} prefix="seo_izmir" pageName="Neden İzmir" />}
+          {activeSeoTab === 'referanslar' && <SeoForm settingsData={settingsData} upd={upd} prefix="seo_referanslar" pageName="Referanslar" />}
+          {activeSeoTab === 'iletisim' && <SeoForm settingsData={settingsData} upd={upd} prefix="seo_iletisim" pageName="İletişim" />}
+          {activeSeoTab === 'hakkimizda' && <SeoForm settingsData={settingsData} upd={upd} prefix="seo_hakkimizda" pageName="Hakkımızda" />}
+          {activeSeoTab === 'ekiplerimiz' && <SeoForm settingsData={settingsData} upd={upd} prefix="seo_ekiplerimiz" pageName="Ekiplerimiz" />}
+          {activeSeoTab === 'blog' && <SeoForm settingsData={settingsData} upd={upd} prefix="seo_blog" pageName="Blog" />}
+          {activeSeoTab === 'seo' && <SeoForm settingsData={settingsData} upd={upd} prefix="seo_seo" pageName="SEO Analiz Aracı" />}
 
           {/* Sitemap */}
           <h3 className="mt-10 mb-5 text-lg text-text-light border-b border-glass-border pb-2 flex items-center gap-2"><i className="fa-solid fa-sitemap text-primary text-lg"></i> XML Site Haritası (Sitemap) Yönetimi</h3>

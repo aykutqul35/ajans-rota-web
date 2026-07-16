@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { initialTeamMembers } from '../data/mockData';
-import SEO from '../components/SEO';
 
 export default // Dedicated Team Page View Component
 
@@ -110,11 +109,6 @@ function TeamPageView({
     }
   };
   return <div className="team-page-view container">
-      <SEO 
-        title="Operasyon Merkezlerimiz ve Ekibimiz | Ajans Rota"
-        description="Dijitalin her alanında kurumsal yetkinlik sağlayan operasyon merkezlerimiz ve uzman ekibimizle tanışın."
-        canonicalPath="/ekiplerimiz"
-      />
       {/* Navigation & Breadcrumb */}
       <div className="service-page-nav">
         <button className="btn btn-secondary back-btn" onClick={onBack}>
@@ -153,7 +147,6 @@ function TeamPageView({
       </div>
 
       {/* Department Hubs */}
-      {/* Department Hubs */}
       <div className="team-hubs-section" style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <span style={{ color: 'var(--primary)', fontWeight: '700', fontSize: '0.85rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Operasyon Merkezlerimiz</span>
@@ -164,68 +157,50 @@ function TeamPageView({
           {[
             { 
               icon: "fa-chart-line", 
-              title: "Veri & Performans Masası", 
-              desc: "Hedef kitlenizi nokta atışı analiz ederek reklam yatırımlarınızı (ROAS) en karlı şekilde yöneten ekibimiz.",
+              title: "Veri Bilimi & Performans Masası", 
+              desc: "Milyonlarca veriyi anlık analiz ederek en karlı hedef kitleyi bulan, bütçenizi yöneten operasyon üssü.",
               tags: ["Google Ads", "Meta Ads", "Programatik", "Analytics"]
             },
             { 
               icon: "fa-pen-nib", 
-              title: "Kreatif Stüdyo & Tasarım", 
-              desc: "Görsel hafızalara kazınan marka hikayeleri yaratan ve performansa dayalı reklam görselleri üreten kreatif departmanımız.",
-              tags: ["Video Kurgu", "Grafik Tasarım", "Metin Yazarlığı", "UI/UX"]
+              title: "Kreatif Stüdyo & Prodüksiyon", 
+              desc: "Görsel hafızalara kazınan marka hikayeleri yaratan, saniyeler içinde binlerce varyasyon üreten tasarım laboratuvarı.",
+              tags: ["Video Kurgu", "Hareketli Grafik", "Copywriting", "UI/UX"]
             },
             { 
               icon: "fa-chess-knight", 
               title: "Strateji & Büyüme Ekibi", 
-              desc: "Rakiplerinizi analiz ederek markanızı sektörde farklılaştıran ve büyüme yol haritanızı çizen strateji merkezimiz.",
+              desc: "Sektörel rakipleri inceleyip markanızı pazarda paha biçilmez bir konuma oturtan elit büyüme stratejistleri.",
               tags: ["Pazar Araştırması", "Konumlandırma", "CRM", "CRO"]
             },
             { 
-              icon: "fa-laptop-code", 
-              title: "Web & Yazılım Mimari", 
-              desc: "Dönüşüm odaklı e-ticaret siteleri ve yüksek performanslı kurumsal web projeleri geliştiren yazılım ekibimiz.",
-              tags: ["E-Ticaret", "Web Tasarım", "Mobil Uygulama", "Özel Yazılım"]
+              icon: "fa-robot", 
+              title: "Yapay Zeka & Otomasyon Lab.", 
+              desc: "İnsan gücünün sınırlarını aşan, uyumadan sistemleri denetleyen ve iyileştiren yapay zeka ajanlarımız.",
+              tags: ["AI Agent", "Entegrasyon", "Makine Öğrenimi", "Veri"]
             },
             { 
               icon: "fa-globe", 
-              title: "SEO & İçerik Ağı", 
-              desc: "Sitenizi arama motorlarında organik olarak en üst sıralara taşıyan SEO ve içerik optimizasyon uzmanlarımız.",
+              title: "Global SEO & İçerik Ağı", 
+              desc: "Arama motorlarında üst sıralara çıkmanızı sağlayan algoritmik analiz ve programatik içerik üretim merkezi.",
               tags: ["Teknik SEO", "Yerel SEO", "Backlink", "İçerik Stratejisi"]
             },
             { 
-              icon: "fa-headset", 
-              title: "Müşteri Deneyimi & Destek", 
-              desc: "Projelerinizin her aşamasında sizinle kesintisiz iletişim kuran ve 7/24 operasyonel destek sağlayan birimimiz.",
-              tags: ["Hesap Yönetimi", "Proje Takibi", "Raporlama", "Destek"]
+              icon: "fa-code", 
+              title: "Web & Otonom Mimari", 
+              desc: "Dönüşüm odaklı hibrid e-ticaret siteleri ve yüksek performanslı otonom yazılım ekosistemleri inşa eden takım.",
+              tags: ["E-Ticaret", "PWA", "Mobil Uygulama", "Özel Yazılım"]
             }
           ].map((hub, idx) => (
-            <div key={idx} className="hub-card" style={{ 
-                padding: '2.5rem 2rem', 
-                background: '#ffffff', // LIGHT MODE
-                border: '1px solid #e2e8f0', 
-                borderTop: '3px solid var(--primary)', 
-                borderRadius: '16px',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                flexDirection: 'column'
-              }} 
-              onMouseEnter={(e) => { 
-                  e.currentTarget.style.transform = 'translateY(-5px)'; 
-                  e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'; 
-              }} 
-              onMouseLeave={(e) => { 
-                  e.currentTarget.style.transform = 'translateY(0)'; 
-                  e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'; 
-              }}>
-              <div style={{ width: '60px', height: '60px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                <i className={`fa-solid ${hub.icon}`} style={{ fontSize: '1.5rem', color: 'var(--primary)' }}></i>
+            <div key={idx} className="glass-card hub-card" style={{ padding: '2.5rem 2rem', borderTop: '2px solid rgba(16, 185, 129, 0.3)', transition: 'transform 0.4s ease' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-10px)'; e.currentTarget.style.borderTopColor = 'var(--primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderTopColor = 'rgba(16, 185, 129, 0.3)'; }}>
+              <div style={{ width: '65px', height: '65px', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
+                <i className={`fa-solid ${hub.icon}`} style={{ fontSize: '1.75rem', color: 'var(--primary)' }}></i>
               </div>
-              <h3 style={{ fontSize: '1.25rem', color: '#0f172a', marginBottom: '1rem', fontFamily: 'var(--font-heading)', fontWeight: '700', lineHeight: '1.3' }}>{hub.title}</h3>
-              <p style={{ color: '#475569', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '1.5rem', flexGrow: 1 }}>{hub.desc}</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.35rem', color: 'var(--text-light)', marginBottom: '1rem', fontFamily: 'var(--font-heading)', fontWeight: '600', lineHeight: '1.3' }}>{hub.title}</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>{hub.desc}</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
                 {hub.tags.map((tag, i) => (
-                  <span key={i} style={{ padding: '0.35rem 0.75rem', background: '#f8fafc', borderRadius: '6px', fontSize: '0.75rem', color: '#334155', fontWeight: '500', border: '1px solid #e2e8f0' }}>{tag}</span>
+                  <span key={i} style={{ padding: '0.4rem 0.8rem', background: 'rgba(16, 185, 129, 0.08)', borderRadius: '20px', fontSize: '0.75rem', color: 'var(--primary)', border: '1px solid rgba(16, 185, 129, 0.15)', fontWeight: '600' }}>{tag}</span>
                 ))}
               </div>
             </div>

@@ -3,6 +3,7 @@ import FadeIn from '../components/FadeIn';
 import StaggerContainer, { StaggerItem } from '../components/StaggerContainer';
 import PartnerLogos from '../components/home/PartnerLogos';
 import { lazy, useState, useEffect, useRef } from 'react';
+import SEO from '../components/SEO';
 
 const SpotlightServiceCard = ({ service, onClick }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -249,6 +250,7 @@ export default function HomePage(props) {
 
   return (
     <>
+      <SEO />
           {/* Hero Section */}
           <section className="hero">
         <div className="hero-glow-1"></div>
@@ -2665,6 +2667,85 @@ export default function HomePage(props) {
 
               </div>}
           </FadeIn>
+        </div>
+      </section>
+
+      {/* Featured Case Study Preview Section */}
+      <section className="case-studies-preview" style={{ padding: '6rem 0', backgroundColor: '#ffffff', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+        <div className="container">
+          <FadeIn className="section-header" style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <span className="section-tag" style={{ color: 'var(--primary)', background: 'rgba(16, 185, 129, 0.1)' }}>Vitrin Başarı Hikayesi</span>
+            <h2 className="section-title">İkna Eden Büyüme Rakamları</h2>
+            <p className="section-desc">{settingsData?.cs1_company || "Alaçatı Ev Kurabiyecisi"} markasında yakaladığımız büyümenin anatomisi.</p>
+          </FadeIn>
+          
+          <div className="glass-card" style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem', padding: '3rem', borderRadius: '24px', background: '#f8fafc', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.05)' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #e2e8f0', paddingBottom: '2rem' }}>
+              <div>
+                <h3 style={{ fontSize: '1.8rem', fontFamily: 'var(--font-heading)', color: '#0f172a', marginBottom: '0.5rem' }}>{settingsData?.cs1_logo || "🍪"} {settingsData?.cs1_company || "Alaçatı Ev Kurabiyecisi"}</h3>
+                <span style={{ display: 'inline-block', padding: '0.4rem 0.8rem', background: '#e2e8f0', color: '#334155', borderRadius: '20px', fontSize: '0.8rem', fontWeight: '600' }}>{settingsData?.cs1_sector || "E-Ticaret & Yerel Üretim"}</span>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <span style={{ display: 'block', fontSize: '0.9rem', color: '#64748b', fontWeight: '500', marginBottom: '0.2rem' }}>Ajans Rota Sonrası</span>
+                <span style={{ fontSize: '2.5rem', fontWeight: '800', color: '#10b981', fontFamily: 'var(--font-heading)' }}>{settingsData?.cs1_after_roas || "6.4x"}</span>
+              </div>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+              <div style={{ background: '#ffffff', padding: '2rem', borderRadius: '16px', border: '1px solid #fee2e2' }}>
+                <span style={{ display: 'inline-block', background: '#fee2e2', color: '#ef4444', padding: '0.3rem 0.8rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: '700', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rota Öncesi</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>
+                    <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Durum / Trafik</span>
+                    <span style={{ fontWeight: '600', color: '#334155' }}>{settingsData?.cs1_before_traffic || "4.500"}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>
+                    <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Getiri / Metrik</span>
+                    <span style={{ fontWeight: '600', color: '#ef4444' }}>{settingsData?.cs1_before_roas || "1.8x ROAS"}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Maliyet / Sorun</span>
+                    <span style={{ fontWeight: '600', color: '#334155' }}>{settingsData?.cs1_before_cost || "Çok Yüksek"}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div style={{ background: '#ffffff', padding: '2rem', borderRadius: '16px', border: '1px solid #d1fae5', position: 'relative' }}>
+                <span style={{ display: 'inline-block', background: '#d1fae5', color: '#059669', padding: '0.3rem 0.8rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: '700', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rota Sonrası</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>
+                    <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Durum / Trafik</span>
+                    <span style={{ fontWeight: '600', color: '#334155' }}>{settingsData?.cs1_after_traffic || "32.000"}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>
+                    <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Getiri / Metrik</span>
+                    <span style={{ fontWeight: '800', color: '#10b981' }}>{settingsData?.cs1_after_roas || "6.4x ROAS"}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Maliyet / Avantaj</span>
+                    <span style={{ fontWeight: '600', color: '#059669' }}>{settingsData?.cs1_after_cost || "%65 Daha Ucuz"}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '1rem' }}>
+              <h4 style={{ fontSize: '1rem', color: '#0f172a', marginBottom: '1rem', fontFamily: 'var(--font-heading)' }}>Uygulanan Strateji:</h4>
+              <ul style={{ listStyleType: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                {[settingsData?.cs1_strat1, settingsData?.cs1_strat2, settingsData?.cs1_strat3].filter(Boolean).map((strat, i) => (
+                  <li key={i} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                    <i className="fa-solid fa-check-circle" style={{ color: '#10b981', marginTop: '4px' }}></i>
+                    <span style={{ color: '#475569', fontSize: '0.95rem', lineHeight: '1.5' }}>{strat}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+               <button onClick={() => handleNavClick('referanslar')} style={{ background: 'transparent', color: 'var(--primary)', border: '2px solid var(--primary)', padding: '0.75rem 2rem', borderRadius: '50px', fontWeight: '700', cursor: 'pointer', transition: 'all 0.3s ease' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--primary)'; e.currentTarget.style.color = 'white'; }} onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--primary)'; }}>Tüm Başarı Hikayelerini İncele <i className="fa-solid fa-arrow-right" style={{ marginLeft: '0.5rem' }}></i></button>
+            </div>
+
+          </div>
         </div>
       </section>
 

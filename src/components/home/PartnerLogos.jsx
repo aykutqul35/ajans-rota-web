@@ -99,7 +99,6 @@ export default function PartnerLogos({ settingsData }) {
   return (
     <section className="py-24 md:py-32 relative overflow-hidden bg-slate-50 border-y border-slate-200">
       {/* Advanced Background Gradients & Grid */}
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay pointer-events-none"></div>
       
       {/* Background glowing orbs matching brand colors */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[128px] pointer-events-none"></div>
