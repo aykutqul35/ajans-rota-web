@@ -207,6 +207,53 @@ export default function AnalyticsTab({
         </div>}
       </div>
 
+      {/* ORGANIC SEARCH KEYWORDS TABLE */}
+      <div className="glass-card p-6 mb-6 border border-emerald-500/20 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+        <h3 className={sectionHeading}>
+          <i className="fa-brands fa-google text-emerald-500"></i> Organik Arama Kelimeleri (Simülasyon / GSC)
+        </h3>
+        
+        <div className="text-xs text-text-muted mb-4 bg-emerald-500/[0.05] p-3 rounded-lg border border-emerald-500/10">
+          <p className="mb-1"><i className="fa-solid fa-circle-info text-emerald-500"></i> <strong>Önemli Teknik Bilgi:</strong> Google, gizlilik politikaları (Not Provided) gereği organik aramalardan gelen ziyaretçilerin <strong>hangi kelimeyi aratarak siteye girdiğini</strong> standart JS pikseli veya Analytics araçlarıyla paylaşmaz. Bu veriyi %100 doğrulukla görmek için sitenizin <strong>Google Search Console (GSC)</strong> hesabına bağlanması gerekir.</p>
+          <p>Aşağıdaki tablo, panelinize Search Console entegre edildiğinde verilerin nasıl görüneceğine dair bir taslaktır.</p>
+        </div>
+
+        {data.totalSessions === 0 ? <div className="text-center py-8 px-4 text-text-muted text-sm">
+          Seçilen tarih aralığında yeterli organik trafik verisi bulunmuyor.
+        </div> : <div className="admin-table-container">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Arama Terimi (Sorgu)</th>
+                <th className="text-center w-[120px]">Tıklama</th>
+                <th className="text-center w-[120px]">Gösterim</th>
+                <th className="text-center w-[100px]">TO (CTR)</th>
+                <th className="text-center w-[100px]">Ort. Konum</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { term: 'izmir dijital ajans', clicks: Math.floor(data.totalSessions * 0.15) || 12, imp: 450, pos: 2.4 },
+                { term: 'sosyal medya yönetimi izmir', clicks: Math.floor(data.totalSessions * 0.12) || 9, imp: 380, pos: 3.1 },
+                { term: 'ajans rota', clicks: Math.floor(data.totalSessions * 0.08) || 6, imp: 120, pos: 1.2 },
+                { term: 'google ads danışmanlığı', clicks: Math.floor(data.totalSessions * 0.05) || 4, imp: 290, pos: 5.6 },
+                { term: 'izmir web tasarım firmaları', clicks: Math.floor(data.totalSessions * 0.04) || 3, imp: 310, pos: 4.8 }
+              ].sort((a,b) => b.clicks - a.clicks).map((kw, i) => {
+                const ctr = ((kw.clicks / kw.imp) * 100).toFixed(1);
+                return <tr key={i}>
+                  <td className="font-medium text-text-light">{kw.term}</td>
+                  <td className="text-center font-bold text-emerald-500">{kw.clicks}</td>
+                  <td className="text-center text-text-muted">{kw.imp}</td>
+                  <td className="text-center text-text-muted">%{ctr}</td>
+                  <td className="text-center text-text-muted">{kw.pos}</td>
+                </tr>;
+              })}
+            </tbody>
+          </table>
+        </div>}
+      </div>
+
     </>}
   </div>;
 }
